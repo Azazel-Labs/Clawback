@@ -1,0 +1,145 @@
+name: Release
+
+# Nightly builds run on a schedule but only when main has new commits since
+# the previous nightly. Pushing a `v*` tag publishes a normal release.
+on:
+  schedule:
+    - cron: "17 6 * * *" # 06:17 UTC daily
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Build a nightly even if nothing changed"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  plan:
+    name: Decide whether to build
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+      tag: ${{ steps.decide.outputs.tag }}
+      nightly: ${{ steps.decide.outputs.nightly }}
+      sha: ${{ steps.decide.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - id: decide
+        shell: bash
+        run: |
+          sha="$(git rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "nightly=false" >> "$GITHUB_OUTPUT"
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "tag=nightly" >> "$GITHUB_OUTPUT"
+          echo "nightly=true" >> "$GITHUB_OUTPUT"
+          previous="$(git rev-parse --verify --quiet 'refs/tags/nightly^{commit}' || true)"
+          if [[ "${{ inputs.force }}" == "true" ]]; then
+            echo "Forced build."
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$previous" == "$sha" ]]; then
+            echo "No new commits since the last nightly ($previous); skipping."
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New commits since ${previous:-the beginning}; building."
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: Build ${{ matrix.target }}
+    needs: plan
+    if: needs.plan.outputs.build == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu }
+          - { os: macos-latest, target: aarch64-apple-darwin }
+          - { os: macos-latest, target: x86_64-apple-darwin }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc }
+          - { os: windows-11-arm, target: aarch64-pc-windows-msvc }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install toolchain (from rust-toolchain.toml)
+        shell: bash
+        run: |
+          rustup toolchain install
+          rustup target add ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          key: ${{ matrix.target }}
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
+      - name: Package
+        shell: bash
+        run: |
+          name="clawback-${{ needs.plan.outputs.tag }}-${{ matrix.target }}"
+          mkdir -p "dist/$name"
+          cp README.md LICENSE "dist/$name/"
+          if [[ "${{ matrix.target }}" == *windows* ]]; then
+            cp "target/${{ matrix.target }}/release/clawback.exe" "dist/$name/"
+            (cd dist && 7z a -tzip "$name.zip" "$name" > /dev/null)
+          else
+            cp "target/${{ matrix.target }}/release/clawback" "dist/$name/"
+            tar -C dist -czf "dist/$name.tar.gz" "$name"
+          fi
+          rm -rf "dist/$name"
+          ls -l dist
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: clawback-${{ matrix.target }}
+          path: dist/*
+          if-no-files-found: error
+
+  publish:
+    name: Publish ${{ needs.plan.outputs.tag }}
+    needs: [plan, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - name: Replace the previous nightly
+        if: needs.plan.outputs.nightly == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete nightly --yes --cleanup-tag || true
+          git tag -f nightly "${{ needs.plan.outputs.sha }}"
+          git push -f origin refs/tags/nightly
+      - uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: ${{ needs.plan.outputs.tag }}
+          name: ${{ needs.plan.outputs.nightly == 'true' && format('Nightly {0}', needs.plan.outputs.sha) || needs.plan.outputs.tag }}
+          prerelease: ${{ needs.plan.outputs.nightly == 'true' }}
+          make_latest: ${{ needs.plan.outputs.nightly != 'true' }}
+          generate_release_notes: ${{ needs.plan.outputs.nightly != 'true' }}
+          body: ${{ needs.plan.outputs.nightly == 'true' && 'Automated build of the latest commit on main. Unsigned; see the README for first-run notes on macOS and Windows.' || '' }}
+          files: dist/*
+          fail_on_unmatched_files: true

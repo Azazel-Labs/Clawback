@@ -1,0 +1,15 @@
+[package]
+name = "clawback-core"
+description = "Filesystem scanner, size tree and SpaceMonger-style layout behind Clawback. Depends only on std."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+# Intentionally none: the core is pure std so it builds anywhere Rust does.
+
+[lints]
+workspace = true

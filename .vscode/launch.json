@@ -1,0 +1,58 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Clawback: Terminal UI",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin", "clawback", "--locked"],
+        "filter": { "name": "clawback", "kind": "bin" }
+      },
+      "args": ["--tui", "${input:scanPath}"],
+      "terminal": "integrated",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Clawback: App",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin", "clawback", "--locked"],
+        "filter": { "name": "clawback", "kind": "bin" }
+      },
+      "args": ["--gui"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Clawback: App (release)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--release", "--bin", "clawback", "--locked"],
+        "filter": { "name": "clawback", "kind": "bin" }
+      },
+      "args": ["--gui"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Clawback: Report on folder",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin", "clawback", "--locked"],
+        "filter": { "name": "clawback", "kind": "bin" }
+      },
+      "args": ["--report", "--top", "10", "${input:scanPath}"],
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "scanPath",
+      "type": "promptString",
+      "description": "Folder to scan (absolute path or relative to the project)",
+      "default": "."
+    }
+  ]
+}

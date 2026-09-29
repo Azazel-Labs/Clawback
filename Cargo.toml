@@ -1,0 +1,106 @@
+[workspace]
+members = ["crates/clawback-core"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+license = "MIT-0"
+repository = "https://github.com/OWNER/clawback"
+authors = ["Nick Darnell"]
+
+[workspace.dependencies]
+clawback-core = { path = "crates/clawback-core", version = "0.1.0" }
+
+# ---------------------------------------------------------------------------
+# Lints: pedantic clippy with a short, deliberate allow list. CI runs
+# `cargo clippy --all-targets -- -D warnings`, so everything here is enforced.
+# ---------------------------------------------------------------------------
+[workspace.lints.rust]
+rust_2018_idioms = { level = "warn", priority = -1 }
+unsafe_op_in_unsafe_fn = "deny"
+unused_qualifications = "warn"
+unused_lifetimes = "warn"
+unused_macro_rules = "warn"
+trivial_numeric_casts = "warn"
+redundant_lifetimes = "warn"
+missing_unsafe_on_extern = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# Pixel and byte arithmetic converts between integer and float types
+# constantly; these are checked by tests instead.
+cast_possible_truncation = "allow"
+cast_possible_wrap = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+# Style preferences that fight readable UI code.
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+too_many_lines = "allow"
+similar_names = "allow"
+struct_excessive_bools = "allow" # Settings mirrors a dialog full of checkboxes
+items_after_statements = "allow"
+# A few restriction lints worth having.
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
+unwrap_used = "warn"
+undocumented_unsafe_blocks = "warn"
+multiple_unsafe_ops_per_block = "warn"
+lossy_float_literal = "warn"
+rc_mutex = "warn"
+str_to_string = "warn"
+string_lit_chars_any = "warn"
+unnecessary_self_imports = "warn"
+verbose_file_reads = "warn"
+
+# ---------------------------------------------------------------------------
+
+[package]
+name = "clawback"
+description = "Fast, cross-platform disk space visualizer: a Rust homage to SpaceMonger"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+default-run = "clawback"
+keywords = ["disk", "treemap", "spacemonger", "disk-usage", "gui"]
+categories = ["filesystem", "visualization", "command-line-utilities"]
+
+[dependencies]
+clawback-core.workspace = true
+# GUI (wgpu renderer; winit loads X11/Wayland/GL libraries at runtime, so
+# there are no system -dev packages to install at build time).
+eframe = { version = "0.36", features = ["persistence"] }
+# Native folder picker (XDG portal on Linux, pure Rust).
+rfd = "0.17"
+# Mounted volumes and free space.
+sysinfo = { version = "0.39", default-features = false, features = ["disk"] }
+# Recycle Bin / Trash.
+trash = "5.2"
+ratatui = "0.30"
+
+[target.'cfg(not(windows))'.dependencies]
+notify = "8.2"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading", "Win32_Security"] }
+
+[lints]
+workspace = true
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
+
+# Optimise dependencies even in debug builds: egui and the scanner are
+# noticeably sluggish otherwise.
+[profile.dev.package."*"]
+opt-level = 2

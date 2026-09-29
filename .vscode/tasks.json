@@ -1,0 +1,113 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}"
+  },
+  "tasks": [
+    {
+      "label": "Clawback: Run terminal UI",
+      "type": "process",
+      "command": "cargo",
+      "args": ["run", "--locked", "--", "--tui", "${input:scanPath}"],
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Run",
+      "type": "process",
+      "command": "cargo",
+      "args": ["run", "--locked", "--", "--gui"],
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Run (release)",
+      "type": "process",
+      "command": "cargo",
+      "args": ["run", "--release", "--locked", "--", "--gui"],
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Report on folder",
+      "type": "process",
+      "command": "cargo",
+      "args": ["run", "--locked", "--", "--report", "--top", "10", "${input:scanPath}"],
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Build",
+      "type": "process",
+      "command": "cargo",
+      "args": ["build", "--workspace", "--locked"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Build (release)",
+      "type": "process",
+      "command": "cargo",
+      "args": ["build", "--release", "--locked"],
+      "group": "build",
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Test workspace",
+      "type": "process",
+      "command": "cargo",
+      "args": ["test", "--workspace", "--locked"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Test core",
+      "type": "process",
+      "command": "cargo",
+      "args": ["test", "-p", "clawback-core", "--locked"],
+      "group": "test",
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Clippy",
+      "type": "process",
+      "command": "cargo",
+      "args": ["clippy", "--workspace", "--all-targets", "--locked", "--", "-D", "warnings"],
+      "problemMatcher": "$rustc"
+    },
+    {
+      "label": "Clawback: Format",
+      "type": "process",
+      "command": "cargo",
+      "args": ["fmt", "--all"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clawback: Check formatting",
+      "type": "process",
+      "command": "cargo",
+      "args": ["fmt", "--all", "--check"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clawback: Check all",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Clawback: Check formatting",
+        "Clawback: Clippy",
+        "Clawback: Test workspace"
+      ],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "scanPath",
+      "type": "promptString",
+      "description": "Folder to scan (absolute path or relative to the project)",
+      "default": "."
+    }
+  ]
+}
