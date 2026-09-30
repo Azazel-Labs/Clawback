@@ -67,7 +67,7 @@ The terminal interface is for browsing; file actions are available in the deskto
 
 Clawback measures what your account can read and reports skipped folders. It does not follow symlinks or Windows junctions. Platform permissions and size-accounting details are in the [user guide](docs/usage.md).
 
-Want to build it yourself? See [Building and development](docs/development.md).
+Want to build it yourself? See [Building and development](docs/development.md). Maintainers: [publish a version](docs/releases.md).
 
 ## Inspired by a classic. Built for today.
 

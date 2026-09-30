@@ -10,7 +10,7 @@ No system libraries or `-dev` packages are needed at build time on any platform.
 
 ## Release builds
 
-Every night at 06:17 UTC, if `main` has new commits since the last nightly, GitHub Actions builds Clawback for Linux, macOS and Windows (x86-64 and ARM64) and replaces the **nightly** pre-release. Pushing a `v*` tag publishes a regular release the same way. Builds are unsigned:
+Every night at 06:17 UTC, if `main` has new commits since the last nightly, GitHub Actions builds Clawback for Linux, macOS and Windows (x86-64 and ARM64) and replaces the **nightly** pre-release. Stable version tags become **Latest**; alpha, beta and RC tags remain prereleases. Use the Rust `cargo xtask` commands or VS Code release tasks described in [Releasing Clawback](releases.md). Builds are unsigned:
 
 - **macOS:** right-click Clawback › Open the first time, or run `xattr -d com.apple.quarantine clawback`.
 - **Windows:** SmartScreen may warn; choose More info › Run anyway.
@@ -55,12 +55,14 @@ Static map geometry and label strings are prepared on the layout worker. Each UI
 
 ## Marketing screenshots
 
-On Windows with Python 3 installed, run:
+With a graphical desktop session and working GPU driver, run:
 
-```powershell
-pwsh -File scripts/capture_screenshots.ps1
+```sh
+cargo xtask screenshots
 ```
 
 The opt-in `screenshots` feature seeds both frontends from `src/demo.rs`: a fictional in-memory drive with fixed names, sizes, and timestamps. It starts no scanner or filesystem watcher and does not persist demo settings. The desktop captures use the actual GPU renderer. The terminal capture exports the actual Ratatui cell buffer, with SVG and PNG versions. Generated source captures stay in ignored `target/`; publishable images go in `docs/images/`.
+
+Capture, PNG encoding and terminal rendering are all Rust. The terminal PNG uses an embedded Hack monospace font, with no system-font dependency. To rerender existing captures without opening the app, use `cargo xtask screenshots --render-only`. VS Code also provides **Clawback: Capture screenshots**.
 
 Normal builds do not include the demo capture code. Screenshots are labeled as fictional data in the app and README.

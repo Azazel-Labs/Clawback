@@ -1,12 +1,13 @@
 [workspace]
-members = ["crates/clawback-core"]
+members = ["crates/clawback-core", "xtask"]
+default-members = [".", "crates/clawback-core"]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.98"
 license = "MIT-0"
-repository = "https://github.com/OWNER/clawback"
+repository = "https://github.com/Azazel-Labs/Clawback"
 authors = ["Nick Darnell"]
 
 [workspace.dependencies]

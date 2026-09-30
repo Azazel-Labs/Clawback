@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1320" height="760" viewBox="0 0 1320 760">
 <title>Clawback terminal interface — fictional demo drive</title>
-<rect width="100%" height="100%" fill="#0f141e"/>
 <rect x="0" y="0" width="10" height="20" fill="#0f141e"/>
 <rect x="10" y="0" width="10" height="20" fill="#0f141e"/>
 <rect x="20" y="0" width="10" height="20" fill="#0f141e"/>
@@ -5017,7 +5016,7 @@
 <rect x="1290" y="740" width="10" height="20" fill="#5bdbcd"/>
 <rect x="1300" y="740" width="10" height="20" fill="#5bdbcd"/>
 <rect x="1310" y="740" width="10" height="20" fill="#5bdbcd"/>
-<g font-family="Consolas, DejaVu Sans Mono, monospace" font-size="16" xml:space="preserve">
+<g font-family="Hack, Consolas, DejaVu Sans Mono, monospace" font-size="16" xml:space="preserve">
 <text x="10" y="15" fill="#5bdbcd">◆</text>
 <text x="30" y="15" fill="#5bdbcd">C</text>
 <text x="40" y="15" fill="#5bdbcd">L</text>

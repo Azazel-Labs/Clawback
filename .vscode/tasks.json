@@ -5,6 +5,13 @@
   },
   "tasks": [
     {
+      "label": "Clawback: Capture screenshots",
+      "type": "process",
+      "command": "cargo",
+      "args": ["xtask", "screenshots"],
+      "problemMatcher": "$rustc"
+    },
+    {
       "label": "Clawback: Run terminal UI",
       "type": "process",
       "command": "cargo",
@@ -100,6 +107,54 @@
         "Clawback: Test workspace"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "Clawback: Release prepare",
+      "type": "process",
+      "command": "cargo",
+      "args": [
+        "xtask",
+        "release",
+        "prepare",
+        "${input:releaseVersion}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Clawback: Release validate",
+      "type": "process",
+      "command": "cargo",
+      "args": [
+        "xtask",
+        "release",
+        "validate",
+        "${input:releaseVersion}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Clawback: Release publish",
+      "type": "process",
+      "command": "cargo",
+      "args": [
+        "xtask",
+        "release",
+        "publish",
+        "${input:releaseVersion}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
     }
   ],
   "inputs": [
@@ -108,6 +163,11 @@
       "type": "promptString",
       "description": "Folder to scan (absolute path or relative to the project)",
       "default": "."
+    },
+    {
+      "id": "releaseVersion",
+      "type": "promptString",
+      "description": "Release version (e.g. 0.1.0 or 0.2.0-rc.1); Publish pushes the version tag"
     }
   ]
 }
