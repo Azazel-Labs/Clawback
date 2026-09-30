@@ -1,5 +1,6 @@
 //! Operating-system integration: volumes, opening files, revealing them in
 //! the file manager, the trash, the folder picker and file attributes.
+use crate::i18n::tr;
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -235,7 +236,7 @@ pub fn trash(path: &Path) -> Result<(), String> {
 
 /// Native folder picker.
 pub fn pick_folder(start: Option<&Path>) -> Option<PathBuf> {
-    let mut d = rfd::FileDialog::new().set_title("Select a Folder to View");
+    let mut d = rfd::FileDialog::new().set_title(tr!("select-a-folder-to-view"));
     if let Some(s) = start {
         d = d.set_directory(s);
     }
@@ -248,37 +249,37 @@ pub fn attributes(path: &Path) -> Vec<String> {
     #[cfg(windows)]
     {
         use std::os::windows::fs::MetadataExt;
-        const NAMES: [(u32, &str); 11] = [
-            (0x20, "Arch"),
-            (0x800, "Compress"),
-            (0x10, "Folder"),
-            (0x4000, "Encrypt"),
-            (0x2, "Hidden"),
-            (0x1000, "Offline"),
-            (0x1, "Read-Only"),
-            (0x400, "Reparse-Pt"),
-            (0x200, "Sparse"),
-            (0x4, "System"),
-            (0x100, "Temp"),
+        let names = [
+            (0x20, tr!("arch")),
+            (0x800, tr!("compress")),
+            (0x10, tr!("folder-2")),
+            (0x4000, tr!("encrypt")),
+            (0x2, tr!("hidden")),
+            (0x1000, tr!("offline")),
+            (0x1, tr!("read-only")),
+            (0x400, tr!("reparse-pt")),
+            (0x200, tr!("sparse")),
+            (0x4, tr!("system")),
+            (0x100, tr!("temp")),
         ];
         let a = md.file_attributes();
-        NAMES.iter().filter(|(bit, _)| a & bit != 0).map(|(_, n)| (*n).to_owned()).collect()
+        names.into_iter().filter(|(bit, _)| a & bit != 0).map(|(_, n)| n).collect()
     }
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
         let mut v = Vec::new();
         if md.is_dir() {
-            v.push("Folder".to_owned());
+            v.push(tr!("folder-2"));
         }
         if path.file_name().is_some_and(|n| n.to_string_lossy().starts_with('.')) {
-            v.push("Hidden".to_owned());
+            v.push(tr!("hidden"));
         }
         if md.permissions().readonly() {
-            v.push("Read-Only".to_owned());
+            v.push(tr!("read-only"));
         }
         if md.file_type().is_symlink() {
-            v.push("Symlink".to_owned());
+            v.push(tr!("symlink"));
         }
         v.push(permission_string(md.permissions().mode()));
         v
@@ -311,15 +312,13 @@ pub fn attach_console() {
 }
 
 /// Platform-specific advice shown with the list of unreadable folders.
-pub fn permission_hint() -> &'static str {
+pub fn permission_hint() -> String {
     if cfg!(target_os = "macos") {
-        "macOS protects some folders (Mail, Messages, other users, …). Grant Clawback \"Full Disk Access\" in \
-         System Settings › Privacy & Security to include them."
+        tr!("permission-hint-macos")
     } else if cfg!(windows) {
-        "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+        tr!("permission-hint-windows")
     } else {
-        "Some folders are only readable by other users or root. Run Clawback with elevated privileges \
-         (for example `sudo -E clawback /`) to include them."
+        tr!("permission-hint-unix")
     }
 }
 

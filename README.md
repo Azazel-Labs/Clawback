@@ -69,6 +69,8 @@ Clawback measures what your account can read and reports skipped folders. It doe
 
 Want to build it yourself? See [Building and development](docs/development.md). Maintainers: [publish a version](docs/releases.md).
 
+Want to help translate the desktop app? See [Crowdin and translation development](docs/translations.md).
+
 ## Inspired by a classic. Built for today.
 
 Clawback is a from-scratch Rust homage to [SpaceMonger 1.4](https://github.com/seanofw/spacemonger1), created by Sean Werkema. It reimplements the nested-map experience without including SpaceMonger source code.

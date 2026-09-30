@@ -8,6 +8,8 @@ use std::path::{Path, PathBuf};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Settings {
+    /// GUI catalog code, or "auto" for OS preferences. Unknown codes use English.
+    pub language: String,
     // File layout
     pub density: i32,
     pub bias: i32,
@@ -44,6 +46,7 @@ impl Default for Settings {
     /// SpaceMonger 1.4's defaults (`CCurrentSettings::Reset`).
     fn default() -> Self {
         Settings {
+            language: "auto".into(),
             density: 0,
             bias: 0,
             file_color: 0,
@@ -96,6 +99,9 @@ impl Settings {
 
     /// Clamp everything into the ranges the UI offers (as `Load()` did).
     pub fn sanitize(&mut self) {
+        if self.language.is_empty() || !self.language.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-') {
+            self.language = "auto".into();
+        }
         self.density = self.density.clamp(-3, 3);
         self.bias = self.bias.clamp(-20, 20);
         if self.file_color >= crate::palette::SCHEME_NAMES.len() {
@@ -114,6 +120,7 @@ impl Settings {
         let mut kv = |k: &str, v: &dyn std::fmt::Display| {
             let _ = writeln!(s, "{k} = {v}");
         };
+        kv("language", &self.language);
         kv("density", &self.density);
         kv("bias", &self.bias);
         kv("file_color", &self.file_color);
@@ -159,6 +166,7 @@ impl Settings {
             let int = || v.parse::<i32>().ok();
             let ms = || v.parse::<u32>().ok();
             match k {
+                "language" => v.clone_into(&mut s.language),
                 "density" => set(&mut s.density, int()),
                 "bias" => set(&mut s.bias, int()),
                 "file_color" => set(&mut s.file_color, v.parse().ok()),
@@ -243,8 +251,18 @@ mod tests {
     }
 
     #[test]
+    fn language_defaults_to_os_but_preserves_explicit_choices() {
+        assert_eq!(Settings::from_text("").language, "auto");
+        assert_eq!(Settings::from_text("language = en\n").language, "en");
+        assert_eq!(Settings::from_text("language = fr-FR\n").language, "fr-FR");
+        let defaults = Settings::default();
+        assert_eq!(Settings::from_text(&defaults.to_text()).language, "auto");
+    }
+
+    #[test]
     fn round_trips() {
         let mut s = Settings {
+            language: "pt-BR".into(),
             density: -2,
             bias: 7,
             folder_color: 4,

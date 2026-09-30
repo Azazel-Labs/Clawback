@@ -11,6 +11,7 @@
 //! * Zooming, resizing, changing settings, or switching away from the app
 //!   clears the selection.
 //! * Folder navigation is immediate; completed redraws swap atomically.
+use crate::i18n::tr;
 
 use crate::{
     background::retire,
@@ -369,40 +370,40 @@ impl MapView {
         let s = input.settings;
         ui.set_min_width(150.0);
 
-        if item(ui, "Zoom In", folder, folder) {
+        if item(ui, tr!("zoom-in"), folder, folder) {
             self.zoom_in();
         }
-        if item(ui, "Zoom Out", cur.is_some() && input.zoomed(), false) {
+        if item(ui, tr!("zoom-out"), cur.is_some() && input.zoomed(), false) {
             self.zoom_out();
         }
-        if item(ui, "Zoom Full", cur.is_some() && input.zoomed(), false) {
+        if item(ui, tr!("zoom-full"), cur.is_some() && input.zoomed(), false) {
             self.zoom_full();
         }
         ui.separator();
-        if item(ui, "Run / Open", node.is_some(), cur.is_some() && !folder)
+        if item(ui, tr!("run-open"), node.is_some(), cur.is_some() && !folder)
             && let Some(n) = node
         {
             out.push(Command::RunOpen(n));
         }
-        if item(ui, "Delete", node.is_some() && !s.disable_delete, false)
+        if item(ui, tr!("delete"), node.is_some() && !s.disable_delete, false)
             && let Some(n) = node
         {
             out.push(Command::Delete(n));
         }
         ui.separator();
-        if item(ui, "Open Drive...", true, false) {
+        if item(ui, tr!("open-drive"), true, false) {
             out.push(Command::OpenDrive);
         }
-        if item(ui, "Rescan Drive", true, false) {
+        if item(ui, tr!("rescan-drive"), true, false) {
             out.push(Command::Rescan);
         }
         let mut free = s.show_free;
-        if ui.checkbox(&mut free, "Show Free Space").clicked() {
+        if ui.checkbox(&mut free, tr!("show-free-space")).clicked() {
             out.push(Command::ToggleFree);
             ui.close();
         }
         ui.separator();
-        if item(ui, "Properties...", node.is_some(), false)
+        if item(ui, tr!("properties-2"), node.is_some(), false)
             && let Some(n) = node
         {
             out.push(Command::Properties(n));
@@ -547,7 +548,7 @@ impl MapView {
 }
 
 /// A menu entry; the default action is drawn bold, like `MFS_DEFAULT`.
-fn item(ui: &mut Ui, label: &str, enabled: bool, bold: bool) -> bool {
+fn item(ui: &mut Ui, label: impl Into<String>, enabled: bool, bold: bool) -> bool {
     let text = if bold { RichText::new(label).strong() } else { RichText::new(label) };
     let clicked = ui.add_enabled(enabled, egui::Button::new(text)).clicked();
     if clicked {
@@ -896,7 +897,7 @@ mod tests {
             disk_total: tree.root().size,
         };
         let ctx = egui::Context::default();
-        theme::apply(&ctx);
+        theme::apply(&ctx, "en");
         let mut map = MapView::default();
         let frame = |map: &mut MapView, pointer: Option<Pos2>| {
             let started = Instant::now();

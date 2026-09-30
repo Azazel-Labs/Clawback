@@ -78,6 +78,9 @@ categories = ["filesystem", "visualization", "command-line-utilities"]
 screenshots = []
 
 [dependencies]
+i18n-embed = { version = "0.16", features = ["fluent-system"] }
+i18n-embed-fl = "0.10"
+rust-embed = { version = "8", features = ["debug-embed"] }
 clawback-core.workspace = true
 # GUI (wgpu renderer; winit loads X11/Wayland/GL libraries at runtime, so
 # there are no system -dev packages to install at build time).
@@ -94,7 +97,7 @@ ratatui = "0.30"
 notify = "8.2"
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading", "Win32_System_StationsAndDesktops", "Win32_Security"] }
+windows-sys = { version = "0.61", features = ["Win32_Globalization", "Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading", "Win32_System_StationsAndDesktops", "Win32_Security"] }
 
 [lints]
 workspace = true
@@ -108,3 +111,10 @@ strip = true
 # noticeably sluggish otherwise.
 [profile.dev.package."*"]
 opt-level = 2
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2-foundation = { version = "0.3", default-features = false, features = ["NSString", "NSLocale", "NSArray"] }
+
+[build-dependencies]
+fluent-syntax = "0.12"
+unic-langid = "0.9"

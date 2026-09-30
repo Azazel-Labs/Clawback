@@ -1,0 +1,207 @@
+# Український інтерфейс Clawback.
+
+ok = { "   Гаразд   " }
+of-scan = % СКАНУВАННЯ
+asset-3d = 3D-ресурс
+a-fast-cross-platform-disk-space-map = Швидка кросплатформна мапа використання диска.
+about-clawback = Про Clawback
+all-files = Усі файли
+application-library = Застосунок / бібліотека
+arch = Архівний
+archive = Архів
+attributes = Атрибути
+attributes-2 = Атрибути:
+audio = Аудіо
+auto-rescan-on-delete = Автоматично сканувати повторно після видалення
+back = Назад
+bias = Напрям компонування:
+binary-data = Двійкові дані
+cancel = Скасувати
+chinese-simplified = Китайська (спрощена)
+chinese-traditional = Китайська (традиційна)
+claw-back-your-disk-space = Поверніть собі місце на диску.
+clawback-settings = Налаштування Clawback
+scan-folder-error = { "Clawback не вдалося просканувати теку.\u000A\u000A" }{ $error }
+scan-path-error = Не вдалося просканувати шлях: { $path }{ "\u000A\u000A" }{ $error }
+about-history = Clawback написано мовою Rust на знак пошани до SpaceMonger 1.4 Шона Веркеми (1997–2000). Компонування, кольори й керування мишею ґрунтуються на початковому коді оригіналу.
+compress = Стиснутий
+contains = Вміст:
+copyright-2026-azazel-labs = Авторське право © 2026 Azazel Labs.
+count-hard-linked-files-once = Рахувати файли з жорсткими посиланнями лише один раз
+workers-help = Поточне обмеження кількості паралельних завдань; автоматично підлаштовується до виміряної пропускної здатності й затримки.
+data-configuration = Дані / конфігурація
+date-time = Дата / час
+delay = Затримка:
+delete = Видалити
+deleting = { "Видалення…\u000A" }{ $path }
+density = Щільність:
+design-document = Проєктний документ
+directories = Теки
+disable-delete-command = Вимкнути команду «Видалити»
+discovering-folders = Пошук тек…
+disk-image = Образ диска
+display-colors = Кольори відображення
+document = Документ
+don-t-descend-into-other-drives-or-network = Не сканувати інші диски або мережеві ресурси, змонтовані всередині сканованої теки
+double-click-to-explore-right-click-for-actions = Подвійне клацання — відкрити / Права кнопка миші — дії
+encrypt = Зашифрований
+english = Англійська
+equal = Збалансовано
+exit = Вийти
+expand-to-browse-click-a-folder-to-view = Розгорніть для перегляду · Натисніть теку, щоб відкрити
+file-type = ТИП ФАЙЛУ
+files = ФАЙЛИ
+folder = ТЕКА
+delete-error = Не вдалося видалити об’єкт: { $path }{ "\u000A\u000A" }{ $error }
+file = Файл
+file-layout = Розташування файлів
+file-size = Розмір файлу
+file-types = Типи файлів
+filename = Назва файлу
+files-2 = Файли:
+contents-count =
+    { $files ->
+        [one] { $files } файл
+        [few] { $files } файли
+        [many] { $files } файлів
+       *[other] { $files } файлу
+    }, { $folders ->
+        [one] { $folders } тека
+        [few] { $folders } теки
+        [many] { $folders } тек
+       *[other] { $folders } теки
+    }
+finding-drives = Пошук дисків…
+folder-2 = Тека
+folders-not-scanned = Непроскановані теки
+folders = Теки:
+french = Французька
+full-path = Повний шлях
+game-archive = Ігровий архів
+german = Німецька
+help = Довідка
+hidden = Прихований
+horz = Гориз.
+icon = Піктограма
+image = Зображення
+language = Мова
+korean = Корейська
+japanese = Японська
+italian = Італійська
+polish = Польська
+russian = Російська
+portuguese-brazil = Португальська (Бразилія)
+licensed-under-mit-0-mit-no-attribution-no = Ліцензія MIT-0 (MIT No Attribution). Без жодних гарантій.
+location = Розташування:
+lots-of-files = Багато файлів
+make-room-for-what-matters = Звільніть місце для важливого.
+mapped-bytes-relative-to-used-drive-space-an = Обсяг врахованих байтів відносно зайнятого місця на диску; це оцінка, а не відсоток кількості файлів.
+miscellaneous-options = Інші параметри
+modified = Змінено:
+move-selected-item-to-trash = Перемістити вибраний об’єкт до кошика
+mute-colors = Приглушити кольори
+name = Назва:
+no-drives-found-use-other-folder-to-pick = Дисків не знайдено. Скористайтеся пунктом «Інша тека…», щоб вибрати теку.
+no-extension = Без розширення
+no-files-in-this-folder = У цій теці немає файлів.
+normal = Звичайний
+offline = Автономний
+open-drive = Відкрити диск…
+open-a-drive-or-folder-to-see-where = Відкрийте диск або теку, щоб дізнатися, що займає місце.
+open-a-folder-or-drive-to-browse-its = Відкрийте теку або диск для перегляду дерева каталогів.
+open-a-folder-to-begin = Відкрийте теку, щоб почати
+open-folder = Відкрити теку…
+open-selected-item = Відкрити вибраний об’єкт
+other-folder = Інша тека…
+palette = Палітра
+pause-scan = Призупинити сканування
+properties = Властивості
+properties-2 = Властивості…
+read-only = Лише читання
+reading-file-details = Читання відомостей про файли…
+ready = Готово
+recent = Нещодавні
+remember-window-position = Запам’ятовувати положення вікна
+reparse-pt = Точка повторної обробки
+rescan = Сканувати повторно
+rescan-drive = Сканувати диск повторно
+resume-scan = Продовжити сканування
+run-open = Запустити / Відкрити
+size = РОЗМІР
+scan-paused = Сканування призупинено
+scanning = Сканування
+scanning-options-apply-to-the-next-scan = Параметри сканування набудуть чинності під час наступного сканування.
+select-drive-to-view = Виберіть диск для перегляду
+select-a-folder-to-view = Виберіть теку для перегляду
+settings = Налаштування…
+show-free-space = Показувати вільне місце
+show-rollover-boxes = Показувати рамки під час наведення вказівника
+show-file-info-tips = Показувати підказки з відомостями про файли
+show-file-name-tips = Показувати підказки з назвами файлів
+show-free-space-2 = Показувати вільне місце
+show-in-file-manager = Показати у файловому менеджері
+size-on-disk = На диску:
+size-2 = Розмір:
+permission-hint-unix = Деякі теки можуть читати лише інші користувачі або root. Щоб включити їх до сканування, запустіть Clawback із підвищеними правами (наприклад, `sudo -E clawback /`).
+permission-hint-windows = Деякі системні теки можуть читати лише адміністратори. Щоб включити їх до сканування, запустіть Clawback від імені адміністратора.
+source-code = Початковий код
+spanish-latin-america = Іспанська (Латинська Америка)
+spanish-spain = Іспанська (Іспанія)
+sparse = Розріджений файл
+special-file = Спеціальний файл
+stay-on-one-filesystem = Не виходити за межі однієї файлової системи
+symbolic-link = Символічне посилання
+symlink = Символічне посилання
+system = Системний
+system-default = Мова системи
+type = ТИП
+takes-effect-the-next-time-clawback-starts = Набуде чинності після наступного запуску Clawback
+temp = Тимчасовий
+the-scan-worker-stopped-unexpectedly = Завдання сканування несподівано завершилося.
+too-few-files = Замало файлів
+too-many-files = Забагато файлів
+tooltips = Підказки
+try-a-faster-ntfs-scan-with-administrator-permission = Спробуйте швидше сканування NTFS із правами адміністратора. Поточне сканування триватиме.
+turbo = Турбо
+turbo-cancelled-normal-scan-continues = Турбо скасовано — звичайне сканування триває
+turbo-unavailable-normal-scan-continues = Турбо недоступне — звичайне сканування триває
+turbo-reading-mft = Турбо: читання MFT…
+type-2 = Тип:
+unreadable-folders = Недоступні для читання теки
+up-a-level = На рівень вище
+updating = Оновлення…
+use-file-lengths-not-size-on-disk = Використовувати розміри файлів замість зайнятого місця на диску
+vert = Верт.
+very-few-files = Дуже мало файлів
+very-many-files = Дуже багато файлів
+video = Відео
+view = Вигляд
+waiting-for-windows-permission = Очікування дозволу Windows…
+workers =
+    { $count ->
+        [one] { $count } паралельне завдання
+        [few] { $count } паралельні завдання
+        [many] { $count } паралельних завдань
+       *[other] { $count } паралельного завдання
+    }
+zoom-full = Показати все
+zoom-in = Збільшити
+zoom-out = Зменшити
+zoom-in-2 = Збільшити
+permission-hint-macos = macOS захищає деякі теки (Пошта, Повідомлення, теки інших користувачів тощо). Щоб включити їх до сканування, надайте Clawback повний доступ до диска в розділі «Системні параметри» › «Приватність і безпека».
+msec = мс
+drive-summary = { $icon }  { $drive }{ "\u000A        " }Вільно { $free } з { $total }  ·  Зайнято { $used }  ·  { $filesystem }
+properties-title = Властивості: { $name }
+window-title = { $path }  -  Усього { $total }  -  Вільно { $free }  -  Clawback
+scan-summary = { $size } | { contents-count }
+turkish = Турецька
+ukrainian = Українська
+czech = Чеська
+portuguese-portugal = Португальська (Португалія)
+dutch = Нідерландська
+indonesian = Індонезійська
+vietnamese = В’єтнамська
+thai = Тайська
+swedish = Шведська
+romanian = Румунська
+hungarian = Угорська

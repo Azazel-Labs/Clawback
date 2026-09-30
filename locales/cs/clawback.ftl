@@ -1,0 +1,207 @@
+# České rozhraní Clawback.
+
+ok = { "   OK   " }
+of-scan = % SKENOVÁNÍ
+asset-3d = 3D prostředek
+a-fast-cross-platform-disk-space-map = Rychlá multiplatformní mapa využití disku.
+about-clawback = O aplikaci Clawback
+all-files = Všechny soubory
+application-library = Aplikace / knihovna
+arch = Archivní
+archive = Archiv
+attributes = Atributy
+attributes-2 = Atributy:
+audio = Zvuk
+auto-rescan-on-delete = Po odstranění automaticky znovu skenovat
+back = Zpět
+bias = Směr rozložení:
+binary-data = Binární data
+cancel = Zrušit
+chinese-simplified = Zjednodušená čínština
+chinese-traditional = Tradiční čínština
+claw-back-your-disk-space = Získejte zpět místo na disku.
+clawback-settings = Nastavení Clawback
+scan-folder-error = { "Clawback nemohl prohledat složku.\u000A\u000A" }{ $error }
+scan-path-error = Nelze prohledat cestu: { $path }{ "\u000A\u000A" }{ $error }
+about-history = Clawback je poctou programu SpaceMonger 1.4 od Seana Werkemy (1997–2000), napsanou v Rustu. Rozložení, barvy a ovládání myší vycházejí z původního zdrojového kódu.
+compress = Komprimovaný
+contains = Obsah:
+copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+count-hard-linked-files-once = Soubory s pevnými odkazy počítat pouze jednou
+workers-help = Aktuální limit souběžných úloh; automaticky se přizpůsobuje naměřené propustnosti a latenci.
+data-configuration = Data / konfigurace
+date-time = Datum / čas
+delay = Prodleva:
+delete = Odstranit
+deleting = { "Odstraňování…\u000A" }{ $path }
+density = Hustota:
+design-document = Návrhový dokument
+directories = Složky
+disable-delete-command = Zakázat příkaz „Odstranit“
+discovering-folders = Vyhledávání složek…
+disk-image = Obraz disku
+display-colors = Barvy zobrazení
+document = Dokument
+don-t-descend-into-other-drives-or-network = Neprohledávat jiné disky ani síťová připojení připojená uvnitř skenované složky
+double-click-to-explore-right-click-for-actions = Dvojklikem procházet / Pravým tlačítkem zobrazit akce
+encrypt = Šifrovaný
+english = Angličtina
+equal = Vyvážené
+exit = Ukončit
+expand-to-browse-click-a-folder-to-view = Rozbalením procházet · Kliknutím zobrazit složku
+file-type = TYP SOUBORU
+files = SOUBORY
+folder = SLOŽKA
+delete-error = Nelze odstranit položku: { $path }{ "\u000A\u000A" }{ $error }
+file = Soubor
+file-layout = Rozložení souborů
+file-size = Velikost souboru
+file-types = Typy souborů
+filename = Název souboru
+files-2 = Soubory:
+contents-count =
+    { $files ->
+        [one] { $files } soubor
+        [few] { $files } soubory
+        [many] { $files } souboru
+       *[other] { $files } souborů
+    }, { $folders ->
+        [one] { $folders } složka
+        [few] { $folders } složky
+        [many] { $folders } složky
+       *[other] { $folders } složek
+    }
+finding-drives = Vyhledávání disků…
+folder-2 = Složka
+folders-not-scanned = Neprohledané složky
+folders = Složky:
+french = Francouzština
+full-path = Úplná cesta
+game-archive = Herní archiv
+german = Němčina
+help = Nápověda
+hidden = Skrytý
+horz = Vodor.
+icon = Ikona
+image = Obrázek
+language = Jazyk
+korean = Korejština
+japanese = Japonština
+italian = Italština
+polish = Polština
+russian = Ruština
+portuguese-brazil = Brazilská portugalština
+licensed-under-mit-0-mit-no-attribution-no = Licence MIT-0 (MIT No Attribution). Bez jakékoli záruky.
+location = Umístění:
+lots-of-files = Mnoho souborů
+make-room-for-what-matters = Udělejte místo tomu, na čem záleží.
+mapped-bytes-relative-to-used-drive-space-an = Započítané bajty vzhledem k využitému místu na disku; jde o odhad, nikoli o procento počtu souborů.
+miscellaneous-options = Další možnosti
+modified = Změněno:
+move-selected-item-to-trash = Přesunout vybranou položku do koše
+mute-colors = Ztlumit barvy
+name = Název:
+no-drives-found-use-other-folder-to-pick = Nebyly nalezeny žádné disky. Vyberte složku pomocí „Jiná složka…“.
+no-extension = Bez přípony
+no-files-in-this-folder = V této složce nejsou žádné soubory.
+normal = Normální
+offline = Offline
+open-drive = Otevřít disk…
+open-a-drive-or-folder-to-see-where = Otevřete disk nebo složku a zjistěte, co zabírá místo.
+open-a-folder-or-drive-to-browse-its = Otevřete složku nebo disk a procházejte strom adresářů.
+open-a-folder-to-begin = Začněte otevřením složky
+open-folder = Otevřít složku…
+open-selected-item = Otevřít vybranou položku
+other-folder = Jiná složka…
+palette = Paleta
+pause-scan = Pozastavit skenování
+properties = Vlastnosti
+properties-2 = Vlastnosti…
+read-only = Jen pro čtení
+reading-file-details = Čtení podrobností o souborech…
+ready = Připraveno
+recent = Nedávné
+remember-window-position = Zapamatovat polohu okna
+reparse-pt = Bod změny zpracování
+rescan = Skenovat znovu
+rescan-drive = Skenovat disk znovu
+resume-scan = Pokračovat ve skenování
+run-open = Spustit / Otevřít
+size = VELIKOST
+scan-paused = Skenování pozastaveno
+scanning = Skenování
+scanning-options-apply-to-the-next-scan = Možnosti skenování se použijí při příštím skenování.
+select-drive-to-view = Vyberte disk k zobrazení
+select-a-folder-to-view = Vyberte složku k zobrazení
+settings = Nastavení…
+show-free-space = Zobrazit volné místo
+show-rollover-boxes = Zobrazit rámečky při najetí myší
+show-file-info-tips = Zobrazit tipy s informacemi o souborech
+show-file-name-tips = Zobrazit tipy s názvy souborů
+show-free-space-2 = Zobrazit volné místo
+show-in-file-manager = Zobrazit ve správci souborů
+size-on-disk = Velikost na disku:
+size-2 = Velikost:
+permission-hint-unix = Některé složky mohou číst pouze jiní uživatelé nebo root. Chcete-li je zahrnout, spusťte Clawback se zvýšenými oprávněními (například `sudo -E clawback /`).
+permission-hint-windows = Některé systémové složky mohou číst pouze správci. Chcete-li je zahrnout, spusťte Clawback jako správce.
+source-code = Zdrojový kód
+spanish-latin-america = Latinskoamerická španělština
+spanish-spain = Evropská španělština
+sparse = Řídký soubor
+special-file = Speciální soubor
+stay-on-one-filesystem = Zůstat v jednom souborovém systému
+symbolic-link = Symbolický odkaz
+symlink = Symbolický odkaz
+system = Systémový
+system-default = Jazyk systému
+type = TYP
+takes-effect-the-next-time-clawback-starts = Projeví se při příštím spuštění Clawback
+temp = Dočasný
+the-scan-worker-stopped-unexpectedly = Úloha skenování byla neočekávaně ukončena.
+too-few-files = Příliš málo souborů
+too-many-files = Příliš mnoho souborů
+tooltips = Popisky
+try-a-faster-ntfs-scan-with-administrator-permission = Vyzkoušejte rychlejší skenování NTFS s oprávněními správce. Aktuální skenování bude pokračovat.
+turbo = Turbo
+turbo-cancelled-normal-scan-continues = Turbo zrušeno — běžné skenování pokračuje
+turbo-unavailable-normal-scan-continues = Turbo není dostupné — běžné skenování pokračuje
+turbo-reading-mft = Turbo: čtení MFT…
+type-2 = Typ:
+unreadable-folders = Nečitelné složky
+up-a-level = O úroveň výše
+updating = Aktualizace…
+use-file-lengths-not-size-on-disk = Používat velikosti souborů místo místa zabraného na disku
+vert = Svisle
+very-few-files = Velmi málo souborů
+very-many-files = Velmi mnoho souborů
+video = Video
+view = Zobrazení
+waiting-for-windows-permission = Čekání na oprávnění Windows…
+workers =
+    { $count ->
+        [one] { $count } souběžná úloha
+        [few] { $count } souběžné úlohy
+        [many] { $count } souběžné úlohy
+       *[other] { $count } souběžných úloh
+    }
+zoom-full = Zobrazit vše
+zoom-in = Přiblížit
+zoom-out = Oddálit
+zoom-in-2 = Přiblížit
+permission-hint-macos = macOS chrání některé složky (Mail, Zprávy, složky jiných uživatelů atd.). Chcete-li je zahrnout, povolte Clawback „Úplný přístup k disku“ v Nastavení systému › Soukromí a zabezpečení.
+msec = ms
+drive-summary = { $icon }  { $drive }{ "\u000A        " }Volné: { $free } z { $total }  ·  Využité: { $used }  ·  { $filesystem }
+properties-title = Vlastnosti: { $name }
+window-title = { $path }  -  Celkem { $total }  -  Volné { $free }  -  Clawback
+scan-summary = { $size } | { contents-count }
+turkish = Turečtina
+ukrainian = Ukrajinština
+czech = Čeština
+portuguese-portugal = Evropská portugalština
+dutch = Nizozemština
+indonesian = Indonéština
+vietnamese = Vietnamština
+thai = Thajština
+swedish = Švédština
+romanian = Rumunština
+hungarian = Maďarština

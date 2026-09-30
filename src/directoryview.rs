@@ -1,5 +1,6 @@
 //! A virtualized directory navigator. Flattening and formatting run off-thread;
 //! the UI only draws the rows currently inside the scroll viewport.
+use crate::i18n::tr;
 use crate::{background::retire, theme};
 use clawback_core::{NodeId, ROOT, Tree, format, tree::flags};
 use eframe::egui::{self, Align2, FontId, Pos2, Rect, Sense, Ui, vec2};
@@ -113,23 +114,23 @@ impl DirectoryView {
         }
 
         ui.horizontal(|ui| {
-            ui.strong("Directories");
-            ui.weak(if scanning { "Discovering folders…" } else { "Expand to browse · Click a folder to view" });
+            ui.strong(tr!("directories"));
+            ui.weak(if scanning { tr!("discovering-folders") } else { tr!("expand-to-browse-click-a-folder-to-view") });
         });
         let (header, _) = ui.allocate_exact_size(vec2(ui.available_width(), 20.0), Sense::hover());
         let font = FontId::proportional(11.0);
-        ui.painter().text(header.left_center(), Align2::LEFT_CENTER, "FOLDER", font.clone(), theme::MUTED);
+        ui.painter().text(header.left_center(), Align2::LEFT_CENTER, tr!("folder"), font.clone(), theme::MUTED);
         ui.painter().text(
             header.right_center() - vec2(80.0, 0.0),
             Align2::RIGHT_CENTER,
-            "SIZE",
+            tr!("size"),
             font.clone(),
             theme::MUTED,
         );
         ui.painter().text(
             header.right_center() - vec2(8.0, 0.0),
             Align2::RIGHT_CENTER,
-            "% OF SCAN",
+            tr!("of-scan"),
             font,
             theme::MUTED,
         );

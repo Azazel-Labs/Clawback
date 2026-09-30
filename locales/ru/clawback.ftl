@@ -1,0 +1,208 @@
+# Интерфейс Clawback. Не изменяйте идентификаторы сообщений и имена переменных.
+
+ok = { "   ОК   " }
+of-scan = % СКАНИРОВАНИЯ
+asset-3d = 3D-ресурс
+a-fast-cross-platform-disk-space-map = Быстрая кроссплатформенная карта использования диска.
+about-clawback = О программе Clawback
+all-files = Все файлы
+application-library = Приложение / библиотека
+arch = Архивный
+archive = Архив
+attributes = Атрибуты
+attributes-2 = Атрибуты:
+audio = Аудио
+auto-rescan-on-delete = Автоматически сканировать заново после удаления
+back = Назад
+bias = Направление компоновки:
+binary-data = Двоичные данные
+cancel = Отмена
+chinese-simplified = Китайский (упрощённый)
+chinese-traditional = Китайский (традиционный)
+claw-back-your-disk-space = Верните себе место на диске.
+clawback-settings = Настройки Clawback
+scan-folder-error = { "Clawback не удалось просканировать папку.\u000A\u000A" }{ $error }
+scan-path-error = Не удалось просканировать путь: { $path }{ "\u000A\u000A" }{ $error }
+about-history = Clawback — программа на Rust, созданная в знак уважения к SpaceMonger 1.4 Шона Веркемы (1997–2000). Компоновка, цвета и управление мышью основаны на исходном коде оригинала.
+compress = Сжатый
+contains = Содержимое:
+copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+count-hard-linked-files-once = Считать файлы с жёсткими ссылками только один раз
+workers-help = Текущее ограничение числа параллельных задач; автоматически подстраивается под измеренную пропускную способность и задержку.
+data-configuration = Данные / конфигурация
+date-time = Дата / время
+delay = Задержка:
+delete = Удалить
+deleting = { "Удаление…\u000A" }{ $path }
+density = Плотность:
+design-document = Проектный документ
+directories = Папки
+disable-delete-command = Отключить команду «Удалить»
+discovering-folders = Поиск папок…
+disk-image = Образ диска
+display-colors = Цвета отображения
+document = Документ
+don-t-descend-into-other-drives-or-network = Не сканировать другие диски и сетевые ресурсы, подключённые внутри сканируемой папки
+double-click-to-explore-right-click-for-actions = Двойной щелчок — открыть / Правая кнопка мыши — действия
+encrypt = Зашифрованный
+english = Английский
+equal = Сбалансированно
+exit = Выход
+expand-to-browse-click-a-folder-to-view = Разверните для просмотра · Нажмите на папку, чтобы открыть её
+file-type = ТИП ФАЙЛА
+files = ФАЙЛЫ
+folder = ПАПКА
+delete-error = Не удалось удалить объект: { $path }{ "\u000A\u000A" }{ $error }
+file = Файл
+file-layout = Расположение файлов
+file-size = Размер файла
+file-types = Типы файлов
+filename = Имя файла
+files-2 = Файлы:
+# Примеры: 1 файл, 2 файла, 5 файлов, 11 файлов, 21 файл, 22 файла.
+contents-count =
+    { $files ->
+        [one] { $files } файл
+        [few] { $files } файла
+        [many] { $files } файлов
+       *[other] { $files } файла
+    }, { $folders ->
+        [one] { $folders } папка
+        [few] { $folders } папки
+        [many] { $folders } папок
+       *[other] { $folders } папки
+    }
+finding-drives = Поиск дисков…
+folder-2 = Папка
+folders-not-scanned = Непросканированные папки
+folders = Папки:
+french = Французский
+full-path = Полный путь
+game-archive = Игровой архив
+german = Немецкий
+help = Справка
+hidden = Скрытый
+horz = Гориз.
+icon = Значок
+image = Изображение
+japanese = Японский
+italian = Итальянский
+korean = Корейский
+language = Язык
+polish = Польский
+russian = Русский
+portuguese-brazil = Португальский (Бразилия)
+licensed-under-mit-0-mit-no-attribution-no = Лицензия MIT-0 (MIT No Attribution). Без каких-либо гарантий.
+location = Расположение:
+lots-of-files = Много файлов
+make-room-for-what-matters = Освободите место для важного.
+mapped-bytes-relative-to-used-drive-space-an = Объём учтённых данных относительно занятого места на диске; это оценка, а не процент от числа файлов.
+miscellaneous-options = Прочие параметры
+modified = Изменён:
+move-selected-item-to-trash = Переместить выбранный объект в корзину
+mute-colors = Приглушить цвета
+name = Имя:
+no-drives-found-use-other-folder-to-pick = Диски не найдены. Используйте «Другая папка…», чтобы выбрать папку.
+no-extension = Без расширения
+no-files-in-this-folder = В этой папке нет файлов.
+normal = Обычный
+offline = Автономный
+open-drive = Открыть диск…
+open-a-drive-or-folder-to-see-where = Откройте диск или папку, чтобы узнать, что занимает место.
+open-a-folder-or-drive-to-browse-its = Откройте папку или диск для просмотра дерева каталогов.
+open-a-folder-to-begin = Откройте папку, чтобы начать
+open-folder = Открыть папку…
+open-selected-item = Открыть выбранный объект
+other-folder = Другая папка…
+palette = Палитра
+pause-scan = Приостановить сканирование
+properties = Свойства
+properties-2 = Свойства…
+read-only = Только чтение
+reading-file-details = Чтение сведений о файлах…
+ready = Готово
+recent = Недавние
+remember-window-position = Запоминать положение окна
+reparse-pt = Точка повторной обработки
+rescan = Сканировать заново
+rescan-drive = Сканировать диск заново
+resume-scan = Продолжить сканирование
+run-open = Запустить / Открыть
+size = РАЗМЕР
+scan-paused = Сканирование приостановлено
+scanning = Сканирование
+scanning-options-apply-to-the-next-scan = Параметры сканирования вступят в силу при следующем сканировании.
+select-drive-to-view = Выберите диск для просмотра
+select-a-folder-to-view = Выберите папку для просмотра
+settings = Настройки…
+show-free-space = Показывать свободное место
+show-rollover-boxes = Показывать рамки при наведении указателя
+show-file-info-tips = Показывать подсказки со сведениями о файлах
+show-file-name-tips = Показывать подсказки с именами файлов
+show-free-space-2 = Показывать свободное место
+show-in-file-manager = Показать в файловом менеджере
+size-on-disk = На диске:
+size-2 = Размер:
+permission-hint-unix = Некоторые папки доступны для чтения только другим пользователям или root. Чтобы включить их в сканирование, запустите Clawback с повышенными правами (например, `sudo -E clawback /`).
+permission-hint-windows = Некоторые системные папки доступны для чтения только администраторам. Чтобы включить их в сканирование, запустите Clawback от имени администратора.
+source-code = Исходный код
+spanish-latin-america = Испанский (Латинская Америка)
+spanish-spain = Испанский (Испания)
+sparse = Разреженный файл
+special-file = Специальный файл
+stay-on-one-filesystem = Не выходить за пределы одной файловой системы
+symbolic-link = Символическая ссылка
+symlink = Символическая ссылка
+system = Системный
+system-default = Язык системы
+type = ТИП
+takes-effect-the-next-time-clawback-starts = Вступит в силу при следующем запуске Clawback
+temp = Временный
+the-scan-worker-stopped-unexpectedly = Задача сканирования неожиданно завершилась.
+too-few-files = Слишком мало файлов
+too-many-files = Слишком много файлов
+tooltips = Подсказки
+try-a-faster-ntfs-scan-with-administrator-permission = Попробуйте ускоренное сканирование NTFS с правами администратора. Текущее сканирование продолжится.
+turbo = Турбо
+turbo-cancelled-normal-scan-continues = Турбо отменено — обычное сканирование продолжается
+turbo-unavailable-normal-scan-continues = Турбо недоступно — обычное сканирование продолжается
+turbo-reading-mft = Турбо: чтение MFT…
+type-2 = Тип:
+unreadable-folders = Недоступные для чтения папки
+up-a-level = На уровень выше
+updating = Обновление…
+use-file-lengths-not-size-on-disk = Использовать размер файлов вместо занимаемого места на диске
+vert = Верт.
+very-few-files = Очень мало файлов
+very-many-files = Очень много файлов
+video = Видео
+view = Вид
+waiting-for-windows-permission = Ожидание разрешения Windows…
+workers =
+    { $count ->
+        [one] { $count } параллельная задача
+        [few] { $count } параллельные задачи
+        [many] { $count } параллельных задач
+       *[other] { $count } параллельной задачи
+    }
+zoom-full = Показать всё
+zoom-in = Увеличить
+zoom-out = Уменьшить
+zoom-in-2 = Увеличить
+permission-hint-macos = macOS защищает некоторые папки (Почта, Сообщения, папки других пользователей и т. д.). Чтобы включить их в сканирование, предоставьте Clawback «Полный доступ к диску» в разделе «Системные настройки» › «Конфиденциальность и безопасность».
+msec = мс
+drive-summary = { $icon }  { $drive }{ "\u000A        " }Свободно { $free } из { $total }  ·  Занято { $used }  ·  { $filesystem }
+properties-title = Свойства: { $name }
+window-title = { $path }  -  Всего { $total }  -  Свободно { $free }  -  Clawback
+scan-summary = { $size } | { contents-count }
+turkish = Турецкий
+ukrainian = Украинский
+czech = Чешский
+portuguese-portugal = Португальский (Португалия)
+dutch = Нидерландский
+indonesian = Индонезийский
+vietnamese = Вьетнамский
+thai = Тайский
+swedish = Шведский
+romanian = Румынский
+hungarian = Венгерский

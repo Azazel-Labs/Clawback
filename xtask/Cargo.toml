@@ -7,6 +7,10 @@ license.workspace = true
 publish = false
 
 [dependencies]
+fluent-syntax = "0.12"
+unic-langid = "0.9"
+proc-macro2 = "1"
+syn = { version = "2", features = ["full", "visit"] }
 toml_edit = "0.25.15"
 png = "0.18.1"
 ab_glyph = "0.2.32"

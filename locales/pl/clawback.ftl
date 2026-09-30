@@ -1,0 +1,208 @@
+# Interfejs Clawback. Nie zmieniaj identyfikatorów komunikatów ani nazw zmiennych.
+
+ok = { "   OK   " }
+of-scan = % SKANOWANIA
+asset-3d = Zasób 3D
+a-fast-cross-platform-disk-space-map = Szybka, wieloplatformowa mapa wykorzystania miejsca na dysku.
+about-clawback = O programie Clawback
+all-files = Wszystkie pliki
+application-library = Aplikacja / biblioteka
+arch = Archiwalny
+archive = Archiwum
+attributes = Atrybuty
+attributes-2 = Atrybuty:
+audio = Dźwięk
+auto-rescan-on-delete = Automatycznie skanuj ponownie po usunięciu
+back = Wstecz
+bias = Kierunek układu:
+binary-data = Dane binarne
+cancel = Anuluj
+chinese-simplified = Chiński uproszczony
+chinese-traditional = Chiński tradycyjny
+claw-back-your-disk-space = Odzyskaj miejsce na dysku.
+clawback-settings = Ustawienia Clawback
+scan-folder-error = { "Clawback nie może przeskanować folderu.\u000A\u000A" }{ $error }
+scan-path-error = Nie można przeskanować ścieżki: { $path }{ "\u000A\u000A" }{ $error }
+about-history = Clawback to napisany w Rust hołd dla programu SpaceMonger 1.4 autorstwa Seana Werkemy (1997–2000). Układ, kolory i obsługa myszy są oparte na oryginalnym kodzie źródłowym.
+compress = Skompresowany
+contains = Zawartość:
+copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+count-hard-linked-files-once = Licz pliki z dowiązaniami twardymi tylko raz
+workers-help = Bieżący limit równoległych zadań; dostosowuje się automatycznie do zmierzonej przepustowości i opóźnień.
+data-configuration = Dane / konfiguracja
+date-time = Data / godzina
+delay = Opóźnienie:
+delete = Usuń
+deleting = { "Usuwanie…\u000A" }{ $path }
+density = Gęstość:
+design-document = Dokument projektowy
+directories = Foldery
+disable-delete-command = Wyłącz polecenie „Usuń”
+discovering-folders = Wyszukiwanie folderów…
+disk-image = Obraz dysku
+display-colors = Kolory wyświetlania
+document = Dokument
+don-t-descend-into-other-drives-or-network = Nie skanuj innych dysków ani udziałów sieciowych zamontowanych wewnątrz skanowanego folderu
+double-click-to-explore-right-click-for-actions = Kliknij dwukrotnie, aby przeglądać / Kliknij prawym przyciskiem, aby wyświetlić działania
+encrypt = Zaszyfrowany
+english = Angielski
+equal = Zrównoważony
+exit = Zakończ
+expand-to-browse-click-a-folder-to-view = Rozwiń, aby przeglądać · Kliknij folder, aby go wyświetlić
+file-type = TYP PLIKU
+files = PLIKI
+folder = FOLDER
+delete-error = Nie można usunąć elementu: { $path }{ "\u000A\u000A" }{ $error }
+file = Plik
+file-layout = Układ plików
+file-size = Rozmiar pliku
+file-types = Typy plików
+filename = Nazwa pliku
+files-2 = Pliki:
+# Przykłady: 1 plik, 2 pliki, 5 plików, 12 plików, 22 pliki, 21 plików.
+contents-count =
+    { $files ->
+        [one] { $files } plik
+        [few] { $files } pliki
+        [many] { $files } plików
+       *[other] { $files } pliku
+    }, { $folders ->
+        [one] { $folders } folder
+        [few] { $folders } foldery
+        [many] { $folders } folderów
+       *[other] { $folders } folderu
+    }
+finding-drives = Wyszukiwanie dysków…
+folder-2 = Folder
+folders-not-scanned = Nieprzeskanowane foldery
+folders = Foldery:
+french = Francuski
+full-path = Pełna ścieżka
+game-archive = Archiwum gry
+german = Niemiecki
+help = Pomoc
+hidden = Ukryty
+horz = Poziomo
+icon = Ikona
+image = Obraz
+japanese = Japoński
+italian = Włoski
+korean = Koreański
+language = Język
+polish = Polski
+russian = Rosyjski
+portuguese-brazil = Portugalski brazylijski
+licensed-under-mit-0-mit-no-attribution-no = Licencja MIT-0 (MIT No Attribution). Bez jakiejkolwiek gwarancji.
+location = Lokalizacja:
+lots-of-files = Dużo plików
+make-room-for-what-matters = Zrób miejsce na to, co ważne.
+mapped-bytes-relative-to-used-drive-space-an = Zliczone bajty w stosunku do zajętego miejsca na dysku; jest to oszacowanie, a nie procent liczby plików.
+miscellaneous-options = Pozostałe opcje
+modified = Zmodyfikowano:
+move-selected-item-to-trash = Przenieś wybrany element do kosza
+mute-colors = Przygaś kolory
+name = Nazwa:
+no-drives-found-use-other-folder-to-pick = Nie znaleziono dysków. Użyj opcji „Inny folder…”, aby wybrać folder.
+no-extension = Bez rozszerzenia
+no-files-in-this-folder = W tym folderze nie ma plików.
+normal = Normalny
+offline = Offline
+open-drive = Otwórz dysk…
+open-a-drive-or-folder-to-see-where = Otwórz dysk lub folder, aby zobaczyć, co zajmuje miejsce.
+open-a-folder-or-drive-to-browse-its = Otwórz folder lub dysk, aby przeglądać jego drzewo katalogów.
+open-a-folder-to-begin = Otwórz folder, aby rozpocząć
+open-folder = Otwórz folder…
+open-selected-item = Otwórz wybrany element
+other-folder = Inny folder…
+palette = Paleta
+pause-scan = Wstrzymaj skanowanie
+properties = Właściwości
+properties-2 = Właściwości…
+read-only = Tylko do odczytu
+reading-file-details = Odczytywanie szczegółów plików…
+ready = Gotowe
+recent = Ostatnie
+remember-window-position = Zapamiętaj położenie okna
+reparse-pt = Punkt ponownej analizy
+rescan = Skanuj ponownie
+rescan-drive = Skanuj dysk ponownie
+resume-scan = Wznów skanowanie
+run-open = Uruchom / Otwórz
+size = ROZMIAR
+scan-paused = Skanowanie wstrzymane
+scanning = Skanowanie
+scanning-options-apply-to-the-next-scan = Opcje skanowania zostaną zastosowane przy następnym skanowaniu.
+select-drive-to-view = Wybierz dysk do wyświetlenia
+select-a-folder-to-view = Wybierz folder do wyświetlenia
+settings = Ustawienia…
+show-free-space = Pokaż wolne miejsce
+show-rollover-boxes = Pokaż obramowanie po najechaniu kursorem
+show-file-info-tips = Pokaż podpowiedzi z informacjami o plikach
+show-file-name-tips = Pokaż podpowiedzi z nazwami plików
+show-free-space-2 = Pokaż wolne miejsce
+show-in-file-manager = Pokaż w menedżerze plików
+size-on-disk = Rozmiar na dysku:
+size-2 = Rozmiar:
+permission-hint-unix = Niektóre foldery mogą być odczytywane tylko przez innych użytkowników lub użytkownika root. Uruchom Clawback z podwyższonymi uprawnieniami (na przykład `sudo -E clawback /`), aby je uwzględnić.
+permission-hint-windows = Niektóre foldery systemowe mogą być odczytywane tylko przez administratorów. Uruchom Clawback jako administrator, aby je uwzględnić.
+source-code = Kod źródłowy
+spanish-latin-america = Hiszpański latynoamerykański
+spanish-spain = Hiszpański z Hiszpanii
+sparse = Plik rozrzedzony
+special-file = Plik specjalny
+stay-on-one-filesystem = Pozostań w jednym systemie plików
+symbolic-link = Dowiązanie symboliczne
+symlink = Dowiązanie symboliczne
+system = Systemowy
+system-default = Domyślny język systemu
+type = TYP
+takes-effect-the-next-time-clawback-starts = Zmiana zacznie obowiązywać po ponownym uruchomieniu Clawback
+temp = Tymczasowy
+the-scan-worker-stopped-unexpectedly = Zadanie skanowania zostało nieoczekiwanie zatrzymane.
+too-few-files = Za mało plików
+too-many-files = Za dużo plików
+tooltips = Podpowiedzi
+try-a-faster-ntfs-scan-with-administrator-permission = Wypróbuj szybsze skanowanie NTFS z uprawnieniami administratora. Bieżące skanowanie będzie kontynuowane.
+turbo = Turbo
+turbo-cancelled-normal-scan-continues = Anulowano Turbo — zwykłe skanowanie trwa nadal
+turbo-unavailable-normal-scan-continues = Turbo niedostępne — zwykłe skanowanie trwa nadal
+turbo-reading-mft = Turbo: odczytywanie MFT…
+type-2 = Typ:
+unreadable-folders = Foldery, których nie można odczytać
+up-a-level = Poziom wyżej
+updating = Aktualizowanie…
+use-file-lengths-not-size-on-disk = Używaj rozmiaru plików zamiast zajmowanego miejsca na dysku
+vert = Pionowo
+very-few-files = Bardzo mało plików
+very-many-files = Bardzo dużo plików
+video = Wideo
+view = Widok
+waiting-for-windows-permission = Oczekiwanie na zgodę w systemie Windows…
+workers =
+    { $count ->
+        [one] { $count } zadanie równoległe
+        [few] { $count } zadania równoległe
+        [many] { $count } zadań równoległych
+       *[other] { $count } zadania równoległego
+    }
+zoom-full = Pokaż całość
+zoom-in = Powiększ
+zoom-out = Pomniejsz
+zoom-in-2 = Powiększ
+permission-hint-macos = macOS chroni niektóre foldery (Poczta, Wiadomości, foldery innych użytkowników itp.). Aby je uwzględnić, przyznaj Clawback „Pełny dostęp do dysku” w Ustawieniach systemowych › Prywatność i ochrona.
+msec = ms
+drive-summary = { $icon }  { $drive }{ "\u000A        " }Wolne: { $free } z { $total }  ·  Zajęte: { $used }  ·  { $filesystem }
+properties-title = Właściwości: { $name }
+window-title = { $path }  -  Łącznie { $total }  -  Wolne { $free }  -  Clawback
+scan-summary = { $size } | { contents-count }
+turkish = Turecki
+ukrainian = Ukraiński
+czech = Czeski
+portuguese-portugal = Portugalski europejski
+dutch = Niderlandzki
+indonesian = Indonezyjski
+vietnamese = Wietnamski
+thai = Tajski
+swedish = Szwedzki
+romanian = Rumuński
+hungarian = Węgierski

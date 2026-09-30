@@ -1,5 +1,6 @@
 //! The application window: SpaceMonger's toolbar, commands and dialogs
 //! around the folder map.
+use crate::i18n::tr;
 
 use crate::directoryview::DirectoryView;
 use crate::mapview::{Command, MapInput, MapView};
@@ -7,7 +8,6 @@ use crate::platform::{self, DiskInfo};
 use crate::scanning::{Running, Update};
 use crate::theme;
 use crate::{background::retire, icon};
-use clawback_core::layout::DENSITY_NAMES;
 use clawback_core::palette::SCHEME_NAMES;
 use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree, format};
 use eframe::egui::{self, Align, Align2, Id, Key, Layout, Modifiers, RichText, Ui, vec2};
@@ -68,7 +68,7 @@ struct OpenDialog {
 
 struct Properties {
     title: String,
-    rows: Vec<(&'static str, String)>,
+    rows: Vec<(String, String)>,
     path: PathBuf,
 }
 
@@ -111,7 +111,8 @@ pub struct ClawbackApp {
 
 impl ClawbackApp {
     pub fn new(cc: &eframe::CreationContext<'_>, settings: Settings, path: Option<PathBuf>) -> Self {
-        theme::apply(&cc.egui_ctx);
+        let language = crate::i18n::set_language(&settings.language);
+        theme::apply(&cc.egui_ctx, language);
         let mut app = ClawbackApp {
             settings,
             doc: None,
@@ -197,7 +198,9 @@ impl ClawbackApp {
                     let _ = settings.save();
                 });
             }
-            Err(e) => self.error = Some(format!("Clawback could not scan {}.\n\n{e}", root.display())),
+            Err(e) => {
+                self.error = Some(tr!("scan-path-error", path = root.display().to_string(), error = e.to_string()));
+            }
         }
     }
 
@@ -265,11 +268,11 @@ impl ClawbackApp {
             Some(Ok(Update::Cancelled)) => self.scan = None,
             Some(Ok(Update::Failed(error))) => {
                 self.scan = None;
-                self.error = Some(format!("Clawback could not scan the folder.\n\n{error}"));
+                self.error = Some(tr!("scan-folder-error", error = error));
             }
             Some(Err(mpsc::TryRecvError::Disconnected)) => {
                 self.scan = None;
-                self.error = Some("The scan worker stopped unexpectedly.".into());
+                self.error = Some(tr!("the-scan-worker-stopped-unexpectedly"));
             }
             _ => {}
         }
@@ -304,7 +307,9 @@ impl ClawbackApp {
                         self.start_scan(root, ctx);
                     }
                 }
-                Err(e) => self.error = Some(format!("Failed to delete {}.\n\n{e}", del.path.display())),
+                Err(e) => {
+                    self.error = Some(tr!("delete-error", path = del.path.display().to_string(), error = e.as_str()));
+                }
             }
         }
         if self.deleting.is_none() {
@@ -615,12 +620,7 @@ impl ClawbackApp {
                     .map(|r| (r.progress.bytes, r.progress.files, r.progress.dirs))
                     .or_else(|| self.doc.as_ref().map(|d| (d.tree.root().size, d.files, d.folders)));
                 if let Some((bytes, files, folders)) = counts {
-                    let stats = format!(
-                        "{} | {} files | {} folders",
-                        format::size(bytes),
-                        format::count(files),
-                        format::count(folders)
-                    );
+                    let stats = tr!("scan-summary", size = format::size(bytes), files = files, folders = folders);
                     ui.add(egui::Label::new(RichText::new(&stats).size(12.0)).truncate()).on_hover_text(stats);
                     ui.separator();
                 }
@@ -651,11 +651,11 @@ impl ClawbackApp {
             )
         } else {
             let size = if doc.view == ROOT { doc.total_space() } else { doc.tree.node(doc.view).size };
-            format!(
-                "{}  -  {} Total  -  {} Free  -  Clawback",
-                dir_display(&doc.tree.path(doc.view)),
-                format::size(size),
-                format::size(doc.free_space())
+            tr!(
+                "window-title",
+                path = dir_display(&doc.tree.path(doc.view)),
+                total = format::size(size),
+                free = format::size(doc.free_space())
             )
         }
     }
@@ -679,7 +679,7 @@ impl ClawbackApp {
             Choice::Drive(i) => dlg.drives[i].mount.clone(),
             Choice::Recent(i) => recent[i].clone(),
         };
-        egui::Window::new("Select Drive to View")
+        egui::Window::new(tr!("select-drive-to-view"))
             .collapsible(false)
             .resizable(false)
             .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
@@ -688,20 +688,20 @@ impl ClawbackApp {
                 egui::ScrollArea::vertical().max_height(340.0).auto_shrink([false, true]).show(ui, |ui| {
                     if dlg.loading.is_some() {
                         ui.spinner();
-                        ui.weak("Finding drives...");
+                        ui.weak(tr!("finding-drives"));
                     } else if dlg.drives.is_empty() {
-                        ui.weak("No drives found. Use \"Other Folder...\" to pick a folder.");
+                        ui.weak(tr!("no-drives-found-use-other-folder-to-pick"));
                     }
                     for (i, d) in dlg.drives.iter().enumerate() {
                         let used = d.total.saturating_sub(d.free);
-                        let text = format!(
-                            "{}  {}\n        {} free of {}  ·  {} used  ·  {}",
-                            if d.removable { "💾" } else { "💽" },
-                            d.label(),
-                            format::size(d.free),
-                            format::size(d.total),
-                            format::percent(used, d.total),
-                            d.fs
+                        let text = tr!(
+                            "drive-summary",
+                            icon = if d.removable { "💾" } else { "💽" },
+                            drive = d.label(),
+                            free = format::size(d.free),
+                            total = format::size(d.total),
+                            used = format::percent(used, d.total),
+                            filesystem = d.fs.as_str()
                         );
                         let r = ui.selectable_label(dlg.choice == Some(Choice::Drive(i)), text);
                         if r.clicked() {
@@ -713,7 +713,7 @@ impl ClawbackApp {
                     }
                     if !recent.is_empty() {
                         ui.separator();
-                        ui.weak("Recent");
+                        ui.weak(tr!("recent"));
                         for (i, p) in recent.iter().enumerate() {
                             let r = ui.selectable_label(
                                 dlg.choice == Some(Choice::Recent(i)),
@@ -730,16 +730,16 @@ impl ClawbackApp {
                 });
                 ui.separator();
                 ui.horizontal(|ui| {
-                    if ui.button("Other Folder...").clicked() {
+                    if ui.button(tr!("other-folder")).clicked() {
                         browse = true;
                     }
                     ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                        if ui.add_enabled(dlg.choice.is_some(), egui::Button::new("   OK   ")).clicked()
+                        if ui.add_enabled(dlg.choice.is_some(), egui::Button::new(tr!("ok"))).clicked()
                             && let Some(c) = dlg.choice
                         {
                             chosen = Some(path_of(c, dlg));
                         }
-                        if ui.button("Cancel").clicked() {
+                        if ui.button(tr!("cancel")).clicked() {
                             cancel = true;
                         }
                     });
@@ -765,15 +765,13 @@ impl ClawbackApp {
         if let Some(run) = &self.scan {
             ui.horizontal(|ui| {
                 ui.add(egui::Spinner::new().size(16.0));
-                ui.label(RichText::new("Scanning").color(theme::TEXT));
+                ui.label(RichText::new(tr!("scanning")).color(theme::TEXT));
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     if ui.button("Stop scan").clicked() {
                         run.cancel();
                     }
                     if run.progress.workers > 0 {
-                        ui.weak(format!("{} workers", run.progress.workers)).on_hover_text(
-                            "Current concurrency limit; automatically adapts to measured throughput and latency.",
-                        );
+                        ui.weak(tr!("workers", count = run.progress.workers)).on_hover_text(tr!("workers-help"));
                     }
                     ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
                         let path = run.current.display().to_string();
@@ -795,20 +793,20 @@ impl ClawbackApp {
                     .fill(theme::ACCENT)
                     .desired_height(3.0),
             )
-            .on_hover_text("Mapped bytes relative to used drive space; an estimate, not a file-count percentage.");
+            .on_hover_text(tr!("mapped-bytes-relative-to-used-drive-space-an"));
         } else {
             ui.horizontal_centered(|ui| {
                 let status = if !self.live_status.is_empty() {
-                    &self.live_status
+                    self.live_status.clone()
                 } else if self.doc.is_some() {
-                    "Ready"
+                    tr!("ready")
                 } else {
-                    "Open a folder to begin"
+                    tr!("open-a-folder-to-begin")
                 };
                 ui.add(egui::Label::new(RichText::new(status).color(theme::MUTED).size(11.0)).truncate());
                 if ui.available_width() > 340.0 {
                     ui.label(
-                        RichText::new("Double-click to explore / Right-click for actions")
+                        RichText::new(tr!("double-click-to-explore-right-click-for-actions"))
                             .color(theme::MUTED)
                             .size(11.0),
                     );
@@ -821,36 +819,58 @@ impl ClawbackApp {
     fn setup_dialog(&mut self, ctx: &egui::Context) {
         let Some(d) = &mut self.setup else { return };
         let mut done: Option<bool> = None;
-        egui::Window::new("Clawback Settings")
+        egui::Window::new(tr!("clawback-settings"))
+            .id(Id::new("clawback-settings"))
             .collapsible(false)
             .resizable(false)
             .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
             .show(ctx, |ui| {
+                ui.horizontal(|ui| {
+                    ui.label(tr!("language"));
+                    let label = if d.language == "auto" {
+                        tr!("system-default")
+                    } else {
+                        crate::i18n::language_name(&d.language)
+                    };
+                    egui::ComboBox::from_id_salt("language").selected_text(label).show_ui(ui, |ui| {
+                        ui.selectable_value(&mut d.language, "auto".to_owned(), tr!("system-default"));
+                        for code in crate::i18n::languages() {
+                            ui.selectable_value(&mut d.language, code.to_owned(), crate::i18n::language_name(code));
+                        }
+                    });
+                });
                 ui.horizontal_top(|ui| {
                     ui.group(|ui| {
                         ui.vertical(|ui| {
-                            ui.strong("File Layout");
+                            ui.strong(tr!("file-layout"));
                             ui.horizontal(|ui| {
-                                ui.label("Density:");
+                                ui.label(tr!("density"));
                                 let mut idx = (d.density + 3).clamp(0, 5) as usize;
                                 if egui::ComboBox::from_id_salt("density")
                                     .width(140.0)
-                                    .show_index(ui, &mut idx, DENSITY_NAMES.len(), |i| DENSITY_NAMES[i])
+                                    .show_index(ui, &mut idx, 6, |i| match i {
+                                        0 => tr!("too-few-files"),
+                                        1 => tr!("very-few-files"),
+                                        2 => tr!("normal"),
+                                        3 => tr!("lots-of-files"),
+                                        4 => tr!("very-many-files"),
+                                        _ => tr!("too-many-files"),
+                                    })
                                     .changed()
                                 {
                                     d.density = idx as i32 - 3;
                                 }
                             });
                             ui.horizontal(|ui| {
-                                ui.label("Bias:");
+                                ui.label(tr!("bias"));
                                 ui.vertical(|ui| {
                                     ui.add(egui::Slider::new(&mut d.bias, -20..=20).show_value(false));
                                     ui.horizontal(|ui| {
-                                        ui.small("Horz");
+                                        ui.small(tr!("horz"));
                                         ui.add_space(36.0);
-                                        ui.small("Equal");
+                                        ui.small(tr!("equal"));
                                         ui.add_space(36.0);
-                                        ui.small("Vert");
+                                        ui.small(tr!("vert"));
                                     });
                                 });
                             });
@@ -858,17 +878,22 @@ impl ClawbackApp {
                     });
                     ui.group(|ui| {
                         ui.vertical(|ui| {
-                            ui.strong("Display Colors");
+                            ui.strong(tr!("display-colors"));
                             egui::Grid::new("colors").num_columns(2).show(ui, |ui| {
-                                for (label, value) in [("Files:", &mut d.file_color), ("Folders:", &mut d.folder_color)]
+                                for (index, (label, value)) in
+                                    [(tr!("files-2"), &mut d.file_color), (tr!("folders"), &mut d.folder_color)]
+                                        .into_iter()
+                                        .enumerate()
                                 {
                                     ui.label(label);
-                                    egui::ComboBox::from_id_salt(label).width(120.0).show_index(
-                                        ui,
-                                        value,
-                                        SCHEME_NAMES.len(),
-                                        |i| SCHEME_NAMES[i],
-                                    );
+                                    egui::ComboBox::from_id_salt(("color-scheme", index))
+                                        .width(120.0)
+                                        .selected_text(SCHEME_NAMES[*value])
+                                        .show_ui(ui, |ui| {
+                                            for (scheme, name) in SCHEME_NAMES.iter().enumerate() {
+                                                ui.selectable_value(value, scheme, *name);
+                                            }
+                                        });
                                     ui.end_row();
                                 }
                             });
@@ -876,25 +901,25 @@ impl ClawbackApp {
                     });
                 });
                 ui.group(|ui| {
-                    ui.strong("ToolTips");
+                    ui.strong(tr!("tooltips"));
                     ui.horizontal_top(|ui| {
                         ui.vertical(|ui| {
-                            ui.checkbox(&mut d.show_name_tips, "Show file-name-tips");
+                            ui.checkbox(&mut d.show_name_tips, tr!("show-file-name-tips"));
                             delay(ui, &mut d.nametip_delay_ms);
                         });
                         ui.add_space(24.0);
                         ui.vertical(|ui| {
-                            ui.checkbox(&mut d.show_info_tips, "Show file-info-tips");
+                            ui.checkbox(&mut d.show_info_tips, tr!("show-file-info-tips"));
                             ui.add_enabled_ui(d.show_info_tips, |ui| {
                                 egui::Grid::new("tipflags").num_columns(2).show(ui, |ui| {
-                                    ui.checkbox(&mut d.tip_path, "Full Path");
-                                    ui.checkbox(&mut d.tip_date, "Date / Time");
+                                    ui.checkbox(&mut d.tip_path, tr!("full-path"));
+                                    ui.checkbox(&mut d.tip_date, tr!("date-time"));
                                     ui.end_row();
-                                    ui.checkbox(&mut d.tip_name, "Filename");
-                                    ui.checkbox(&mut d.tip_size, "File Size");
+                                    ui.checkbox(&mut d.tip_name, tr!("filename"));
+                                    ui.checkbox(&mut d.tip_size, tr!("file-size"));
                                     ui.end_row();
-                                    ui.checkbox(&mut d.tip_icon, "Icon");
-                                    ui.checkbox(&mut d.tip_attrib, "Attributes");
+                                    ui.checkbox(&mut d.tip_icon, tr!("icon"));
+                                    ui.checkbox(&mut d.tip_attrib, tr!("attributes"));
                                     ui.end_row();
                                 });
                                 delay(ui, &mut d.infotip_delay_ms);
@@ -903,40 +928,39 @@ impl ClawbackApp {
                     });
                 });
                 ui.group(|ui| {
-                    ui.strong("Miscellaneous Options");
+                    ui.strong(tr!("miscellaneous-options"));
                     egui::Grid::new("misc").num_columns(2).show(ui, |ui| {
-                        ui.checkbox(&mut d.auto_rescan, "Auto Rescan on Delete");
+                        ui.checkbox(&mut d.auto_rescan, tr!("auto-rescan-on-delete"));
                         ui.end_row();
-                        ui.checkbox(&mut d.disable_delete, "Disable \"Delete\" Command");
-                        ui.checkbox(&mut d.save_pos, "Remember Window Position")
-                            .on_hover_text("Takes effect the next time Clawback starts");
+                        ui.checkbox(&mut d.disable_delete, tr!("disable-delete-command"));
+                        ui.checkbox(&mut d.save_pos, tr!("remember-window-position"))
+                            .on_hover_text(tr!("takes-effect-the-next-time-clawback-starts"));
                         ui.end_row();
-                        ui.checkbox(&mut d.rollover_box, "Show Rollover Boxes");
+                        ui.checkbox(&mut d.rollover_box, tr!("show-rollover-boxes"));
                         ui.end_row();
                     });
                 });
                 ui.group(|ui| {
-                    ui.strong("Scanning");
+                    ui.strong(tr!("scanning"));
                     egui::Grid::new("scanning").num_columns(2).show(ui, |ui| {
-                        ui.checkbox(&mut d.one_filesystem, "Stay on one filesystem").on_hover_text(
-                            "Don't descend into other drives or network mounts inside the scanned folder",
-                        );
-                        ui.checkbox(&mut d.apparent_size, "Use file lengths, not size on disk");
+                        ui.checkbox(&mut d.one_filesystem, tr!("stay-on-one-filesystem"))
+                            .on_hover_text(tr!("don-t-descend-into-other-drives-or-network"));
+                        ui.checkbox(&mut d.apparent_size, tr!("use-file-lengths-not-size-on-disk"));
                         ui.end_row();
                         if cfg!(unix) {
-                            ui.checkbox(&mut d.dedupe_hardlinks, "Count hard-linked files once");
+                            ui.checkbox(&mut d.dedupe_hardlinks, tr!("count-hard-linked-files-once"));
                             ui.end_row();
                         }
                     });
-                    ui.weak("Scanning options apply to the next scan.");
+                    ui.weak(tr!("scanning-options-apply-to-the-next-scan"));
                 });
                 ui.add_space(4.0);
                 ui.horizontal(|ui| {
                     ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                        if ui.button("   OK   ").clicked() {
+                        if ui.button(tr!("ok")).clicked() {
                             done = Some(true);
                         }
-                        if ui.button("Cancel").clicked() {
+                        if ui.button(tr!("cancel")).clicked() {
                             done = Some(false);
                         }
                     });
@@ -947,7 +971,16 @@ impl ClawbackApp {
                 if let Some(mut s) = self.setup.take() {
                     s.recent = std::mem::take(&mut self.settings.recent);
                     s.sanitize();
+                    let language_changed = self.settings.language != s.language;
                     self.settings = s;
+                    let language = crate::i18n::set_language(&self.settings.language);
+                    theme::set_fonts(ctx, language);
+                    if language_changed {
+                        // Cached map galleys reference the previous font atlas.
+                        self.map = MapView::default();
+                    }
+                    self.props = None;
+                    self.props_rx = None;
                     self.save_settings();
                 }
             }
@@ -961,7 +994,7 @@ impl ClawbackApp {
             return;
         }
         let mut close = false;
-        egui::Window::new("About Clawback")
+        egui::Window::new(tr!("about-clawback"))
             .collapsible(false)
             .resizable(false)
             .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
@@ -971,21 +1004,18 @@ impl ClawbackApp {
                     icon::paint(ui.painter(), rect);
                     ui.vertical(|ui| {
                         ui.heading(format!("Clawback {}", env!("CARGO_PKG_VERSION")));
-                        ui.label("A fast, cross-platform disk space map.");
+                        ui.label(tr!("a-fast-cross-platform-disk-space-map"));
                         ui.add_space(6.0);
-                        ui.label(
-                            "Clawback is a Rust homage to SpaceMonger 1.4 by Sean Werkema (1997–2000). Its layout, \
-                             colours and mouse behaviour follow the original source code.",
-                        );
+                        ui.label(tr!("about-history",));
                         ui.add_space(6.0);
-                        ui.label("Claw back your disk space.");
+                        ui.label(tr!("claw-back-your-disk-space"));
                         ui.add_space(6.0);
-                        ui.weak("Copyright © 2026 Azazel Labs.");
-                        ui.weak("Licensed under MIT-0 (MIT No Attribution). No warranty of any kind.");
+                        ui.weak(tr!("copyright-2026-azazel-labs"));
+                        ui.weak(tr!("licensed-under-mit-0-mit-no-attribution-no"));
                     });
                 });
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    if ui.button("   OK   ").clicked() {
+                    if ui.button(tr!("ok")).clicked() {
                         close = true;
                     }
                 });
@@ -998,10 +1028,10 @@ impl ClawbackApp {
     fn properties_dialog(&mut self, ctx: &egui::Context) {
         if self.props_rx.is_some() {
             let mut open = true;
-            egui::Window::new("Properties").id(Id::new("clawback-properties")).open(&mut open).show(ctx, |ui| {
+            egui::Window::new(tr!("properties")).id(Id::new("clawback-properties")).open(&mut open).show(ctx, |ui| {
                 ui.horizontal(|ui| {
                     ui.spinner();
-                    ui.label("Reading file details…");
+                    ui.label(tr!("reading-file-details"));
                 });
             });
             if !open {
@@ -1019,18 +1049,18 @@ impl ClawbackApp {
             .show(ctx, |ui| {
                 egui::Grid::new("props").num_columns(2).spacing([16.0, 6.0]).show(ui, |ui| {
                     for (k, v) in &p.rows {
-                        ui.strong(*k);
+                        ui.strong(k);
                         ui.label(v);
                         ui.end_row();
                     }
                 });
                 ui.add_space(8.0);
                 ui.horizontal(|ui| {
-                    if ui.button("Show in File Manager").clicked() {
+                    if ui.button(tr!("show-in-file-manager")).clicked() {
                         let _ = platform::reveal(&p.path);
                     }
                     ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                        if ui.button("   OK   ").clicked() {
+                        if ui.button(tr!("ok")).clicked() {
                             close = true;
                         }
                     });
@@ -1047,7 +1077,7 @@ impl ClawbackApp {
             return;
         }
         let mut open = true;
-        egui::Window::new("Folders Not Scanned").open(&mut open).default_width(560.0).show(ctx, |ui| {
+        egui::Window::new(tr!("folders-not-scanned")).open(&mut open).default_width(560.0).show(ctx, |ui| {
             ui.label(platform::permission_hint());
             ui.separator();
             let rows: Vec<&Skipped> = doc.skipped.iter().collect();
@@ -1076,7 +1106,7 @@ impl ClawbackApp {
             egui::Modal::new(Id::new("clawback-deleting")).show(ctx, |ui| {
                 ui.horizontal(|ui| {
                     ui.spinner();
-                    ui.label(format!("Deleting...\n{}", elide(&d.path.display().to_string(), 60)));
+                    ui.label(tr!("deleting", path = elide(&d.path.display().to_string(), 60)));
                 });
             });
         }
@@ -1087,7 +1117,7 @@ impl ClawbackApp {
                 ui.label(msg);
                 ui.add_space(8.0);
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    if ui.button("   OK   ").clicked() {
+                    if ui.button(tr!("ok")).clicked() {
                         close = true;
                     }
                 });
@@ -1135,11 +1165,11 @@ impl eframe::App for ClawbackApp {
                 if let Some(doc) = &self.doc {
                     self.directories.ui(ui, &doc.tree, doc.id, doc.generation, doc.view, self.scan.is_some())
                 } else {
-                    ui.strong("Directories");
+                    ui.strong(tr!("directories"));
                     ui.weak(if self.scan.is_some() {
-                        "Discovering folders…"
+                        tr!("discovering-folders")
                     } else {
-                        "Open a folder or drive to browse its directory tree."
+                        tr!("open-a-folder-or-drive-to-browse-its")
                     });
                     None
                 }
@@ -1177,14 +1207,14 @@ impl eframe::App for ClawbackApp {
                     p.text(
                         center,
                         Align2::CENTER_CENTER,
-                        "Make room for what matters.",
+                        tr!("make-room-for-what-matters"),
                         egui::FontId::proportional(24.0),
                         theme::TEXT,
                     );
                     p.text(
                         center + vec2(0.0, 34.0),
                         Align2::CENTER_CENTER,
-                        "Open a drive or folder to see where your space goes.",
+                        tr!("open-a-drive-or-folder-to-see-where"),
                         egui::FontId::proportional(13.0),
                         theme::MUTED,
                     );
@@ -1233,28 +1263,28 @@ fn properties(t: &Tree, n: NodeId) -> Properties {
     let path = t.path(n);
     let name = node.name_lossy().into_owned();
     let kind = match node.kind {
-        clawback_core::Kind::Dir => "Folder",
-        clawback_core::Kind::File => "File",
-        clawback_core::Kind::Symlink => "Symbolic link",
-        clawback_core::Kind::Other => "Special file",
+        clawback_core::Kind::Dir => tr!("folder-2"),
+        clawback_core::Kind::File => tr!("file"),
+        clawback_core::Kind::Symlink => tr!("symbolic-link"),
+        clawback_core::Kind::Other => tr!("special-file"),
     };
     let mut rows = vec![
-        ("Name:", name.clone()),
-        ("Type:", kind.to_owned()),
-        ("Location:", path.parent().map(|p| p.display().to_string()).unwrap_or_default()),
-        ("Size:", format!("{} ({})", format::size(node.display_len()), format::bytes_exact(node.display_len()))),
-        ("Size on disk:", format!("{} ({})", format::size(node.size), format::bytes_exact(node.size))),
+        (tr!("name"), name.clone()),
+        (tr!("type-2"), kind),
+        (tr!("location"), path.parent().map(|p| p.display().to_string()).unwrap_or_default()),
+        (tr!("size-2"), format!("{} ({})", format::size(node.display_len()), format::bytes_exact(node.display_len()))),
+        (tr!("size-on-disk"), format!("{} ({})", format::size(node.size), format::bytes_exact(node.size))),
     ];
     if node.is_dir() {
         let folders = t.dir_count(n).saturating_sub(1);
-        rows.push(("Contains:", format!("{} Files, {} Folders", format::count(node.files), format::count(folders))));
+        rows.push((tr!("contains"), tr!("contents-count", files = node.files, folders = folders)));
     }
-    rows.push(("Modified:", format::date(node.mtime)));
+    rows.push((tr!("modified"), format::date(node.mtime)));
     let attrs = platform::attributes(&path);
     if !attrs.is_empty() {
-        rows.push(("Attributes:", attrs.join(" ")));
+        rows.push((tr!("attributes-2"), attrs.join(" ")));
     }
-    Properties { title: format!("{name} Properties"), rows, path }
+    Properties { title: tr!("properties-title", name = name), rows, path }
 }
 
 /// A toolbar button.
@@ -1264,9 +1294,9 @@ fn tb(ui: &mut Ui, label: &str, enabled: bool, hint: &str) -> bool {
 
 fn delay(ui: &mut Ui, ms: &mut u32) {
     ui.horizontal(|ui| {
-        ui.label("Delay:");
+        ui.label(tr!("delay"));
         ui.add(egui::DragValue::new(ms).range(0..=99_999).speed(5));
-        ui.label("msec");
+        ui.label(tr!("msec"));
     });
 }
 

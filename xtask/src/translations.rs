@@ -1,0 +1,179 @@
+use crate::Result;
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    fs,
+    path::Path,
+};
+use syn::{parse::Parser, visit::Visit};
+#[path = "../../localization/catalog.rs"]
+mod catalog;
+
+#[derive(Default)]
+struct Extractor {
+    messages: BTreeMap<String, BTreeSet<String>>,
+    error: Option<syn::Error>,
+}
+impl<'ast> Visit<'ast> for Extractor {
+    fn visit_macro(&mut self, node: &'ast syn::Macro) {
+        if node.path.segments.last().is_some_and(|part| part.ident == "tr") {
+            self.message(node.tokens.clone());
+        } else {
+            self.nested(node.tokens.clone());
+        }
+    }
+}
+
+impl Extractor {
+    fn message(&mut self, tokens: proc_macro2::TokenStream) {
+        let parser = |input: syn::parse::ParseStream<'_>| {
+            let source: syn::LitStr = input.parse()?;
+            let mut arguments = BTreeSet::new();
+            while !input.is_empty() {
+                input.parse::<syn::Token![,]>()?;
+                if input.is_empty() {
+                    break;
+                }
+                let name: syn::Ident = input.parse()?;
+                input.parse::<syn::Token![=]>()?;
+                input.parse::<syn::Expr>()?;
+                if !arguments.insert(name.to_string()) {
+                    return Err(syn::Error::new(name.span(), "duplicate argument"));
+                }
+            }
+            Ok((source.value(), arguments))
+        };
+        match parser.parse2(tokens) {
+            Ok((id, arguments)) => {
+                if self.messages.insert(id, arguments.clone()).is_some_and(|previous| previous != arguments) {
+                    self.error =
+                        Some(syn::Error::new(proc_macro2::Span::call_site(), "inconsistent arguments for message ID"));
+                }
+            }
+            Err(error) => self.error = Some(error),
+        }
+    }
+
+    /// syn does not visit Rust expressions inside macros such as vec!.
+    fn nested(&mut self, tokens: proc_macro2::TokenStream) {
+        use proc_macro2::TokenTree;
+        let tokens = tokens.into_iter().collect::<Vec<_>>();
+        let mut i = 0;
+        while i < tokens.len() {
+            if matches!(&tokens[i], TokenTree::Ident(name) if name == "tr")
+                && matches!(tokens.get(i + 1), Some(TokenTree::Punct(p)) if p.as_char() == '!')
+                && let Some(TokenTree::Group(group)) = tokens.get(i + 2)
+            {
+                self.message(group.stream());
+                i += 3;
+                continue;
+            }
+            if let TokenTree::Group(group) = &tokens[i] {
+                self.nested(group.stream());
+            }
+            i += 1;
+        }
+    }
+}
+
+fn extract(directory: &Path, extractor: &mut Extractor) -> Result<()> {
+    for entry in fs::read_dir(directory)? {
+        let path = entry?.path();
+        if path.is_dir() {
+            extract(&path, extractor)?;
+        } else if path.extension().is_some_and(|ext| ext == "rs") {
+            extractor.visit_file(&syn::parse_file(&fs::read_to_string(path)?)?);
+        }
+    }
+    Ok(())
+}
+
+pub fn run(root: &Path, args: &[String]) -> Result<()> {
+    if args.first().is_some_and(|arg| arg == "fmt") && (args.len() == 1 || (args.len() == 2 && args[1] == "--check")) {
+        return format_catalogs(&root.join("locales"), args.len() == 1);
+    }
+    if args.len() != 1 || args[0] != "check" {
+        return Err("Usage: cargo xtask translations <check|fmt [--check]>".into());
+    }
+    let mut extractor = Extractor::default();
+    extract(&root.join("src"), &mut extractor)?;
+    if let Some(error) = extractor.error {
+        return Err(error.into());
+    }
+    let directory = root.join("locales");
+    let catalogs = catalog::load(&directory)?;
+    let source = catalogs.get("en").ok_or("missing English catalog")?;
+    for (id, arguments) in &extractor.messages {
+        if source.get(id) != Some(arguments) {
+            return Err(format!(
+                "Message {id:?}: Rust arguments {arguments:?} do not match the English Fluent catalog {:?}",
+                source.get(id)
+            )
+            .into());
+        }
+    }
+    format_catalogs(&directory, false)?;
+    println!("Validated {} messages in {} catalogs.", extractor.messages.len(), catalogs.len());
+    Ok(())
+}
+
+fn formatted(source: &str) -> Result<String> {
+    // Accept Windows checkouts while keeping canonical output independent of OS.
+    let source = source.replace("\r\n", "\n");
+    let resource = fluent_syntax::parser::parse(source.as_str())
+        .map_err(|(_, errors)| format!("Invalid Fluent; refusing to format: {errors:?}"))?;
+    Ok(fluent_syntax::serializer::serialize(&resource))
+}
+
+fn format_catalogs(directory: &Path, write: bool) -> Result<()> {
+    let mut changes = Vec::new();
+    for entry in fs::read_dir(directory)? {
+        let path = entry?.path().join("clawback.ftl");
+        if !path.is_file() {
+            continue;
+        }
+        let source = fs::read_to_string(&path)?;
+        let output = formatted(&source).map_err(|error| format!("{}: {error}", path.display()))?;
+        if source.replace("\r\n", "\n") != output {
+            changes.push((path, output));
+        }
+    }
+    changes.sort_by(|a, b| a.0.cmp(&b.0));
+    if !write && !changes.is_empty() {
+        let paths = changes.iter().map(|(path, _)| path.display().to_string()).collect::<Vec<_>>().join("\n");
+        return Err(format!("Fluent formatting differs:\n{paths}\nRun cargo xtask translations fmt").into());
+    }
+    // Parse every file before writing any, so malformed input cannot be silently discarded.
+    for (path, output) in &changes {
+        fs::write(path, output)?;
+    }
+    if write {
+        println!("Formatted {} Fluent catalogs.", changes.len());
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn formatting_preserves_grammar_comments_and_literal_whitespace() {
+        let source = "# Translator context\ncount = { $n ->\n [one] One\n *[other] { $n } files\n    }\n\nline = { \"\\u000A  \" }{ $path }\n";
+        let output = formatted(source).expect("valid Fluent");
+        assert_eq!(fluent_syntax::parser::parse(source), fluent_syntax::parser::parse(output.as_str()));
+        assert_eq!(formatted(&output).expect("formatted Fluent"), output);
+        assert_eq!(formatted(&source.replace('\n', "\r\n")).expect("Windows newlines"), output);
+        assert!(formatted("broken = { ").is_err());
+    }
+    #[test]
+    fn extracts_nested_macros_and_checks_arguments() {
+        let mut extractor = Extractor::default();
+        extractor.visit_file(
+            &syn::parse_file(r#"fn f() { vec![tr!("name"), tr!("workers", count = 2)]; }"#)
+                .expect("valid Rust fixture"),
+        );
+        assert!(extractor.error.is_none());
+        assert_eq!(extractor.messages.len(), 2);
+        extractor.visit_file(&syn::parse_file(r#"fn f() { tr!("workers", other = 2); }"#).expect("valid Rust fixture"));
+        assert!(extractor.error.is_some());
+    }
+}

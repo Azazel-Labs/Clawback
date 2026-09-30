@@ -1,0 +1,52 @@
+name: Crowdin translations
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - locales/en/clawback.ftl
+      - crowdin.yml
+      - .github/workflows/translations.yml
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: crowdin-translations
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: vars.CROWDIN_PROJECT_ID != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install toolchain (from rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Validate source catalog
+        run: cargo xtask translations check
+      - name: Synchronize Crowdin and open a translation PR
+        uses: crowdin/github-action@9c23991700c0ec5256fd41089b9d9d7d540e424e # v3
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: true
+          skip_untranslated_strings: true
+          export_only_approved: true
+          localization_branch_name: l10n/crowdin
+          create_pull_request: true
+          pull_request_base_branch_name: main
+          pull_request_title: 'Update translations from Crowdin'
+          pull_request_body: 'Approved Crowdin translations. Review translations and run CI on this branch before merging.'
+          commit_message: 'Update translations from Crowdin'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Validate downloaded translations
+        run: cargo xtask translations check

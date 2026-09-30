@@ -9,6 +9,7 @@ mod background;
 #[cfg(feature = "screenshots")]
 mod demo;
 mod directoryview;
+mod i18n;
 mod icon;
 mod maprender;
 mod mapview;

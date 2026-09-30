@@ -1,0 +1,33 @@
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+base_path: .
+preserve_hierarchy: true
+
+files:
+  - source: /locales/en/clawback.ftl
+    translation: /locales/%locale%/clawback.ftl
+    languages_mapping:
+      locale:
+        fr: fr
+        de: de
+        es-419: es-419
+        es-ES: es-ES
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        ko: ko
+        ja: ja
+        pl: pl
+        ru: ru
+        pt-BR: pt-BR
+        it: it
+        tr: tr
+        uk: uk
+        cs: cs
+        pt-PT: pt-PT
+        nl: nl
+        id: id
+        vi: vi
+        th: th
+        sv-SE: sv
+        ro: ro
+        hu: hu

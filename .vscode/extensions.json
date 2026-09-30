@@ -1,3 +1,7 @@
 {
-  "recommendations": ["rust-lang.rust-analyzer", "vadimcn.vscode-lldb"]
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "vadimcn.vscode-lldb",
+    "macabeus.vscode-fluent"
+  ]
 }

@@ -128,6 +128,8 @@ jobs:
           mkdir -p "dist/$name"
           cp README.md LICENSE "dist/$name/"
           cp -r docs "dist/$name/"
+          cp assets/fonts/OFL.txt "dist/$name/NotoSans-OFL.txt"
+          cp assets/fonts/NotoSansThai-OFL.txt "dist/$name/NotoSansThai-OFL.txt"
           if [[ "${{ matrix.target }}" == *windows* ]]; then
             cp "target/${{ matrix.target }}/release/clawback.exe" "dist/$name/"
             (cd dist && 7z a -tzip "$name.zip" "$name" > /dev/null)
