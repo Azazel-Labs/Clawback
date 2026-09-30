@@ -199,13 +199,14 @@ pub fn reveal(path: &Path) -> Result<(), String> {
 
 #[cfg(all(unix, not(target_os = "macos")))]
 fn file_uri(path: &Path) -> String {
+    use std::fmt::Write as _;
     use std::os::unix::ffi::OsStrExt;
     let mut s = String::from("file://");
     for &b in path.as_os_str().as_bytes() {
         if b.is_ascii_alphanumeric() || b"/-_.~".contains(&b) {
             s.push(b as char);
         } else {
-            s.push_str(&format!("%{b:02X}"));
+            let _ = write!(s, "%{b:02X}");
         }
     }
     s

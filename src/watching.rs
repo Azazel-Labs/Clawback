@@ -98,6 +98,13 @@ impl Watch {
         let watcher = {
             use notify::Watcher;
             let events = inbox.clone();
+            // Native backends (notably FSEvents) report resolved paths. Keep
+            // events in the same namespace as the scanner, including aliases
+            // such as /var -> /private/var. Resolve only the root, never an
+            // individual event: deleted and renamed paths may no longer exist.
+            let scan_root = std::path::absolute(root).map_err(|e| e.to_string())?;
+            let watched_root = root.canonicalize().map_err(|e| e.to_string())?;
+            let event_root = watched_root.clone();
             let mut watcher = notify::RecommendedWatcher::new(
                 move |event: notify::Result<notify::Event>| match event {
                     Ok(event) if event.need_rescan() => events.send(Change::Rescan),
@@ -106,7 +113,9 @@ impl Watch {
                             return;
                         }
                         for path in event.paths {
-                            events.send(Change::Path(path));
+                            if let Some(path) = remap_event_path(&path, &event_root, &scan_root) {
+                                events.send(Change::Path(path));
+                            }
                         }
                     }
                     Err(error) => events.send(Change::Failed(error.to_string())),
@@ -114,7 +123,7 @@ impl Watch {
                 notify::Config::default().with_follow_symlinks(false),
             )
             .map_err(|e| e.to_string())?;
-            watcher.watch(root, notify::RecursiveMode::Recursive).map_err(|e| e.to_string())?;
+            watcher.watch(&watched_root, notify::RecursiveMode::Recursive).map_err(|e| e.to_string())?;
             watcher
         };
         Ok(Self { _watcher: watcher, inbox, rx })
@@ -284,6 +293,14 @@ impl Watch {
     }
 }
 
+#[cfg(any(not(windows), test))]
+fn remap_event_path(path: &Path, watched_root: &Path, scan_root: &Path) -> Option<PathBuf> {
+    path.strip_prefix(watched_root)
+        .or_else(|_| path.strip_prefix(scan_root))
+        .ok()
+        .map(|relative| scan_root.join(relative))
+}
+
 #[derive(Default)]
 struct Pending {
     paths: BTreeSet<PathBuf>,
@@ -340,13 +357,13 @@ mod tests {
     }
 
     #[track_caller]
-    fn receive(live: &Live, condition: impl Fn(&Snapshot) -> bool) -> Snapshot {
+    fn receive(live: &Live, stage: &str, condition: impl Fn(&Snapshot) -> bool) -> Snapshot {
         let deadline = Instant::now() + Duration::from_secs(15);
         loop {
             match live
                 .rx
                 .recv_timeout(deadline.saturating_duration_since(Instant::now()))
-                .expect("live update deadline")
+                .unwrap_or_else(|error| panic!("live update deadline during {stage}: {error}"))
             {
                 Update::Snapshot(snapshot) if condition(&snapshot) => return snapshot,
                 Update::Status(status) => assert!(!status.starts_with("Live stopped:"), "{status}"),
@@ -370,49 +387,57 @@ mod tests {
     #[test]
     fn native_notifications_cover_scan_gap_edit_rename_delete_and_recovery() {
         let temp = Temp::new();
+        #[cfg(unix)]
+        let root = {
+            let actual = temp.0.join("actual");
+            fs::create_dir_all(actual.join("watched")).unwrap();
+            let alias = temp.0.join("alias");
+            std::os::unix::fs::symlink(&actual, &alias).unwrap();
+            alias.join("watched")
+        };
+        #[cfg(not(unix))]
+        let root = temp.0.clone();
         let options =
             ScanOptions { apparent_size: true, dedupe_hardlinks: false, threads: 1, ..ScanOptions::default() };
-        fs::write(temp.0.join("initial"), [1; 10]).unwrap();
-        let watcher = Watch::start(&temp.0).unwrap();
-        let result = clawback_core::scan::scan(&temp.0, options.clone()).unwrap();
+        fs::write(root.join("initial"), [1; 10]).unwrap();
+        let watcher = Watch::start(&root).unwrap();
+        let result = clawback_core::scan::scan(&root, options.clone()).unwrap();
         // This event occurs after the baseline scan, before the live worker starts.
-        fs::write(temp.0.join("during-scan"), [2; 20]).unwrap();
+        fs::write(root.join("during-scan"), [2; 20]).unwrap();
         let live = watcher.live(result.tree, options, Vec::new(), None, Arc::new(|| {})).live.unwrap();
-        let first = receive(&live, |s| s.tree.root().size == 30);
-        let initial_id = first.tree.find_path(&temp.0.join("initial")).unwrap();
-        fs::write(temp.0.join("initial"), [3; 100]).unwrap();
-        let edited = receive(&live, |s| s.tree.root().size == 120);
+        let first = receive(&live, "scan-gap creation", |s| s.tree.root().size == 30);
+        let initial_id = first.tree.find_path(&root.join("initial")).unwrap();
+        fs::write(root.join("initial"), [3; 100]).unwrap();
+        let edited = receive(&live, "file edit", |s| s.tree.root().size == 120);
         assert!(!edited.reset);
-        assert_eq!(edited.tree.find_path(&temp.0.join("initial")), Some(initial_id));
+        assert_eq!(edited.tree.find_path(&root.join("initial")), Some(initial_id));
         assert_eq!(first.tree.root().size, 30);
-        fs::rename(temp.0.join("during-scan"), temp.0.join("renamed")).unwrap();
-        let renamed = receive(&live, |s| {
-            s.tree.find_path(&temp.0.join("renamed")).is_some()
-                && s.tree.find_path(&temp.0.join("during-scan")).is_none()
+        fs::rename(root.join("during-scan"), root.join("renamed")).unwrap();
+        let renamed = receive(&live, "rename", |s| {
+            s.tree.find_path(&root.join("renamed")).is_some() && s.tree.find_path(&root.join("during-scan")).is_none()
         });
         assert_eq!(renamed.tree.root().size, 120);
         #[cfg(windows)]
         {
-            fs::rename(temp.0.join("renamed"), temp.0.join("RENAMED")).unwrap();
-            let renamed_case = receive(&live, |s| {
-                s.tree.find_path(&temp.0.join("RENAMED")).is_some()
-                    && s.tree.find_path(&temp.0.join("renamed")).is_none()
+            fs::rename(root.join("renamed"), root.join("RENAMED")).unwrap();
+            let renamed_case = receive(&live, "case-only rename", |s| {
+                s.tree.find_path(&root.join("RENAMED")).is_some() && s.tree.find_path(&root.join("renamed")).is_none()
             });
             assert_eq!(renamed_case.tree.root().files, 2);
             assert_eq!(renamed_case.tree.root().size, 120);
         }
-        fs::create_dir_all(temp.0.join("new/nested")).unwrap();
-        fs::write(temp.0.join("new/nested/data"), [4; 55]).unwrap();
-        let added = receive(&live, |s| s.tree.root().size == 175);
+        fs::create_dir_all(root.join("new/nested")).unwrap();
+        fs::write(root.join("new/nested/data"), [4; 55]).unwrap();
+        let added = receive(&live, "new nested directory", |s| s.tree.root().size == 175);
         assert_eq!(added.dirs, 3);
-        fs::remove_dir_all(temp.0.join("new")).unwrap();
-        fs::remove_file(temp.0.join("initial")).unwrap();
-        let removed = receive(&live, |s| s.tree.root().size == 20);
+        fs::remove_dir_all(root.join("new")).unwrap();
+        fs::remove_file(root.join("initial")).unwrap();
+        let removed = receive(&live, "deletion", |s| s.tree.root().size == 20);
         assert_eq!(removed.tree.root().files, 1);
         assert_eq!(removed.dirs, 1);
         // Simulate the native zero-byte completion / OS overflow signal.
         live.inbox.send(Change::Rescan);
-        let recovered = receive(&live, |s| s.reset);
+        let recovered = receive(&live, "overflow recovery", |s| s.reset);
         assert_eq!(recovered.tree.root().size, 20);
         // Drain the final status; idle watching must not publish periodic trees.
         while live.rx.recv_timeout(Duration::from_millis(1300)).is_ok() {}
@@ -423,6 +448,16 @@ mod tests {
             std::thread::sleep(Duration::from_millis(20));
         }
         assert!(worker.upgrade().is_none(), "closing the document stops its worker");
+    }
+
+    #[test]
+    fn native_paths_map_to_scan_alias_even_after_deletion() {
+        let native = Path::new("/private/var/demo");
+        let scanned = Path::new("/var/demo");
+        assert_eq!(remap_event_path(&native.join("gone/file"), native, scanned), Some(scanned.join("gone/file")));
+        assert_eq!(remap_event_path(native, native, scanned), Some(scanned.to_path_buf()));
+        assert_eq!(remap_event_path(&scanned.join("file"), native, scanned), Some(scanned.join("file")));
+        assert_eq!(remap_event_path(Path::new("/private/var/demo-other/file"), native, scanned), None);
     }
 
     #[test]
