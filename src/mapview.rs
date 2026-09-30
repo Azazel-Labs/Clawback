@@ -4,8 +4,7 @@
 //! * **Left button down** selects the box under the cursor (clicking a
 //!   folder's frame or title band selects the folder; clicking free space or
 //!   an unnamed filler box clears the selection).
-//! * **Double-click** a folder to zoom in on it; double-click a file to run or
-//!   open it.
+//! * **Double-click** a bucket to zoom into its folder; files zoom to their parent.
 //! * **Right-click** selects the box and pops up the command menu.
 //! * Resting the mouse shows a *name tip* over truncated labels and an
 //!   *info tip* near the cursor; any mouse or keyboard input hides them.
@@ -33,12 +32,24 @@ const LABEL_FONT: f32 = 10.0;
 const LINE: f32 = 14.0;
 /// Info tips appear this far below-right of the cursor.
 const TIP_OFFSET: f32 = 16.0;
+/// Folder frames take precedence; otherwise choose the deepest containing bucket.
+fn zoom_target(boxes: &[DisplayBox], x: i32, y: i32) -> Option<NodeId> {
+    if let Some(index) = layout::hit_test(boxes, x, y)
+        && boxes[index].folder
+    {
+        return boxes[index].node();
+    }
+    boxes.iter().rev().find(|b| b.folder && b.contains(x, y)).and_then(DisplayBox::node)
+}
+
 const INFO_BG: Color32 = theme::SURFACE;
 
 /// What the map asks the application to do.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Command {
     ZoomTo(NodeId),
+    ZoomPath(std::path::PathBuf),
+    Back,
     ZoomOut,
     ZoomFull,
     RunOpen(NodeId),
@@ -309,6 +320,16 @@ impl MapView {
         }
 
         let pointer = response.hover_pos();
+        if response.double_clicked() {
+            let origin = self.display_origin();
+            if let Some(pos) = response.interact_pointer_pos() {
+                let (x, y) = ((pos.x - origin.x).floor() as i32, (pos.y - origin.y).floor() as i32);
+                // Use the displayed snapshot, whose IDs may differ from a new scan preview.
+                if let Some(node) = zoom_target(&self.boxes, x, y) {
+                    out.push(Command::ZoomPath(input.tree.path(node)));
+                }
+            }
+        }
         if interactive {
             self.handle_mouse(&ctx, &response, pointer, input, &mut out);
         }
@@ -333,16 +354,6 @@ impl MapView {
         let press = ctx.input(|i| i.pointer.primary_pressed() || i.pointer.secondary_pressed());
         if press && response.hovered() {
             self.selected = self.hit(pointer);
-        }
-        if response.double_clicked() {
-            self.selected = self.hit(response.interact_pointer_pos());
-            if let Some(b) = self.selected.map(|i| self.boxes[i]) {
-                if b.folder {
-                    self.zoom_in();
-                } else if let Some(n) = b.node() {
-                    out.push(Command::RunOpen(n));
-                }
-            }
         }
         if response.secondary_clicked() {
             self.selected = self.hit(response.interact_pointer_pos());
@@ -808,6 +819,19 @@ mod tests {
         }
         assert!(Arc::ptr_eq(map.display_tree.as_ref().unwrap(), &replacement));
         assert_eq!(map.prepared.as_ref().unwrap().label_count(), 384);
+    }
+
+    #[test]
+    fn double_click_targets_folder_frames_and_file_containers() {
+        let boxes = vec![
+            DisplayBox { x: 0, y: 0, w: 200, h: 200, item: layout::Item::Node(1), depth: 0, folder: true },
+            DisplayBox { x: 10, y: 30, w: 100, h: 100, item: layout::Item::Node(2), depth: 1, folder: true },
+            DisplayBox { x: 20, y: 60, w: 60, h: 60, item: layout::Item::Node(3), depth: 2, folder: false },
+        ];
+        assert_eq!(zoom_target(&boxes, 1, 1), Some(1));
+        assert_eq!(zoom_target(&boxes, 11, 31), Some(2));
+        assert_eq!(zoom_target(&boxes, 50, 90), Some(2));
+        assert_eq!(zoom_target(&boxes, 300, 300), None);
     }
 
     #[test]

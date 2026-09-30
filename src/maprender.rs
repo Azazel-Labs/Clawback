@@ -12,12 +12,18 @@ use std::{
     time::{Duration, Instant},
 };
 
+/// Pick the higher-contrast ink once on the layout worker, not each frame.
+fn label_color(rgb: [u8; 3]) -> Color32 {
+    if palette::dark_ink(rgb) { Color32::BLACK } else { Color32::WHITE }
+}
+
 const MAX_LABELS: usize = 384;
 const LABELS_PER_FRAME: usize = 8;
 const LABEL_BUDGET: Duration = Duration::from_millis(1);
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 struct LabelKey {
+    color: Color32,
     folder: bool,
     lines: Vec<String>,
 }
@@ -29,6 +35,7 @@ pub struct LabelCache {
 }
 
 struct LabelSpec {
+    color: Color32,
     rect: Rect,
     folder: bool,
     lines: Vec<String>,
@@ -52,16 +59,6 @@ impl PreparedMap {
     }
     /// Called by the layout worker. No font/context locks are taken here.
     pub fn build(tree: &Tree, boxes: &[DisplayBox], origin: Pos2, schemes: [usize; 2], free: [u64; 2]) -> Self {
-        const DEPTH: [[u8; 3]; 8] = [
-            [42, 94, 112],
-            [63, 75, 130],
-            [96, 64, 118],
-            [117, 72, 90],
-            [117, 89, 57],
-            [58, 104, 89],
-            [49, 97, 122],
-            [78, 78, 117],
-        ];
         let mut mesh = Mesh::default();
         mesh.reserve_vertices(boxes.len() * 8);
         mesh.reserve_triangles(boxes.len() * 4);
@@ -74,20 +71,14 @@ impl PreparedMap {
                 continue;
             }
             let scheme = schemes[usize::from(b.folder)];
-            let base = if b.item == Item::Free {
-                [27, 36, 49]
-            } else if scheme == 0 {
-                DEPTH[b.depth.rem_euclid(8) as usize]
-            } else {
-                palette::shades(scheme, b.depth).color.map(|c| (u16::from(c) * 2 / 5 + 16) as u8)
-            };
-            mesh.add_colored_rect(rect, Color32::from_rgb(55, 67, 85));
+            let base = if b.item == Item::Free { [29, 30, 30] } else { palette::map_color(scheme, b.depth) };
+            mesh.add_colored_rect(rect, theme::BORDER);
             let rect = rect.shrink(0.6);
             if !rect.is_positive() {
                 continue;
             }
-            let top = base.map(|c| c.saturating_add(9));
-            let bottom = base.map(|c| c.saturating_sub(9));
+            let top = base.map(|c| c.saturating_add(3));
+            let bottom = base.map(|c| c.saturating_sub(3));
             let start = mesh.vertices.len() as u32;
             for (pos, color) in [
                 (rect.left_top(), top),
@@ -134,7 +125,16 @@ impl PreparedMap {
                         lines.push(format::date(node.mtime));
                     }
                 }
-                LabelSpec { rect: rect_of(b), folder: b.folder, lines }
+                LabelSpec {
+                    rect: rect_of(b),
+                    folder: b.folder,
+                    lines,
+                    color: if b.item == Item::Free {
+                        theme::TEXT
+                    } else {
+                        label_color(palette::map_color(schemes[usize::from(b.folder)], b.depth))
+                    },
+                }
             })
             .collect();
         Self { mesh: Arc::new(mesh), pending, labels: Vec::new() }
@@ -158,7 +158,7 @@ impl PreparedMap {
             let Some(spec) = self.pending.front() else {
                 break;
             };
-            let key = LabelKey { folder: spec.folder, lines: spec.lines.clone() };
+            let key = LabelKey { color: spec.color, folder: spec.folder, lines: spec.lines.clone() };
             let galleys = if let Some(galleys) = cache.shaped.get(&key) {
                 galleys.clone()
             } else {
@@ -169,7 +169,7 @@ impl PreparedMap {
                 let galleys: Vec<_> = spec
                     .lines
                     .iter()
-                    .map(|text| painter.layout_no_wrap(text.clone(), font.clone(), theme::TEXT))
+                    .map(|text| painter.layout_no_wrap(text.clone(), font.clone(), spec.color))
                     .collect();
                 if cache.shaped.len() >= 1024 {
                     cache.shaped.clear();

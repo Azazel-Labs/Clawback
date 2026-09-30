@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="440" viewBox="0 0 1040 440"><rect width="1040" height="440" rx="12" fill="#181919"/>
+<text x="24" y="48" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Material</text>
+<text x="24" y="72" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Google Material 400</text>
+<rect x="230" y="24" width="91" height="78" rx="4" fill="#42a5f5"/>
+<rect x="327" y="24" width="91" height="78" rx="4" fill="#26a69a"/>
+<rect x="424" y="24" width="91" height="78" rx="4" fill="#5c6bc0"/>
+<rect x="521" y="24" width="91" height="78" rx="4" fill="#ab47bc"/>
+<rect x="618" y="24" width="91" height="78" rx="4" fill="#ec407a"/>
+<rect x="715" y="24" width="91" height="78" rx="4" fill="#ffa726"/>
+<rect x="812" y="24" width="91" height="78" rx="4" fill="#ffca28"/>
+<rect x="909" y="24" width="91" height="78" rx="4" fill="#66bb6a"/>
+<text x="24" y="152" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Candy</text>
+<text x="24" y="176" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Playful pastels</text>
+<rect x="230" y="128" width="91" height="78" rx="4" fill="#f575aa"/>
+<rect x="327" y="128" width="91" height="78" rx="4" fill="#a986f5"/>
+<rect x="424" y="128" width="91" height="78" rx="4" fill="#6aa5f9"/>
+<rect x="521" y="128" width="91" height="78" rx="4" fill="#4ed3cc"/>
+<rect x="618" y="128" width="91" height="78" rx="4" fill="#a8dc74"/>
+<rect x="715" y="128" width="91" height="78" rx="4" fill="#fcca6c"/>
+<rect x="812" y="128" width="91" height="78" rx="4" fill="#fa9673"/>
+<rect x="909" y="128" width="91" height="78" rx="4" fill="#d67bdb"/>
+<text x="24" y="256" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Sunset</text>
+<text x="24" y="280" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Purple, coral, gold</text>
+<rect x="230" y="232" width="91" height="78" rx="4" fill="#6848b7"/>
+<rect x="327" y="232" width="91" height="78" rx="4" fill="#9743b2"/>
+<rect x="424" y="232" width="91" height="78" rx="4" fill="#ca418d"/>
+<rect x="521" y="232" width="91" height="78" rx="4" fill="#eb5367"/>
+<rect x="618" y="232" width="91" height="78" rx="4" fill="#f67d46"/>
+<rect x="715" y="232" width="91" height="78" rx="4" fill="#f7aa45"/>
+<rect x="812" y="232" width="91" height="78" rx="4" fill="#e5c768"/>
+<rect x="909" y="232" width="91" height="78" rx="4" fill="#b85c86"/>
+<text x="24" y="360" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Lagoon</text>
+<text x="24" y="384" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Blue, teal, green</text>
+<rect x="230" y="336" width="91" height="78" rx="4" fill="#1d7abc"/>
+<rect x="327" y="336" width="91" height="78" rx="4" fill="#1ba3d0"/>
+<rect x="424" y="336" width="91" height="78" rx="4" fill="#1abcbb"/>
+<rect x="521" y="336" width="91" height="78" rx="4" fill="#36c994"/>
+<rect x="618" y="336" width="91" height="78" rx="4" fill="#93d065"/>
+<rect x="715" y="336" width="91" height="78" rx="4" fill="#369aad"/>
+<rect x="812" y="336" width="91" height="78" rx="4" fill="#4675c8"/>
+<rect x="909" y="336" width="91" height="78" rx="4" fill="#6e61d3"/>
+</svg>

@@ -98,10 +98,10 @@ impl Settings {
     pub fn sanitize(&mut self) {
         self.density = self.density.clamp(-3, 3);
         self.bias = self.bias.clamp(-20, 20);
-        if self.file_color > 11 {
+        if self.file_color >= crate::palette::SCHEME_NAMES.len() {
             self.file_color = 0;
         }
-        if self.folder_color > 11 {
+        if self.folder_color >= crate::palette::SCHEME_NAMES.len() {
             self.folder_color = 0;
         }
         self.nametip_delay_ms = self.nametip_delay_ms.min(99_999);
@@ -232,6 +232,15 @@ pub fn config_file() -> Option<PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn map_presets_survive_save_and_reload() {
+        for (scheme, _) in crate::palette::MAP_PRESETS {
+            let settings = Settings { file_color: scheme, folder_color: scheme, ..Settings::default() };
+            let restored = Settings::from_text(&settings.to_text());
+            assert_eq!((restored.file_color, restored.folder_color), (scheme, scheme));
+        }
+    }
 
     #[test]
     fn round_trips() {

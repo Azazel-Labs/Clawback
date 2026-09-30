@@ -6,6 +6,8 @@
 
 mod app;
 mod background;
+#[cfg(feature = "screenshots")]
+mod demo;
 mod directoryview;
 mod icon;
 mod maprender;
@@ -127,6 +129,13 @@ fn parse_args_from(args: impl IntoIterator<Item = std::ffi::OsString>) -> Result
 }
 
 fn main() -> ExitCode {
+    #[cfg(feature = "screenshots")]
+    if let Some(path) = std::env::var_os("CLAWBACK_TERMINAL_CAPTURE") {
+        return match tui::capture_demo(&PathBuf::from(path)) {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(_) => ExitCode::FAILURE,
+        };
+    }
     let args = match parse_args() {
         Ok(Some(a)) => a,
         Ok(None) => return ExitCode::SUCCESS,

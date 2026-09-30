@@ -79,6 +79,7 @@ enum Tool {
     ZoomFull,
     ZoomIn,
     ZoomOut,
+    Back,
     Free,
     Run,
     Delete,
@@ -91,6 +92,7 @@ pub struct ClawbackApp {
     settings: Settings,
     doc: Option<Doc>,
     next_doc_id: u64,
+    history: Vec<PathBuf>,
     scan: Option<Running>,
     live: Option<crate::watching::Live>,
     live_status: String,
@@ -114,6 +116,7 @@ impl ClawbackApp {
             settings,
             doc: None,
             next_doc_id: 1,
+            history: Vec::new(),
             scan: None,
             live: None,
             live_status: String::new(),
@@ -129,6 +132,29 @@ impl ClawbackApp {
             error: None,
             title: String::new(),
         };
+        #[cfg(feature = "screenshots")]
+        if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
+            let tree = crate::demo::tree();
+            let view = crate::demo::view(&tree);
+            app.settings = Settings { show_free: false, ..Settings::default() };
+            app.live_status = "Demo data - fictional files and sizes".into();
+            if view != ROOT {
+                app.history.push(tree.root_path().to_path_buf());
+            }
+            app.doc = Some(Doc {
+                id: 1,
+                root: tree.root_path().to_path_buf(),
+                view,
+                generation: 0,
+                files: tree.root().files,
+                folders: tree.dir_count(ROOT),
+                tree: Arc::new(tree),
+                skipped: Arc::new(Vec::new()),
+                disk: None,
+                is_mount: false,
+            });
+            return app;
+        }
         if let Some(p) = path {
             app.start_scan(p, &cc.egui_ctx);
         }
@@ -136,6 +162,10 @@ impl ClawbackApp {
     }
 
     fn save_settings(&self) {
+        #[cfg(feature = "screenshots")]
+        if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
+            return;
+        }
         let _ = self.settings.save();
     }
 
@@ -159,6 +189,7 @@ impl ClawbackApp {
                 self.props_rx = None;
                 self.show_unreadable = false;
                 self.map.reset();
+                self.history.clear();
                 self.scan = Some(scan);
                 self.settings.push_recent(&root);
                 let settings = self.settings.clone();
@@ -170,7 +201,11 @@ impl ClawbackApp {
         }
     }
 
-    fn set_doc(&mut self, doc: Doc) {
+    fn set_doc(&mut self, mut doc: Doc) {
+        if let Some(previous) = &self.doc {
+            let path = previous.tree.path(previous.view);
+            doc.view = doc.tree.find_path(&path).unwrap_or(ROOT);
+        }
         if let Some(old) = self.doc.replace(doc) {
             retire(old);
         }
@@ -320,9 +355,26 @@ impl ClawbackApp {
 
     fn apply(&mut self, cmd: Command, ctx: &egui::Context) {
         match cmd {
+            Command::ZoomPath(path) => {
+                if let Some(n) = self.doc.as_ref().and_then(|d| d.tree.find_path(&path)) {
+                    self.apply(Command::ZoomTo(n), ctx);
+                }
+            }
             Command::ZoomTo(n) => {
                 if let Some(d) = &mut self.doc
+                    && d.tree.is_live(n)
                     && d.tree.node(n).is_dir()
+                    && d.view != n
+                {
+                    self.history.push(d.tree.path(d.view));
+                    d.view = n;
+                    self.map.clear_selection();
+                    ctx.request_repaint();
+                }
+            }
+            Command::Back => {
+                if let Some(d) = &mut self.doc
+                    && let Some(n) = previous_view(&mut self.history, &d.tree, d.view)
                 {
                     d.view = n;
                     self.map.clear_selection();
@@ -330,19 +382,11 @@ impl ClawbackApp {
                 }
             }
             Command::ZoomOut => {
-                if let Some(d) = &mut self.doc {
-                    d.view = d.tree.parent(d.view).unwrap_or(ROOT);
-                    self.map.clear_selection();
-                    ctx.request_repaint();
+                if let Some(n) = self.doc.as_ref().and_then(|d| d.tree.parent(d.view)) {
+                    self.apply(Command::ZoomTo(n), ctx);
                 }
             }
-            Command::ZoomFull => {
-                if let Some(d) = &mut self.doc {
-                    d.view = ROOT;
-                    self.map.clear_selection();
-                    ctx.request_repaint();
-                }
-            }
+            Command::ZoomFull => self.apply(Command::ZoomTo(ROOT), ctx),
             Command::RunOpen(n) => {
                 if let Some(d) = &self.doc
                     && let Err(e) = platform::open(&d.tree.path(n))
@@ -422,10 +466,29 @@ impl ClawbackApp {
     /// Keyboard shortcuts for the toolbar commands (SpaceMonger had none; the
     /// mouse behaviour is unchanged).
     fn keys(&mut self, ctx: &egui::Context) {
-        if self.busy() || ctx.egui_wants_keyboard_input() || ctx.any_popup_open() {
+        if self.open.is_some()
+            || self.setup.is_some()
+            || self.error.is_some()
+            || self.about
+            || self.props.is_some()
+            || self.show_unreadable
+            || ctx.egui_wants_keyboard_input()
+            || ctx.any_popup_open()
+        {
             return;
         }
         let pressed = |m: Modifiers, k: Key| ctx.input_mut(|i| i.consume_key(m, k));
+        if pressed(Modifiers::NONE, Key::Escape)
+            || pressed(Modifiers::NONE, Key::Backspace)
+            || pressed(Modifiers::ALT, Key::ArrowLeft)
+            || ctx.input(|i| i.pointer.button_clicked(egui::PointerButton::Extra1))
+        {
+            self.apply(Command::Back, ctx);
+            return;
+        }
+        if self.busy() {
+            return;
+        }
         let tool = if pressed(Modifiers::COMMAND, Key::O) {
             Some(Tool::Open)
         } else if pressed(Modifiers::NONE, Key::F5) {
@@ -450,6 +513,7 @@ impl ClawbackApp {
         let zoomed = self.doc.as_ref().is_some_and(|d| d.view != ROOT);
         let sel = self.map.selected_node();
         match t {
+            Tool::Back => self.apply(Command::Back, ctx),
             Tool::Open => self.apply(Command::OpenDrive, ctx),
             Tool::Rescan => self.apply(Command::Rescan, ctx),
             Tool::ZoomFull if zoomed => self.map.zoom_full(),
@@ -478,116 +542,99 @@ impl ClawbackApp {
         let ready = self.doc.is_some() && self.scan.is_none();
         let zoomed = self.doc.as_ref().is_some_and(|d| d.view != ROOT);
         let selected = self.map.selected_node().is_some();
-        let compact = ui.available_width() < 600.0;
         let mut action = None;
-        ui.add_space(8.0);
-        ui.horizontal(|ui| {
-            let (mark, _) = ui.allocate_exact_size(vec2(28.0, 28.0), egui::Sense::hover());
-            let painter = ui.painter();
-            painter.rect_filled(mark, 8.0, theme::ACCENT);
-            painter.line_segment(
-                [mark.center() + vec2(5.0, -6.0), mark.center() + vec2(-5.0, 0.0)],
-                egui::Stroke::new(2.5, theme::BG),
-            );
-            painter.line_segment(
-                [mark.center() + vec2(-5.0, 0.0), mark.center() + vec2(5.0, 6.0)],
-                egui::Stroke::new(2.5, theme::BG),
-            );
-            ui.label(RichText::new("Clawback").size(21.0).strong());
-            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                ui.menu_button("More", |ui| {
-                    for (label, enabled, tool) in [
-                        ("Settings", true, Tool::Setup),
-                        ("About Clawback", true, Tool::About),
-                        ("Open selected item", ready && selected, Tool::Run),
-                        (
-                            "Move selected item to trash",
-                            ready && selected && !self.settings.disable_delete,
-                            Tool::Delete,
-                        ),
-                    ] {
-                        if ui.add_enabled(enabled, egui::Button::new(label)).clicked() {
-                            action = Some(tool);
+        ui.spacing_mut().button_padding = vec2(8.0, 3.0);
+        ui.spacing_mut().interact_size.y = 24.0;
+        ui.horizontal_centered(|ui| {
+            if ui.add(egui::Button::new("Open folder")).clicked() {
+                action = Some(Tool::Open);
+            }
+            if tb(ui, "Back", !self.history.is_empty(), "Previous view / Escape / Backspace") {
+                action = Some(Tool::Back);
+            }
+            ui.menu_button("Palette", |ui| {
+                for (scheme, name) in clawback_core::palette::MAP_PRESETS {
+                    ui.horizontal(|ui| {
+                        if ui
+                            .selectable_label(
+                                self.settings.file_color == scheme && self.settings.folder_color == scheme,
+                                name,
+                            )
+                            .clicked()
+                        {
+                            self.settings.file_color = scheme;
+                            self.settings.folder_color = scheme;
+                            self.save_settings();
                             ui.close();
                         }
-                    }
-                    if self.doc.as_ref().is_some_and(|d| d.unreadable() > 0)
-                        && ui.button("Unreadable folders").clicked()
-                    {
-                        action = Some(Tool::Unreadable);
-                        ui.close();
-                    }
-                });
-                if ui
-                    .add(egui::Button::new(RichText::new("Open folder").color(theme::BG).strong()).fill(theme::ACCENT))
-                    .clicked()
-                {
-                    action = Some(Tool::Open);
-                }
-                if ready && !compact && ui.button("Rescan").on_hover_text("Scan again · F5").clicked() {
-                    action = Some(Tool::Rescan);
-                }
-            });
-        });
-        ui.add_space(10.0);
-        let path =
-            self.doc.as_ref().map(|d| d.tree.path(d.view)).or_else(|| self.scan.as_ref().map(|r| r.root.clone()));
-        ui.label(
-            RichText::new(path.as_ref().map_or_else(
-                || "Your space. Back in perspective.".into(),
-                |p| elide(&p.display().to_string(), (ui.available_width() / 7.0) as usize),
-            ))
-            .color(theme::MUTED),
-        );
-        if let Some(doc) = &self.doc {
-            ui.add_space(6.0);
-            let values = [
-                ("SPACE MAPPED", format::size(doc.tree.root().size)),
-                ("FILES", format::count(doc.files)),
-                ("FOLDERS", format::count(doc.folders)),
-            ];
-            ui.columns(3, |columns| {
-                for (column, (label, value)) in columns.iter_mut().zip(values) {
-                    theme::frame().show(column, |ui| {
-                        ui.set_min_width((ui.available_width() - 2.0).max(0.0));
-                        ui.label(RichText::new(label).size(10.0).color(theme::MUTED));
-                        ui.label(RichText::new(value).size(if compact { 17.0 } else { 21.0 }).strong());
+                        for depth in 0..8 {
+                            let [r, g, b] = clawback_core::palette::map_color(scheme, depth);
+                            let (rect, _) = ui.allocate_exact_size(vec2(12.0, 16.0), egui::Sense::hover());
+                            ui.painter().rect_filled(rect, 2.0, egui::Color32::from_rgb(r, g, b));
+                        }
                     });
                 }
             });
-        }
-        ui.add_space(8.0);
-        ui.horizontal_wrapped(|ui| {
-            if compact && ready && tb(ui, "Rescan", true, "Scan again · F5") {
-                action = Some(Tool::Rescan);
-            }
-            for (label, enabled, hint, tool) in [
-                ("All files", ready && zoomed, "Back to the root · Home", Tool::ZoomFull),
-                ("Up a level", ready && zoomed, "Zoom out · Backspace", Tool::ZoomOut),
-                (
-                    "Zoom in",
-                    ready && selected && self.map.selected_is_folder(),
-                    "Open selected folder in the map · Enter",
-                    Tool::ZoomIn,
-                ),
-            ] {
-                if tb(ui, label, enabled, hint) {
-                    action = Some(tool);
+            ui.menu_button("More", |ui| {
+                for (label, enabled, tool) in [
+                    ("Up a level", ready && zoomed, Tool::ZoomOut),
+                    ("Rescan / F5", ready, Tool::Rescan),
+                    ("All files / Home", ready && zoomed, Tool::ZoomFull),
+                    ("Zoom in / Enter", ready && selected && self.map.selected_is_folder(), Tool::ZoomIn),
+                    ("Settings", true, Tool::Setup),
+                    ("About Clawback", true, Tool::About),
+                    ("Open selected item", ready && selected, Tool::Run),
+                    ("Move selected item to trash", ready && selected && !self.settings.disable_delete, Tool::Delete),
+                ] {
+                    if ui.add_enabled(enabled, egui::Button::new(label)).clicked() {
+                        action = Some(tool);
+                        ui.close();
+                    }
                 }
-            }
-            let can_show_free = ready && self.doc.as_ref().is_some_and(|d| d.is_mount);
-            if ui
-                .add_enabled(
-                    can_show_free,
-                    egui::Button::new("Show free space").selected(self.settings.show_free && can_show_free),
-                )
-                .on_hover_text("Include unused capacity when viewing an entire drive")
-                .clicked()
-            {
-                action = Some(Tool::Free);
-            }
+                let can_show_free = ready && self.doc.as_ref().is_some_and(|d| d.is_mount);
+                if ui
+                    .add_enabled(
+                        can_show_free,
+                        egui::Button::new("Show free space").selected(self.settings.show_free && can_show_free),
+                    )
+                    .clicked()
+                {
+                    action = Some(Tool::Free);
+                    ui.close();
+                }
+                if self.doc.as_ref().is_some_and(|d| d.unreadable() > 0) && ui.button("Unreadable folders").clicked() {
+                    action = Some(Tool::Unreadable);
+                    ui.close();
+                }
+            });
+            ui.separator();
+            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                let counts = self
+                    .scan
+                    .as_ref()
+                    .map(|r| (r.progress.bytes, r.progress.files, r.progress.dirs))
+                    .or_else(|| self.doc.as_ref().map(|d| (d.tree.root().size, d.files, d.folders)));
+                if let Some((bytes, files, folders)) = counts {
+                    let stats = format!(
+                        "{} | {} files | {} folders",
+                        format::size(bytes),
+                        format::count(files),
+                        format::count(folders)
+                    );
+                    ui.add(egui::Label::new(RichText::new(&stats).size(12.0)).truncate()).on_hover_text(stats);
+                    ui.separator();
+                }
+                let path = self
+                    .doc
+                    .as_ref()
+                    .map(|d| d.tree.path(d.view))
+                    .or_else(|| self.scan.as_ref().map(|r| r.root.clone()));
+                let text = path.map_or_else(|| "Clawback".into(), |p| p.display().to_string());
+                ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
+                    ui.add(egui::Label::new(RichText::new(&text).color(theme::MUTED)).truncate()).on_hover_text(text);
+                });
+            });
         });
-        ui.add_space(6.0);
         action
     }
 
@@ -712,27 +759,29 @@ impl ClawbackApp {
 
     /// Scan activity lives below the map, without covering its contents.
     fn status_bar(&self, ui: &mut Ui) {
+        ui.spacing_mut().item_spacing.y = 2.0;
+        ui.spacing_mut().button_padding = vec2(8.0, 2.0);
+        ui.spacing_mut().interact_size.y = 22.0;
         if let Some(run) = &self.scan {
             ui.horizontal(|ui| {
-                ui.spinner();
-                ui.label(RichText::new("Mapping your space").color(theme::ACCENT).strong());
-                if run.progress.workers > 0 {
-                    ui.weak(format!("up to {} workers", run.progress.workers)).on_hover_text(
-                        "Automatically adjusts concurrency using measured throughput and operation latency.",
-                    );
-                }
+                ui.add(egui::Spinner::new().size(16.0));
+                ui.label(RichText::new("Scanning").color(theme::TEXT));
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     if ui.button("Stop scan").clicked() {
                         run.cancel();
                     }
-                    ui.label(RichText::new(format!("{} found", format::size(run.progress.bytes))).color(theme::MUTED));
+                    if run.progress.workers > 0 {
+                        ui.weak(format!("{} workers", run.progress.workers)).on_hover_text(
+                            "Current concurrency limit; automatically adapts to measured throughput and latency.",
+                        );
+                    }
+                    ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
+                        let path = run.current.display().to_string();
+                        ui.add(egui::Label::new(RichText::new(&path).size(11.0).color(theme::MUTED)).truncate())
+                            .on_hover_text(path);
+                    });
                 });
             });
-            ui.label(
-                RichText::new(elide(&run.current.display().to_string(), (ui.available_width() / 7.0) as usize))
-                    .size(11.0)
-                    .color(theme::MUTED),
-            );
             let fraction = run
                 .disk
                 .as_ref()
@@ -745,23 +794,25 @@ impl ClawbackApp {
                     .animate(fraction.is_none())
                     .fill(theme::ACCENT)
                     .desired_height(3.0),
-            );
+            )
+            .on_hover_text("Mapped bytes relative to used drive space; an estimate, not a file-count percentage.");
         } else {
-            ui.horizontal_wrapped(|ui| {
-                ui.label(
-                    RichText::new(if !self.live_status.is_empty() {
-                        &self.live_status
-                    } else if self.doc.is_some() {
-                        "●  Ready"
-                    } else {
-                        "●  Let's make room"
-                    })
-                    .color(theme::ACCENT)
-                    .size(11.0),
-                );
-                ui.label(
-                    RichText::new("Double-click to explore  /  Right-click for actions").color(theme::MUTED).size(11.0),
-                );
+            ui.horizontal_centered(|ui| {
+                let status = if !self.live_status.is_empty() {
+                    &self.live_status
+                } else if self.doc.is_some() {
+                    "Ready"
+                } else {
+                    "Open a folder to begin"
+                };
+                ui.add(egui::Label::new(RichText::new(status).color(theme::MUTED).size(11.0)).truncate());
+                if ui.available_width() > 340.0 {
+                    ui.label(
+                        RichText::new("Double-click to explore / Right-click for actions")
+                            .color(theme::MUTED)
+                            .size(11.0),
+                    );
+                }
             });
         }
     }
@@ -1051,25 +1102,35 @@ impl ClawbackApp {
 impl eframe::App for ClawbackApp {
     fn ui(&mut self, ui: &mut Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
+        #[cfg(feature = "screenshots")]
+        crate::demo::capture(&ctx);
         self.poll(&ctx);
         self.keys(&ctx);
 
-        let tool = egui::Panel::top("toolbar")
-            .frame(egui::Frame::new().fill(theme::BG).inner_margin(16))
+        // Two compact bands leave roughly 90% of the window for the data.
+        let band_height = (ui.available_height() * 0.05).clamp(32.0, 44.0);
+        egui::Panel::top("scan-progress")
+            .exact_size(band_height)
+            .frame(egui::Frame::new().fill(theme::SURFACE).inner_margin(egui::Margin::symmetric(10, 3)))
+            .show(ui, |ui| self.status_bar(ui));
+        let tool = egui::Panel::top("compact-toolbar")
+            .exact_size(band_height)
+            .frame(egui::Frame::new().fill(theme::BG).inner_margin(egui::Margin::symmetric(10, 3)))
             .show(ui, |ui| self.toolbar(ui))
             .inner;
-        egui::Panel::bottom("status")
-            .frame(egui::Frame::new().fill(theme::SURFACE).inner_margin(12))
-            .show(ui, |ui| self.status_bar(ui));
         if let Some(t) = tool {
             self.tool(t, &ctx);
         }
 
-        let folder = egui::Panel::top("directory-tree")
+        let directory_panel = "directory-tree";
+        #[cfg(feature = "screenshots")]
+        let directory_panel =
+            if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() { "demo-directories" } else { directory_panel };
+        let folder = egui::Panel::top(directory_panel)
             .resizable(true)
             .default_size(190.0)
             .size_range(90.0..=400.0)
-            .frame(egui::Frame::new().fill(theme::SURFACE).inner_margin(12))
+            .frame(egui::Frame::new().fill(theme::SURFACE).inner_margin(8))
             .show(ui, |ui| {
                 if let Some(doc) = &self.doc {
                     self.directories.ui(ui, &doc.tree, doc.id, doc.generation, doc.view, self.scan.is_some())
@@ -1089,7 +1150,7 @@ impl eframe::App for ClawbackApp {
         }
 
         let commands = egui::CentralPanel::default()
-            .frame(egui::Frame::new().fill(theme::BG).inner_margin(16))
+            .frame(egui::Frame::new().fill(theme::BG).inner_margin(8))
             .show(ui, |ui| {
                 let settings = &self.settings;
                 let input = self.doc.as_ref().map(|d| MapInput {
@@ -1107,9 +1168,9 @@ impl eframe::App for ClawbackApp {
                     let center = ui.max_rect().center();
                     let p = ui.painter();
                     for (offset, size, color) in [
-                        (vec2(-54.0, -100.0), vec2(64.0, 62.0), egui::Color32::from_rgb(41, 97, 105)),
-                        (vec2(16.0, -100.0), vec2(38.0, 30.0), egui::Color32::from_rgb(62, 79, 133)),
-                        (vec2(16.0, -64.0), vec2(38.0, 26.0), egui::Color32::from_rgb(104, 69, 123)),
+                        (vec2(-54.0, -100.0), vec2(64.0, 62.0), egui::Color32::from_rgb(49, 65, 71)),
+                        (vec2(16.0, -100.0), vec2(38.0, 30.0), egui::Color32::from_rgb(54, 60, 77)),
+                        (vec2(16.0, -64.0), vec2(38.0, 26.0), egui::Color32::from_rgb(68, 56, 74)),
                     ] {
                         p.rect_filled(egui::Rect::from_min_size(center + offset, size), 6.0, color);
                     }
@@ -1152,6 +1213,19 @@ impl eframe::App for ClawbackApp {
     fn save(&mut self, _storage: &mut dyn eframe::Storage) {
         self.save_settings();
     }
+}
+
+fn previous_view(history: &mut Vec<PathBuf>, tree: &Tree, current: NodeId) -> Option<NodeId> {
+    while let Some(path) = history.pop() {
+        if let Some(n) = tree.find_path(&path)
+            && tree.is_live(n)
+            && tree.node(n).is_dir()
+            && n != current
+        {
+            return Some(n);
+        }
+    }
+    None
 }
 
 fn properties(t: &Tree, n: NodeId) -> Properties {
@@ -1218,6 +1292,35 @@ fn elide(s: &str, max: usize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn back_follows_visited_views_and_skips_deleted_folders() {
+        use clawback_core::tree::{Kind, NewEntry};
+        let mut tree = Tree::new(Path::new("/scan"));
+        let mut add = |parent, name: &str| {
+            tree.add_children(
+                parent,
+                vec![NewEntry {
+                    name: name.into(),
+                    kind: Kind::Dir,
+                    size: 0,
+                    len: 0,
+                    mtime: 0,
+                    flags: 0,
+                    file_id: None,
+                }],
+            )
+            .start
+        };
+        let a = add(ROOT, "a");
+        let deep = add(a, "deep");
+        let b = add(ROOT, "b");
+        let mut history = vec![tree.path(ROOT), tree.path(deep), tree.path(b)];
+        tree.remove(b);
+        assert_eq!(previous_view(&mut history, &tree, a), Some(deep));
+        assert_eq!(previous_view(&mut history, &tree, deep), Some(ROOT));
+        assert_eq!(previous_view(&mut history, &tree, ROOT), None);
+    }
 
     #[test]
     fn eliding() {

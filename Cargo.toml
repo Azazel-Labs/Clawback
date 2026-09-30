@@ -73,6 +73,9 @@ default-run = "clawback"
 keywords = ["disk", "treemap", "spacemonger", "disk-usage", "gui"]
 categories = ["filesystem", "visualization", "command-line-utilities"]
 
+[features]
+screenshots = []
+
 [dependencies]
 clawback-core.workspace = true
 # GUI (wgpu renderer; winit loads X11/Wayland/GL libraries at runtime, so

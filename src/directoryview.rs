@@ -153,20 +153,20 @@ impl DirectoryView {
                 let (rect, response) = ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::click());
                 let p = ui.painter();
                 if row.node == view {
-                    p.rect_filled(rect, 4.0, theme::ACCENT.gamma_multiply(0.13));
+                    p.rect_filled(rect, 4.0, theme::BORDER);
                 } else if response.hovered() {
                     p.rect_filled(rect, 4.0, theme::BORDER.gamma_multiply(0.45));
                 }
                 let indent = (row.depth as f32 * 16.0).min((rect.width() - 220.0).max(0.0));
                 let arrow = Rect::from_min_size(rect.min + vec2(indent, 0.0), vec2(22.0, ROW_HEIGHT));
                 if row.expandable {
-                    p.text(
-                        arrow.center(),
-                        Align2::CENTER_CENTER,
-                        if self.expanded.contains(&row.node) { "▾" } else { "▸" },
-                        FontId::proportional(13.0),
-                        theme::MUTED,
-                    );
+                    let center = arrow.center();
+                    let points = if self.expanded.contains(&row.node) {
+                        [center + vec2(-4.0, -2.0), center + vec2(0.0, 2.0), center + vec2(4.0, -2.0)]
+                    } else {
+                        [center + vec2(-2.0, -4.0), center + vec2(2.0, 0.0), center + vec2(-2.0, 4.0)]
+                    };
+                    p.add(egui::Shape::line(points.to_vec(), egui::Stroke::new(1.5, theme::TEXT)));
                 }
                 let text = Rect::from_min_max(
                     Pos2::new(arrow.max.x, rect.min.y),

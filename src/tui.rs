@@ -381,10 +381,12 @@ impl App {
             if rect.is_empty() {
                 continue;
             }
-            let [r, g, blue] = palette::shades(0, b.depth).color;
+            let scheme = if b.folder { self.settings.folder_color } else { self.settings.file_color };
+            let rgb = palette::map_color(scheme, b.depth);
+            let [r, g, blue] = rgb;
             let color = Color::Rgb(r, g, blue);
             let is_selected = b.node().is_some() && b.node() == selected;
-            let style = Style::default().bg(color).fg(Color::Black);
+            let style = Style::default().bg(color).fg(if palette::dark_ink(rgb) { Color::Black } else { Color::White });
             let border = if rect.height >= 3 && rect.width >= 6 { Borders::ALL } else { Borders::NONE };
             let block = Block::default()
                 .borders(border)
@@ -404,6 +406,35 @@ impl App {
             }
         }
     }
+}
+
+#[cfg(feature = "screenshots")]
+pub fn capture_demo(path: &std::path::Path) -> io::Result<()> {
+    use ratatui::{Terminal, backend::TestBackend};
+    use std::io::Write;
+    let tree = crate::demo::tree();
+    let mut app = App {
+        root: tree.root_path().to_path_buf(),
+        tree: Arc::new(tree),
+        settings: Settings::default(),
+        running: None,
+        live: None,
+        view: ROOT,
+        entries: Vec::new(),
+        selection: ListState::default(),
+        status: "Demo data - fictional files and sizes".into(),
+        started: Instant::now(),
+        map_only: false,
+    };
+    app.refresh_entries();
+    let mut terminal = Terminal::new(TestBackend::new(132, 38)).expect("infallible test backend");
+    terminal.draw(|frame| app.draw(frame)).expect("infallible test backend");
+    let mut file = std::fs::File::create(path)?;
+    writeln!(file, "132 38")?;
+    for cell in &terminal.backend().buffer().content {
+        writeln!(file, "{}\t{:?}\t{:?}", cell.symbol(), cell.fg, cell.bg)?;
+    }
+    Ok(())
 }
 
 #[cfg(test)]
