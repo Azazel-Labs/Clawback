@@ -48,7 +48,7 @@ Open files, inspect properties, or move unwanted items to the Recycle Bin / Tras
 Prefer a keyboard? The terminal interface pairs a colored space map with a size-sorted file list, folder navigation, scan progress, and live updates. Text reports work in scripts and redirected output too.
 
 ```sh
-clawback --gui             # Desktop app
+clawback                   # Desktop app (also from a terminal)
 clawback --tui .           # Interactive terminal map
 clawback --report --top 10 .
 ```

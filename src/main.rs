@@ -14,6 +14,7 @@ mod maprender;
 mod mapview;
 mod platform;
 mod scanning;
+mod session;
 mod theme;
 mod tui;
 #[cfg(windows)]
@@ -30,7 +31,7 @@ const USAGE: &str = "\
 Clawback - see where your disk space went.
 
 USAGE:
-    clawback [PATH]                 Terminal map in a terminal; window otherwise
+    clawback [PATH]                 Desktop window (terminal map on headless systems)
     clawback --report [OPTIONS] [PATH]
                                 Print a text report instead of opening a window
 
@@ -62,8 +63,14 @@ enum Mode {
     Gui,
 }
 
-fn terminal_mode(mode: Mode, stdin_tty: bool, stdout_tty: bool, dumb: bool) -> bool {
-    mode == Mode::Tui || (mode == Mode::Auto && stdin_tty && stdout_tty && !dumb)
+fn launch_mode(mode: Mode, graphical: bool, terminal: bool, dumb: bool) -> Option<Mode> {
+    match mode {
+        Mode::Gui => Some(Mode::Gui),
+        Mode::Tui => terminal.then_some(Mode::Tui),
+        Mode::Auto if graphical => Some(Mode::Gui),
+        Mode::Auto if terminal && !dumb => Some(Mode::Tui),
+        Mode::Auto => None,
+    }
 }
 
 fn parse_args() -> Result<Option<Args>, String> {
@@ -148,28 +155,35 @@ fn main() -> ExitCode {
     if args.report {
         return run_report(&args);
     }
-    // Windows binaries have no console until attached to the launcher.
-    if args.mode != Mode::Gui {
+    let graphical = args.mode == Mode::Gui || (args.mode == Mode::Auto && session::graphical());
+    // Attach only for a terminal launch, keeping default GUI launches console-free.
+    if !graphical {
         platform::attach_console();
     }
     let input = std::io::stdin().is_terminal();
     let output = std::io::stdout().is_terminal();
-    if terminal_mode(args.mode, input, output, std::env::var_os("TERM").is_some_and(|term| term == "dumb")) {
-        if !input || !output {
+    match launch_mode(
+        args.mode,
+        graphical,
+        input && output,
+        std::env::var_os("TERM").is_some_and(|term| term == "dumb"),
+    ) {
+        None => {
             eprintln!(
-                "clawback: --tui needs an interactive terminal (stdin and stdout); use --report for redirected output"
+                "clawback: no usable interactive interface; use --report for headless or redirected output, or --gui to force a window"
             );
-            return ExitCode::from(2);
+            ExitCode::from(2)
         }
-        match tui::run(args.path.clone().unwrap_or_else(|| PathBuf::from(".")), scan_settings(&args)) {
-            Ok(()) => ExitCode::SUCCESS,
-            Err(error) => {
-                eprintln!("clawback: {error}");
-                ExitCode::FAILURE
+        Some(Mode::Tui) => {
+            match tui::run(args.path.clone().unwrap_or_else(|| PathBuf::from(".")), scan_settings(&args)) {
+                Ok(()) => ExitCode::SUCCESS,
+                Err(error) => {
+                    eprintln!("clawback: {error}");
+                    ExitCode::FAILURE
+                }
             }
         }
-    } else {
-        run_gui(args.path)
+        Some(_) => run_gui(args.path),
     }
 }
 
@@ -233,14 +247,21 @@ mod cli_tests {
     use super::*;
 
     #[test]
-    fn automatic_mode_requires_interactive_input_and_output() {
-        assert!(terminal_mode(Mode::Auto, true, true, false));
-        assert!(!terminal_mode(Mode::Auto, true, false, false), "piped output must not receive a TUI");
-        assert!(!terminal_mode(Mode::Auto, false, true, false), "piped input cannot drive the UI");
-        assert!(!terminal_mode(Mode::Auto, false, false, false), "desktop launch uses GUI");
-        assert!(!terminal_mode(Mode::Auto, true, true, true), "respect TERM=dumb");
-        assert!(!terminal_mode(Mode::Gui, true, true, false), "explicit GUI beats detection");
-        assert!(terminal_mode(Mode::Tui, true, true, true), "explicit TUI beats TERM=dumb");
+    fn gui_is_default_and_headless_fallback_requires_a_usable_terminal() {
+        for input in [false, true] {
+            for output in [false, true] {
+                assert_eq!(launch_mode(Mode::Auto, true, input && output, false), Some(Mode::Gui));
+                assert_eq!(
+                    launch_mode(Mode::Auto, false, input && output, false),
+                    (input && output).then_some(Mode::Tui)
+                );
+            }
+        }
+        assert_eq!(launch_mode(Mode::Auto, false, true, true), None);
+        assert_eq!(launch_mode(Mode::Auto, true, true, true), Some(Mode::Gui));
+        assert_eq!(launch_mode(Mode::Gui, false, false, true), Some(Mode::Gui));
+        assert_eq!(launch_mode(Mode::Tui, true, true, true), Some(Mode::Tui));
+        assert_eq!(launch_mode(Mode::Tui, true, false, false), None);
     }
 
     #[test]

@@ -59,7 +59,7 @@ By default Clawback stays on one filesystem, so scanning `/` won't wander into n
 ## Command line
 
 ```
-clawback [PATH]                  terminal map in a terminal; desktop window otherwise
+clawback [PATH]                  desktop window; terminal map when no graphical session exists
 clawback --tui [PATH]            force the interactive terminal map
 clawback --gui [PATH]            force the desktop window
 clawback --report [PATH]         print a text summary instead of opening a window
@@ -71,7 +71,7 @@ clawback --report [PATH]         print a text summary instead of opening a windo
 
 ### Terminal interface
 
-The Ratatui terminal interface draws the same nested, colorful disk map alongside a size-sorted file list. It starts automatically when both input and output are interactive terminals (`TERM=dumb` disables automatic selection). Without a path, it scans the current directory. Desktop launches still open the window; `--gui` also opens it from a terminal.
+The Ratatui terminal interface draws the same nested, colorful disk map alongside a size-sorted file list. The desktop window is the default, including when launched from a terminal. Use `--tui` to choose the terminal interface. On systems without a graphical session, Clawback falls back to the terminal interface when both input and output are interactive and `TERM` is not `dumb`. Without either interface, it exits with guidance to use `--report`; it does not start an unattended scan. Without a path, terminal mode scans the current directory. `--gui` forces a desktop launch even if session detection says none is available.
 
 Use **↑/↓** or **j/k** to select, **Enter/→** to explore a folder, **Backspace/←** to go up, **Home** to return to the scan root, **r/F5** to rescan, **Tab** to expand the map, and **q/Ctrl+C** to quit. **Esc** cancels a running scan; its partial results remain browsable. Navigation becomes available after scanning stops. Narrow terminals show the map with the selected item's details underneath.
 

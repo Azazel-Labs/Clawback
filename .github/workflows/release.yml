@@ -99,7 +99,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+          # Keep Linux download builds on a fixed glibc baseline; CI tests ubuntu-latest.
+          - { os: ubuntu-24.04, target: x86_64-unknown-linux-gnu }
           - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu }
           - { os: macos-latest, target: aarch64-apple-darwin }
           - { os: macos-latest, target: x86_64-apple-darwin }
@@ -176,3 +177,12 @@ jobs:
           body: ${{ needs.plan.outputs.nightly == 'true' && 'Automated build of the latest commit on main. Unsigned; see the README for first-run notes on macOS and Windows.' || '' }}
           files: dist/*
           fail_on_unmatched_files: true
+
+  distribute:
+    name: Distribute stable release
+    needs: [plan, publish]
+    if: needs.plan.outputs.prerelease == 'false'
+    uses: ./.github/workflows/distribute.yml
+    with:
+      tag: ${{ needs.plan.outputs.tag }}
+    secrets: inherit

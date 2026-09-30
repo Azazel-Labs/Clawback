@@ -67,3 +67,52 @@ cargo xtask release validate v0.1.0
 ```
 
 Builds are currently unsigned; see the [first-run notes](development.md#release-builds).
+
+## WinGet and Homebrew after publication
+
+The Release workflow calls **Distribute stable release** after publishing a stable
+release. Publishing a stable release through GitHub also triggers that workflow.
+Nightlies and previews are excluded. It generates WinGet manifests and a macOS
+Homebrew formula from the published version's URLs and `SHA256SUMS.txt`, and saves
+them as a workflow artifact. No Python or PowerShell scripts are required.
+
+Catalog submission is disabled until the following one-time setup is complete:
+
+1. Make the release downloads publicly accessible without authentication. The
+   workflow checks all four download URLs anonymously before submitting.
+2. Create the public repository **Azazel-Labs/homebrew-tap**, initialized with a
+   README so it has a default branch. The workflow manages `Formula/clawback.rb`.
+3. Under this repository's **Settings → Secrets and variables → Actions**, add
+   secret **HOMEBREW_TAP_TOKEN**: a fine-grained GitHub token with Contents
+   read/write access to the tap repository. Authorize organization access if required.
+4. Add secret **WINGET_TOKEN** for the GitHub account submitting to
+   `microsoft/winget-pkgs`. Follow the
+   [WingetCreate token requirements](https://github.com/microsoft/winget-create#github-personal-access-token-classic-permissions).
+   It must be able to create a fork, push its branch, and open the submission PR.
+   Secrets belong in Actions settings, never in source files.
+5. Add Actions **variable** `DISTRIBUTION_ENABLED` with value `true`.
+
+Once enabled, each current **Latest** stable release updates the tap after an
+install/version smoke test and submits the WinGet manifests for both Windows
+architectures. The same submission handles the first WinGet registration; it
+still requires Microsoft's validation/review before users can install it.
+Existing WinGet versions and open version PRs are skipped on retries. Homebrew
+updates are ordinary commits with no force-pushes.
+
+To distribute an already-published release, use **Actions → Distribute stable
+release → Run workflow**, select **main**, and enter its tag, such as `v0.1.0`.
+This uses current tooling without moving the release tag or rebuilding binaries.
+Only the current Latest stable release is submitted, preventing an old retry
+from downgrading the tap. Leave `DISTRIBUTION_ENABLED` unset to generate and
+inspect metadata without submitting anything.
+
+After acceptance/publication, users install with:
+
+```sh
+winget install --id AzazelLabs.Clawback --exact
+brew install Azazel-Labs/tap/clawback
+```
+
+Distribution failures do not remove the published GitHub release. Correct the
+setup and rerun the distribution workflow. These jobs cover WinGet and our
+Homebrew tap; Linux archives remain on GitHub Releases.
