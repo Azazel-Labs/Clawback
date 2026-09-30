@@ -1,6 +1,6 @@
 # Clawback
 
-**Your disk is full. See why. Take it back.**
+**Your disk is full. See why. Claw it back.**
 
 Clawback turns files and folders into a map you can explore. Big boxes mean big files. Follow the space, find what you no longer need, and watch the map update as you clean up.
 
