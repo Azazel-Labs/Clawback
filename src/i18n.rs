@@ -176,7 +176,17 @@ pub fn language_name(code: &str) -> String {
         "nb" => ("Norsk bokmål", tr!("norwegian-bokmal")),
         _ => return code.to_owned(),
     };
-    format!("{native} ({translated})")
+    display_name(native, &translated)
+}
+
+/// Skip the translation when it repeats the native name ("English (English)").
+fn display_name(native: &str, translated: &str) -> String {
+    let translated = translated.trim_matches(['\u{2068}', '\u{2069}']);
+    if translated.to_lowercase() == native.to_lowercase() {
+        native.to_owned()
+    } else {
+        format!("{native} ({translated})")
+    }
 }
 
 #[cfg(test)]
@@ -580,6 +590,13 @@ mod tests {
             );
             assert_eq!(i18n_embed_fl::fl!(pt, "workers", count = count), format!("{count} {workers}"));
         }
+    }
+
+    #[test]
+    fn active_language_name_is_not_repeated() {
+        assert_eq!(display_name("English", "English"), "English");
+        assert_eq!(display_name("Svenska", "\u{2068}svenska\u{2069}"), "Svenska");
+        assert_eq!(display_name("English", "Englisch"), "English (Englisch)");
     }
 
     #[test]
