@@ -1,4 +1,4 @@
-# Pesan antarmuka Clawback. Jangan ubah ID pesan dan nama variabel.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % PEMINDAIAN
@@ -34,6 +34,11 @@ date-time = Tanggal / Waktu
 delay = Jeda:
 delete = Hapus
 deleting = { "Menghapus...\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Moving to Recycle Bin…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s elapsed
+delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
 density = Kepadatan:
 design-document = Dokumen desain
 directories = Direktori
@@ -188,3 +193,20 @@ thai = Bahasa Thai
 swedish = Bahasa Swedia
 romanian = Bahasa Rumania
 hungarian = Bahasa Hungaria
+turbo-read-progress = Turbo: reading MFT { $percent }% · { $records } records
+turbo-resolving = Turbo: resolving file names…
+turbo-assembling = Turbo: assembling folders · { $files } files
+turbo-sorting = Turbo: sorting results…
+turbo-transferring = Turbo: loading results…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues.
+settings-appearance = Appearance
+settings-behavior = Behavior
+settings-save = Save changes
+settings-bias-help = Left favors horizontal shapes; center balances them; right favors vertical shapes.
+settings-name-tips = File names
+settings-info-tips = File details
+settings-window = Window & interaction
+settings-deletion = Deleting files
+settings-scan-scope = Scan boundaries
+settings-file-sizes = Size accounting
