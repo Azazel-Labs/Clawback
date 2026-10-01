@@ -6,6 +6,7 @@
 
 mod app;
 mod background;
+mod deletion;
 #[cfg(feature = "screenshots")]
 mod demo;
 mod directoryview;

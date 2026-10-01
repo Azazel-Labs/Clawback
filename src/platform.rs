@@ -229,11 +229,6 @@ fn spawn(cmd: &str, args: &[&std::ffi::OsStr]) -> Result<(), String> {
     Ok(())
 }
 
-/// Move to the Recycle Bin / Trash (SpaceMonger's "Delete" used `FOF_ALLOWUNDO`).
-pub fn trash(path: &Path) -> Result<(), String> {
-    trash::delete(path).map_err(|e| e.to_string())
-}
-
 /// Native folder picker.
 pub fn pick_folder(start: Option<&Path>) -> Option<PathBuf> {
     let mut d = rfd::FileDialog::new().set_title(tr!("select-a-folder-to-view"));

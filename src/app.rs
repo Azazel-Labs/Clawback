@@ -12,7 +12,7 @@ use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree, format};
 use eframe::egui::{self, Align, Align2, Id, Key, Layout, Modifiers, RichText, Ui, vec2};
 use std::path::{MAIN_SEPARATOR, Path, PathBuf};
 use std::sync::{Arc, mpsc};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 /// A completed scan being viewed (SpaceMonger's `CFolderTree` document).
 struct Doc {
@@ -51,6 +51,9 @@ struct Deleting {
     doc: u64,
     path: PathBuf,
     rx: mpsc::Receiver<DeleteResult>,
+    progress: Arc<crate::deletion::Progress>,
+    started: Instant,
+    size: u64,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -367,7 +370,11 @@ impl ClawbackApp {
             ctx.request_repaint_after(Duration::from_millis(100));
         }
 
-        let finished = self.deleting.as_ref().and_then(|d| d.rx.try_recv().ok());
+        let finished = self.deleting.as_ref().and_then(|d| match d.rx.try_recv() {
+            Ok(result) => Some(result),
+            Err(mpsc::TryRecvError::Empty) => None,
+            Err(mpsc::TryRecvError::Disconnected) => Some(Err(tr!("delete-worker-stopped"))),
+        });
         if let Some(result) = finished
             && let Some(del) = self.deleting.take()
         {
@@ -395,6 +402,11 @@ impl ClawbackApp {
                     }
                 }
                 Err(e) => {
+                    if let Some(live) = &self.live
+                        && self.doc.as_ref().is_some_and(|d| d.id == del.doc)
+                    {
+                        live.invalidate(del.path.clone());
+                    }
                     self.error = Some(tr!("delete-error", path = del.path.display().to_string(), error = e.as_str()));
                 }
             }
@@ -543,17 +555,27 @@ impl ClawbackApp {
         let (tx, rx) = mpsc::channel();
         let (p, repaint) = (path.clone(), ctx.clone());
         let mut tree = doc.tree.clone();
-        let mount = doc.disk.as_ref().map(|d| d.mount.clone());
+        let mut disk = doc.disk.clone();
+        let live = self.live.is_some();
+        let progress = Arc::new(crate::deletion::Progress::default());
+        let worker_progress = progress.clone();
+        let started = Instant::now();
         std::thread::spawn(move || {
-            let result = platform::trash(&p).map(|()| {
-                Arc::make_mut(&mut tree).remove(node);
-                let disk = mount.and_then(|m| platform::all_disks().into_iter().find(|d| d.mount == m));
+            let result = crate::deletion::trash(&p, &worker_progress).map(|()| {
+                worker_progress.phase(crate::deletion::Phase::Updating);
+                let _span = crate::perf::span("delete.reconcile");
+                if !live {
+                    Arc::make_mut(&mut tree).remove(node);
+                    if let Some(disk) = &mut disk {
+                        platform::refresh_disk_space(disk);
+                    }
+                }
                 (tree, disk)
             });
             let _ = tx.send(result);
             repaint.request_repaint();
         });
-        self.deleting = Some(Deleting { doc: doc.id, path, rx });
+        self.deleting = Some(Deleting { doc: doc.id, path, rx, progress, started, size: doc.tree.node(node).size });
     }
 
     fn busy(&self) -> bool {
@@ -1182,11 +1204,37 @@ impl ClawbackApp {
 
     fn modal_dialogs(&mut self, ctx: &egui::Context) {
         if let Some(d) = &self.deleting {
+            let progress = d.progress.snapshot();
+            ctx.request_repaint_after(Duration::from_millis(100));
             egui::Modal::new(Id::new("clawback-deleting")).show(ctx, |ui| {
+                ui.set_width((ctx.content_rect().width() - 64.0).clamp(240.0, 420.0));
                 ui.horizontal(|ui| {
                     ui.spinner();
-                    ui.label(tr!("deleting", path = elide(&d.path.display().to_string(), 60)));
+                    ui.strong(match progress.phase {
+                        crate::deletion::Phase::Preparing => tr!("delete-preparing"),
+                        crate::deletion::Phase::Recycling => tr!("delete-recycling"),
+                        crate::deletion::Phase::Updating => tr!("delete-updating"),
+                    });
                 });
+                ui.add_space(8.0);
+                ui.add(egui::Label::new(d.path.display().to_string()).truncate())
+                    .on_hover_text(d.path.display().to_string());
+                ui.label(
+                    RichText::new(tr!(
+                        "delete-details",
+                        size = format::size(d.size),
+                        seconds = d.started.elapsed().as_secs().to_string()
+                    ))
+                    .color(theme::MUTED),
+                );
+                if progress.total > 0 && progress.phase == crate::deletion::Phase::Recycling {
+                    ui.add_space(8.0);
+                    ui.add(egui::ProgressBar::new(progress.done as f32 / progress.total as f32).show_percentage());
+                }
+                if !progress.current.is_empty() && progress.current != d.path.display().to_string() {
+                    ui.add(egui::Label::new(RichText::new(&progress.current).small().color(theme::MUTED)).truncate())
+                        .on_hover_text(&progress.current);
+                }
             });
         }
         if let Some(msg) = &self.error {
@@ -1476,16 +1524,6 @@ fn dir_display(p: &Path) -> String {
         s.push(MAIN_SEPARATOR);
     }
     s
-}
-
-/// Shorten long text from the front: "…/some/deep/path".
-fn elide(s: &str, max: usize) -> String {
-    let n = s.chars().count();
-    if n <= max {
-        return s.to_owned();
-    }
-    let tail: String = s.chars().skip(n - (max - 1)).collect();
-    format!("…{tail}")
 }
 
 #[cfg(test)]
