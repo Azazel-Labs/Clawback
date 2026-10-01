@@ -1,0 +1,9 @@
+# Store and check out text files with LF on every platform.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.icns binary
+*.otf binary
+*.ttf binary
+*.zip binary

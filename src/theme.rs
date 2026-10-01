@@ -153,6 +153,10 @@ mod tests {
                     include_str!("../locales/af/clawback.ftl"),
                     include_str!("../locales/ca/clawback.ftl"),
                     include_str!("../locales/sr-Cyrl/clawback.ftl"),
+                    include_str!("../locales/da/clawback.ftl"),
+                    include_str!("../locales/fi/clawback.ftl"),
+                    include_str!("../locales/el/clawback.ftl"),
+                    include_str!("../locales/nb/clawback.ftl"),
                 ] {
                     for ch in catalog.chars().filter(|c| !c.is_whitespace()) {
                         assert!(characters.contains_key(&ch), "Missing glyph: {ch}");

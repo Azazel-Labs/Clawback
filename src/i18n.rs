@@ -119,6 +119,12 @@ fn preferred_catalog(preferences: &[String], available: &[&str]) -> Option<usize
             {
                 return Some(index);
             }
+            // Legacy macrolanguage `no` (e.g. glibc no_NO) means Bokmål in practice.
+            if code.eq_ignore_ascii_case("no")
+                && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("nb"))
+            {
+                return Some(index);
+            }
             let Some(end) = code.rfind('-') else { break };
             code.truncate(end);
         }
@@ -164,6 +170,10 @@ pub fn language_name(code: &str) -> String {
         "af" => ("Afrikaans", tr!("afrikaans")),
         "ca" => ("Català", tr!("catalan")),
         "sr-Cyrl" => ("Српски, ћирилица", tr!("serbian-cyrillic")),
+        "da" => ("Dansk", tr!("danish")),
+        "fi" => ("Suomi", tr!("finnish")),
+        "el" => ("Ελληνικά", tr!("greek")),
+        "nb" => ("Norsk bokmål", tr!("norwegian-bokmal")),
         _ => return code.to_owned(),
     };
     format!("{native} ({translated})")
@@ -505,6 +515,11 @@ mod tests {
             ("ca_AD.UTF-8", "ca", "Cancel·la"),
             ("sr-Cyrl-RS", "sr-Cyrl", "Откажи"),
             ("sr_RS.UTF-8", "sr-Cyrl", "Откажи"),
+            ("da-DK", "da", "Annuller"),
+            ("fi_FI.UTF-8", "fi", "Peruuta"),
+            ("el-GR", "el", "Ακύρωση"),
+            ("nb-NO", "nb", "Avbryt"),
+            ("no_NO.UTF-8", "nb", "Avbryt"),
         ] {
             let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("embedded locale");
             assert_eq!(LANGUAGES[index], code);
@@ -533,6 +548,10 @@ mod tests {
                 "afrikaans",
                 "catalan",
                 "serbian-cyrillic",
+                "danish",
+                "finnish",
+                "greek",
+                "norwegian-bokmal",
             ] {
                 assert_ne!(language.get(id), id, "{code}: untranslated language name");
             }
@@ -560,6 +579,13 @@ mod tests {
                 format!("{count} {files}, {count} {folders}")
             );
             assert_eq!(i18n_embed_fl::fl!(pt, "workers", count = count), format!("{count} {workers}"));
+        }
+    }
+
+    #[test]
+    fn every_catalog_has_a_display_name() {
+        for &code in LANGUAGES {
+            assert_ne!(language_name(code), code, "{code}: add it to language_name or map it in crowdin.yml");
         }
     }
 
