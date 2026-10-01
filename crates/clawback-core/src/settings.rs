@@ -6,6 +6,9 @@ use crate::scan::ScanOptions;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
+/// Allowed `directory_split` range, in thousandths.
+pub const DIRECTORY_SPLIT: (u32, u32) = (100, 650);
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Settings {
     /// GUI catalog code, or "auto" for OS preferences. Unknown codes use English.
@@ -23,7 +26,6 @@ pub struct Settings {
     pub show_info_tips: bool,
     pub infotip_delay_ms: u32,
     pub tip_path: bool,
-    pub tip_name: bool,
     pub tip_icon: bool,
     pub tip_date: bool,
     pub tip_size: bool,
@@ -33,6 +35,8 @@ pub struct Settings {
     pub disable_delete: bool,
     pub animated_zoom: bool,
     pub save_pos: bool,
+    /// Height of the folder and file-type panels, in thousandths of the window below the menu bar.
+    pub directory_split: u32,
     pub rollover_box: bool,
     pub show_free: bool,
     // Scanning (not in SpaceMonger; needed off Windows)
@@ -58,7 +62,6 @@ impl Default for Settings {
             show_info_tips: true,
             infotip_delay_ms: 250,
             tip_path: false,
-            tip_name: false,
             tip_icon: true,
             tip_date: true,
             tip_size: true,
@@ -67,6 +70,7 @@ impl Default for Settings {
             disable_delete: false,
             animated_zoom: true,
             save_pos: false,
+            directory_split: 300,
             rollover_box: false,
             show_free: true,
             one_filesystem: true,
@@ -106,21 +110,18 @@ impl Settings {
         }
         self.density = self.density.clamp(-3, 3);
         self.bias = self.bias.clamp(-20, 20);
-        if self.file_color >= crate::palette::SCHEME_NAMES.len() {
-            self.file_color = crate::palette::DEFAULT_MAP_SCHEME;
-        }
-        if self.folder_color >= crate::palette::SCHEME_NAMES.len() {
-            self.folder_color = crate::palette::DEFAULT_MAP_SCHEME;
-        }
-        // ID 15 was a standalone Muted preset. Keep other saved IDs stable.
+        // ID 15 was a standalone Muted preset. Retired single-hue and grey schemes use the default.
         for scheme in [&mut self.file_color, &mut self.folder_color] {
             if *scheme == 15 {
                 *scheme = crate::palette::DEFAULT_MAP_SCHEME;
                 self.mute_palette = true;
+            } else if !crate::palette::is_preset(*scheme) {
+                *scheme = crate::palette::DEFAULT_MAP_SCHEME;
             }
         }
         self.nametip_delay_ms = self.nametip_delay_ms.min(99_999);
         self.infotip_delay_ms = self.infotip_delay_ms.min(99_999);
+        self.directory_split = self.directory_split.clamp(DIRECTORY_SPLIT.0, DIRECTORY_SPLIT.1);
         self.recent.truncate(MAX_RECENT);
     }
 
@@ -140,7 +141,6 @@ impl Settings {
         kv("show_info_tips", &self.show_info_tips);
         kv("infotip_delay", &self.infotip_delay_ms);
         kv("tip_path", &self.tip_path);
-        kv("tip_name", &self.tip_name);
         kv("tip_icon", &self.tip_icon);
         kv("tip_date", &self.tip_date);
         kv("tip_size", &self.tip_size);
@@ -149,6 +149,7 @@ impl Settings {
         kv("disable_delete", &self.disable_delete);
         kv("animated_zoom", &self.animated_zoom);
         kv("save_pos", &self.save_pos);
+        kv("directory_split", &self.directory_split);
         kv("rollover_box", &self.rollover_box);
         kv("show_free", &self.show_free);
         kv("one_filesystem", &self.one_filesystem);
@@ -187,7 +188,6 @@ impl Settings {
                 "show_info_tips" => set(&mut s.show_info_tips, flag()),
                 "infotip_delay" => set(&mut s.infotip_delay_ms, ms()),
                 "tip_path" => set(&mut s.tip_path, flag()),
-                "tip_name" => set(&mut s.tip_name, flag()),
                 "tip_icon" => set(&mut s.tip_icon, flag()),
                 "tip_date" => set(&mut s.tip_date, flag()),
                 "tip_size" => set(&mut s.tip_size, flag()),
@@ -196,6 +196,7 @@ impl Settings {
                 "disable_delete" => set(&mut s.disable_delete, flag()),
                 "animated_zoom" => set(&mut s.animated_zoom, flag()),
                 "save_pos" => set(&mut s.save_pos, flag()),
+                "directory_split" => set(&mut s.directory_split, ms()),
                 "rollover_box" => set(&mut s.rollover_box, flag()),
                 "show_free" => set(&mut s.show_free, flag()),
                 "one_filesystem" => set(&mut s.one_filesystem, flag()),
@@ -273,6 +274,21 @@ mod tests {
     }
 
     #[test]
+    fn retired_schemes_fall_back_and_presets_are_alphabetical() {
+        let s = Settings::from_text(
+            "file_color = 2
+folder_color = 10
+",
+        );
+        assert_eq!(
+            (s.file_color, s.folder_color),
+            (crate::palette::DEFAULT_MAP_SCHEME, crate::palette::DEFAULT_MAP_SCHEME)
+        );
+        let names: Vec<_> = crate::palette::MAP_PRESETS.iter().map(|(_, name)| *name).collect();
+        assert!(names.is_sorted());
+    }
+
+    #[test]
     fn language_defaults_to_os_but_preserves_explicit_choices() {
         assert_eq!(Settings::from_text("").language, "auto");
         assert_eq!(Settings::from_text("language = en\n").language, "en");
@@ -287,7 +303,7 @@ mod tests {
             language: "pt-BR".into(),
             density: -2,
             bias: 7,
-            folder_color: 4,
+            folder_color: 19,
             rollover_box: true,
             nametip_delay_ms: 10,
             ..Settings::default()

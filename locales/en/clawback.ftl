@@ -23,7 +23,6 @@ claw-back-your-disk-space = Claw back your disk space.
 clawback-settings = Clawback Settings
 scan-folder-error = { "Clawback could not scan the folder.\u000A\u000A" }{ $error }
 scan-path-error = Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Clawback is a Rust homage to SpaceMonger 1.4 by Sean Werkema (1997–2000). Its layout, colours and mouse behaviour follow the original source code.
 compress = Compress
 contains = Contains:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
@@ -36,9 +35,34 @@ delete = Delete
 deleting = { "Deleting...\u000A" }{ $path }
 delete-preparing = Preparing to recycle…
 delete-recycling = Moving to Recycle Bin…
+delete-permanently = Deleting permanently…
+emptying-recycle-bin = Emptying Recycle Bin…
+delete-permanently-title = Delete permanently?
+delete-too-big-for-recycle-bin = “{ $name }” is too big for the Recycle Bin.
+empty-recycle-bin-title = Empty the Recycle Bin?
+empty-recycle-bin-body = Everything in your Recycle Bin on { $drive } will be deleted permanently.
+delete-cannot-be-undone = This can’t be undone.
+delete-size-files =
+    { $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }
+delete-permanently-button = Delete permanently
+empty-recycle-bin-button = Empty Recycle Bin
+delete-progress-files = { $done } of { $total } files
+purge-failed =
+    { $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }
 delete-updating = Updating disk map…
 delete-details = { $size } · { $seconds }s elapsed
 delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
+delete-queued =
+    { $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }
 density = Density:
 design-document = Design document
 directories = Directories
@@ -58,6 +82,7 @@ file-type = FILE TYPE
 files = FILES
 folder = FOLDER
 delete-error = Failed to delete { $path }{ ".\u000A\u000A" }{ $error }
+click-to-empty-recycle-bin = Click to empty this drive’s Recycle Bin
 file = File
 file-layout = File Layout
 file-size = File Size
@@ -137,8 +162,8 @@ select-a-folder-to-view = Select a Folder to View
 settings = Settings…
 show-free-space = Show Free Space
 show-rollover-boxes = Show Rollover Boxes
-show-file-info-tips = Show file-info-tips
-show-file-name-tips = Show file-name-tips
+show-file-info-tips = Show file details tooltips
+show-file-name-tips = Show file name tooltips
 show-free-space-2 = Show free space
 show-in-file-manager = Show in File Manager
 size-on-disk = Size on disk:
@@ -189,6 +214,7 @@ zoom-out = Zoom Out
 zoom-in-2 = Zoom in
 permission-hint-macos = macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.
 msec = msec
+drive-free-of-total = { $free } free of { $total }
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }
 properties-title = { $name } Properties
 window-title = { $path }  -  { $total } Total  -  { $free } Free  -  Clawback

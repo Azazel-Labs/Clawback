@@ -2,7 +2,7 @@
 use crate::{i18n::tr, theme};
 use clawback_core::{
     Settings,
-    palette::{SCHEME_NAMES, display_color},
+    palette::{MAP_PRESETS, display_color},
 };
 use eframe::egui::{self, Align, Color32, CornerRadius, Id, Layout, RichText, Stroke, Ui, vec2};
 
@@ -46,7 +46,11 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
                 });
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     if ui
-                        .add(egui::Button::new(RichText::new("×").size(23.0)).frame(false).min_size(vec2(32.0, 32.0)))
+                        .add(
+                            egui::Button::new(RichText::new("×").size(23.0))
+                                .frame_when_inactive(false)
+                                .min_size(vec2(32.0, 32.0)),
+                        )
                         .on_hover_text(tr!("cancel"))
                         .clicked()
                     {
@@ -117,12 +121,7 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
                     {
                         done = Some(true);
                     }
-                    if ui
-                        .add_sized(
-                            [88.0, 36.0],
-                            egui::Button::new(tr!("cancel")).fill(Color32::TRANSPARENT).stroke(Stroke::NONE),
-                        )
-                        .clicked()
+                    if ui.add_sized([88.0, 36.0], egui::Button::new(tr!("cancel")).frame_when_inactive(false)).clicked()
                     {
                         done = Some(false);
                     }
@@ -198,13 +197,29 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
     for (index, (label, value)) in
         [(tr!("files-2"), &mut d.file_color), (tr!("folders"), &mut d.folder_color)].into_iter().enumerate()
     {
+        let muted = d.mute_palette;
         row(ui, &label, |ui| {
+            // Right-to-left: the current palette's swatches sit beside the closed dropdown.
+            swatches(ui, *value, muted);
             egui::ComboBox::from_id_salt(("color-scheme", index))
                 .width(ui.available_width())
-                .selected_text(SCHEME_NAMES[*value])
+                .selected_text(MAP_PRESETS.iter().find(|(id, _)| id == value).map_or("", |(_, name)| *name))
                 .show_ui(ui, |ui| {
-                    for (scheme, name) in SCHEME_NAMES.iter().enumerate().filter(|(id, _)| *id != 15) {
-                        ui.selectable_value(value, scheme, *name);
+                    ui.set_min_width(SWATCHES_WIDTH + 140.0);
+                    for &(scheme, name) in &MAP_PRESETS {
+                        let response = ui.add(
+                            egui::Button::selectable(*value == scheme, name)
+                                .min_size(vec2(ui.available_width(), 24.0))
+                                .right_text(()),
+                        );
+                        let strip = egui::Rect::from_min_size(
+                            egui::pos2(response.rect.right() - SWATCHES_WIDTH - 6.0, response.rect.center().y - 7.0),
+                            vec2(SWATCHES_WIDTH, 14.0),
+                        );
+                        paint_swatches(ui.painter(), strip, scheme, muted);
+                        if response.clicked() {
+                            *value = scheme;
+                        }
                     }
                 });
         });
@@ -254,6 +269,27 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
     });
 }
 
+const SWATCH: f32 = 10.0;
+const SWATCH_GAP: f32 = 2.0;
+const SWATCHES_WIDTH: f32 = 8.0 * (SWATCH + SWATCH_GAP) - SWATCH_GAP;
+
+/// A palette's eight depth colours as a compact strip.
+fn swatches(ui: &mut Ui, scheme: usize, muted: bool) {
+    let (rect, _) = ui.allocate_exact_size(vec2(SWATCHES_WIDTH, 14.0), egui::Sense::hover());
+    paint_swatches(ui.painter(), rect, scheme, muted);
+}
+
+fn paint_swatches(painter: &egui::Painter, rect: egui::Rect, scheme: usize, muted: bool) {
+    for depth in 0..8 {
+        let [r, g, b] = display_color(scheme, depth, muted);
+        let tile = egui::Rect::from_min_size(
+            egui::pos2(rect.left() + depth as f32 * (SWATCH + SWATCH_GAP), rect.top()),
+            vec2(SWATCH, rect.height()),
+        );
+        painter.rect_filled(tile, 2, Color32::from_rgb(r, g, b));
+    }
+}
+
 fn delay(ui: &mut Ui, ms: &mut u32) {
     row(ui, &tr!("delay"), |ui| {
         ui.add(egui::DragValue::new(ms).range(0..=99_999).speed(5).suffix(format!(" {}", tr!("msec"))));
@@ -271,7 +307,6 @@ fn tooltips(ui: &mut Ui, d: &mut Settings) {
         delay(ui, &mut d.infotip_delay_ms);
         ui.columns(2, |columns| {
             columns[0].checkbox(&mut d.tip_path, tr!("full-path"));
-            columns[0].checkbox(&mut d.tip_name, tr!("filename"));
             columns[0].checkbox(&mut d.tip_icon, tr!("icon"));
             columns[1].checkbox(&mut d.tip_date, tr!("date-time"));
             columns[1].checkbox(&mut d.tip_size, tr!("file-size"));

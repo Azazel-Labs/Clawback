@@ -20,6 +20,8 @@ mod perf;
 #[cfg(feature = "perf-probe")]
 mod perf_probe;
 mod platform;
+#[cfg(windows)]
+mod recycle_bin;
 mod scanning;
 mod session;
 mod settings_ui;

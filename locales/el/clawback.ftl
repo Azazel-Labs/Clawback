@@ -23,7 +23,6 @@ claw-back-your-disk-space = Ρυθμίστε πίσω το χώρο στο δί�
 clawback-settings = Ρυθμίσεις Clawback
 scan-folder-error = { "Clawback could not scan the folder.\u000A\u000A" }{ $error }
 scan-path-error = Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Το Clawback είναι ένας φόρος τιμής στο SpaceMonger 1.4 του Sean Werkema (1997-2000). " διάταξη, τα χρώματα και η συμπεριφορά του ποντικιού ακολουθούν τον αρχικό πηγαίο κώδικα.
 compress = Συμπίεση
 contains = Περιέχει:
 copyright-2026-azazel-labs = Πνευματικά Δικαιώματα © 2026 Azazel Labs.

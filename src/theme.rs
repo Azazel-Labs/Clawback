@@ -10,6 +10,8 @@ pub const BORDER: Color32 = Color32::from_rgb(43, 44, 44);
 pub const TEXT: Color32 = Color32::from_rgb(216, 216, 216);
 pub const MUTED: Color32 = Color32::from_rgb(153, 153, 153);
 pub const ACCENT: Color32 = Color32::from_rgb(117, 169, 214);
+pub const DANGER: Color32 = Color32::from_rgb(226, 104, 92);
+pub const FOLDER: Color32 = Color32::from_rgb(232, 191, 92);
 
 pub fn set_fonts(ctx: &egui::Context, language: &str) {
     // Keep CJK and Thai labels and filenames readable without installed OS fonts.
@@ -49,6 +51,12 @@ pub fn set_fonts(ctx: &egui::Context, language: &str) {
             .or_default()
             .extend(order.into_iter().chain(["Noto Sans Thai"]).map(str::to_owned));
     }
+    // Phosphor icons (MIT; license shipped beside the binary) live in the Private Use Area.
+    // Last in the chain, so they can only supply icons and never shadow text glyphs.
+    fonts
+        .font_data
+        .insert("Phosphor".into(), egui::FontData::from_static(egui_phosphor::Variant::Regular.font_bytes()).into());
+    fonts.families.entry(egui::FontFamily::Proportional).or_default().push("Phosphor".into());
     ctx.set_fonts(fonts);
 }
 
@@ -83,9 +91,12 @@ pub fn apply(ctx: &egui::Context, language: &str) {
     v.widgets.inactive.weak_bg_fill = Color32::from_rgb(36, 37, 37);
     v.widgets.inactive.bg_fill = Color32::from_rgb(36, 37, 37);
     v.widgets.open.weak_bg_fill = Color32::from_rgb(43, 44, 44);
-    v.widgets.hovered.weak_bg_fill = Color32::from_rgb(43, 44, 44);
-    v.widgets.hovered.bg_stroke = Stroke::new(1.0, Color32::from_rgb(70, 71, 71));
-    v.widgets.active.weak_bg_fill = Color32::from_rgb(51, 52, 52);
+    // Hover must read clearly on dark dialog surfaces, not just a shade off the resting fill.
+    v.widgets.hovered.weak_bg_fill = Color32::from_rgb(52, 59, 68);
+    v.widgets.hovered.bg_fill = Color32::from_rgb(52, 59, 68);
+    v.widgets.hovered.bg_stroke = Stroke::new(1.0, Color32::from_rgb(102, 124, 146));
+    v.widgets.hovered.fg_stroke = Stroke::new(1.0, Color32::WHITE);
+    v.widgets.active.weak_bg_fill = Color32::from_rgb(61, 70, 81);
     v.widgets.active.bg_stroke = Stroke::new(1.0, ACCENT);
     style.spacing.item_spacing = vec2(8.0, 8.0);
     style.spacing.button_padding = vec2(12.0, 7.0);
@@ -100,6 +111,24 @@ pub fn apply(ctx: &egui::Context, language: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn menu_icons_resolve_from_the_bundled_icon_font() {
+        let ctx = egui::Context::default();
+        set_fonts(&ctx, "en");
+        let mut output = ctx.run_ui(egui::RawInput::default(), |ui| {
+            let definitions = ui.fonts_mut(|fonts| fonts.definitions().clone());
+            assert_eq!(
+                definitions.families[&egui::FontFamily::Proportional].last().map(String::as_str),
+                Some("Phosphor")
+            );
+            let mut fonts = egui::epaint::text::Fonts::new(egui::epaint::text::TextOptions::default(), definitions);
+            let characters = fonts.fonts.font(&egui::FontFamily::Proportional).characters().clone();
+            let icon = egui_phosphor::regular::TRASH.chars().next().expect("icon codepoint");
+            assert!(characters.contains_key(&icon));
+        });
+        output.textures_delta.clear();
+    }
 
     #[test]
     fn catalogs_have_font_coverage_and_render() {

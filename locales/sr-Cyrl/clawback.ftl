@@ -23,7 +23,6 @@ claw-back-your-disk-space = Вратите свој простор на диск
 clawback-settings = Подешавања програма Clawback
 scan-folder-error = { "Clawback није успео да скенира фасциклу.\u000A\u000A" }{ $error }
 scan-path-error = Clawback није успео да скенира { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Clawback је омаж у језику Rust програму SpaceMonger 1.4 аутора Sean Werkema (1997–2000). Распоред, боје и понашање миша прате оригинални изворни кôд.
 compress = Компримуј
 contains = Садржи:
 copyright-2026-azazel-labs = Ауторска права © 2026 Azazel Labs.

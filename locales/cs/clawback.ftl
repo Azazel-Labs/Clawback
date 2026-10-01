@@ -23,7 +23,6 @@ claw-back-your-disk-space = Získejte zpět místo na disku.
 clawback-settings = Nastavení Clawback
 scan-folder-error = { "Clawback nemohl prohledat složku.\u000A\u000A" }{ $error }
 scan-path-error = Nelze prohledat cestu: { $path }{ "\u000A\u000A" }{ $error }
-about-history = Clawback je poctou programu SpaceMonger 1.4 od Seana Werkemy (1997–2000), napsanou v Rustu. Rozložení, barvy a ovládání myší vycházejí z původního zdrojového kódu.
 compress = Komprimovaný
 contains = Obsah:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.

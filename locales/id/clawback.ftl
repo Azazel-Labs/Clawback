@@ -23,7 +23,6 @@ claw-back-your-disk-space = Rebut kembali ruang disk Anda.
 clawback-settings = Pengaturan Clawback
 scan-folder-error = { "Clawback tidak dapat memindai folder.\u000A\u000A" }{ $error }
 scan-path-error = Clawback tidak dapat memindai { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Clawback adalah penghormatan dalam Rust untuk SpaceMonger 1.4 karya Sean Werkema (1997–2000). Tata letak, warna, dan perilaku mouse mengikuti kode sumber aslinya.
 compress = Kompresi
 contains = Berisi:
 copyright-2026-azazel-labs = Hak cipta © 2026 Azazel Labs.

@@ -23,7 +23,6 @@ claw-back-your-disk-space = Disk alanınızı geri kazanın.
 clawback-settings = Clawback ayarları
 scan-folder-error = { "Clawback klasörü tarayamadı.\u000A\u000A" }{ $error }
 scan-path-error = Yol taranamadı: { $path }{ "\u000A\u000A" }{ $error }
-about-history = Clawback, Sean Werkema'nın SpaceMonger 1.4 (1997–2000) programına saygı duruşu olarak Rust ile yazılmıştır. Yerleşimi, renkleri ve fare davranışı özgün kaynak kodunu temel alır.
 compress = Sıkıştırılmış
 contains = İçerik:
 copyright-2026-azazel-labs = Telif hakkı © 2026 Azazel Labs.

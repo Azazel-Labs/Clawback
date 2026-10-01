@@ -23,7 +23,6 @@ claw-back-your-disk-space = 取回你的磁碟空間。
 clawback-settings = Clawback 設定
 scan-folder-error = { "Clawback 無法掃描此資料夾。\u000A\u000A" }{ $error }
 scan-path-error = Clawback 無法掃描 { $path }{ "。\u000A\u000A" }{ $error }
-about-history = Clawback 使用 Rust 撰寫，向 Sean Werkema 於 1997–2000 年開發的 SpaceMonger 1.4 致敬。其配置、配色和滑鼠操作皆以原版原始碼為基礎。
 compress = 已壓縮
 contains = 包含：
 copyright-2026-azazel-labs = 著作權所有 © 2026 Azazel Labs。

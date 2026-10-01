@@ -23,7 +23,6 @@ claw-back-your-disk-space = Win je schijfruimte terug.
 clawback-settings = Clawback-instellingen
 scan-folder-error = { "Clawback kon de map niet scannen.\u000A\u000A" }{ $error }
 scan-path-error = Kan het pad niet scannen: { $path }{ "\u000A\u000A" }{ $error }
-about-history = Clawback is een in Rust geschreven eerbetoon aan SpaceMonger 1.4 van Sean Werkema (1997–2000). De indeling, kleuren en muisbediening volgen de oorspronkelijke broncode.
 compress = Gecomprimeerd
 contains = Inhoud:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.

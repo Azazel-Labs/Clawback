@@ -36,18 +36,25 @@ pub const BOX_COLORS: [Rgb; 24] = [
 /// Desktop map presets. Existing scheme IDs remain stable in saved settings.
 pub const DEFAULT_MAP_SCHEME: usize = 16;
 
-pub const MAP_PRESETS: [(usize, &str); 10] = [
-    (16, "Electric"),
-    (17, "Aurora"),
+/// The palettes offered to users, alphabetically. Other schemes are kept only so saved IDs stay
+/// stable; settings that name one fall back to [`DEFAULT_MAP_SCHEME`].
+pub const MAP_PRESETS: [(usize, &str); 11] = [
     (18, "Arcade"),
-    (19, "Citrus"),
-    (20, "Orchid"),
-    (21, "Gemstone"),
-    (0, "Material"),
+    (17, "Aurora"),
+    (22, "Blackbody Radiation"),
     (12, "Candy"),
-    (13, "Sunset"),
+    (19, "Citrus"),
+    (16, "Electric"),
+    (21, "Gemstone"),
     (14, "Lagoon"),
+    (0, "Material"),
+    (20, "Orchid"),
+    (13, "Sunset"),
 ];
+
+pub fn is_preset(scheme: usize) -> bool {
+    MAP_PRESETS.iter().any(|&(id, _)| id == scheme)
+}
 
 /// Apply a restrained saturation reduction while retaining palette identity.
 /// Shared by the cached desktop mesh, label contrast, previews, and terminal.
@@ -124,6 +131,18 @@ pub fn map_color(scheme: usize, depth: i32) -> Rgb {
             0x00EA_580C,
             0x00CA_8A04,
             0x0016_A34A,
+        ]),
+        // Blackbody Radiation: rising colour temperature, from a dull ~800 K glow through
+        // 1000, 1500, 2000, 3000 and 4500 K to daylight (~6500 K) and ~10000 K blue-white.
+        22 => from_hex([
+            0x008B_1A00,
+            0x00D6_3A00,
+            0x00FF_6A00,
+            0x00FF_9A2E,
+            0x00FF_C27A,
+            0x00FF_E4C4,
+            0x00F4_F1FF,
+            0x00B9_CCFF,
         ]),
         // Google Material Design 400 swatches: blue, teal, indigo, purple,
         // pink, orange, amber, green. https://m1.material.io/style/color.html
@@ -236,7 +255,7 @@ pub const WHITE: Rgb = [0xFF, 0xFF, 0xFF];
 
 /// Colour scheme names, preserving legacy IDs. Index 0 is "Material"
 /// (colour by depth), 1 is the system 3D colours, 2.. are fixed colours.
-pub const SCHEME_NAMES: [&str; 22] = [
+pub const SCHEME_NAMES: [&str; 23] = [
     "Material",
     "Windows Colors",
     "White",
@@ -259,6 +278,7 @@ pub const SCHEME_NAMES: [&str; 22] = [
     "Citrus",
     "Orchid",
     "Gemstone",
+    "Blackbody Radiation",
 ];
 
 /// Base, bright (top-left bevel) and dark (bottom-right bevel) colours.

@@ -23,7 +23,6 @@ claw-back-your-disk-space = Lấy lại dung lượng đĩa của bạn.
 clawback-settings = Cài đặt Clawback
 scan-folder-error = { "Clawback không thể quét thư mục.\u000A\u000A" }{ $error }
 scan-path-error = Clawback không thể quét { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Clawback là phần mềm viết bằng Rust nhằm tri ân SpaceMonger 1.4 của Sean Werkema (1997–2000). Bố cục, màu sắc và thao tác chuột dựa theo mã nguồn gốc.
 compress = Nén
 contains = Chứa:
 copyright-2026-azazel-labs = Bản quyền © 2026 Azazel Labs.

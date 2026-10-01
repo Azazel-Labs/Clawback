@@ -10,6 +10,7 @@ use crate::theme;
 use crate::{background::retire, icon};
 use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree, format};
 use eframe::egui::{self, Align, Align2, Id, Key, Layout, Modifiers, RichText, Ui, vec2};
+use std::collections::VecDeque;
 use std::path::{MAIN_SEPARATOR, Path, PathBuf};
 use std::sync::{Arc, mpsc};
 use std::time::{Duration, Instant};
@@ -40,21 +41,69 @@ impl Doc {
     fn free_space(&self) -> u64 {
         self.disk.as_ref().map_or(0, |d| d.free)
     }
+    fn recycle_bin(&self) -> Option<NodeId> {
+        #[cfg(windows)]
+        return crate::recycle_bin::find(&self.tree, self.is_mount);
+        #[cfg(not(windows))]
+        None
+    }
     fn unreadable(&self) -> usize {
         self.skipped.iter().filter(|s| s.reason != SkipReason::OtherFilesystem).count()
     }
 }
 
-type DeleteResult = Result<(Arc<Tree>, Option<DiskInfo>), String>;
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum DeleteKind {
+    /// Move to the Recycle Bin; anything too large for it asks before a permanent delete.
+    Recycle,
+    /// Confirmed permanent delete, done by Clawback's fast purge.
+    Permanent,
+    /// Confirmed emptying of the user's Recycle Bin folder on the scanned drive.
+    EmptyBin,
+}
+
+enum DeleteDone {
+    /// Everything went; free space is re-read.
+    Removed(Option<DiskInfo>),
+    /// The user answered no to a Windows prompt; nothing changed.
+    Declined,
+    /// Too large for the Recycle Bin. Nothing was deleted; ask before purging.
+    TooLarge,
+    /// Cancelled or partly failed; the message explains failures.
+    Partial(Option<String>, Option<DiskInfo>),
+}
+type DeleteResult = Result<DeleteDone, String>;
 
 struct Deleting {
     doc: u64,
+    node: Option<NodeId>,
     path: PathBuf,
+    kind: DeleteKind,
+    /// Paths that leave the map when the job succeeds.
+    targets: Vec<PathBuf>,
     rx: mpsc::Receiver<DeleteResult>,
     progress: Arc<crate::deletion::Progress>,
     started: Instant,
     size: u64,
+    files: u64,
 }
+
+/// A delete waiting for the one in progress (or for confirmation); resolved by path when it starts.
+#[derive(Clone)]
+struct QueuedDelete {
+    doc: u64,
+    node: NodeId,
+    path: PathBuf,
+    size: u64,
+    files: u64,
+    kind: DeleteKind,
+}
+
+/// Kept when emptying a Recycle Bin folder: Explorer's view settings for it.
+const BIN_KEEP: &str = "desktop.ini";
+
+/// How long a recycled path is hidden from live snapshots that predate its removal.
+const RECYCLED_GRACE: Duration = Duration::from_secs(60);
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Choice {
@@ -117,8 +166,18 @@ pub struct ClawbackApp {
     props_rx: Option<mpsc::Receiver<Properties>>,
     show_unreadable: bool,
     deleting: Option<Deleting>,
+    delete_queue: VecDeque<QueuedDelete>,
+    delete_errors: Vec<String>,
+    /// Recycled paths the live watcher may not have caught up with yet.
+    recycled: Vec<(PathBuf, Instant)>,
+    /// Permanent deletes waiting for the user's confirmation, asked one at a time.
+    confirm: VecDeque<QueuedDelete>,
     error: Option<String>,
     title: String,
+    /// The directory panel splitter is being dragged; its new share is saved on release.
+    split_dragging: bool,
+    /// Native picker icons: 0 fixed drive, 1 removable drive, [`FOLDER_ICON`] folder.
+    picker_icons: std::collections::HashMap<u8, egui::TextureHandle>,
 }
 
 impl ClawbackApp {
@@ -161,12 +220,9 @@ impl ClawbackApp {
             None => {}
         }
     }
-    pub fn new(cc: &eframe::CreationContext<'_>, settings: Settings, path: Option<PathBuf>) -> Self {
-        let language = crate::i18n::set_language(&settings.language);
-        crate::startup::mark("translations_ready");
-        theme::apply(&cc.egui_ctx, language);
-        crate::startup::mark("theme_ready");
-        let mut app = ClawbackApp {
+    /// The initial state, before any document or window exists.
+    fn with_settings(settings: Settings) -> Self {
+        ClawbackApp {
             #[cfg(feature = "perf-probe")]
             probe: crate::perf_probe::Probe::new(),
             settings,
@@ -187,9 +243,24 @@ impl ClawbackApp {
             props_rx: None,
             show_unreadable: false,
             deleting: None,
+            delete_queue: VecDeque::new(),
+            delete_errors: Vec::new(),
+            recycled: Vec::new(),
+            confirm: VecDeque::new(),
             error: None,
             title: String::new(),
-        };
+            split_dragging: false,
+            picker_icons: std::collections::HashMap::new(),
+        }
+    }
+
+    pub fn new(cc: &eframe::CreationContext<'_>, settings: Settings, path: Option<PathBuf>) -> Self {
+        let language = crate::i18n::set_language(&settings.language);
+        crate::startup::mark("translations_ready");
+        theme::apply(&cc.egui_ctx, language);
+        crate::startup::mark("theme_ready");
+        #[allow(unused_mut)] // Only the screenshot build edits it further.
+        let mut app = Self::with_settings(settings);
         #[cfg(feature = "screenshots")]
         if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
             let tree = crate::demo::tree();
@@ -379,26 +450,51 @@ impl ClawbackApp {
             && let Some(del) = self.deleting.take()
         {
             match result {
-                Ok((tree, disk)) => {
-                    if let Some(live) = &self.live
-                        && self.doc.as_ref().is_some_and(|d| d.id == del.doc)
-                    {
-                        live.invalidate(del.path.clone());
-                        retire(tree);
-                    } else if let Some(doc) = self.doc.as_mut().filter(|d| d.id == del.doc) {
-                        retire(std::mem::replace(&mut doc.tree, tree));
-                        doc.generation += 1;
-                        if disk.is_some() {
-                            doc.disk = disk;
-                        }
-                    } else {
-                        retire(tree);
-                    }
-                    if self.live.is_none()
+                Ok(DeleteDone::Removed(disk)) => {
+                    self.forget_removed(&del.targets, disk);
+                    if self.delete_queue.is_empty()
+                        && self.live.is_none()
                         && self.settings.auto_rescan
                         && let Some(root) = self.doc.as_ref().map(|d| d.root.clone())
                     {
                         self.start_scan(root, ctx);
+                    }
+                }
+                Ok(DeleteDone::Declined) => {
+                    // Keep it on the map, but let the watcher catch any partial change.
+                    if let Some(live) = &self.live {
+                        live.invalidate(del.path.clone());
+                    }
+                }
+                Ok(DeleteDone::TooLarge) => {
+                    if let Some(node) = del.node {
+                        self.confirm.push_back(QueuedDelete {
+                            doc: del.doc,
+                            node,
+                            path: del.path.clone(),
+                            size: del.size,
+                            files: del.files,
+                            kind: DeleteKind::Permanent,
+                        });
+                    }
+                }
+                Ok(DeleteDone::Partial(error, disk)) => {
+                    // Some of it is gone: the watcher (or a rescan) reconciles what remains.
+                    if let Some(live) = &self.live {
+                        for target in &del.targets {
+                            live.invalidate(target.clone());
+                        }
+                    }
+                    if let (Some(doc), Some(disk)) = (&mut self.doc, disk) {
+                        doc.disk = Some(disk);
+                        doc.generation += 1;
+                    }
+                    if let Some(error) = error {
+                        self.delete_errors.push(tr!(
+                            "delete-error",
+                            path = del.path.display().to_string(),
+                            error = error.as_str()
+                        ));
                     }
                 }
                 Err(e) => {
@@ -407,14 +503,26 @@ impl ClawbackApp {
                     {
                         live.invalidate(del.path.clone());
                     }
-                    self.error = Some(tr!("delete-error", path = del.path.display().to_string(), error = e.as_str()));
+                    self.delete_errors.push(tr!(
+                        "delete-error",
+                        path = del.path.display().to_string(),
+                        error = e.as_str()
+                    ));
                 }
             }
+            self.start_next_delete(ctx);
         }
         if self.deleting.is_none() {
             let update = self.live.as_ref().map(|live| live.rx.try_recv());
             match update {
-                Some(Ok(crate::watching::Update::Snapshot(snapshot))) => {
+                Some(Ok(crate::watching::Update::Snapshot(mut snapshot))) => {
+                    self.recycled.retain(|(path, at)| {
+                        let Some(node) = snapshot.tree.find_path(path).filter(|&n| n != ROOT) else {
+                            return false; // The watcher has caught up.
+                        };
+                        Arc::make_mut(&mut snapshot.tree).remove(node);
+                        at.elapsed() < RECYCLED_GRACE
+                    });
                     if let Some(doc) = &mut self.doc {
                         if snapshot.reset {
                             doc.id = self.next_doc_id;
@@ -467,6 +575,7 @@ impl ClawbackApp {
             }
             Command::ZoomTo(n) => {
                 if let Some(d) = &mut self.doc
+                    && d.recycle_bin() != Some(n)
                     && d.tree.is_live(n)
                     && d.tree.node(n).is_dir()
                     && d.view != n
@@ -500,6 +609,10 @@ impl ClawbackApp {
                 }
             }
             Command::Delete(n) => self.delete(n, ctx),
+            Command::EmptyRecycleBin => {
+                #[cfg(windows)]
+                self.request_empty_recycle_bin();
+            }
             Command::OpenDrive => {
                 let (tx, rx) = mpsc::channel();
                 let repaint = ctx.clone();
@@ -543,47 +656,160 @@ impl ClawbackApp {
     }
 
     /// Move to the trash with no confirmation, as SpaceMonger did (it is undoable).
+    /// Deletes queue behind the one in progress so the map stays usable.
     fn delete(&mut self, node: NodeId, ctx: &egui::Context) {
-        if self.settings.disable_delete || self.deleting.is_some() {
+        if self.settings.disable_delete || node == ROOT {
             return;
         }
         let Some(doc) = &self.doc else { return };
-        if node == ROOT {
+        let path = doc.tree.path(node);
+        // Already covered by a pending delete of itself or an ancestor.
+        if self.pending_paths().any(|pending| path.starts_with(pending)) {
             return;
         }
-        let path = doc.tree.path(node);
+        // A queued descendant would fail once this folder is gone.
+        self.delete_queue.retain(|q| !q.path.starts_with(&path));
+        let n = doc.tree.node(node);
+        let (size, files) = (n.size, n.files);
+        self.delete_queue.push_back(QueuedDelete { doc: doc.id, node, path, size, files, kind: DeleteKind::Recycle });
+        self.start_next_delete(ctx);
+    }
+
+    /// Everything being deleted, queued, or awaiting confirmation.
+    fn pending_paths(&self) -> impl Iterator<Item = &PathBuf> {
+        self.deleting
+            .iter()
+            .map(|d| &d.path)
+            .chain(self.delete_queue.iter().map(|q| &q.path))
+            .chain(self.confirm.iter().map(|q| &q.path))
+    }
+
+    /// Ask to empty the user's Recycle Bin folder on the scanned drive.
+    #[cfg(windows)]
+    fn request_empty_recycle_bin(&mut self) {
+        if self.settings.disable_delete {
+            return;
+        }
+        let Some(doc) = &self.doc else { return };
+        let Some(folder) = doc.recycle_bin().and_then(|bin| crate::recycle_bin::user_folder(&doc.tree, bin)) else {
+            return;
+        };
+        let path = doc.tree.path(folder);
+        let n = doc.tree.node(folder);
+        if n.children.is_empty() || self.pending_paths().any(|pending| *pending == path) {
+            return;
+        }
+        let (size, files) = (n.size, n.files);
+        self.confirm.push_back(QueuedDelete {
+            doc: doc.id,
+            node: folder,
+            path,
+            size,
+            files,
+            kind: DeleteKind::EmptyBin,
+        });
+    }
+
+    /// Drop deleted paths from the map now. The live watcher can take a while to reconcile a
+    /// large delete, and its snapshots until then must not bring them back.
+    fn forget_removed(&mut self, targets: &[PathBuf], disk: Option<DiskInfo>) {
+        let Some(doc) = &mut self.doc else { return };
+        let tree = Arc::make_mut(&mut doc.tree);
+        for target in targets {
+            if let Some(node) = tree.find_path(target).filter(|&n| n != ROOT) {
+                tree.remove(node);
+            }
+            if let Some(live) = &self.live {
+                live.invalidate(target.clone());
+                self.recycled.push((target.clone(), Instant::now()));
+            }
+        }
+        doc.files = doc.tree.root().files;
+        if disk.is_some() {
+            doc.disk = disk;
+        }
+        doc.generation += 1;
+    }
+
+    fn start_next_delete(&mut self, ctx: &egui::Context) {
+        if self.deleting.is_some() {
+            return;
+        }
+        let Some(QueuedDelete { path, size, files, kind, .. }) = self.delete_queue.pop_front() else { return };
+        let Some(doc) = &self.doc else {
+            self.delete_queue.clear();
+            return;
+        };
+        // Earlier deletes or a rescan may have replaced the tree since this was queued.
+        let node = doc.tree.find_path(&path).filter(|&n| n != ROOT);
+        // Emptying the bin keeps the user's folder and its desktop.ini; only the contents go.
+        let targets = match (kind, node) {
+            (DeleteKind::EmptyBin, Some(folder)) => doc
+                .tree
+                .node(folder)
+                .children
+                .iter()
+                .filter(|&&c| !doc.tree.node(c).name_lossy().eq_ignore_ascii_case(BIN_KEEP))
+                .map(|&c| doc.tree.path(c))
+                .collect(),
+            _ => vec![path.clone()],
+        };
+        let threads = match doc.disk.as_ref().map(|d| d.kind) {
+            Some(clawback_core::adaptive::StorageKind::Rotational) => 2,
+            _ => 8,
+        };
         let (tx, rx) = mpsc::channel();
         let (p, repaint) = (path.clone(), ctx.clone());
-        let mut tree = doc.tree.clone();
         let mut disk = doc.disk.clone();
-        let live = self.live.is_some();
         let progress = Arc::new(crate::deletion::Progress::default());
+        if kind != DeleteKind::Recycle {
+            progress.set_total(files);
+        }
         let worker_progress = progress.clone();
         let started = Instant::now();
         std::thread::spawn(move || {
-            let result = crate::deletion::trash(&p, &worker_progress).map(|()| {
+            use crate::deletion::Recycled;
+            let mut refresh = || {
                 worker_progress.phase(crate::deletion::Phase::Updating);
-                let _span = crate::perf::span("delete.reconcile");
-                if !live {
-                    Arc::make_mut(&mut tree).remove(node);
-                    if let Some(disk) = &mut disk {
-                        platform::refresh_disk_space(disk);
+                if let Some(disk) = &mut disk {
+                    platform::refresh_disk_space(disk);
+                }
+                disk.take()
+            };
+            let result = match kind {
+                DeleteKind::Recycle => crate::deletion::trash(&p, &worker_progress).map(|outcome| match outcome {
+                    Recycled::Done => DeleteDone::Removed(refresh()),
+                    Recycled::Declined => DeleteDone::Declined,
+                    Recycled::TooLarge => DeleteDone::TooLarge,
+                }),
+                DeleteKind::Permanent | DeleteKind::EmptyBin => {
+                    let target = crate::deletion::Target {
+                        root: &p,
+                        contents_only: kind == DeleteKind::EmptyBin,
+                        keep: &[BIN_KEEP],
+                    };
+                    let report = crate::deletion::purge(&target, threads, &worker_progress);
+                    #[cfg(windows)]
+                    if kind == DeleteKind::EmptyBin {
+                        crate::recycle_bin::notify_changed(&p);
+                    }
+                    if report.failed == 0 && !report.cancelled {
+                        Ok(DeleteDone::Removed(refresh()))
+                    } else {
+                        let error =
+                            report.first_error.map(|first| tr!("purge-failed", count = report.failed, error = first));
+                        Ok(DeleteDone::Partial(error, refresh()))
                     }
                 }
-                (tree, disk)
-            });
+            };
             let _ = tx.send(result);
             repaint.request_repaint();
         });
-        self.deleting = Some(Deleting { doc: doc.id, path, rx, progress, started, size: doc.tree.node(node).size });
+        self.deleting = Some(Deleting { doc: doc.id, node, path, kind, targets, rx, progress, started, size, files });
     }
 
     fn busy(&self) -> bool {
-        self.scan.is_some()
-            || self.deleting.is_some()
-            || self.open.is_some()
-            || self.setup.is_some()
-            || self.error.is_some()
+        self.scan.is_some() || self.open.is_some() || self.setup.is_some() || self.error.is_some()
     }
 
     /// Keyboard shortcuts for the toolbar commands (SpaceMonger had none; the
@@ -592,6 +818,7 @@ impl ClawbackApp {
         if self.open.is_some()
             || self.setup.is_some()
             || self.error.is_some()
+            || !self.confirm.is_empty()
             || self.about
             || self.props.is_some()
             || self.show_unreadable
@@ -669,8 +896,11 @@ impl ClawbackApp {
         let mut action = None;
         ui.spacing_mut().button_padding = vec2(8.0, 3.0);
         ui.spacing_mut().interact_size.y = 24.0;
+        let bar_key = Id::new("menu_bar_open");
+        let was_open = ui.data(|d| d.get_temp::<bool>(bar_key).unwrap_or(false));
+        let mut open = false;
         egui::MenuBar::new().ui(ui, |ui| {
-            ui.menu_button(tr!("file"), |ui| {
+            bar_menu(ui, was_open, &mut open, tr!("file"), |ui| {
                 let open_shortcut = ui.ctx().format_shortcut(&egui::KeyboardShortcut::new(Modifiers::COMMAND, Key::O));
                 if menu_item(ui, tr!("open-folder"), true, &open_shortcut) {
                     action = Some(Tool::Open);
@@ -699,7 +929,7 @@ impl ClawbackApp {
                     ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
                 }
             });
-            ui.menu_button(tr!("view"), |ui| {
+            bar_menu(ui, was_open, &mut open, tr!("view"), |ui| {
                 for (label, enabled, shortcut, tool) in [
                     (tr!("back"), !self.history.is_empty(), "Backspace", Tool::Back),
                     (tr!("up-a-level"), ready && zoomed, "", Tool::ZoomOut),
@@ -724,7 +954,7 @@ impl ClawbackApp {
                     action = Some(Tool::Unreadable);
                 }
             });
-            ui.menu_button(tr!("palette"), |ui| {
+            bar_menu(ui, was_open, &mut open, tr!("palette"), |ui| {
                 if ui.checkbox(&mut self.settings.mute_palette, tr!("mute-colors")).changed() {
                     self.save_settings();
                 }
@@ -766,7 +996,7 @@ impl ClawbackApp {
                     }
                 }
             });
-            ui.menu_button(tr!("help"), |ui| {
+            bar_menu(ui, was_open, &mut open, tr!("help"), |ui| {
                 if menu_item(ui, tr!("about-clawback"), true, "") {
                     action = Some(Tool::About);
                 }
@@ -800,6 +1030,7 @@ impl ClawbackApp {
                 }
             });
         });
+        ui.data_mut(|d| d.insert_temp(bar_key, open));
         action
     }
 
@@ -827,6 +1058,20 @@ impl ClawbackApp {
 
     fn open_dialog(&mut self, ctx: &egui::Context) {
         let _span = crate::perf::span("ui.drive_picker");
+        if self.open.is_none() {
+            return;
+        }
+        #[cfg(windows)]
+        {
+            use windows_sys::Win32::UI::Shell::{SIID_DRIVEFIXED, SIID_DRIVEREMOVE, SIID_FOLDER};
+            for (key, id) in [(0, SIID_DRIVEFIXED), (1, SIID_DRIVEREMOVE), (FOLDER_ICON, SIID_FOLDER)] {
+                if !self.picker_icons.contains_key(&key)
+                    && let Some(image) = crate::filetype_icons::windows::stock(id, 64)
+                {
+                    self.picker_icons.insert(key, ctx.load_texture("drive-icon", image, egui::TextureOptions::LINEAR));
+                }
+            }
+        }
         let Some(dlg) = &mut self.open else { return };
         if let Some(rx) = &dlg.loading {
             match rx.try_recv() {
@@ -847,53 +1092,60 @@ impl ClawbackApp {
             Choice::Drive(i) => dlg.drives[i].disk.mount.clone(),
             Choice::Recent(i) => recent[i].clone(),
         };
-        egui::Window::new(tr!("select-drive-to-view"))
-            .collapsible(false)
-            .resizable(false)
-            .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
+        let icons = &self.picker_icons;
+        let modal = egui::Modal::new(Id::new("clawback-open-drive"))
+            .backdrop_color(egui::Color32::from_black_alpha(170))
+            .frame(
+                egui::Frame::new()
+                    .fill(theme::SURFACE)
+                    .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
+                    .corner_radius(14)
+                    .inner_margin(22)
+                    .shadow(egui::epaint::Shadow {
+                        offset: [0, 12],
+                        blur: 40,
+                        spread: 0,
+                        color: egui::Color32::from_black_alpha(120),
+                    }),
+            )
             .show(ctx, |ui| {
-                ui.set_width(440.0);
+                ui.set_width((ctx.content_rect().width() - 64.0).clamp(300.0, 560.0));
+                ui.spacing_mut().item_spacing.y = 8.0;
+                ui.label(RichText::new(tr!("select-drive-to-view")).size(24.0).strong().color(theme::TEXT));
+                ui.add_space(4.0);
                 ui.style_mut().spacing.scroll = egui::style::ScrollStyle::solid();
                 egui::ScrollArea::vertical()
-                    .max_height(340.0)
-                    .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
+                    .max_height((ctx.content_rect().height() - 240.0).clamp(160.0, 420.0))
                     .auto_shrink([false, true])
                     .show(ui, |ui| {
                         if dlg.loading.is_some() {
-                            ui.spinner();
-                            ui.weak(tr!("finding-drives"));
+                            ui.horizontal(|ui| {
+                                ui.spinner();
+                                ui.weak(tr!("finding-drives"));
+                            });
                         } else if dlg.drives.is_empty() {
                             ui.weak(tr!("no-drives-found-use-other-folder-to-pick"));
                         }
                         for (i, drive) in dlg.drives.iter().enumerate() {
-                            let d = &drive.disk;
-                            let used = d.total.saturating_sub(d.free);
-                            let text = tr!(
-                                "drive-summary",
-                                icon = if d.removable { "💾" } else { "💽" },
-                                drive = d.label(),
-                                free = format::size(d.free),
-                                total = format::size(d.total),
-                                used = format::percent(used, d.total),
-                                filesystem = d.fs.as_str()
-                            );
-                            let r = picker_row(ui, dlg.choice == Some(Choice::Drive(i)), &text);
+                            #[cfg(windows)]
+                            let turbo = drive.turbo;
+                            #[cfg(not(windows))]
+                            let turbo = false;
+                            let icon = icons.get(&u8::from(drive.disk.removable));
+                            let r = drive_card(ui, &drive.disk, icon, turbo, dlg.choice == Some(Choice::Drive(i)));
                             if r.clicked() {
                                 dlg.choice = Some(Choice::Drive(i));
                             }
                             if r.double_clicked() {
-                                chosen = Some(d.mount.clone());
+                                chosen = Some(drive.disk.mount.clone());
                             }
                         }
                         if !recent.is_empty() {
-                            ui.separator();
-                            ui.weak(tr!("recent"));
+                            ui.add_space(8.0);
+                            ui.label(RichText::new(tr!("recent")).size(11.0).strong().color(theme::MUTED));
                             for (i, p) in recent.iter().enumerate() {
-                                let r = picker_row(
-                                    ui,
-                                    dlg.choice == Some(Choice::Recent(i)),
-                                    &format!("📁  {}", p.display()),
-                                );
+                                let r =
+                                    folder_card(ui, p, icons.get(&FOLDER_ICON), dlg.choice == Some(Choice::Recent(i)));
                                 if r.clicked() {
                                     dlg.choice = Some(Choice::Recent(i));
                                 }
@@ -903,39 +1155,46 @@ impl ClawbackApp {
                             }
                         }
                     });
-                ui.separator();
-                #[cfg(windows)]
+                ui.add_space(6.0);
                 ui.horizontal(|ui| {
-                    let eligible = match dlg.choice {
-                        Some(Choice::Drive(i)) => dlg.drives[i].turbo,
-                        _ => false,
-                    };
-                    if ui.add_enabled(eligible, turbo_button()).clicked()
-                        && let Some(c) = dlg.choice
-                    {
-                        chosen = Some(path_of(c, dlg));
-                        start_turbo = true;
-                    }
-                    ui.add(egui::Label::new(tr!("try-a-faster-ntfs-scan-with-administrator-permission")).wrap());
-                });
-                #[cfg(windows)]
-                ui.separator();
-                ui.horizontal(|ui| {
-                    if ui.button(tr!("other-folder")).clicked() {
+                    if ui.add(egui::Button::new(tr!("other-folder")).min_size(vec2(0.0, 34.0))).clicked() {
                         browse = true;
                     }
                     ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                        if ui.add_enabled(dlg.choice.is_some(), egui::Button::new(tr!("ok"))).clicked()
+                        let open = egui::Button::new(RichText::new(tr!("ok").trim()).strong().color(theme::BG))
+                            .fill(theme::ACCENT)
+                            .min_size(vec2(96.0, 34.0));
+                        if ui.add_enabled(dlg.choice.is_some(), open).clicked()
                             && let Some(c) = dlg.choice
                         {
                             chosen = Some(path_of(c, dlg));
                         }
-                        if ui.button(tr!("cancel")).clicked() {
+                        #[cfg(windows)]
+                        if matches!(dlg.choice, Some(Choice::Drive(i)) if dlg.drives[i].turbo)
+                            && ui
+                                .add(turbo_button())
+                                .on_hover_text(tr!("try-a-faster-ntfs-scan-with-administrator-permission"))
+                                .clicked()
+                            && let Some(c) = dlg.choice
+                        {
+                            chosen = Some(path_of(c, dlg));
+                            start_turbo = true;
+                        }
+                        if ui.add(egui::Button::new(tr!("cancel")).min_size(vec2(88.0, 34.0))).clicked() {
                             cancel = true;
                         }
                     });
                 });
             });
+        if chosen.is_none()
+            && ctx.input(|i| i.key_pressed(Key::Enter))
+            && let Some(c) = dlg.choice
+        {
+            chosen = Some(path_of(c, dlg));
+        }
+        if modal.should_close() {
+            cancel = true;
+        }
         if browse {
             let start = self.doc.as_ref().map(|d| d.root.clone());
             chosen = platform::pick_folder(start.as_deref()).or(chosen);
@@ -952,32 +1211,209 @@ impl ClawbackApp {
         }
     }
 
-    /// A scan-only overlay; completing a scan returns the space to the map.
-    fn scan_toast(&self, ctx: &egui::Context) {
-        if self.scan.is_none() {
+    /// Non-modal scan and delete activity, stacked in the lower right over the map.
+    fn toasts(&mut self, ctx: &egui::Context) {
+        if self.scan.is_none() && self.deleting.is_none() && self.delete_errors.is_empty() {
             return;
         }
+        let card = |ui: &mut Ui, add_contents: &mut dyn FnMut(&mut Ui)| {
+            egui::Frame::new()
+                .fill(theme::NAVIGATOR)
+                .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
+                .corner_radius(10)
+                .inner_margin(12)
+                .shadow(egui::epaint::Shadow {
+                    offset: [0, 4],
+                    blur: 20,
+                    spread: 0,
+                    color: egui::Color32::from_black_alpha(140),
+                })
+                .show(ui, |ui| {
+                    ui.set_width((ctx.content_rect().width() - 56.0).min(380.0));
+                    add_contents(ui);
+                });
+        };
         egui::Area::new(Id::new("scan-toast"))
             .order(egui::Order::Foreground)
             .anchor(Align2::RIGHT_BOTTOM, [-16.0, -16.0])
             .movable(false)
             .show(ctx, |ui| {
-                egui::Frame::new()
-                    .fill(theme::NAVIGATOR)
-                    .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
-                    .corner_radius(10)
-                    .inner_margin(12)
-                    .shadow(egui::epaint::Shadow {
-                        offset: [0, 4],
-                        blur: 20,
-                        spread: 0,
-                        color: egui::Color32::from_black_alpha(140),
-                    })
-                    .show(ui, |ui| {
-                        ui.set_width((ctx.content_rect().width() - 56.0).min(380.0));
-                        self.scan_activity(ui);
+                ui.spacing_mut().item_spacing.y = 8.0;
+                let mut dismissed = None;
+                for (i, error) in self.delete_errors.iter().enumerate() {
+                    card(ui, &mut |ui| {
+                        ui.horizontal_top(|ui| {
+                            ui.with_layout(Layout::right_to_left(Align::Min), |ui| {
+                                if ui.small_button("×").on_hover_text(tr!("ok")).clicked() {
+                                    dismissed = Some(i);
+                                }
+                                ui.add(egui::Label::new(RichText::new(error).color(theme::TEXT)).wrap());
+                            });
+                        });
                     });
+                }
+                if let Some(i) = dismissed {
+                    self.delete_errors.remove(i);
+                }
+                if self.deleting.is_some() {
+                    card(ui, &mut |ui| self.delete_activity(ui));
+                }
+                if self.scan.is_some() {
+                    card(ui, &mut |ui| self.scan_activity(ui));
+                }
             });
+    }
+
+    /// Clawback's own confirmation before anything is deleted permanently.
+    fn confirm_dialog(&mut self, ctx: &egui::Context) {
+        let Some(job) = self.confirm.front() else { return };
+        let empty_bin = job.kind == DeleteKind::EmptyBin;
+        let name =
+            job.path.file_name().map_or_else(|| job.path.display().to_string(), |n| n.to_string_lossy().into_owned());
+        let drive = self.doc.as_ref().map(|d| d.root.display().to_string()).unwrap_or_default();
+        let details = tr!("delete-size-files", size = format::size(job.size), files = job.files);
+        let mut answer = None;
+        let modal = egui::Modal::new(Id::new("clawback-confirm-purge"))
+            .backdrop_color(egui::Color32::from_black_alpha(170))
+            .frame(
+                egui::Frame::new()
+                    .fill(theme::SURFACE)
+                    .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
+                    .corner_radius(14)
+                    .inner_margin(22),
+            )
+            .show(ctx, |ui| {
+                ui.set_width((ctx.content_rect().width() - 64.0).clamp(280.0, 440.0));
+                ui.spacing_mut().item_spacing.y = 8.0;
+                ui.horizontal(|ui| {
+                    ui.label(RichText::new(egui_phosphor::regular::WARNING).size(26.0).color(theme::DANGER));
+                    ui.label(
+                        RichText::new(if empty_bin {
+                            tr!("empty-recycle-bin-title")
+                        } else {
+                            tr!("delete-permanently-title")
+                        })
+                        .size(20.0)
+                        .strong()
+                        .color(theme::TEXT),
+                    );
+                });
+                ui.add(
+                    egui::Label::new(if empty_bin {
+                        tr!("empty-recycle-bin-body", drive = drive)
+                    } else {
+                        tr!("delete-too-big-for-recycle-bin", name = name)
+                    })
+                    .wrap(),
+                )
+                .on_hover_text(job.path.display().to_string());
+                ui.label(RichText::new(details).color(theme::MUTED));
+                ui.label(RichText::new(tr!("delete-cannot-be-undone")).strong().color(theme::DANGER));
+                ui.add_space(8.0);
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    let label =
+                        if empty_bin { tr!("empty-recycle-bin-button") } else { tr!("delete-permanently-button") };
+                    if ui
+                        .add(
+                            egui::Button::new(RichText::new(label).strong().color(theme::BG))
+                                .fill(theme::DANGER)
+                                .min_size(vec2(0.0, 34.0)),
+                        )
+                        .clicked()
+                    {
+                        answer = Some(true);
+                    }
+                    if ui.add(egui::Button::new(tr!("cancel")).min_size(vec2(88.0, 34.0))).clicked() {
+                        answer = Some(false);
+                    }
+                });
+            });
+        if modal.should_close() {
+            answer = Some(false);
+        }
+        if let Some(confirmed) = answer {
+            self.answer_confirm(confirmed, ctx);
+        }
+    }
+
+    fn answer_confirm(&mut self, confirmed: bool, ctx: &egui::Context) {
+        let Some(job) = self.confirm.pop_front() else { return };
+        if confirmed && !self.settings.disable_delete {
+            // Confirmed work goes ahead of plain recycling still in the queue.
+            self.delete_queue.push_front(job);
+            self.start_next_delete(ctx);
+        }
+    }
+
+    fn delete_activity(&self, ui: &mut Ui) {
+        let Some(d) = &self.deleting else { return };
+        let progress = d.progress.snapshot();
+        ui.ctx().request_repaint_after(Duration::from_millis(100));
+        ui.spacing_mut().item_spacing = vec2(8.0, 7.0);
+        let purging = d.kind != DeleteKind::Recycle;
+        ui.horizontal(|ui| {
+            ui.add(egui::Spinner::new().size(14.0));
+            ui.strong(match progress.phase {
+                crate::deletion::Phase::Preparing => tr!("delete-preparing"),
+                crate::deletion::Phase::Recycling => tr!("delete-recycling"),
+                crate::deletion::Phase::Deleting if d.kind == DeleteKind::EmptyBin => tr!("emptying-recycle-bin"),
+                crate::deletion::Phase::Deleting => tr!("delete-permanently"),
+                crate::deletion::Phase::Updating => tr!("delete-updating"),
+            });
+            if purging && progress.phase == crate::deletion::Phase::Deleting {
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    if ui.button(tr!("cancel")).clicked() {
+                        d.progress.cancel();
+                    }
+                });
+            }
+        });
+        let path = d.path.display().to_string();
+        ui.add(egui::Label::new(RichText::new(&path).size(12.0)).truncate()).on_hover_text(&path);
+        ui.label(
+            RichText::new(tr!(
+                "delete-details",
+                size = format::size(d.size),
+                seconds = d.started.elapsed().as_secs().to_string()
+            ))
+            .size(11.0)
+            .color(theme::MUTED),
+        );
+        if purging && progress.total > 0 && progress.phase == crate::deletion::Phase::Deleting {
+            ui.add(
+                egui::ProgressBar::new((progress.done as f64 / progress.total as f64).min(1.0) as f32)
+                    .fill(theme::DANGER)
+                    .desired_height(4.0),
+            );
+            ui.label(
+                RichText::new(tr!(
+                    "delete-progress-files",
+                    done = format::count(progress.done.min(progress.total)),
+                    total = format::count(progress.total)
+                ))
+                .size(11.0)
+                .color(theme::MUTED),
+            );
+        }
+        if progress.total > 0 && progress.phase == crate::deletion::Phase::Recycling {
+            ui.add(
+                egui::ProgressBar::new(progress.done as f32 / progress.total as f32)
+                    .fill(theme::ACCENT)
+                    .desired_height(4.0),
+            );
+        }
+        if !progress.current.is_empty() && progress.current != path {
+            ui.add(egui::Label::new(RichText::new(&progress.current).size(11.0).color(theme::MUTED)).truncate())
+                .on_hover_text(&progress.current);
+        }
+        if !self.delete_queue.is_empty() {
+            let queued = tr!("delete-queued", count = self.delete_queue.len());
+            let paths = self.delete_queue.iter().map(|q| q.path.display().to_string()).collect::<Vec<_>>().join(
+                "
+",
+            );
+            ui.label(RichText::new(queued).size(11.0).color(theme::MUTED)).on_hover_text(paths);
+        }
     }
 
     fn scan_activity(&self, ui: &mut Ui) {
@@ -1095,33 +1531,34 @@ impl ClawbackApp {
             return;
         }
         let mut close = false;
-        egui::Window::new(tr!("about-clawback"))
-            .collapsible(false)
-            .resizable(false)
-            .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
-            .show(ctx, |ui| {
-                ui.horizontal_top(|ui| {
-                    let (rect, _) = ui.allocate_exact_size(vec2(64.0, 64.0), egui::Sense::hover());
-                    icon::paint(ui.painter(), rect);
-                    ui.vertical(|ui| {
-                        ui.heading(format!("Clawback {}", env!("CARGO_PKG_VERSION")));
-                        ui.label(tr!("a-fast-cross-platform-disk-space-map"));
-                        ui.add_space(6.0);
-                        ui.label(tr!("about-history",));
-                        ui.add_space(6.0);
-                        ui.label(tr!("claw-back-your-disk-space"));
-                        ui.add_space(6.0);
-                        ui.weak(tr!("copyright-2026-azazel-labs"));
-                        ui.weak(tr!("licensed-under-mit-0-mit-no-attribution-no"));
-                    });
-                });
-                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    if ui.button(tr!("ok")).clicked() {
-                        close = true;
-                    }
-                });
+        let modal = egui::Modal::new(Id::new("clawback-about")).show(ctx, |ui| {
+            ui.set_width(320.0);
+            ui.vertical_centered(|ui| {
+                ui.add_space(8.0);
+                let (rect, _) = ui.allocate_exact_size(vec2(72.0, 72.0), egui::Sense::hover());
+                icon::paint(ui.painter(), rect);
+                ui.add_space(10.0);
+                ui.label(RichText::new("Clawback").size(24.0).strong().color(theme::TEXT));
+                ui.label(RichText::new(env!("CARGO_PKG_VERSION")).color(theme::MUTED));
+                ui.add_space(12.0);
+                ui.label(tr!("a-fast-cross-platform-disk-space-map"));
+                ui.label(RichText::new(tr!("claw-back-your-disk-space")).color(theme::ACCENT));
+                ui.add_space(8.0);
+                ui.hyperlink_to("github.com/Azazel-Labs/Clawback", env!("CARGO_PKG_REPOSITORY"));
+                ui.add_space(14.0);
+                ui.separator();
+                ui.add_space(6.0);
+                ui.label(RichText::new(tr!("copyright-2026-azazel-labs")).size(11.0).color(theme::MUTED));
+                ui.label(
+                    RichText::new(tr!("licensed-under-mit-0-mit-no-attribution-no")).size(11.0).color(theme::MUTED),
+                );
+                ui.add_space(10.0);
+                if ui.button(tr!("ok")).clicked() {
+                    close = true;
+                }
             });
-        if close || ctx.input(|i| i.key_pressed(Key::Escape)) {
+        });
+        if close || modal.should_close() {
             self.about = false;
         }
     }
@@ -1203,40 +1640,6 @@ impl ClawbackApp {
     }
 
     fn modal_dialogs(&mut self, ctx: &egui::Context) {
-        if let Some(d) = &self.deleting {
-            let progress = d.progress.snapshot();
-            ctx.request_repaint_after(Duration::from_millis(100));
-            egui::Modal::new(Id::new("clawback-deleting")).show(ctx, |ui| {
-                ui.set_width((ctx.content_rect().width() - 64.0).clamp(240.0, 420.0));
-                ui.horizontal(|ui| {
-                    ui.spinner();
-                    ui.strong(match progress.phase {
-                        crate::deletion::Phase::Preparing => tr!("delete-preparing"),
-                        crate::deletion::Phase::Recycling => tr!("delete-recycling"),
-                        crate::deletion::Phase::Updating => tr!("delete-updating"),
-                    });
-                });
-                ui.add_space(8.0);
-                ui.add(egui::Label::new(d.path.display().to_string()).truncate())
-                    .on_hover_text(d.path.display().to_string());
-                ui.label(
-                    RichText::new(tr!(
-                        "delete-details",
-                        size = format::size(d.size),
-                        seconds = d.started.elapsed().as_secs().to_string()
-                    ))
-                    .color(theme::MUTED),
-                );
-                if progress.total > 0 && progress.phase == crate::deletion::Phase::Recycling {
-                    ui.add_space(8.0);
-                    ui.add(egui::ProgressBar::new(progress.done as f32 / progress.total as f32).show_percentage());
-                }
-                if !progress.current.is_empty() && progress.current != d.path.display().to_string() {
-                    ui.add(egui::Label::new(RichText::new(&progress.current).small().color(theme::MUTED)).truncate())
-                        .on_hover_text(&progress.current);
-                }
-            });
-        }
         if let Some(msg) = &self.error {
             let mut close = false;
             let r = egui::Modal::new(Id::new("clawback-error")).show(ctx, |ui| {
@@ -1298,10 +1701,10 @@ impl eframe::App for ClawbackApp {
         self.poll(&ctx);
         self.keys(&ctx);
 
-        // Scan progress floats over the map instead of reserving a permanent band.
-        let band_height = (ui.available_height() * 0.05).clamp(32.0, 44.0);
+        // Scan progress floats over the map instead of reserving a permanent band,
+        // so the menu bar only needs its 24 px items plus the frame margins.
         let tool = egui::Panel::top("compact-toolbar")
-            .exact_size(band_height)
+            .exact_size(30.0)
             .frame(egui::Frame::new().fill(theme::BG).inner_margin(egui::Margin::symmetric(10, 3)))
             .show(ui, |ui| self.toolbar(ui))
             .inner;
@@ -1309,69 +1712,95 @@ impl eframe::App for ClawbackApp {
             self.tool(t, &ctx);
         }
 
-        let directory_panel = "directory-tree-v2";
-        #[cfg(feature = "screenshots")]
-        let directory_panel =
-            if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() { "demo-directories-v2" } else { directory_panel };
-        let folder = egui::Panel::top(directory_panel)
-            .resizable(true)
-            .default_size(290.0)
-            .size_range(100.0..=(ui.available_height() * 0.65).max(100.0))
-            .frame(
-                egui::Frame::new()
-                    .fill(theme::NAVIGATOR)
-                    .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
-                    .inner_margin(6),
-            )
-            .show(ui, |ui| {
-                if let Some(doc) = &self.doc {
-                    let selected = self
-                        .map
-                        .selected_node()
-                        .filter(|&id| {
-                            (id as usize) < doc.tree.len()
-                                && !doc.tree.node(id).has(clawback_core::tree::flags::REMOVED)
-                        })
-                        .unwrap_or(doc.view);
-                    let scope =
-                        if doc.tree.node(selected).is_dir() { selected } else { doc.tree.node(selected).parent };
-                    if ui.available_width() >= 760.0 {
-                        egui::Panel::right("file-types-panel-v2")
-                            .resizable(true)
-                            .default_size(ui.available_width() * 0.32)
-                            .size_range(300.0..=ui.available_width() * 0.6)
-                            .frame(egui::Frame::new().inner_margin(egui::Margin::symmetric(8, 0)))
-                            .show(ui, |ui| self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope));
-                    } else {
-                        ui.horizontal(|ui| {
-                            ui.selectable_value(&mut self.narrow_types, false, tr!("directories"));
-                            ui.selectable_value(&mut self.narrow_types, true, tr!("file-types"));
-                        });
-                        if self.narrow_types {
-                            self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope);
-                            return None;
+        // Nothing to browse until a scan produces a tree; the map gets the whole window.
+        if self.doc.is_some() {
+            let directory_panel = "directory-tree-v2";
+            #[cfg(feature = "screenshots")]
+            let directory_panel = if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
+                "demo-directories-v2"
+            } else {
+                directory_panel
+            };
+            // The split is a share of the window, so it survives restarts and window resizes.
+            // egui's own saved panel size is clamped to whatever height the first frames had.
+            let panel_id = Id::new(directory_panel);
+            let below_toolbar = ui.available_height();
+            let (min_split, max_split) = clawback_core::settings::DIRECTORY_SPLIT;
+            let max_height = (below_toolbar * max_split as f32 / 1000.0).max(100.0);
+            let dragging = ctx.read_response(panel_id.with("__resize")).is_some_and(|r| r.dragged());
+            if !dragging {
+                let height = (below_toolbar * self.settings.directory_split as f32 / 1000.0).clamp(100.0, max_height);
+                let outer_rect =
+                    egui::Rect::from_min_size(ui.available_rect_before_wrap().min, vec2(ui.available_width(), height));
+                ctx.data_mut(|d| d.insert_persisted(panel_id, egui::containers::panel::PanelState { outer_rect }));
+            }
+            let folder = egui::Panel::top(panel_id)
+                .resizable(true)
+                .size_range(100.0..=max_height)
+                .frame(
+                    egui::Frame::new()
+                        .fill(theme::NAVIGATOR)
+                        .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
+                        .inner_margin(6),
+                )
+                .show(ui, |ui| {
+                    let doc = self.doc.as_ref()?;
+                    {
+                        let selected = self
+                            .map
+                            .selected_node()
+                            .filter(|&id| {
+                                (id as usize) < doc.tree.len()
+                                    && !doc.tree.node(id).has(clawback_core::tree::flags::REMOVED)
+                            })
+                            .unwrap_or(doc.view);
+                        let scope =
+                            if doc.tree.node(selected).is_dir() { selected } else { doc.tree.node(selected).parent };
+                        if ui.available_width() >= 760.0 {
+                            egui::Panel::right("file-types-panel-v2")
+                                .resizable(true)
+                                .default_size(ui.available_width() * 0.32)
+                                .size_range(300.0..=ui.available_width() * 0.6)
+                                .frame(egui::Frame::new().inner_margin(egui::Margin::symmetric(8, 0)))
+                                .show(ui, |ui| self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope));
+                        } else {
+                            ui.horizontal(|ui| {
+                                ui.selectable_value(&mut self.narrow_types, false, tr!("directories"));
+                                ui.selectable_value(&mut self.narrow_types, true, tr!("file-types"));
+                            });
+                            if self.narrow_types {
+                                self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope);
+                                return None;
+                            }
                         }
+                        self.directories.ui(ui, &doc.tree, doc.id, doc.generation, doc.view, self.scan.is_some())
                     }
-                    self.directories.ui(ui, &doc.tree, doc.id, doc.generation, doc.view, self.scan.is_some())
-                } else {
-                    ui.strong(tr!("directories"));
-                    ui.weak(if self.scan.is_some() {
-                        tr!("discovering-folders")
-                    } else {
-                        tr!("open-a-folder-or-drive-to-browse-its")
-                    });
-                    None
-                }
-            })
-            .inner;
-        if let Some(node) = folder {
-            self.apply(Command::ZoomTo(node), &ctx);
+                });
+            if dragging && below_toolbar > 0.0 {
+                let split = (folder.response.rect.height() / below_toolbar * 1000.0).round() as u32;
+                self.settings.directory_split = split.clamp(min_split, max_split);
+                self.split_dragging = true;
+            } else if std::mem::take(&mut self.split_dragging) {
+                self.save_settings();
+            }
+            if let Some(node) = folder.inner {
+                self.apply(Command::ZoomTo(node), &ctx);
+            }
         }
 
         let commands = egui::CentralPanel::default()
             .frame(egui::Frame::new().fill(theme::BG).inner_margin(8))
             .show(ui, |ui| {
                 let settings = &self.settings;
+                let pending_delete: Vec<(NodeId, bool)> = self
+                    .doc
+                    .as_ref()
+                    .map(|d| {
+                        let active = self.deleting.iter().filter(|x| x.doc == d.id).filter_map(|x| x.node);
+                        let queued = self.delete_queue.iter().filter(|q| q.doc == d.id).map(|q| q.node);
+                        active.map(|n| (n, true)).chain(queued.map(|n| (n, false))).collect()
+                    })
+                    .unwrap_or_default();
                 let input = self.doc.as_ref().map(|d| MapInput {
                     scanning: self.scan.is_some(),
                     tree: &d.tree,
@@ -1381,32 +1810,39 @@ impl eframe::App for ClawbackApp {
                     free: (settings.show_free && d.view == ROOT && d.is_mount).then(|| d.free_space()),
                     disk_free: d.free_space(),
                     disk_total: d.total_space(),
+                    deleting: &pending_delete,
+                    recycle_bin: d.recycle_bin(),
                 });
-                let out = self.map.ui(ui, input.as_ref());
+                let mut out = self.map.ui(ui, input.as_ref());
                 if self.doc.is_none() && self.scan.is_none() {
+                    // The icon is the way in: click it to choose a drive.
                     let center = ui.max_rect().center();
+                    let icon_rect = egui::Rect::from_center_size(center - vec2(0.0, 92.0), vec2(112.0, 112.0));
+                    let response = ui
+                        .interact(icon_rect, Id::new("empty-open-drive"), egui::Sense::click())
+                        .on_hover_cursor(egui::CursorIcon::PointingHand)
+                        .on_hover_text(tr!("select-drive-to-view"));
+                    let hover = ui.ctx().animate_bool(response.id, response.hovered());
                     let p = ui.painter();
-                    for (offset, size, color) in [
-                        (vec2(-54.0, -100.0), vec2(64.0, 62.0), egui::Color32::from_rgb(49, 65, 71)),
-                        (vec2(16.0, -100.0), vec2(38.0, 30.0), egui::Color32::from_rgb(54, 60, 77)),
-                        (vec2(16.0, -64.0), vec2(38.0, 26.0), egui::Color32::from_rgb(68, 56, 74)),
-                    ] {
-                        p.rect_filled(egui::Rect::from_min_size(center + offset, size), 6.0, color);
-                    }
+                    p.circle_filled(icon_rect.center(), 74.0, theme::ACCENT.gamma_multiply(0.04 + 0.08 * hover));
+                    icon::paint(p, icon_rect.expand(6.0 * hover));
                     p.text(
-                        center,
+                        center + vec2(0.0, 6.0),
                         Align2::CENTER_CENTER,
                         tr!("make-room-for-what-matters"),
                         egui::FontId::proportional(24.0),
                         theme::TEXT,
                     );
                     p.text(
-                        center + vec2(0.0, 34.0),
+                        center + vec2(0.0, 40.0),
                         Align2::CENTER_CENTER,
                         tr!("open-a-drive-or-folder-to-see-where"),
                         egui::FontId::proportional(13.0),
                         theme::MUTED,
                     );
+                    if response.clicked() {
+                        out.push(Command::OpenDrive);
+                    }
                 }
                 out
             })
@@ -1416,7 +1852,8 @@ impl eframe::App for ClawbackApp {
         }
 
         self.open_dialog(&ctx);
-        self.scan_toast(&ctx);
+        self.toasts(&ctx);
+        self.confirm_dialog(&ctx);
         self.setup_dialog(&ctx);
         self.about_dialog(&ctx);
         self.properties_dialog(&ctx);
@@ -1502,10 +1939,150 @@ fn turbo_button() -> egui::Button<'static> {
         .min_size(vec2(112.0, 34.0))
 }
 
-fn picker_row(ui: &mut Ui, selected: bool, text: &str) -> egui::Response {
-    let height = if text.contains('\n') { 56.0 } else { 34.0 };
-    ui.add_sized(vec2(ui.available_width(), height), egui::Button::selectable(selected, text).truncate())
-        .on_hover_text(text)
+/// One drive in the picker: a large native icon, its name, a usage bar and free space.
+fn drive_card(
+    ui: &mut Ui,
+    disk: &DiskInfo,
+    icon: Option<&egui::TextureHandle>,
+    turbo: bool,
+    selected: bool,
+) -> egui::Response {
+    let (rect, response) = picker_card(ui, 78.0, selected);
+    let p = ui.painter();
+    let icon_rect = egui::Rect::from_center_size(rect.left_center() + vec2(42.0, 0.0), vec2(56.0, 56.0));
+    if let Some(icon) = icon {
+        p.image(
+            icon.id(),
+            icon_rect,
+            egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
+            egui::Color32::WHITE,
+        );
+    } else {
+        // Portable stand-in: a drive body with an activity light.
+        let body = egui::Rect::from_center_size(icon_rect.center(), vec2(48.0, 30.0));
+        p.rect_filled(body, 6, egui::Color32::from_rgb(70, 78, 88));
+        p.circle_filled(body.right_center() - vec2(9.0, 0.0), 3.0, theme::ACCENT);
+    }
+    let left = icon_rect.right() + 16.0;
+    let right = rect.right() - 16.0;
+    let used = disk.total.saturating_sub(disk.free);
+    let fraction = if disk.total == 0 { 0.0 } else { used as f32 / disk.total as f32 };
+    let name = p.layout_no_wrap(disk.label(), egui::FontId::proportional(16.0), theme::TEXT);
+    let mut name_right = right;
+    if turbo {
+        let badge = p.layout_no_wrap(format!("⚡ {}", tr!("turbo")), egui::FontId::proportional(11.0), theme::ACCENT);
+        let badge_rect = egui::Rect::from_min_size(
+            egui::pos2(right - badge.size().x - 14.0, rect.top() + 12.0),
+            badge.size() + vec2(14.0, 6.0),
+        );
+        p.rect_filled(badge_rect, 9, theme::ACCENT.gamma_multiply(0.14));
+        p.galley(badge_rect.min + vec2(7.0, 3.0), badge, theme::ACCENT);
+        name_right = badge_rect.left() - 8.0;
+    }
+    let name_pos = egui::pos2(left, rect.top() + 12.0);
+    p.with_clip_rect(egui::Rect::from_min_max(name_pos, egui::pos2(name_right, rect.bottom()))).galley(
+        name_pos,
+        name,
+        theme::TEXT,
+    );
+    let bar = egui::Rect::from_min_max(egui::pos2(left, rect.top() + 40.0), egui::pos2(right, rect.top() + 46.0));
+    p.rect_filled(bar, 3, theme::BG);
+    let mut filled = bar;
+    filled.max.x = bar.left() + bar.width() * fraction.clamp(0.0, 1.0);
+    p.rect_filled(filled, 3, if fraction >= 0.9 { theme::DANGER } else { theme::ACCENT });
+    p.text(
+        egui::pos2(left, rect.bottom() - 14.0),
+        Align2::LEFT_CENTER,
+        tr!("drive-free-of-total", free = format::size(disk.free), total = format::size(disk.total)),
+        egui::FontId::proportional(12.0),
+        theme::MUTED,
+    );
+    p.text(
+        egui::pos2(right, rect.bottom() - 14.0),
+        Align2::RIGHT_CENTER,
+        format!("{}  ·  {}", format::percent(used, disk.total), disk.fs),
+        egui::FontId::proportional(12.0),
+        theme::MUTED,
+    );
+    response.on_hover_text(disk.mount.display().to_string())
+}
+
+const FOLDER_ICON: u8 = 2;
+
+/// A clickable picker card with hover and selection chrome; contents are painted by the caller.
+fn picker_card(ui: &mut Ui, height: f32, selected: bool) -> (egui::Rect, egui::Response) {
+    let (rect, response) = ui.allocate_exact_size(vec2(ui.available_width(), height), egui::Sense::click());
+    let hover = ui.ctx().animate_bool(response.id, response.hovered());
+    let p = ui.painter();
+    let fill = if selected { egui::Color32::from_rgb(35, 47, 58) } else { theme::NAVIGATOR };
+    p.rect_filled(rect, 10, fill.lerp_to_gamma(theme::ROW_ALT, if selected { 0.0 } else { hover }));
+    p.rect_stroke(
+        rect,
+        10,
+        egui::Stroke::new(if selected { 1.5 } else { 1.0 }, if selected { theme::ACCENT } else { theme::BORDER }),
+        egui::StrokeKind::Inside,
+    );
+    (rect, response.on_hover_cursor(egui::CursorIcon::PointingHand))
+}
+
+/// A recently opened folder: its icon and name, with the containing folder beneath.
+fn folder_card(ui: &mut Ui, path: &Path, icon: Option<&egui::TextureHandle>, selected: bool) -> egui::Response {
+    let (rect, response) = picker_card(ui, 52.0, selected);
+    let p = ui.painter();
+    let icon_rect = egui::Rect::from_center_size(rect.left_center() + vec2(30.0, 0.0), vec2(32.0, 32.0));
+    if let Some(icon) = icon {
+        p.image(
+            icon.id(),
+            icon_rect,
+            egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
+            egui::Color32::WHITE,
+        );
+    } else {
+        // Portable stand-in: a folder tab and body.
+        let body = egui::Rect::from_center_size(icon_rect.center() + vec2(0.0, 2.0), vec2(28.0, 20.0));
+        p.rect_filled(egui::Rect::from_min_size(body.min - vec2(0.0, 4.0), vec2(12.0, 6.0)), 2, theme::FOLDER);
+        p.rect_filled(body, 3, theme::FOLDER);
+    }
+    let left = icon_rect.right() + 14.0;
+    let text = egui::Rect::from_min_max(egui::pos2(left, rect.top()), egui::pos2(rect.right() - 14.0, rect.bottom()));
+    let name = path.file_name().map_or_else(|| path.display().to_string(), |n| n.to_string_lossy().into_owned());
+    let parent = path.parent().map(dir_display).unwrap_or_default();
+    let clipped = p.with_clip_rect(text);
+    clipped.text(
+        egui::pos2(left, rect.top() + 17.0),
+        Align2::LEFT_CENTER,
+        name,
+        egui::FontId::proportional(14.0),
+        theme::TEXT,
+    );
+    clipped.text(
+        egui::pos2(left, rect.bottom() - 15.0),
+        Align2::LEFT_CENTER,
+        parent,
+        egui::FontId::proportional(11.0),
+        theme::MUTED,
+    );
+    response.on_hover_text(path.display().to_string())
+}
+
+/// A menu-bar menu that, as in native menu bars, opens on hover while another menu in the bar is open.
+/// `was_open` is whether any bar menu was open last frame; `open` collects that for this frame.
+fn bar_menu<'a>(
+    ui: &mut Ui,
+    was_open: bool,
+    open: &mut bool,
+    label: impl egui::IntoAtoms<'a>,
+    add_contents: impl FnOnce(&mut Ui),
+) -> egui::Response {
+    let response = ui.menu_button(label, add_contents).response;
+    let popup = egui::Popup::default_response_id(&response);
+    // Skip the frame its title was clicked, so clicking an open menu's title still closes it.
+    if was_open && response.hovered() && !response.clicked() && !egui::Popup::is_id_open(ui.ctx(), popup) {
+        egui::Popup::open_id(ui.ctx(), popup);
+        ui.ctx().request_repaint();
+    }
+    *open |= egui::Popup::is_id_open(ui.ctx(), popup);
+    response
 }
 
 /// A menu command with a separate, right-aligned shortcut column.
@@ -1531,6 +2108,285 @@ mod tests {
     use super::*;
 
     #[test]
+    fn menu_bar_switches_menus_on_hover_once_one_is_open() {
+        let ctx = egui::Context::default();
+        let mut buttons = Vec::new();
+        let mut frame = |events: Vec<egui::Event>| {
+            buttons.clear();
+            let mut output = ctx.run_ui(egui::RawInput { events, ..Default::default() }, |ui| {
+                let key = Id::new("menu_bar_open");
+                let was_open = ui.data(|d| d.get_temp::<bool>(key).unwrap_or(false));
+                let mut open = false;
+                egui::MenuBar::new().ui(ui, |ui| {
+                    for name in ["File", "View"] {
+                        let response = bar_menu(ui, was_open, &mut open, name, |ui| {
+                            ui.label(name);
+                        });
+                        buttons.push((response.rect.center(), egui::Popup::default_response_id(&response)));
+                    }
+                });
+                ui.data_mut(|d| d.insert_temp(key, open));
+            });
+            output.textures_delta.clear();
+            buttons.clone()
+        };
+        let button = |pos, pressed| egui::Event::PointerButton {
+            pos,
+            button: egui::PointerButton::Primary,
+            pressed,
+            modifiers: Modifiers::NONE,
+        };
+        let [(file, file_popup), (view, view_popup)] = frame(vec![])[..] else { panic!() };
+
+        // Hovering alone opens nothing.
+        frame(vec![egui::Event::PointerMoved(view)]);
+        frame(vec![]);
+        assert!(!egui::Popup::is_any_open(&ctx));
+
+        frame(vec![egui::Event::PointerMoved(file), button(file, true)]);
+        frame(vec![button(file, false)]);
+        assert!(egui::Popup::is_id_open(&ctx, file_popup));
+
+        frame(vec![egui::Event::PointerMoved(view)]);
+        frame(vec![]);
+        assert!(egui::Popup::is_id_open(&ctx, view_popup));
+        assert!(!egui::Popup::is_id_open(&ctx, file_popup));
+
+        // Clicking the open menu's title still closes it.
+        frame(vec![button(view, true)]);
+        frame(vec![button(view, false)]);
+        frame(vec![]);
+        assert!(!egui::Popup::is_any_open(&ctx));
+    }
+
+    /// A real folder on disk with a matching in-memory tree, as a scan would produce.
+    struct DeleteFixture {
+        app: ClawbackApp,
+        ctx: egui::Context,
+        root: PathBuf,
+    }
+
+    impl DeleteFixture {
+        fn new(name: &str, layout: &[(&str, bool)], is_mount: bool) -> Self {
+            use clawback_core::tree::{Kind, NewEntry};
+            let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("target")
+                .join("delete-flow-tests")
+                .join(format!("{name}-{}", std::process::id()));
+            let _ = std::fs::remove_dir_all(&root);
+            std::fs::create_dir_all(&root).unwrap();
+            let mut tree = Tree::new(&root);
+            for (relative, dir) in layout {
+                let path = root.join(relative);
+                if *dir {
+                    std::fs::create_dir_all(&path).unwrap();
+                } else {
+                    std::fs::write(&path, b"clawback").unwrap();
+                }
+                let parent = path.parent().and_then(|p| tree.find_path(p)).expect("parent listed first");
+                tree.add_children(
+                    parent,
+                    vec![NewEntry {
+                        name: path.file_name().unwrap().into(),
+                        kind: if *dir { Kind::Dir } else { Kind::File },
+                        size: if *dir { 0 } else { 8 },
+                        len: if *dir { 0 } else { 8 },
+                        mtime: 0,
+                        flags: 0,
+                        file_id: None,
+                    }],
+                );
+            }
+            tree.sort_all();
+            let mut app = ClawbackApp::with_settings(Settings { auto_rescan: false, ..Settings::default() });
+            app.doc = Some(Doc {
+                id: 1,
+                root: root.clone(),
+                view: ROOT,
+                generation: 0,
+                files: tree.root().files,
+                folders: tree.dir_count(ROOT),
+                tree: Arc::new(tree),
+                skipped: Arc::new(Vec::new()),
+                disk: None,
+                is_mount,
+            });
+            Self { app, ctx: egui::Context::default(), root }
+        }
+
+        fn node(&self, relative: &str) -> NodeId {
+            self.app.doc.as_ref().unwrap().tree.find_path(&self.root.join(relative)).expect("in the tree")
+        }
+
+        fn in_tree(&self, relative: &str) -> bool {
+            self.app.doc.as_ref().unwrap().tree.find_path(&self.root.join(relative)).is_some()
+        }
+
+        /// Pretend the Recycle Bin refused `relative`, as the shell does for oversized items.
+        fn too_large(&mut self, relative: &str) {
+            let node = self.node(relative);
+            let (tx, rx) = mpsc::channel();
+            tx.send(Ok(DeleteDone::TooLarge)).unwrap();
+            self.app.deleting = Some(Deleting {
+                doc: 1,
+                node: Some(node),
+                path: self.root.join(relative),
+                kind: DeleteKind::Recycle,
+                targets: vec![self.root.join(relative)],
+                rx,
+                progress: Arc::new(crate::deletion::Progress::default()),
+                started: Instant::now(),
+                size: 8,
+                files: 2,
+            });
+            self.app.poll(&self.ctx);
+        }
+
+        fn finish(&mut self) {
+            let deadline = Instant::now() + Duration::from_secs(20);
+            while self.app.deleting.is_some() || !self.app.delete_queue.is_empty() {
+                assert!(Instant::now() < deadline, "delete did not finish");
+                self.app.poll(&self.ctx);
+                std::thread::sleep(Duration::from_millis(5));
+            }
+        }
+    }
+
+    impl Drop for DeleteFixture {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_dir_all(&self.root);
+        }
+    }
+
+    const BIG: &[(&str, bool)] = &[("big", true), ("big/a.bin", false), ("big/b.bin", false), ("keep.txt", false)];
+
+    #[test]
+    fn oversized_items_wait_for_confirmation_and_nothing_is_deleted() {
+        let mut f = DeleteFixture::new("ask", BIG, false);
+        f.too_large("big");
+        assert_eq!(f.app.confirm.len(), 1);
+        assert!(f.app.confirm[0].kind == DeleteKind::Permanent);
+        assert!(f.app.deleting.is_none() && f.app.delete_errors.is_empty());
+        assert!(f.root.join("big/a.bin").exists());
+        assert!(f.in_tree("big"));
+    }
+
+    #[test]
+    fn declining_the_confirmation_keeps_everything() {
+        let mut f = DeleteFixture::new("decline", BIG, false);
+        f.too_large("big");
+        let ctx = f.ctx.clone();
+        f.app.answer_confirm(false, &ctx);
+        f.finish();
+        assert!(f.app.confirm.is_empty() && f.app.delete_errors.is_empty());
+        assert!(f.root.join("big/a.bin").exists());
+        assert!(f.in_tree("big"));
+    }
+
+    #[test]
+    fn confirming_purges_the_item_and_updates_the_map() {
+        let mut f = DeleteFixture::new("confirm", BIG, false);
+        f.too_large("big");
+        let generation = f.app.doc.as_ref().unwrap().generation;
+        let ctx = f.ctx.clone();
+        f.app.answer_confirm(true, &ctx);
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        assert!(!f.root.join("big").exists());
+        assert!(!f.in_tree("big"));
+        assert!(f.root.join("keep.txt").exists() && f.in_tree("keep.txt"));
+        assert!(f.app.doc.as_ref().unwrap().generation > generation);
+    }
+
+    #[test]
+    fn disabled_delete_ignores_a_pending_confirmation() {
+        let mut f = DeleteFixture::new("disabled", BIG, false);
+        f.too_large("big");
+        f.app.settings.disable_delete = true;
+        let ctx = f.ctx.clone();
+        f.app.answer_confirm(true, &ctx);
+        f.finish();
+        assert!(f.root.join("big/a.bin").exists());
+    }
+
+    #[test]
+    fn a_cancelled_purge_reports_no_error_and_keeps_the_rest_on_the_map() {
+        let mut f = DeleteFixture::new("cancel", BIG, false);
+        f.too_large("big");
+        let ctx = f.ctx.clone();
+        f.app.answer_confirm(true, &ctx);
+        if let Some(d) = &f.app.deleting {
+            d.progress.cancel();
+        }
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        // Whatever survived stays listed until a rescan or the watcher reconciles it.
+        assert!(f.in_tree("big") || !f.root.join("big").exists());
+    }
+
+    #[test]
+    fn a_failed_purge_is_reported_once_with_the_count() {
+        let mut f = DeleteFixture::new("fail", BIG, false);
+        f.too_large("big");
+        // Hold one file open without delete sharing, so it cannot go.
+        #[cfg(windows)]
+        let _held = {
+            use std::os::windows::fs::OpenOptionsExt;
+            std::fs::OpenOptions::new().read(true).share_mode(0).open(f.root.join("big/a.bin")).unwrap()
+        };
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            std::fs::set_permissions(f.root.join("big"), std::fs::Permissions::from_mode(0o500)).unwrap();
+        }
+        let ctx = f.ctx.clone();
+        f.app.answer_confirm(true, &ctx);
+        f.finish();
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            std::fs::set_permissions(f.root.join("big"), std::fs::Permissions::from_mode(0o700)).unwrap();
+        }
+        assert_eq!(f.app.delete_errors.len(), 1, "{:?}", f.app.delete_errors);
+        assert!(f.app.delete_errors[0].contains("a.bin"));
+        assert!(f.root.join("big/a.bin").exists());
+        assert!(f.in_tree("big"), "a partly deleted folder stays until it is reconciled");
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn emptying_the_recycle_bin_asks_then_clears_only_the_users_folder() {
+        let sid = crate::recycle_bin::user_sid().expect("current user's SID");
+        let user = format!("$Recycle.Bin/{sid}");
+        let layout = [
+            ("$Recycle.Bin", true),
+            (user.as_str(), true),
+            (&format!("{user}/desktop.ini"), false),
+            (&format!("{user}/$RABC123.txt"), false),
+            (&format!("{user}/$IABC123.txt"), false),
+            (&format!("{user}/$RDEF456"), true),
+            (&format!("{user}/$RDEF456/inner.bin"), false),
+            ("$Recycle.Bin/S-1-5-21-other-user", true),
+            ("$Recycle.Bin/S-1-5-21-other-user/theirs.bin", false),
+        ];
+        let mut f = DeleteFixture::new("bin", &layout, true);
+        let ctx = f.ctx.clone();
+        f.app.apply(Command::EmptyRecycleBin, &ctx);
+        assert_eq!(f.app.confirm.len(), 1, "emptying always asks first");
+        assert!(f.app.confirm[0].kind == DeleteKind::EmptyBin);
+        assert!(f.root.join(&user).join("$RABC123.txt").exists());
+
+        f.app.answer_confirm(true, &ctx);
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        let left: Vec<_> = std::fs::read_dir(f.root.join(&user)).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(left, ["desktop.ini"]);
+        assert!(f.root.join("$Recycle.Bin/S-1-5-21-other-user/theirs.bin").exists());
+        assert!(!f.in_tree(&format!("{user}/$RDEF456")) && f.in_tree(&format!("{user}/desktop.ini")));
+        assert!(f.in_tree("$Recycle.Bin/S-1-5-21-other-user/theirs.bin"));
+    }
+
+    #[test]
     fn picker_rows_keep_their_geometry_on_hover_and_selection() {
         let ctx = egui::Context::default();
         theme::apply(&ctx, "en");
@@ -1552,14 +2408,16 @@ mod tests {
                         .auto_shrink([false, true])
                         .show(ui, |ui| {
                             for i in 0..20 {
-                                let response = picker_row(
-                                    ui,
-                                    selected,
-                                    &format!(
-                                        "Drive {i}: {}\n100 GB free of 1 TB · 90% used · NTFS",
-                                        "long drive name ".repeat(12)
-                                    ),
-                                );
+                                let disk = DiskInfo {
+                                    name: format!("Drive {i}: {}", "long drive name ".repeat(12)),
+                                    mount: PathBuf::from(format!("/mnt/{i}")),
+                                    fs: "NTFS".into(),
+                                    total: 1 << 40,
+                                    free: 100 << 30,
+                                    removable: false,
+                                    kind: clawback_core::adaptive::StorageKind::Unknown,
+                                };
+                                let response = drive_card(ui, &disk, None, true, selected);
                                 if i == 0 {
                                     row = response.rect;
                                 }
