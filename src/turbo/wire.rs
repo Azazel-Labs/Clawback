@@ -5,7 +5,7 @@
 //! Helper → GUI: `Tag`-prefixed progress packets, then one tree or error.
 use clawback_core::{
     ROOT, ScanOptions, Tree,
-    scan::{MftProgress, ScanBackend, ScanResult},
+    scan::{MftPhase, MftProgress, ScanBackend, ScanResult},
     tree::{Kind, NewEntry, flags},
 };
 use std::{
@@ -17,8 +17,6 @@ use std::{
 };
 
 pub const MAGIC: &[u8; 8] = b"CLAWMFT2";
-/// The last `MftProgress::phase`: the tree is being sent.
-pub const TRANSFERRING: u64 = 4;
 /// Longest string on the wire, in UTF-16 units: the Windows path limit.
 const MAX_UNITS: u64 = 32767;
 const OPTION_APPARENT_SIZE: u8 = 1;
@@ -257,7 +255,7 @@ pub fn read_tree(input: &mut impl Read, root: &Path) -> io::Result<ScanResult> {
 
 /// Fixed-size telemetry packets: never send per-file messages or partial trees.
 pub fn write_progress(output: &mut impl Write, p: MftProgress) -> io::Result<()> {
-    for value in [p.phase, p.read, p.total, p.records, p.files, p.dirs, p.bytes] {
+    for value in [p.phase as u64, p.read, p.total, p.records, p.files, p.dirs, p.bytes] {
         put(output, value)?;
     }
     Ok(())
@@ -265,7 +263,7 @@ pub fn write_progress(output: &mut impl Write, p: MftProgress) -> io::Result<()>
 
 pub fn read_progress(input: &mut impl Read) -> io::Result<MftProgress> {
     let p = MftProgress {
-        phase: number(input)?,
+        phase: MftPhase::try_from(number(input)?).map_err(|_| invalid())?,
         read: number(input)?,
         total: number(input)?,
         records: number(input)?,
@@ -273,7 +271,7 @@ pub fn read_progress(input: &mut impl Read) -> io::Result<MftProgress> {
         dirs: number(input)?,
         bytes: number(input)?,
     };
-    if p.phase > TRANSFERRING || p.read > p.total || p.files > u64::from(u32::MAX) || p.dirs > u64::from(u32::MAX) {
+    if p.read > p.total || p.files > u64::from(u32::MAX) || p.dirs > u64::from(u32::MAX) {
         return Err(invalid());
     }
     Ok(p)
@@ -381,17 +379,34 @@ mod tests {
 
     #[test]
     fn telemetry_roundtrip_rejects_truncation_and_invalid_values() {
-        let p = MftProgress { phase: 2, read: 1024, total: 1024, records: 40, files: 30, dirs: 5, bytes: 8192 };
+        let p = MftProgress {
+            phase: MftPhase::Assembling,
+            read: 1024,
+            total: 1024,
+            records: 40,
+            files: 30,
+            dirs: 5,
+            bytes: 8192,
+        };
         let mut packet = Vec::new();
         write_progress(&mut packet, p).expect("write");
+        assert_eq!(packet[..8], 2u64.to_le_bytes(), "phases keep their wire numbers");
         assert_eq!(read_progress(&mut packet.as_slice()).expect("read"), p);
         for len in 0..packet.len() {
             assert!(read_progress(&mut &packet[..len]).is_err());
         }
-        for bad in [MftProgress { phase: 5, ..p }, MftProgress { read: 1025, ..p }] {
-            let mut packet = Vec::new();
-            write_progress(&mut packet, bad).expect("write");
-            assert!(read_progress(&mut packet.as_slice()).is_err());
+        for (number, phase) in
+            [MftPhase::Reading, MftPhase::Resolving, MftPhase::Assembling, MftPhase::Sorting, MftPhase::Transferring]
+                .into_iter()
+                .enumerate()
+        {
+            assert_eq!(MftPhase::try_from(number as u64), Ok(phase));
         }
+        let mut bad_phase = packet.clone();
+        bad_phase[..8].copy_from_slice(&5u64.to_le_bytes());
+        assert!(read_progress(&mut bad_phase.as_slice()).is_err());
+        let mut bad_read = Vec::new();
+        write_progress(&mut bad_read, MftProgress { read: 1025, ..p }).expect("write");
+        assert!(read_progress(&mut bad_read.as_slice()).is_err());
     }
 }

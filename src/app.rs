@@ -9,6 +9,7 @@ use crate::platform::{self, DiskInfo};
 use crate::properties::Props;
 use crate::scanning::{Running, Update};
 use crate::theme;
+use crate::watching::LiveStatus;
 use crate::{background::retire, icon};
 use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree, format};
 use eframe::egui::{self, Align, Align2, Id, Key, Layout, Modifiers, RichText, Ui, vec2};
@@ -153,7 +154,7 @@ pub struct ClawbackApp {
     history: Vec<PathBuf>,
     scan: Option<Running>,
     live: Option<crate::watching::Live>,
-    live_status: String,
+    live_status: Option<LiveStatus>,
     map: MapView,
     directories: DirectoryView,
     file_types: crate::filetypes::FileTypes,
@@ -242,7 +243,7 @@ impl ClawbackApp {
                 let language = crate::i18n::set_language(&app.settings.language);
                 theme::set_fonts(&cc.egui_ctx, language);
             }
-            app.live_status = "Demo data - fictional files and sizes".into();
+            app.live_status = Some(LiveStatus::Demo);
             if view != ROOT {
                 app.history.push(tree.root_path().to_path_buf());
             }
@@ -288,7 +289,7 @@ impl ClawbackApp {
         if let Some(live) = self.live.take() {
             retire(live);
         }
-        self.live_status.clear();
+        self.live_status = None;
         if let Some(run) = self.scan.take() {
             run.cancel();
             retire(run);
@@ -348,31 +349,35 @@ impl ClawbackApp {
     fn poll_scan(&mut self, ctx: &egui::Context) {
         let update = self.scan.as_ref().map(|run| run.rx.try_recv());
         match update {
-            Some(Ok(Update::Preview(preview))) => {
+            Some(Ok(Update::Volume {
+                disk,
+                is_mount,
+                #[cfg(windows)]
+                turbo_available,
+            })) => {
                 let run = self.scan.as_mut().expect("active scan");
-                run.progress = preview.progress;
-                run.current = preview.current;
-                run.disk.clone_from(&preview.disk);
-                run.is_mount = preview.is_mount;
+                run.disk = disk;
+                run.is_mount = is_mount;
                 #[cfg(windows)]
                 {
-                    run.turbo_available = preview.turbo_available;
+                    run.turbo_available = turbo_available;
                 }
-                let (files, folders) = (preview.progress.files, preview.progress.dirs);
-                self.set_doc(Doc {
-                    disk: preview.disk,
-                    is_mount: preview.is_mount,
-                    ..Doc::new(self.next_doc_id, preview.tree, files, folders)
-                });
             }
-            Some(Ok(Update::Finished(r, disk, is_mount, started))) => {
-                self.scan = None;
+            Some(Ok(Update::Preview { tree, progress, current })) => {
+                let run = self.scan.as_mut().expect("active scan");
+                run.progress = progress;
+                run.current = current;
+                let (disk, is_mount) = (run.disk.clone(), run.is_mount);
+                self.set_doc(Doc { disk, is_mount, ..Doc::new(self.next_doc_id, tree, progress.files, progress.dirs) });
+            }
+            Some(Ok(Update::Finished { result: r, started })) => {
+                let mut run = self.scan.take().expect("active scan");
                 self.live = started.live;
-                self.live_status = started.status;
+                self.live_status = Some(started.status);
                 self.set_doc(Doc {
                     skipped: Arc::new(r.skipped),
-                    disk,
-                    is_mount,
+                    disk: run.disk.take(),
+                    is_mount: run.is_mount,
                     ..Doc::new(self.next_doc_id, r.tree, r.files, r.dirs)
                 });
                 self.next_doc_id += 1;
@@ -494,16 +499,16 @@ impl ClawbackApp {
                 }
             }
             Some(Ok(crate::watching::Update::Status(status))) => {
-                if status.starts_with("Live stopped:")
+                if status.is_stopped()
                     && let Some(live) = self.live.take()
                 {
                     retire(live);
                 }
-                self.live_status = status;
+                self.live_status = Some(status);
             }
             Some(Err(mpsc::TryRecvError::Disconnected)) => {
-                if self.live_status.starts_with("Live ·") {
-                    self.live_status = "Live stopped · Rescan to reconnect".into();
+                if self.live_status.as_ref().is_some_and(LiveStatus::is_live) {
+                    self.live_status = Some(LiveStatus::Disconnected);
                 }
                 if let Some(live) = self.live.take() {
                     retire(live);
@@ -943,7 +948,10 @@ impl ClawbackApp {
                     let text = path.display().to_string();
                     ui.with_layout(Layout::left_to_right(Align::Center), |ui| {
                         ui.add(egui::Label::new(RichText::new(&text).color(theme::MUTED)).truncate()).on_hover_text(
-                            if self.live_status.is_empty() { text } else { format!("{text}\n{}", self.live_status) },
+                            match &self.live_status {
+                                Some(status) => format!("{text}\n{}", status.text()),
+                                None => text,
+                            },
                         );
                     });
                 }
@@ -1235,6 +1243,7 @@ impl ClawbackApp {
         #[cfg(windows)]
         if run.turbo_available {
             use crate::turbo::Status;
+            use clawback_core::scan::MftPhase;
             let status = run.turbo.status();
             let busy = matches!(status, Status::Requested | Status::AwaitingConsent | Status::Reading);
             egui::Frame::new().fill(theme::SURFACE).inner_margin(8.0).show(ui, |ui| {
@@ -1248,15 +1257,15 @@ impl ClawbackApp {
                         Status::Reading => {
                             let p = run.turbo.progress().unwrap_or_default();
                             let message = match p.phase {
-                                0 => tr!(
+                                MftPhase::Reading => tr!(
                                     "turbo-read-progress",
                                     percent = p.read.saturating_mul(100).checked_div(p.total).unwrap_or(0),
                                     records = format::count(p.records)
                                 ),
-                                1 => tr!("turbo-resolving"),
-                                2 => tr!("turbo-assembling", files = format::count(p.files)),
-                                3 => tr!("turbo-sorting"),
-                                _ => tr!("turbo-transferring"),
+                                MftPhase::Resolving => tr!("turbo-resolving"),
+                                MftPhase::Assembling => tr!("turbo-assembling", files = format::count(p.files)),
+                                MftPhase::Sorting => tr!("turbo-sorting"),
+                                MftPhase::Transferring => tr!("turbo-transferring"),
                             };
                             (message, Some(tr!("turbo-progress-help")))
                         }

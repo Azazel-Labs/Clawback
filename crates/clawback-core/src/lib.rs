@@ -31,3 +31,5 @@ mod windows;
 pub use scan::{Scan, ScanOptions, ScanResult, SkipReason, Skipped};
 pub use settings::Settings;
 pub use tree::{Kind, NO_NODE, NodeId, ROOT, Tree};
+#[cfg(windows)]
+pub use windows::raw_volume_eligible;

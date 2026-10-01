@@ -10,19 +10,24 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, mpsc};
 use std::time::Duration;
 
-pub struct Preview {
-    #[cfg(windows)]
-    pub turbo_available: bool,
-    pub tree: Tree,
-    pub progress: ProgressSnapshot,
-    pub current: PathBuf,
-    pub disk: Option<DiskInfo>,
-    pub is_mount: bool,
-}
-
 pub enum Update {
-    Preview(Preview),
-    Finished(ScanResult, Option<DiskInfo>, bool, Started),
+    /// The scanned volume, sent once before the first preview.
+    Volume {
+        disk: Option<DiskInfo>,
+        /// The scan root is the volume's mount point.
+        is_mount: bool,
+        #[cfg(windows)]
+        turbo_available: bool,
+    },
+    Preview {
+        tree: Tree,
+        progress: ProgressSnapshot,
+        current: PathBuf,
+    },
+    Finished {
+        result: ScanResult,
+        started: Started,
+    },
     Failed(String),
     Cancelled,
 }
@@ -51,8 +56,8 @@ impl Running {
     pub fn demo(paused: bool) -> Self {
         let (tx, rx) = mpsc::sync_channel(1);
         Self {
-            root: PathBuf::from("Demo Drive"),
-            current: PathBuf::from("Demo Drive/Projects/Lunar Garden/Assets"),
+            root: PathBuf::from(crate::demo::DRIVE),
+            current: PathBuf::from(format!("{}/Projects/Lunar Garden/Assets", crate::demo::DRIVE)),
             progress: ProgressSnapshot { files: 184_302, dirs: 12_408, bytes: 94_983_340_321, workers: 8, denied: 0 },
             disk: Some(crate::demo::disk()),
             is_mount: true,
@@ -120,6 +125,16 @@ impl Running {
                     return;
                 }
             };
+            let volume = Update::Volume {
+                disk: disk.clone(),
+                is_mount,
+                #[cfg(windows)]
+                turbo_available: race.available,
+            };
+            if tx.send(volume).is_err() {
+                return;
+            }
+            repaint();
             let mut published = None;
             loop {
                 // Once Turbo leads, park traversal workers to avoid competing
@@ -141,17 +156,13 @@ impl Running {
                     continue;
                 }
                 let preview_span = crate::perf::span("worker.scan_preview");
-                let preview = Preview {
-                    #[cfg(windows)]
-                    turbo_available: race.available,
+                let preview = Update::Preview {
                     tree: lock(&shared.tree).preview(4096),
                     progress,
                     current: shared.progress.current_path(),
-                    disk: disk.clone(),
-                    is_mount,
                 };
                 drop(preview_span);
-                match tx.try_send(Update::Preview(preview)) {
+                match tx.try_send(preview) {
                     Ok(()) => {
                         published = Some(progress);
                         repaint();
@@ -170,20 +181,16 @@ impl Running {
                 None => scan.wait(),
             };
             let started = if result.cancelled || stop.load(Ordering::Relaxed) {
-                Started::unavailable("scan cancelled")
+                Started::cancelled()
             } else {
                 match watcher {
-                    Ok(watcher) => watcher.live(
-                        result.tree.clone(),
-                        options,
-                        result.skipped.clone(),
-                        disk.clone(),
-                        repaint.clone(),
-                    ),
+                    Ok(watcher) => {
+                        watcher.live(result.tree.clone(), options, result.skipped.clone(), disk, repaint.clone())
+                    }
                     Err(error) => Started::unavailable(error),
                 }
             };
-            let _ = tx.send(Update::Finished(result, disk, is_mount, started));
+            let _ = tx.send(Update::Finished { result, started });
             repaint();
         })?;
         Ok(Self {
@@ -307,8 +314,9 @@ impl TurboRace {
 
 #[cfg(windows)]
 fn turbo_lead(normal: ProgressSnapshot, mft: clawback_core::scan::MftProgress) -> Option<ProgressSnapshot> {
-    (mft.phase >= 2 && mft.files.saturating_add(mft.dirs) > normal.files.saturating_add(normal.dirs))
-        .then_some(ProgressSnapshot { files: mft.files, dirs: mft.dirs, bytes: mft.bytes, denied: 0, workers: 1 })
+    (mft.phase >= clawback_core::scan::MftPhase::Assembling
+        && mft.files.saturating_add(mft.dirs) > normal.files.saturating_add(normal.dirs))
+    .then_some(ProgressSnapshot { files: mft.files, dirs: mft.dirs, bytes: mft.bytes, denied: 0, workers: 1 })
 }
 
 impl Drop for Running {
@@ -324,11 +332,11 @@ mod tests {
     #[cfg(windows)]
     #[test]
     fn turbo_overtakes_only_with_assembled_entries() {
-        use clawback_core::scan::MftProgress;
+        use clawback_core::scan::{MftPhase, MftProgress};
         let normal = ProgressSnapshot { files: 100, dirs: 10, ..Default::default() };
         let mut mft = MftProgress { records: 1_000_000, ..Default::default() };
         assert!(turbo_lead(normal, mft).is_none());
-        mft.phase = 2;
+        mft.phase = MftPhase::Assembling;
         mft.files = 99;
         mft.dirs = 11;
         assert!(turbo_lead(normal, mft).is_none());

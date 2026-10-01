@@ -16,10 +16,51 @@ use std::{
 const CAPACITY: usize = 4096;
 const BATCH: Duration = Duration::from_secs(1);
 const RECOVERY_INTERVAL: Duration = Duration::from_secs(30);
-const WATCHING: &str = "Live · Watching for changes";
 
 fn stopped(error: impl std::fmt::Display) -> Update {
-    Update::Status(format!("Live stopped: {error} · Rescan to reconnect"))
+    Update::Status(LiveStatus::Stopped(error.to_string()))
+}
+
+/// What live watching is doing; [`LiveStatus::text`] renders it for both frontends.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum LiveStatus {
+    Watching,
+    CatchingUp,
+    Reconciling,
+    /// The watcher failed; a rescan reconnects.
+    Stopped(String),
+    /// The live worker went away without reporting why.
+    Disconnected,
+    /// Watching could not start.
+    Unavailable(String),
+    /// The scan was cancelled, so there is no complete tree to keep live.
+    Cancelled,
+    /// The screenshot fixture's fictional data.
+    #[cfg(feature = "screenshots")]
+    Demo,
+}
+impl LiveStatus {
+    /// Changes are being followed, as opposed to stopped or never started.
+    pub fn is_live(&self) -> bool {
+        matches!(self, Self::Watching | Self::CatchingUp | Self::Reconciling)
+    }
+    pub fn is_stopped(&self) -> bool {
+        matches!(self, Self::Stopped(_))
+    }
+    pub fn text(&self) -> String {
+        use crate::i18n::tr;
+        match self {
+            Self::Watching => tr!("live-watching"),
+            Self::CatchingUp => tr!("live-catching-up"),
+            Self::Reconciling => tr!("live-reconciling"),
+            Self::Stopped(error) => tr!("live-stopped", error = error.as_str()),
+            Self::Disconnected => tr!("live-disconnected"),
+            Self::Unavailable(error) => tr!("live-unavailable", error = error.as_str()),
+            Self::Cancelled => tr!("live-scan-cancelled"),
+            #[cfg(feature = "screenshots")]
+            Self::Demo => tr!("live-demo"),
+        }
+    }
 }
 
 pub enum Change {
@@ -55,7 +96,7 @@ pub struct Snapshot {
 
 pub enum Update {
     Snapshot(Snapshot),
-    Status(String),
+    Status(LiveStatus),
 }
 
 pub struct Live {
@@ -76,11 +117,14 @@ impl Drop for Live {
 
 pub struct Started {
     pub live: Option<Live>,
-    pub status: String,
+    pub status: LiveStatus,
 }
 impl Started {
     pub fn unavailable(error: impl std::fmt::Display) -> Self {
-        Self { live: None, status: format!("Live unavailable: {error} · Rescan to refresh") }
+        Self { live: None, status: LiveStatus::Unavailable(error.to_string()) }
+    }
+    pub fn cancelled() -> Self {
+        Self { live: None, status: LiveStatus::Cancelled }
     }
 }
 
@@ -151,7 +195,7 @@ impl Watch {
         match std::thread::Builder::new().name("clawback-live".into()).spawn(move || {
             self.run(baseline, &cancel, &tx, &*repaint);
         }) {
-            Ok(_) => Started { live: Some(Live { rx, inbox, stop }), status: WATCHING.into() },
+            Ok(_) => Started { live: Some(Live { rx, inbox, stop }), status: LiveStatus::Watching },
             Err(error) => Started::unavailable(error),
         }
     }
@@ -210,22 +254,14 @@ impl Watch {
                 if last_recovery.is_some_and(|last| last.elapsed() < RECOVERY_INTERVAL) {
                     continue;
                 }
-                if !publish(Update::Status("Live · Reconciling changes in background".into())) {
+                if !publish(Update::Status(LiveStatus::Reconciling)) {
                     return;
                 }
                 pending.paths.clear();
                 pending.rescan = false;
                 let mut opts = options.clone();
                 opts.threads = 1;
-                let result = Scan::start(&root, opts, None).map(|scan| {
-                    while !scan.is_finished() {
-                        if stop.load(Ordering::Relaxed) {
-                            scan.cancel();
-                        }
-                        std::thread::sleep(Duration::from_millis(50));
-                    }
-                    scan.wait()
-                });
+                let result = Scan::start(&root, opts, None).map(|scan| scan.wait_or_stop(stop));
                 if stop.load(Ordering::Relaxed) {
                     return;
                 }
@@ -282,8 +318,8 @@ impl Watch {
                 pending.rescan = true;
             }
             if changed || pending.rescan {
-                let status = if pending.is_empty() { WATCHING } else { "Live · Catching up" };
-                if !publish(Update::Status(status.into())) {
+                let status = if pending.is_empty() { LiveStatus::Watching } else { LiveStatus::CatchingUp };
+                if !publish(Update::Status(status)) {
                     return;
                 }
             }
@@ -372,7 +408,7 @@ mod tests {
                 .unwrap_or_else(|error| panic!("live update deadline during {stage}: {error}"))
             {
                 Update::Snapshot(snapshot) if condition(&snapshot) => return snapshot,
-                Update::Status(status) => assert!(!status.starts_with("Live stopped:"), "{status}"),
+                Update::Status(status) => assert!(!status.is_stopped(), "{status:?}"),
                 Update::Snapshot(snapshot) => {
                     eprintln!(
                         "Waiting: size={}, names={:?}",
