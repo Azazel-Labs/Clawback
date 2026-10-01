@@ -1,4 +1,4 @@
-# Interfejs Clawback. Nie zmieniaj identyfikatorów komunikatów ani nazw zmiennych.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % SKANOWANIA
@@ -26,7 +26,7 @@ scan-path-error = Nie można przeskanować ścieżki: { $path }{ "\u000A\u000A" 
 about-history = Clawback to napisany w Rust hołd dla programu SpaceMonger 1.4 autorstwa Seana Werkemy (1997–2000). Układ, kolory i obsługa myszy są oparte na oryginalnym kodzie źródłowym.
 compress = Skompresowany
 contains = Zawartość:
-copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+copyright-2026-azazel-labs = Copyright ©️ 2026 Azazel Labs.
 count-hard-linked-files-once = Licz pliki z dowiązaniami twardymi tylko raz
 workers-help = Bieżący limit równoległych zadań; dostosowuje się automatycznie do zmierzonej przepustowości i opóźnień.
 data-configuration = Dane / konfiguracja
@@ -34,6 +34,11 @@ date-time = Data / godzina
 delay = Opóźnienie:
 delete = Usuń
 deleting = { "Usuwanie…\u000A" }{ $path }
+delete-preparing = Przygotowanie do recyklingu…
+delete-recycling = Przenoszenie do kosza…
+delete-updating = Aktualizowanie mapy dysku…
+delete-details = { $size } · { $seconds }s upłynął
+delete-worker-stopped = Pracownik recyklingu został nieoczekiwanie zatrzymany. Sprawdź wybrany element przed ponowną próbą.
 density = Gęstość:
 design-document = Dokument projektowy
 directories = Foldery
@@ -51,7 +56,7 @@ exit = Zakończ
 expand-to-browse-click-a-folder-to-view = Rozwiń, aby przeglądać · Kliknij folder, aby go wyświetlić
 file-type = TYP PLIKU
 files = PLIKI
-folder = FOLDER
+folder = OBSERWUJ
 delete-error = Nie można usunąć elementu: { $path }{ "\u000A\u000A" }{ $error }
 file = Plik
 file-layout = Układ plików
@@ -59,7 +64,6 @@ file-size = Rozmiar pliku
 file-types = Typy plików
 filename = Nazwa pliku
 files-2 = Pliki:
-# Przykłady: 1 plik, 2 pliki, 5 plików, 12 plików, 22 pliki, 21 plików.
 contents-count =
     { $files ->
         [one] { $files } plik
@@ -85,10 +89,10 @@ hidden = Ukryty
 horz = Poziomo
 icon = Ikona
 image = Obraz
+language = Język
+korean = Koreański
 japanese = Japoński
 italian = Włoski
-korean = Koreański
-language = Język
 polish = Polski
 russian = Rosyjski
 portuguese-brazil = Portugalski brazylijski
@@ -206,3 +210,20 @@ thai = Tajski
 swedish = Szwedzki
 romanian = Rumuński
 hungarian = Węgierski
+turbo-read-progress = Turbo: odczyt rekordów MFT { $percent }% · { $records}
+turbo-resolving = Turbo: rozwiązywanie nazw plików…
+turbo-assembling = Turbo: montaż folderów · { $files } plików
+turbo-sorting = Turbo: sortowanie wyników…
+turbo-transferring = Turbo: ładowanie wyników…
+turbo-main-progress = Wyświetlanie postępu Turbo · sprawdzanie wyników…
+turbo-progress-help = Liczniki przełączają się na Turbo, gdy zmontowała więcej wpisów. Mapa utrzymuje regularny podgląd skanowania do czasu potwierdzenia kompletnego drzewa Turbo. Jeśli Turbo się nie powiedzie, regularne skanowanie będzie kontynuowane.
+settings-appearance = Wygląd
+settings-behavior = Zachowanie
+settings-save = Zapisz zmiany
+settings-bias-help = Lewy faworyzuje kształty poziome; wyśrodkuj je równoważenie; prawe faworyzuje kształty pionowe.
+settings-name-tips = Nazwy plików
+settings-info-tips = Szczegóły pliku
+settings-window = Okno i interakcja
+settings-deletion = Usuwanie plików
+settings-scan-scope = Zeskanuj granice
+settings-file-sizes = Księgowanie rozmiaru

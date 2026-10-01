@@ -1,4 +1,4 @@
-# Український інтерфейс Clawback.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   Гаразд   " }
 of-scan = % СКАНУВАННЯ
@@ -34,6 +34,11 @@ date-time = Дата / час
 delay = Затримка:
 delete = Видалити
 deleting = { "Видалення…\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Переміщення до кошика…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s вже створено
+delete-worker-stopped = Процес переробки скінчився несподівано. Перевірте обраний предмет, перш ніж спробувати знову.
 density = Щільність:
 design-document = Проєктний документ
 directories = Теки
@@ -205,3 +210,20 @@ thai = Тайська
 swedish = Шведська
 romanian = Румунська
 hungarian = Угорська
+turbo-read-progress = Турбо: читання MFT { $percent }% · { $records } записів
+turbo-resolving = Turbo: Розв'язання імен файлів…
+turbo-assembling = Турбо: створення папок · { $files } файлів
+turbo-sorting = Турбо: результати сортування…
+turbo-transferring = Турбо: завантаження результатів…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Лічильники переключаються на Турбо, коли склали більше записів. Карта зберігає звичайний попередній перегляд сканування, поки не буде перевірено завершено дерево Турбо. Якщо Турбо не вдасться, регулярне сканування триває.
+settings-appearance = Зовнішній вигляд
+settings-behavior = Поведінка
+settings-save = Зберегти зміни
+settings-bias-help = Ліва кнопка - горизонтальні фігури; центри врівноважують ; права виступає вертикальними формами.
+settings-name-tips = Назви файлів
+settings-info-tips = Подробиці про файл
+settings-window = Вікно і взаємодія
+settings-deletion = Видалення файлів
+settings-scan-scope = Сканувати межі
+settings-file-sizes = Размірний облік

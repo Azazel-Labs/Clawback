@@ -1,4 +1,4 @@
-# Интерфейс Clawback. Не изменяйте идентификаторы сообщений и имена переменных.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   ОК   " }
 of-scan = % СКАНИРОВАНИЯ
@@ -26,7 +26,7 @@ scan-path-error = Не удалось просканировать путь: { $
 about-history = Clawback — программа на Rust, созданная в знак уважения к SpaceMonger 1.4 Шона Веркемы (1997–2000). Компоновка, цвета и управление мышью основаны на исходном коде оригинала.
 compress = Сжатый
 contains = Содержимое:
-copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+copyright-2026-azazel-labs = Авторское право ©️ 2026 Azazel Labs.
 count-hard-linked-files-once = Считать файлы с жёсткими ссылками только один раз
 workers-help = Текущее ограничение числа параллельных задач; автоматически подстраивается под измеренную пропускную способность и задержку.
 data-configuration = Данные / конфигурация
@@ -34,6 +34,11 @@ date-time = Дата / время
 delay = Задержка:
 delete = Удалить
 deleting = { "Удаление…\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Перемещение в Корзину…
+delete-updating = Обновление карты диска…
+delete-details = { $size } · { $seconds }s прошло
+delete-worker-stopped = Работник по рециркуляции неожиданно остановлен. Проверьте выбранный предмет перед повторной попыткой.
 density = Плотность:
 design-document = Проектный документ
 directories = Папки
@@ -59,7 +64,6 @@ file-size = Размер файла
 file-types = Типы файлов
 filename = Имя файла
 files-2 = Файлы:
-# Примеры: 1 файл, 2 файла, 5 файлов, 11 файлов, 21 файл, 22 файла.
 contents-count =
     { $files ->
         [one] { $files } файл
@@ -85,10 +89,10 @@ hidden = Скрытый
 horz = Гориз.
 icon = Значок
 image = Изображение
+language = Язык
+korean = Корейский
 japanese = Японский
 italian = Итальянский
-korean = Корейский
-language = Язык
 polish = Польский
 russian = Русский
 portuguese-brazil = Португальский (Бразилия)
@@ -206,3 +210,20 @@ thai = Тайский
 swedish = Шведский
 romanian = Румынский
 hungarian = Венгерский
+turbo-read-progress = Turbo: чтение MFT { $percent }% · { $records } записи
+turbo-resolving = Turbo: разрешение имен файлов…
+turbo-assembling = Turbo: assembling folders · { $files } файлы
+turbo-sorting = Турбо: сортировка результатов…
+turbo-transferring = Турбо: загрузка результатов…
+turbo-main-progress = Отображение прогресса Turbo · проверка результатов…
+turbo-progress-help = Счетчики переключаются на Turbo, когда они собрали больше записей. Карта хранит обычное сканирование до проверки полного дерева Турбо. В случае сбоя Turbo регулярное сканирование продолжается.
+settings-appearance = Внешний вид
+settings-behavior = Поведение
+settings-save = Сохранить изменения
+settings-bias-help = Левый преимущество горизонтальных форм; центр балансирует их; правый благоприятствует вертикальным формам.
+settings-name-tips = Имена файлов
+settings-info-tips = Детали файла
+settings-window = Окно и взаимодействие
+settings-deletion = Удаление файлов
+settings-scan-scope = Границы сканирования
+settings-file-sizes = Размер счета

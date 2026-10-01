@@ -1,4 +1,4 @@
-# Interfaz de Clawback en español de España. No modificar los identificadores ni las variables.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % DEL ANÁLISIS
@@ -26,7 +26,7 @@ scan-path-error = Clawback no ha podido analizar { $path }{ ".\u000A\u000A" }{ $
 about-history = Clawback es un homenaje a SpaceMonger 1.4 de Sean Werkema (1997–2000), escrito en Rust. Su distribución, colores y comportamiento del ratón se basan en el código fuente original.
 compress = Comprimido
 contains = Contiene:
-copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+copyright-2026-azazel-labs = Copyright ©️ 2026 Azazel Labs.
 count-hard-linked-files-once = Contar los archivos con enlaces físicos una sola vez
 workers-help = Límite actual de tareas simultáneas; se ajusta automáticamente según el rendimiento y la latencia medidos.
 data-configuration = Datos / configuración
@@ -34,6 +34,11 @@ date-time = Fecha / hora
 delay = Retardo:
 delete = Eliminar
 deleting = { "Eliminando…\u000A" }{ $path }
+delete-preparing = Preparando para reciclar…
+delete-recycling = Moviendo a la papelera de reciclaje…
+delete-updating = Actualizando mapa de disco…
+delete-details = { $size } · { $seconds }s transcurridos
+delete-worker-stopped = El trabajador de reciclado se detuvo inesperadamente. Compruebe el elemento seleccionado antes de volver a intentarlo.
 density = Densidad:
 design-document = Documento de diseño
 directories = Carpetas
@@ -59,7 +64,6 @@ file-size = Tamaño de archivo
 file-types = Tipos de archivo
 filename = Nombre de archivo
 files-2 = Archivos:
-# Solo 1 usa el singular; 0 y las demás cantidades usan el plural.
 contents-count =
     { $files ->
         [one] { $files } archivo
@@ -200,3 +204,20 @@ thai = Tailandés
 swedish = Sueco
 romanian = Rumano
 hungarian = Húngaro
+turbo-read-progress = Turbo: leyendo MFT { $percent }% · { $records } registros
+turbo-resolving = Turbo: resolviendo nombres de archivo…
+turbo-assembling = Turbo: carpetas ensambladoras · { $files } archivos
+turbo-sorting = Turbo: ordenando resultados…
+turbo-transferring = Turbo: cargando resultados…
+turbo-main-progress = Mostrando progreso Turbo · validando resultados…
+turbo-progress-help = Los contadores cambian a Turbo cuando ha ensamblado más entradas. El mapa mantiene la vista previa del escaneo regular hasta que el árbol completo del Turbo sea validado. Si el Turbo falla, el escaneo normal continúa.
+settings-appearance = Apariencia
+settings-behavior = Comportamiento
+settings-save = Guardar cambios
+settings-bias-help = La izquierda favorece las formas horizontales; el centro las equilibra; la derecha favorece las formas verticales.
+settings-name-tips = Nombre de archivo
+settings-info-tips = Detalles del archivo
+settings-window = Ventana e interacción
+settings-deletion = Eliminando archivos
+settings-scan-scope = Escanear límites
+settings-file-sizes = Tamaño contable

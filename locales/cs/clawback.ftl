@@ -1,4 +1,4 @@
-# České rozhraní Clawback.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % SKENOVÁNÍ
@@ -26,7 +26,7 @@ scan-path-error = Nelze prohledat cestu: { $path }{ "\u000A\u000A" }{ $error }
 about-history = Clawback je poctou programu SpaceMonger 1.4 od Seana Werkemy (1997–2000), napsanou v Rustu. Rozložení, barvy a ovládání myší vycházejí z původního zdrojového kódu.
 compress = Komprimovaný
 contains = Obsah:
-copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.
+copyright-2026-azazel-labs = Copyright ©️ 2026 Azazel popisky.
 count-hard-linked-files-once = Soubory s pevnými odkazy počítat pouze jednou
 workers-help = Aktuální limit souběžných úloh; automaticky se přizpůsobuje naměřené propustnosti a latenci.
 data-configuration = Data / konfigurace
@@ -34,6 +34,11 @@ date-time = Datum / čas
 delay = Prodleva:
 delete = Odstranit
 deleting = { "Odstraňování…\u000A" }{ $path }
+delete-preparing = Příprava na recyklaci…
+delete-recycling = Přesouvání do koše…
+delete-updating = Aktualizace diskové mapy…
+delete-details = { $size } · { $seconds }s uplynulo
+delete-worker-stopped = Recyklační pracovník byl neočekávaně zastaven. Před dalším pokusem zkontrolujte vybranou položku.
 density = Hustota:
 design-document = Návrhový dokument
 directories = Složky
@@ -205,3 +210,20 @@ thai = Thajština
 swedish = Švédština
 romanian = Rumunština
 hungarian = Maďarština
+turbo-read-progress = Turbo: čtení MFT { $percent }% · { $records } záznamů
+turbo-resolving = Turbo: řešení názvů souborů…
+turbo-assembling = Turbo: montáž souborů · { $files}
+turbo-sorting = Turbo: výsledky třídění…
+turbo-transferring = Turbo: Načítání výsledků…
+turbo-main-progress = Zobrazuji Turbo průběh · ověřování výsledků…
+turbo-progress-help = Počítadlo přepne na Turbo poté, co sestaví více položek. Mapa udržuje pravidelný náhled skenování, dokud není ověřen kompletní Turbo strom. Pokud Turbo selže, bude pokračovat pravidelné skenování.
+settings-appearance = Vzhled
+settings-behavior = Chování
+settings-save = Uložit změny
+settings-bias-help = Levice upřednostňuje vodorovné tvary, středová rovnováha mezi nimi; pravice upřednostňuje vertikální tvary.
+settings-name-tips = Názvy souborů
+settings-info-tips = Detaily souboru
+settings-window = Okno & interakce
+settings-deletion = Mazání souborů
+settings-scan-scope = Hranice skenování
+settings-file-sizes = Účtování o velikosti
