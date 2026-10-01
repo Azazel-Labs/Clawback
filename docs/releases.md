@@ -31,6 +31,28 @@ Clippy and tests on Linux, macOS and Windows, then builds all six platform/CPU
 archives. Publication waits for every build to succeed and includes checksums
 and automatically generated release notes.
 
+## crates.io
+
+Add a repository Actions secret named **CARGO_REGISTRY_TOKEN** containing a
+crates.io API token allowed to publish **clawback-core** and **clawback**. For the
+first release, the token must allow creating new crates. The token's account
+must have a verified email on crates.io. Keep the token out of source control.
+
+The **Publish to crates.io** workflow runs on version tags (`v*`), independently
+of the GitHub binary release workflow. It validates the tag against the manifests,
+runs formatting, Clippy and tests on Linux, then verifies and publishes
+`clawback-core` followed by `clawback`. Stable and prerelease tags are supported;
+nightly builds never publish to crates.io.
+
+For the first publication or a retry, use **Actions → Publish to crates.io →
+Run workflow** from `main` and supply an existing version tag such as `v0.1.0`.
+The workflow publishes the source at that tag, so commit the intended source
+before creating it. Already-published versions are skipped, allowing a retry if
+the core succeeded but the app failed. Other registry errors fail the workflow.
+Published versions cannot be overwritten; source changes require a new version.
+
+After publication, users can install with `cargo install clawback --locked`.
+
 ## Stable, previews, and nightly
 
 | Version or trigger | Result | GitHub Latest |

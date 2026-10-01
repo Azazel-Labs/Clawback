@@ -127,9 +127,8 @@ writing files. Comments, grammar, message order, and literal text are preserved.
 Malformed files are rejected before any catalogs are written. CRLF and LF
 checkouts are treated equivalently.
 
-Builds validate catalogs too. Fluent source files are authored, not regenerated:
-the old JSON `translations update` command has been retired to avoid
-overwriting translator-authored grammar.
+Builds validate catalogs too. Edit Fluent source files directly; validation and
+formatting preserve translator-authored grammar instead of regenerating translations.
 
 To add a language, add `locales/<language>/clawback.ftl` and register its native
 name and translatable display name in `src/i18n.rs`. Add that display-name
@@ -169,10 +168,6 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
    Review and approve the translations before the
    first approved-only download.
 4. Allow GitHub Actions to create pull requests, then run **Crowdin translations**.
-
-For an existing JSON-based project, import the new Fluent source and French
-catalog before retiring the old JSON source. Message IDs have changed;
-do not download old JSON exports over the Fluent catalogs.
 
 The configuration maps French and German exports to the generic `fr` and `de`
 directories so regional OS preferences share their language's translation.

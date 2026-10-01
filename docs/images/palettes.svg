@@ -1,42 +1,92 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="440" viewBox="0 0 1040 440"><rect width="1040" height="440" rx="12" fill="#181919"/>
-<text x="24" y="48" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Material</text>
-<text x="24" y="72" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Google Material 400</text>
-<rect x="230" y="24" width="91" height="78" rx="4" fill="#42a5f5"/>
-<rect x="327" y="24" width="91" height="78" rx="4" fill="#26a69a"/>
-<rect x="424" y="24" width="91" height="78" rx="4" fill="#5c6bc0"/>
-<rect x="521" y="24" width="91" height="78" rx="4" fill="#ab47bc"/>
-<rect x="618" y="24" width="91" height="78" rx="4" fill="#ec407a"/>
-<rect x="715" y="24" width="91" height="78" rx="4" fill="#ffa726"/>
-<rect x="812" y="24" width="91" height="78" rx="4" fill="#ffca28"/>
-<rect x="909" y="24" width="91" height="78" rx="4" fill="#66bb6a"/>
-<text x="24" y="152" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Candy</text>
-<text x="24" y="176" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Playful pastels</text>
-<rect x="230" y="128" width="91" height="78" rx="4" fill="#f575aa"/>
-<rect x="327" y="128" width="91" height="78" rx="4" fill="#a986f5"/>
-<rect x="424" y="128" width="91" height="78" rx="4" fill="#6aa5f9"/>
-<rect x="521" y="128" width="91" height="78" rx="4" fill="#4ed3cc"/>
-<rect x="618" y="128" width="91" height="78" rx="4" fill="#a8dc74"/>
-<rect x="715" y="128" width="91" height="78" rx="4" fill="#fcca6c"/>
-<rect x="812" y="128" width="91" height="78" rx="4" fill="#fa9673"/>
-<rect x="909" y="128" width="91" height="78" rx="4" fill="#d67bdb"/>
-<text x="24" y="256" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Sunset</text>
-<text x="24" y="280" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Purple, coral, gold</text>
-<rect x="230" y="232" width="91" height="78" rx="4" fill="#6848b7"/>
-<rect x="327" y="232" width="91" height="78" rx="4" fill="#9743b2"/>
-<rect x="424" y="232" width="91" height="78" rx="4" fill="#ca418d"/>
-<rect x="521" y="232" width="91" height="78" rx="4" fill="#eb5367"/>
-<rect x="618" y="232" width="91" height="78" rx="4" fill="#f67d46"/>
-<rect x="715" y="232" width="91" height="78" rx="4" fill="#f7aa45"/>
-<rect x="812" y="232" width="91" height="78" rx="4" fill="#e5c768"/>
-<rect x="909" y="232" width="91" height="78" rx="4" fill="#b85c86"/>
-<text x="24" y="360" fill="#eeeeee" font-family="Segoe UI, sans-serif" font-size="20" font-weight="600">Lagoon</text>
-<text x="24" y="384" fill="#aaaaaa" font-family="Segoe UI, sans-serif" font-size="13">Blue, teal, green</text>
-<rect x="230" y="336" width="91" height="78" rx="4" fill="#1d7abc"/>
-<rect x="327" y="336" width="91" height="78" rx="4" fill="#1ba3d0"/>
-<rect x="424" y="336" width="91" height="78" rx="4" fill="#1abcbb"/>
-<rect x="521" y="336" width="91" height="78" rx="4" fill="#36c994"/>
-<rect x="618" y="336" width="91" height="78" rx="4" fill="#93d065"/>
-<rect x="715" y="336" width="91" height="78" rx="4" fill="#369aad"/>
-<rect x="812" y="336" width="91" height="78" rx="4" fill="#4675c8"/>
-<rect x="909" y="336" width="91" height="78" rx="4" fill="#6e61d3"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="564" viewBox="0 0 900 564"><title>Clawback map palettes, Electric default</title><rect width="900" height="564" fill="#181818"/>
+<text x="18" y="39" fill="#eeeeee" font-family="sans-serif" font-size="16">Electric · default</text>
+<rect x="214" y="12" width="79" height="40" rx="3" fill="#448aff"/>
+<rect x="298" y="12" width="79" height="40" rx="3" fill="#00bfa5"/>
+<rect x="382" y="12" width="79" height="40" rx="3" fill="#7c4dff"/>
+<rect x="466" y="12" width="79" height="40" rx="3" fill="#e040fb"/>
+<rect x="550" y="12" width="79" height="40" rx="3" fill="#ff4081"/>
+<rect x="634" y="12" width="79" height="40" rx="3" fill="#ff6e40"/>
+<rect x="718" y="12" width="79" height="40" rx="3" fill="#ffd740"/>
+<rect x="802" y="12" width="79" height="40" rx="3" fill="#76ff03"/>
+<text x="18" y="93" fill="#eeeeee" font-family="sans-serif" font-size="16">Aurora</text>
+<rect x="214" y="66" width="79" height="40" rx="3" fill="#3b82f6"/>
+<rect x="298" y="66" width="79" height="40" rx="3" fill="#22d3ee"/>
+<rect x="382" y="66" width="79" height="40" rx="3" fill="#2dd4bf"/>
+<rect x="466" y="66" width="79" height="40" rx="3" fill="#a3e635"/>
+<rect x="550" y="66" width="79" height="40" rx="3" fill="#818cf8"/>
+<rect x="634" y="66" width="79" height="40" rx="3" fill="#c084fc"/>
+<rect x="718" y="66" width="79" height="40" rx="3" fill="#e879f9"/>
+<rect x="802" y="66" width="79" height="40" rx="3" fill="#38bdf8"/>
+<text x="18" y="147" fill="#eeeeee" font-family="sans-serif" font-size="16">Arcade</text>
+<rect x="214" y="120" width="79" height="40" rx="3" fill="#00d9ff"/>
+<rect x="298" y="120" width="79" height="40" rx="3" fill="#ff3dae"/>
+<rect x="382" y="120" width="79" height="40" rx="3" fill="#9d5cff"/>
+<rect x="466" y="120" width="79" height="40" rx="3" fill="#ffe14a"/>
+<rect x="550" y="120" width="79" height="40" rx="3" fill="#00e6a8"/>
+<rect x="634" y="120" width="79" height="40" rx="3" fill="#ff784f"/>
+<rect x="718" y="120" width="79" height="40" rx="3" fill="#5b8cff"/>
+<rect x="802" y="120" width="79" height="40" rx="3" fill="#d4ff42"/>
+<text x="18" y="201" fill="#eeeeee" font-family="sans-serif" font-size="16">Citrus</text>
+<rect x="214" y="174" width="79" height="40" rx="3" fill="#ffb300"/>
+<rect x="298" y="174" width="79" height="40" rx="3" fill="#ff7043"/>
+<rect x="382" y="174" width="79" height="40" rx="3" fill="#f06292"/>
+<rect x="466" y="174" width="79" height="40" rx="3" fill="#ab47bc"/>
+<rect x="550" y="174" width="79" height="40" rx="3" fill="#29b6f6"/>
+<rect x="634" y="174" width="79" height="40" rx="3" fill="#26c6da"/>
+<rect x="718" y="174" width="79" height="40" rx="3" fill="#66bb6a"/>
+<rect x="802" y="174" width="79" height="40" rx="3" fill="#d4e157"/>
+<text x="18" y="255" fill="#eeeeee" font-family="sans-serif" font-size="16">Orchid</text>
+<rect x="214" y="228" width="79" height="40" rx="3" fill="#8b5cf6"/>
+<rect x="298" y="228" width="79" height="40" rx="3" fill="#c084fc"/>
+<rect x="382" y="228" width="79" height="40" rx="3" fill="#f472b6"/>
+<rect x="466" y="228" width="79" height="40" rx="3" fill="#fb7185"/>
+<rect x="550" y="228" width="79" height="40" rx="3" fill="#fdba74"/>
+<rect x="634" y="228" width="79" height="40" rx="3" fill="#fde68a"/>
+<rect x="718" y="228" width="79" height="40" rx="3" fill="#67e8f9"/>
+<rect x="802" y="228" width="79" height="40" rx="3" fill="#60a5fa"/>
+<text x="18" y="309" fill="#eeeeee" font-family="sans-serif" font-size="16">Gemstone</text>
+<rect x="214" y="282" width="79" height="40" rx="3" fill="#2563eb"/>
+<rect x="298" y="282" width="79" height="40" rx="3" fill="#0d9488"/>
+<rect x="382" y="282" width="79" height="40" rx="3" fill="#7c3aed"/>
+<rect x="466" y="282" width="79" height="40" rx="3" fill="#be185d"/>
+<rect x="550" y="282" width="79" height="40" rx="3" fill="#dc2626"/>
+<rect x="634" y="282" width="79" height="40" rx="3" fill="#ea580c"/>
+<rect x="718" y="282" width="79" height="40" rx="3" fill="#ca8a04"/>
+<rect x="802" y="282" width="79" height="40" rx="3" fill="#16a34a"/>
+<text x="18" y="363" fill="#eeeeee" font-family="sans-serif" font-size="16">Material</text>
+<rect x="214" y="336" width="79" height="40" rx="3" fill="#42a5f5"/>
+<rect x="298" y="336" width="79" height="40" rx="3" fill="#26a69a"/>
+<rect x="382" y="336" width="79" height="40" rx="3" fill="#5c6bc0"/>
+<rect x="466" y="336" width="79" height="40" rx="3" fill="#ab47bc"/>
+<rect x="550" y="336" width="79" height="40" rx="3" fill="#ec407a"/>
+<rect x="634" y="336" width="79" height="40" rx="3" fill="#ffa726"/>
+<rect x="718" y="336" width="79" height="40" rx="3" fill="#ffca28"/>
+<rect x="802" y="336" width="79" height="40" rx="3" fill="#66bb6a"/>
+<text x="18" y="417" fill="#eeeeee" font-family="sans-serif" font-size="16">Candy</text>
+<rect x="214" y="390" width="79" height="40" rx="3" fill="#f575aa"/>
+<rect x="298" y="390" width="79" height="40" rx="3" fill="#a986f5"/>
+<rect x="382" y="390" width="79" height="40" rx="3" fill="#6aa5f9"/>
+<rect x="466" y="390" width="79" height="40" rx="3" fill="#4ed3cc"/>
+<rect x="550" y="390" width="79" height="40" rx="3" fill="#a8dc74"/>
+<rect x="634" y="390" width="79" height="40" rx="3" fill="#fcca6c"/>
+<rect x="718" y="390" width="79" height="40" rx="3" fill="#fa9673"/>
+<rect x="802" y="390" width="79" height="40" rx="3" fill="#d67bdb"/>
+<text x="18" y="471" fill="#eeeeee" font-family="sans-serif" font-size="16">Sunset</text>
+<rect x="214" y="444" width="79" height="40" rx="3" fill="#6848b7"/>
+<rect x="298" y="444" width="79" height="40" rx="3" fill="#9743b2"/>
+<rect x="382" y="444" width="79" height="40" rx="3" fill="#ca418d"/>
+<rect x="466" y="444" width="79" height="40" rx="3" fill="#eb5367"/>
+<rect x="550" y="444" width="79" height="40" rx="3" fill="#f67d46"/>
+<rect x="634" y="444" width="79" height="40" rx="3" fill="#f7aa45"/>
+<rect x="718" y="444" width="79" height="40" rx="3" fill="#e5c768"/>
+<rect x="802" y="444" width="79" height="40" rx="3" fill="#b85c86"/>
+<text x="18" y="525" fill="#eeeeee" font-family="sans-serif" font-size="16">Lagoon</text>
+<rect x="214" y="498" width="79" height="40" rx="3" fill="#1d7abc"/>
+<rect x="298" y="498" width="79" height="40" rx="3" fill="#1ba3d0"/>
+<rect x="382" y="498" width="79" height="40" rx="3" fill="#1abcbb"/>
+<rect x="466" y="498" width="79" height="40" rx="3" fill="#36c994"/>
+<rect x="550" y="498" width="79" height="40" rx="3" fill="#93d065"/>
+<rect x="634" y="498" width="79" height="40" rx="3" fill="#369aad"/>
+<rect x="718" y="498" width="79" height="40" rx="3" fill="#4675c8"/>
+<rect x="802" y="498" width="79" height="40" rx="3" fill="#6e61d3"/>
 </svg>

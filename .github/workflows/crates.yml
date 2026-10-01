@@ -1,0 +1,110 @@
+name: Publish to crates.io
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing version tag to publish (for example v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# Serialize publication, including manual retries of partially published releases.
+concurrency:
+  group: crates-io
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  publish:
+    name: Validate and publish crates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Select version tag
+        id: version
+        shell: bash
+        env:
+          REQUESTED_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          if [[ ! "$REQUESTED_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Supply a version tag such as v0.1.0."
+            exit 1
+          fi
+          echo "tag=$REQUESTED_TAG" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ steps.version.outputs.tag }}
+          persist-credentials: false
+      - name: Check publishing credential
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          if [[ -z "$CARGO_REGISTRY_TOKEN" ]]; then
+            echo "::error::Add the CARGO_REGISTRY_TOKEN repository secret with permission to publish clawback-core and clawback (including new crates for the first release)."
+            exit 1
+          fi
+      - name: Install toolchain (from rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Validate tag, formatting, Clippy, and tests
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          cargo xtask release validate "$RELEASE_TAG"
+          cargo fmt --all --check
+          cargo clippy --workspace --all-targets --locked -- -D warnings
+          cargo test --workspace --locked
+      - name: Check which versions still need publishing
+        id: pending
+        shell: python
+        run: |
+          import json
+          import os
+          import tomllib
+          import urllib.error
+          import urllib.request
+
+          with open("Cargo.toml", "rb") as manifest:
+              version = tomllib.load(manifest)["workspace"]["package"]["version"]
+          for name, output in [("clawback-core", "core"), ("clawback", "app")]:
+              request = urllib.request.Request(
+                  f"https://crates.io/api/v1/crates/{name}/{version}",
+                  headers={"User-Agent": "Clawback release workflow (github.com/Azazel-Labs/Clawback)"},
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      published = json.load(response)["version"]
+                  if published["yanked"]:
+                      raise RuntimeError(f"{name} {version} is yanked; resolve this before publishing")
+                  pending = False
+                  print(f"{name} {version} already published; skipping")
+              except urllib.error.HTTPError as error:
+                  if error.code != 404:
+                      raise
+                  pending = True
+              with open(os.environ["GITHUB_OUTPUT"], "a") as outputs:
+                  outputs.write(f"{output}={str(pending).lower()}\n")
+      - name: Verify core package
+        if: steps.pending.outputs.core == 'true'
+        run: cargo publish --dry-run --locked -p clawback-core
+      - name: Publish core package
+        if: steps.pending.outputs.core == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish --locked -p clawback-core
+      # Cargo waits for the core version to become available in the registry.
+      - name: Verify app package
+        if: steps.pending.outputs.app == 'true'
+        run: cargo publish --dry-run --locked -p clawback
+      - name: Publish app package
+        if: steps.pending.outputs.app == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish --locked -p clawback

@@ -46,6 +46,12 @@ jobs:
         run: cargo xtask translations check
       - name: Tests
         run: cargo test --workspace --locked
+      - name: Windows Turbo helper failure path (no elevation)
+        if: runner.os == 'Windows'
+        run: cargo xtask test-turbo smoke .
+      - name: Windows Turbo helper snapshot transfer (no elevation)
+        if: runner.os == 'Windows'
+        run: cargo xtask test-turbo fixture .
       - name: Release build
         run: cargo build --release --locked
       - name: Smoke test (text report)

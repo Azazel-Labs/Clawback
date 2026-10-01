@@ -125,16 +125,10 @@ jobs:
         shell: bash
         run: |
           name="clawback-${{ needs.plan.outputs.tag }}-${{ matrix.target }}"
-          mkdir -p "dist/$name"
-          cp README.md LICENSE "dist/$name/"
-          cp -r docs "dist/$name/"
-          cp assets/fonts/OFL.txt "dist/$name/NotoSans-OFL.txt"
-          cp assets/fonts/NotoSansThai-OFL.txt "dist/$name/NotoSansThai-OFL.txt"
+          cargo xtask package "${{ matrix.target }}" "${{ needs.plan.outputs.tag }}"
           if [[ "${{ matrix.target }}" == *windows* ]]; then
-            cp "target/${{ matrix.target }}/release/clawback.exe" "dist/$name/"
             (cd dist && 7z a -tzip "$name.zip" "$name" > /dev/null)
           else
-            cp "target/${{ matrix.target }}/release/clawback" "dist/$name/"
             tar -C dist -czf "dist/$name.tar.gz" "$name"
           fi
           rm -rf "dist/$name"
