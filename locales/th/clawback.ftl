@@ -23,7 +23,6 @@ claw-back-your-disk-space = เรียกคืนพื้นที่ดิ�
 clawback-settings = การตั้งค่า Clawback
 scan-folder-error = { "Clawback ไม่สามารถสแกนโฟลเดอร์ได้\u000A\u000A" }{ $error }
 scan-path-error = Clawback ไม่สามารถสแกน { $path }{ " ได้\u000A\u000A" }{ $error }
-about-history = Clawback เขียนด้วย Rust เพื่อยกย่อง SpaceMonger 1.4 ของ Sean Werkema (1997–2000) โดยใช้การจัดวาง สี และพฤติกรรมเมาส์ตามซอร์สโค้ดต้นฉบับ
 compress = บีบอัด
 contains = ประกอบด้วย:
 copyright-2026-azazel-labs = ลิขสิทธิ์ © 2026 Azazel Labs

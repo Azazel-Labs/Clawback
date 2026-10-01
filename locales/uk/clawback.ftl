@@ -23,7 +23,6 @@ claw-back-your-disk-space = Поверніть собі місце на диск
 clawback-settings = Налаштування Clawback
 scan-folder-error = { "Clawback не вдалося просканувати теку.\u000A\u000A" }{ $error }
 scan-path-error = Не вдалося просканувати шлях: { $path }{ "\u000A\u000A" }{ $error }
-about-history = Clawback написано мовою Rust на знак пошани до SpaceMonger 1.4 Шона Веркеми (1997–2000). Компонування, кольори й керування мишею ґрунтуються на початковому коді оригіналу.
 compress = Стиснутий
 contains = Вміст:
 copyright-2026-azazel-labs = Авторське право © 2026 Azazel Labs.

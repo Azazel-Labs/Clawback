@@ -23,7 +23,6 @@ claw-back-your-disk-space = Lov tilbake diskplassen din.
 clawback-settings = Clawback innstillinger
 scan-folder-error = { "Clawback kunne ikke skanne mappen.\u000A\u000A" }{ $error }
 scan-path-error = Lagreden { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Rust homage to SpaceMonger 1.4 av Sean Werkema (1997–2000). Its layout, colours and musatferd følger den opprinnelige kildekoden.
 compress = Komprimer
 contains = Inneholder:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.

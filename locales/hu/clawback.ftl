@@ -23,7 +23,6 @@ claw-back-your-disk-space = Szerezze vissza a lemezterületét.
 clawback-settings = A Clawback beállításai
 scan-folder-error = { "A Clawback nem tudta átvizsgálni a mappát.\u000A\u000A" }{ $error }
 scan-path-error = Az útvonal nem vizsgálható át: { $path }{ "\u000A\u000A" }{ $error }
-about-history = A Clawback Rust nyelven írt tisztelgés Sean Werkema SpaceMonger 1.4 (1997–2000) programja előtt. Elrendezése, színei és egérkezelése az eredeti forráskódot követik.
 compress = Tömörített
 contains = Tartalom:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.

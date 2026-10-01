@@ -23,7 +23,6 @@ claw-back-your-disk-space = Верните себе место на диске.
 clawback-settings = Настройки Clawback
 scan-folder-error = { "Clawback не удалось просканировать папку.\u000A\u000A" }{ $error }
 scan-path-error = Не удалось просканировать путь: { $path }{ "\u000A\u000A" }{ $error }
-about-history = Clawback — программа на Rust, созданная в знак уважения к SpaceMonger 1.4 Шона Веркемы (1997–2000). Компоновка, цвета и управление мышью основаны на исходном коде оригинала.
 compress = Сжатый
 contains = Содержимое:
 copyright-2026-azazel-labs = Авторское право © 2026 Azazel Labs.

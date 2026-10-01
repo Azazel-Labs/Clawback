@@ -48,6 +48,8 @@ pub struct FileTypes {
     summary: Option<Summary>,
     pending: Option<Pending>,
     last_started: Option<Instant>,
+    /// When the shown summary stopped matching the tree; brief refreshes stay silent.
+    stale_since: Option<Instant>,
 }
 
 impl Drop for FileTypes {
@@ -123,13 +125,19 @@ impl FileTypes {
             self.pending = Some(Pending { key, rx, cancel });
             self.last_started = Some(Instant::now());
         }
+        if self.displayed == Some(key) {
+            self.stale_since = None;
+        } else {
+            self.stale_since.get_or_insert_with(Instant::now);
+        }
+        let updating = self.stale_since.is_some_and(|since| since.elapsed() >= Duration::from_millis(600));
         ui.spacing_mut().item_spacing.y = 4.0;
         ui.horizontal(|ui| {
             ui.strong(tr!("file-types"));
-            if same_scope && let Some(summary) = &self.summary {
+            if let Some(summary) = &self.summary {
                 ui.add(egui::Label::new(&summary.name).truncate()).on_hover_text(&summary.name);
             }
-            if self.displayed != Some(key) {
+            if updating {
                 ui.weak(tr!("updating"));
             }
         });
@@ -157,10 +165,11 @@ impl FileTypes {
         ] {
             ui.painter().text(header.left_center() + vec2(x, 0.0), align, label, font.clone(), theme::MUTED);
         }
-        if !same_scope {
-            return;
-        }
         let Some(summary) = &self.summary else { return };
+        // Keep the previous folder's or snapshot's rows, dimmed, until the new summary is ready.
+        if !same_scope {
+            ui.multiply_opacity(0.55);
+        }
         if summary.rows.is_empty() {
             ui.weak(tr!("no-files-in-this-folder"));
             return;

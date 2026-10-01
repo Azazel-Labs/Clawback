@@ -8,8 +8,11 @@ use windows_sys::Win32::{
     Storage::FileSystem::FILE_ATTRIBUTE_NORMAL,
     System::Com::{COINIT_APARTMENTTHREADED, CoInitializeEx, CoUninitialize},
     UI::{
-        Shell::{SHFILEINFOW, SHGFI_ICON, SHGFI_LARGEICON, SHGFI_USEFILEATTRIBUTES, SHGetFileInfoW},
-        WindowsAndMessaging::{DI_NORMAL, DestroyIcon, DrawIconEx},
+        Shell::{
+            SHDefExtractIconW, SHFILEINFOW, SHGFI_ICON, SHGFI_LARGEICON, SHGFI_USEFILEATTRIBUTES, SHGSI_ICONLOCATION,
+            SHGetFileInfoW, SHGetStockIconInfo, SHSTOCKICONID, SHSTOCKICONINFO,
+        },
+        WindowsAndMessaging::{DI_NORMAL, DestroyIcon, DrawIconEx, HICON},
     },
 };
 
@@ -35,6 +38,19 @@ pub fn load(extension: &str, size: u32) -> Option<ColorImage> {
             CoUninitialize();
             return None;
         }
+        let image = rasterize(info.hIcon, size);
+        DestroyIcon(info.hIcon);
+        CoUninitialize();
+        image
+    }
+}
+
+/// Render an icon at `size` pixels with straight alpha. The caller keeps ownership of `icon`.
+#[allow(clippy::multiple_unsafe_ops_per_block)]
+pub(crate) fn rasterize(icon: HICON, size: u32) -> Option<ColorImage> {
+    // SAFETY: All pointers reference initialized, correctly sized native structures
+    // or owned GDI buffers. Every successful allocation is released on each exit.
+    unsafe {
         let dc = CreateCompatibleDC(ptr::null_mut());
         let mut bitmap: BITMAPINFO = std::mem::zeroed();
         bitmap.bmiHeader = BITMAPINFOHEADER {
@@ -55,18 +71,16 @@ pub fn load(extension: &str, size: u32) -> Option<ColorImage> {
             if !dc.is_null() {
                 DeleteDC(dc);
             }
-            DestroyIcon(info.hIcon);
-            CoUninitialize();
             return None;
         }
         let previous = SelectObject(dc, dib);
         let len = (size * size * 4) as usize;
         std::slice::from_raw_parts_mut(bits.cast::<u8>(), len).fill(0);
-        let black_ok = DrawIconEx(dc, 0, 0, info.hIcon, size as i32, size as i32, 0, ptr::null_mut(), DI_NORMAL) != 0;
+        let black_ok = DrawIconEx(dc, 0, 0, icon, size as i32, size as i32, 0, ptr::null_mut(), DI_NORMAL) != 0;
         GdiFlush();
         let black = std::slice::from_raw_parts(bits.cast::<u8>(), len).to_vec();
         std::slice::from_raw_parts_mut(bits.cast::<u8>(), len).fill(255);
-        let white_ok = DrawIconEx(dc, 0, 0, info.hIcon, size as i32, size as i32, 0, ptr::null_mut(), DI_NORMAL) != 0;
+        let white_ok = DrawIconEx(dc, 0, 0, icon, size as i32, size as i32, 0, ptr::null_mut(), DI_NORMAL) != 0;
         GdiFlush();
         let pixels = std::slice::from_raw_parts(bits.cast::<u8>(), len);
         let mut rgba = Vec::with_capacity(len);
@@ -79,10 +93,31 @@ pub fn load(extension: &str, size: u32) -> Option<ColorImage> {
         SelectObject(dc, previous);
         DeleteObject(dib);
         DeleteDC(dc);
-        DestroyIcon(info.hIcon);
-        CoUninitialize();
         (black_ok && white_ok).then(|| ColorImage::from_rgba_unmultiplied([size as usize, size as usize], &rgba))
     }
+}
+
+/// A shell stock icon (drives, Recycle Bin, …) at `size` pixels.
+pub(crate) fn stock(id: SHSTOCKICONID, size: u32) -> Option<ColorImage> {
+    // SAFETY: the info structure is sized for this call and the shell fills its path.
+    let mut info: SHSTOCKICONINFO = unsafe { std::mem::zeroed() };
+    info.cbSize = size_of::<SHSTOCKICONINFO>() as u32;
+    // SAFETY: valid stock icon ID and writable, correctly sized structure.
+    if unsafe { SHGetStockIconInfo(id, SHGSI_ICONLOCATION, &raw mut info) } < 0 {
+        return None;
+    }
+    let mut large: HICON = ptr::null_mut();
+    // SAFETY: szPath is terminated by the shell; only the large icon is requested.
+    let extracted = unsafe {
+        SHDefExtractIconW(info.szPath.as_ptr(), info.iIcon, 0, &raw mut large, ptr::null_mut(), size & 0xffff)
+    };
+    if extracted < 0 || large.is_null() {
+        return None;
+    }
+    let image = rasterize(large, size);
+    // SAFETY: the extracted icon is owned by this function.
+    unsafe { DestroyIcon(large) };
+    image
 }
 
 #[cfg(test)]

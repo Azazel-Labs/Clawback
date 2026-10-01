@@ -23,7 +23,6 @@ claw-back-your-disk-space = Recupera spazio sul disco.
 clawback-settings = Impostazioni di Clawback
 scan-folder-error = { "Clawback non ha potuto analizzare la cartella.\u000A\u000A" }{ $error }
 scan-path-error = Impossibile analizzare il percorso: { $path }{ "\u000A\u000A" }{ $error }
-about-history = Clawback è un omaggio a SpaceMonger 1.4 di Sean Werkema (1997–2000), scritto in Rust. La disposizione, i colori e il comportamento del mouse seguono il codice sorgente originale.
 compress = Compresso
 contains = Contenuto:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.

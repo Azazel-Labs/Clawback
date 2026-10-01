@@ -23,7 +23,6 @@ claw-back-your-disk-space = Recuperează-ți spațiul pe disc.
 clawback-settings = Setări Clawback
 scan-folder-error = { "Clawback nu a putut scana dosarul.\u000A\u000A" }{ $error }
 scan-path-error = Clawback nu a putut scana { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Clawback este un omagiu scris în Rust pentru SpaceMonger 1.4 de Sean Werkema (1997–2000). Aranjarea, culorile și comportamentul mouse-ului urmează codul sursă original.
 compress = Comprimat
 contains = Conține:
 copyright-2026-azazel-labs = Drepturi de autor © 2026 Azazel Labs.

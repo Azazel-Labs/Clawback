@@ -23,7 +23,6 @@ claw-back-your-disk-space = Käännä levytilaasi takaisin.
 clawback-settings = Clawbackin Asetukset
 scan-folder-error = { "Clawback could not scan the folder.\u000A\u000A" }{ $error }
 scan-path-error = Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }
-about-history = Clawback on Rust kunnianosoitus SpaceMonger 1.4 by Sean Werkema (1997–2000). Sen ulkoasu, värit ja hiiren käyttäytyminen noudattavat alkuperäistä lähdekoodia.
 compress = Pakkaa
 contains = Sisältää:
 copyright-2026-azazel-labs = Copyright © 2026 Azazel Labs.

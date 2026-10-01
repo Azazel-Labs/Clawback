@@ -1,19 +1,21 @@
-//! Windows shell recycling with native progress and no permanent-delete fallback.
+//! Windows shell recycling with native progress. The shell never deletes permanently here:
+//! items the Recycle Bin can't take are stopped before deletion and reported as too large,
+//! so Clawback can ask the user itself and purge them faster than the shell would.
 // The windows::implement macro emits pointer casts and always-inline COM glue.
 #![allow(clippy::ref_as_ptr, clippy::inline_always)]
-use super::{Phase, Progress};
+use super::{Phase, Progress, Recycled};
 use clawback_core::scan::lock;
 use std::{os::windows::ffi::OsStrExt, path::Path, sync::Arc, time::Instant};
 use windows::{
     Win32::{
-        Foundation::E_ABORT,
+        Foundation::{E_ABORT, ERROR_CANCELLED},
         System::Com::{
             CLSCTX_INPROC_SERVER, COINIT_APARTMENTTHREADED, CoCreateInstance, CoInitializeEx, CoTaskMemFree,
             CoUninitialize,
         },
         UI::Shell::{
-            FOF_ALLOWUNDO, FOF_NO_UI, FOF_WANTNUKEWARNING, FOFX_EARLYFAILURE, FOFX_RECYCLEONDELETE, FileOperation,
-            IFileOperation, IFileOperationProgressSink, IFileOperationProgressSink_Impl, IShellItem,
+            COPYENGINE_E_USER_CANCELLED, FOF_ALLOWUNDO, FOF_NO_UI, FOFX_EARLYFAILURE, FOFX_RECYCLEONDELETE,
+            FileOperation, IFileOperation, IFileOperationProgressSink, IFileOperationProgressSink_Impl, IShellItem,
             SHCreateItemFromParsingName, SIGDN_FILESYSPATH, TSF_DELETE_RECYCLE_IF_POSSIBLE,
         },
     },
@@ -31,8 +33,12 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         Ok(())
     }
     fn FinishOperations(&self, hrresult: windows_core::HRESULT) -> windows_core::Result<()> {
-        if hrresult.is_err() {
-            lock(&self.progress.state).error = Some(hrresult.message());
+        let mut state = lock(&self.progress.state);
+        if declined(hrresult) {
+            state.declined = true;
+        } else if hrresult.is_err() && !state.too_large {
+            // Keep the first, most specific failure over the batch summary.
+            state.error.get_or_insert_with(|| Error::from(hrresult).to_string());
         }
         Ok(())
     }
@@ -96,8 +102,10 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
     }
     fn PreDeleteItem(&self, dwflags: u32, psiitem: windows_core::Ref<'_, IShellItem>) -> windows_core::Result<()> {
         if dwflags & TSF_DELETE_RECYCLE_IF_POSSIBLE.0 as u32 == 0 {
-            lock(&self.progress.state).error = Some("This item cannot be moved to the Recycle Bin".into());
-            return Err(Error::new(E_ABORT, "This item cannot be moved to the Recycle Bin"));
+            // Too large for the Recycle Bin, or the drive has none: the shell would delete it
+            // permanently. Stop first; Clawback asks the user and purges it itself.
+            lock(&self.progress.state).too_large = true;
+            return Err(Error::from(E_ABORT));
         }
         let mut last = lock(&self.progress.last_item);
         if last.is_none_or(|time| time.elapsed().as_millis() >= 100) {
@@ -122,8 +130,11 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         hrdelete: windows_core::HRESULT,
         _psinewlycreated: windows_core::Ref<'_, IShellItem>,
     ) -> windows_core::Result<()> {
-        if hrdelete.is_err() {
-            lock(&self.progress.state).error = Some(hrdelete.message());
+        let mut state = lock(&self.progress.state);
+        if declined(hrdelete) {
+            state.declined = true;
+        } else if hrdelete.is_err() && !state.too_large {
+            state.error.get_or_insert_with(|| Error::from(hrdelete).to_string());
         }
         Ok(())
     }
@@ -149,8 +160,8 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
     }
     fn UpdateProgress(&self, iworktotal: u32, iworksofar: u32) -> windows_core::Result<()> {
         let mut state = lock(&self.progress.state);
-        state.total = iworktotal;
-        state.done = iworksofar.min(iworktotal);
+        state.total = u64::from(iworktotal);
+        state.done = u64::from(iworksofar.min(iworktotal));
         Ok(())
     }
     fn ResetTimer(&self) -> windows_core::Result<()> {
@@ -170,7 +181,30 @@ impl Drop for Apartment {
         unsafe { CoUninitialize() };
     }
 }
-pub fn recycle(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<()> {
+/// Answering no to a shell prompt, such as the permanent-delete warning.
+fn declined(hr: windows_core::HRESULT) -> bool {
+    hr == COPYENGINE_E_USER_CANCELLED || hr == ERROR_CANCELLED.to_hresult()
+}
+
+/// Errors are display text that already carries its code.
+pub fn recycle(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String> {
+    let result = perform(path, progress);
+    let snapshot = progress.snapshot();
+    if snapshot.too_large {
+        return Ok(Recycled::TooLarge);
+    }
+    if let Some(error) = snapshot.error {
+        return Err(error);
+    }
+    match result {
+        Err(error) if declined(error.code()) => Ok(Recycled::Declined),
+        Err(error) => Err(error.to_string()),
+        Ok(()) if snapshot.declined => Ok(Recycled::Declined),
+        Ok(()) => Ok(Recycled::Done),
+    }
+}
+
+fn perform(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<()> {
     // SAFETY: the caller uses a dedicated background thread; no existing COM apartment.
     unsafe { CoInitializeEx(None, COINIT_APARTMENTTHREADED) }.ok()?;
     let _apartment = Apartment;
@@ -189,11 +223,7 @@ pub fn recycle(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<(
     // SAFETY: COM is initialized on this thread.
     let operation: IFileOperation = unsafe { CoCreateInstance(&FileOperation, None, CLSCTX_INPROC_SERVER) }?;
     // SAFETY: the operation is live and all supplied flags are documented shell flags.
-    unsafe {
-        operation.SetOperationFlags(
-            FOF_NO_UI | FOF_ALLOWUNDO | FOF_WANTNUKEWARNING | FOFX_RECYCLEONDELETE | FOFX_EARLYFAILURE,
-        )
-    }?;
+    unsafe { operation.SetOperationFlags(FOF_NO_UI | FOF_ALLOWUNDO | FOFX_RECYCLEONDELETE | FOFX_EARLYFAILURE) }?;
     // SAFETY: the UTF-16 path is terminated and lives through this call.
     let item: IShellItem = unsafe { SHCreateItemFromParsingName(PCWSTR(wide.as_ptr()), None) }?;
     // SAFETY: the locally owned sink remains alive through Unadvise.
@@ -208,11 +238,12 @@ pub fn recycle(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<(
     let aborted = unsafe { operation.GetAnyOperationsAborted() };
     // SAFETY: cookie belongs to this operation and was successfully registered above.
     let _ = unsafe { operation.Unadvise(cookie) };
-    if let Some(error) = progress.snapshot().error {
-        return Err(Error::new(E_ABORT, error));
+    let snapshot = progress.snapshot();
+    if snapshot.too_large {
+        return Ok(()); // Stopped on purpose; the shell's resulting failure is expected.
     }
     result?;
-    if aborted?.as_bool() {
+    if aborted?.as_bool() && !snapshot.declined {
         return Err(Error::new(E_ABORT, "Recycling was cancelled or could not complete"));
     }
     Ok(())
@@ -221,6 +252,7 @@ pub fn recycle(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use windows::Win32::Foundation::E_ACCESSDENIED;
 
     #[test]
     fn progress_and_permanent_delete_guard() {
@@ -232,9 +264,36 @@ mod tests {
         // SAFETY: same locally owned sink; no filesystem operation.
         unsafe { sink.UpdateProgress(0, 10) }.unwrap();
         assert_eq!(progress.snapshot().done, 0);
-        // SAFETY: absent item is permitted and the guard rejects before dereferencing it.
+        // The first, specific failure is kept over the shell's batch summary.
+        // SAFETY: same locally owned sink; absent items are permitted.
+        unsafe { sink.PostDeleteItem(0, None, E_ACCESSDENIED, None) }.unwrap();
+        // SAFETY: same locally owned sink.
+        unsafe { sink.FinishOperations(E_ABORT) }.unwrap();
+        assert!(progress.snapshot().error.is_some_and(|e| e.contains(&format!("{E_ACCESSDENIED}"))));
+
+        // A permanent delete is stopped before it happens and reported as too large, not failed.
+        let progress = Arc::new(Progress::default());
+        let sink: IFileOperationProgressSink = Sink { progress: progress.clone() }.into();
+        // SAFETY: absent item is permitted; the guard rejects before reading it.
         assert!(unsafe { sink.PreDeleteItem(0, None) }.is_err());
-        assert!(progress.snapshot().error.is_some());
+        // SAFETY: same locally owned sink.
+        unsafe { sink.PostDeleteItem(0, None, E_ABORT, None) }.unwrap();
+        // SAFETY: same locally owned sink.
+        unsafe { sink.FinishOperations(E_ABORT) }.unwrap();
+        let snapshot = progress.snapshot();
+        assert!(snapshot.too_large && snapshot.error.is_none());
+    }
+
+    #[test]
+    fn answering_no_is_not_an_error() {
+        let progress = Arc::new(Progress::default());
+        let sink: IFileOperationProgressSink = Sink { progress: progress.clone() }.into();
+        // SAFETY: locally owned sink with no filesystem operation; absent items are permitted.
+        unsafe { sink.PostDeleteItem(0, None, COPYENGINE_E_USER_CANCELLED, None) }.unwrap();
+        // SAFETY: same locally owned sink.
+        unsafe { sink.FinishOperations(ERROR_CANCELLED.to_hresult()) }.unwrap();
+        let snapshot = progress.snapshot();
+        assert!(snapshot.declined && snapshot.error.is_none());
     }
 
     #[test]
