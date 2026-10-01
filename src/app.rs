@@ -1875,7 +1875,13 @@ mod tests {
             std::fs::set_permissions(f.root.join("big"), std::fs::Permissions::from_mode(0o700)).unwrap();
         }
         assert_eq!(f.app.delete_errors.len(), 1, "{:?}", f.app.delete_errors);
-        assert!(f.app.delete_errors[0].contains("a.bin"));
+        let error = &f.app.delete_errors[0];
+        // Windows blocks only the held file. A read-only Unix folder blocks both, and
+        // which one is reported first follows the filesystem's (hashed) listing order.
+        #[cfg(windows)]
+        assert!(error.contains("1 item") && error.contains("a.bin"), "{error}");
+        #[cfg(unix)]
+        assert!(error.contains("2 items") && (error.contains("a.bin") || error.contains("b.bin")), "{error}");
         assert!(f.root.join("big/a.bin").exists());
         assert!(f.in_tree("big"), "a partly deleted folder stays until it is reconciled");
     }
