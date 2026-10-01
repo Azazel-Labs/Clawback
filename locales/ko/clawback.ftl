@@ -213,3 +213,7 @@ settings-file-sizes = Size accounting
 afrikaans = 아프리칸스어
 catalan = 카탈로니아어
 serbian-cyrillic = 세르비아어, 키릴 문자
+danish = 덴마크어
+finnish = 핀란드어
+greek = 그리스어
+norwegian-bokmal = 노르웨이어(보크몰)

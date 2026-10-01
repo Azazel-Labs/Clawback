@@ -191,3 +191,7 @@ hungarian = ฮังการี
 afrikaans = แอฟริกานส์
 catalan = คาตาลัน
 serbian-cyrillic = เซอร์เบีย ซีริลลิก
+danish = เดนมาร์ก
+finnish = ฟินแลนด์
+greek = กรีก
+norwegian-bokmal = นอร์เวย์บุคมอล

@@ -6,6 +6,9 @@ preserve_hierarchy: true
 files:
   - source: /locales/en/clawback.ftl
     translation: /locales/%locale%/clawback.ftl
+    # Held back: Arabic and Hebrew need right-to-left layout and fonts;
+    # en-US would shadow the English source catalog.
+    excluded_target_languages: [ar, en-US]
     languages_mapping:
       locale:
         fr: fr
@@ -34,3 +37,7 @@ files:
         af: af
         ca: ca
         sr: sr-Cyrl
+        da: da
+        fi: fi
+        el: el
+        no: nb

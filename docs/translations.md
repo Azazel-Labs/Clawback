@@ -8,8 +8,9 @@ Simplified Chinese (`zh-Hans`), Traditional Chinese (`zh-Hant`), Korean (`ko`), 
 Russian (`ru`), Brazilian Portuguese (`pt-BR`), Italian (`it`), Turkish (`tr`),
 Ukrainian (`uk`), Czech (`cs`), European Portuguese (`pt-PT`), Dutch (`nl`),
 Indonesian (`id`), Vietnamese (`vi`), Thai (`th`), Swedish (`sv`), Romanian (`ro`),
-Hungarian (`hu`), Afrikaans (`af`), Catalan (`ca`), and Serbian Cyrillic
-(`sr-Cyrl`) are included: 27 catalogs including English.
+Hungarian (`hu`), Afrikaans (`af`), Catalan (`ca`), Serbian Cyrillic
+(`sr-Cyrl`), Danish (`da`), Finnish (`fi`), Greek (`el`), and Norwegian Bokmål
+(`nb`) are included: 31 catalogs including English.
 Catalogs are embedded in debug and release builds. No network connection,
 Crowdin credentials, or separately installed files are needed at runtime.
 
@@ -37,7 +38,9 @@ Brazilian Portuguese matches `pt-BR` (including `pt_BR.UTF-8`). Unspecified
 Portuguese matches `pt-PT` and its CLDR parent locales, including `pt-AO` and
 `pt-MZ`; an exact catalog always takes precedence. The new generic catalogs
 also match regional OS preferences, such as `tr-TR`, `uk-UA`, `cs-CZ`, `nl-BE`,
-`id-ID`, `vi-VN`, `th-TH`, `sv-FI`, `ro-MD`, `hu-HU`, `af-ZA`, and `ca-ES`.
+`id-ID`, `vi-VN`, `th-TH`, `sv-FI`, `ro-MD`, `hu-HU`, `af-ZA`, `ca-ES`, `da-DK`,
+`fi-FI`, `el-GR`, and `nb-NO`. The legacy Norwegian tag `no` (glibc `no_NO`)
+selects `nb`.
 Serbian follows CLDR likely subtags: `sr`, `sr-RS`, `sr-BA`, and `sr-XK` select
 `sr-Cyrl`, while explicit Latin (`sr-Latn-RS`, glibc `sr_RS@latin`) and
 Montenegrin `sr-ME` do not, falling through to the next preference.
@@ -161,8 +164,8 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
    Portuguese, Brazilian (`pt-BR`), Italian (`it`), Turkish (`tr`), Ukrainian
    (`uk`), Czech (`cs`), Portuguese (`pt-PT`), Dutch (`nl`), Indonesian (`id`),
    Vietnamese (`vi`), Thai (`th`), Swedish (`sv-SE`), Romanian (`ro`),
-   Hungarian (`hu`), Afrikaans (`af`), Catalan (`ca`), and Serbian (Cyrillic)
-   (`sr`) as target languages.
+   Hungarian (`hu`), Afrikaans (`af`), Catalan (`ca`), Serbian (Cyrillic) (`sr`),
+   Danish (`da`), Finnish (`fi`), Greek (`el`), and Norwegian (`no`) as target languages.
 2. Set the GitHub repository variable `CROWDIN_PROJECT_ID` and secret
    `CROWDIN_PERSONAL_TOKEN` to the project's ID and an authorized token.
 3. Upload `locales/en/clawback.ftl` as the source file and import
@@ -171,7 +174,7 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
    `locales/zh-Hans/clawback.ftl`, `locales/zh-Hant/clawback.ftl`, `locales/ko/clawback.ftl`,
    `locales/ja/clawback.ftl`, `locales/pl/clawback.ftl`, `locales/ru/clawback.ftl`,
    `locales/pt-BR/clawback.ftl`, `locales/it/clawback.ftl`, and the catalogs for
-   the fourteen additional targets listed above as their respective translations.
+   the eighteen additional targets listed above as their respective translations.
    Review and approve the translations before the
    first approved-only download.
 4. Allow GitHub Actions to create pull requests, then run **Crowdin translations**.
@@ -179,13 +182,21 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
 The configuration maps French and German exports to the generic `fr` and `de`
 directories so regional OS preferences share their language's translation.
 Crowdin's Simplified Chinese (`zh-CN`) exports map to `zh-Hans`, and Traditional
-Chinese (`zh-TW`) exports map to `zh-Hant`. Swedish (`sv-SE`) maps to `sv`, and Serbian (Cyrillic) (`sr`) maps to `sr-Cyrl`;
+Chinese (`zh-TW`) exports map to `zh-Hant`. Swedish (`sv-SE`) maps to `sv`, Serbian (Cyrillic) (`sr`) maps to `sr-Cyrl`, and Norwegian (`no`) maps to `nb`;
 the other new generic languages map to their two-letter catalog directories.
 Portuguese (`pt-PT`) keeps its regional code, separate from `pt-BR`.
 The workflow uploads sources, downloads approved
 translations, and opens a PR; it never merges automatically.
 It remains disabled until a project ID is configured. Normal local builds and
 translation checks do not upload anything.
+
+Every target language must be mapped in `crowdin.yml` to a generic catalog
+directory; unmapped languages export under Crowdin's region codes (such as
+`da-DK`), which OS preferences like `da` never select. Arabic (`ar`), Hebrew
+(`he`), and English (US) (`en-US`) are excluded from downloads: egui has no
+right-to-left layout or Arabic/Hebrew fonts here, and `en-US` would shadow the
+English source. Crowdin's GitHub integration reads `crowdin.yml` from `main`
+on GitHub, so push configuration changes before the next sync.
 
 PRs created with GitHub's built-in token do not automatically trigger other
 workflows: manually run **CI** against `l10n/crowdin` before merging.
