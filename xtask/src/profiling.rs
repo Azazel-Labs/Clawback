@@ -7,14 +7,12 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
-pub const USAGE: &str = "cargo xtask profile-scans <root> [--repeats N] [--timeout SECONDS] [--storage unknown|ssd|hdd] [--mode all|auto|directory|mft] [--threads N]\n       cargo xtask profile-scans synthetic [FILES]\n       cargo xtask profile-scans metadata <root>";
-
 /// Command-line words, passed through unchanged to the core profiler.
 macro_rules! keywords {
     ($name:ident { $($variant:ident = $text:literal),+ $(,)? }) => {
-        #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, clap::ValueEnum)]
         enum $name {
-            $($variant),+
+            $(#[value(name = $text)] $variant),+
         }
         impl $name {
             fn as_str(self) -> &'static str {
@@ -23,64 +21,75 @@ macro_rules! keywords {
                 }
             }
         }
-        impl std::str::FromStr for $name {
-            type Err = Box<dyn std::error::Error>;
-            fn from_str(value: &str) -> Result<Self> {
-                match value {
-                    $($text => Ok(Self::$variant),)+
-                    _ => Err(crate::usage(USAGE)),
-                }
-            }
-        }
     };
 }
 keywords!(Storage { Unknown = "unknown", Ssd = "ssd", Hdd = "hdd" });
-keywords!(Mode { Auto = "auto", Directory = "directory", Mft = "mft" });
+// `All` selects the standard comparison set rather than one scanner.
+keywords!(Mode { All = "all", Auto = "auto", Directory = "directory", Mft = "mft" });
 
+#[derive(Debug, clap::Args)]
+#[command(args_conflicts_with_subcommands = true, subcommand_negates_reqs = true, arg_required_else_help = true)]
+pub struct Args {
+    #[command(subcommand)]
+    probe: Option<Probe>,
+    #[command(flatten)]
+    options: Options,
+}
+
+/// Dedicated Windows probes, run as ignored clawback-core tests.
+#[derive(Debug, clap::Subcommand)]
+enum Probe {
+    /// Time MFT parsing of a synthetic volume (Windows)
+    Synthetic {
+        /// Number of synthetic files
+        #[arg(default_value_t = 200_000, value_parser = clap::value_parser!(u64).range(1..))]
+        files: u64,
+    },
+    /// Time Windows metadata calls under ROOT (Windows)
+    Metadata {
+        /// Existing directory to probe
+        root: PathBuf,
+    },
+}
+
+#[derive(Debug, clap::Args)]
 struct Options {
-    root: PathBuf,
+    /// Existing directory to scan
+    #[arg(required = true)]
+    root: Option<PathBuf>,
+    /// Runs per case
+    #[arg(long, value_name = "N", default_value_t = 3, value_parser = clap::value_parser!(u64).range(1..))]
     repeats: u64,
+    /// Per-run timeout
+    #[arg(long, value_name = "SECONDS", default_value_t = 120, value_parser = clap::value_parser!(u64).range(1..))]
     timeout: u64,
+    /// Storage kind reported to the scanner
+    #[arg(long, value_enum, default_value_t = Storage::Unknown)]
     storage: Storage,
-    /// One scanner, or None for the standard comparison set ("all").
-    mode: Option<Mode>,
+    /// One scanner, or all for the standard comparison set
+    #[arg(long, value_enum, default_value_t = Mode::All)]
+    mode: Mode,
+    /// Worker threads for a single --mode (0 = automatic)
+    #[arg(long, value_name = "N", value_parser = clap::value_parser!(u64).range(..=256))]
     threads: Option<u64>,
 }
 
 impl Options {
-    fn parse(args: &[String]) -> Result<Self> {
-        let (root, rest) = args.split_first().ok_or_else(|| crate::usage(USAGE))?;
-        let mut result =
-            Self { root: root.into(), repeats: 3, timeout: 120, storage: Storage::Unknown, mode: None, threads: None };
-        for pair in rest.chunks(2) {
-            let [flag, value] = pair else { return Err(crate::usage(USAGE)) };
-            match flag.as_str() {
-                "--repeats" => result.repeats = positive(value)?,
-                "--timeout" => result.timeout = positive(value)?,
-                "--storage" => result.storage = value.parse()?,
-                "--mode" => result.mode = if value == "all" { None } else { Some(value.parse()?) },
-                "--threads" => {
-                    let n = value.parse()?;
-                    if n > 256 {
-                        return Err("threads must be between 0 and 256".into());
-                    }
-                    result.threads = Some(n);
-                }
-                _ => return Err(crate::usage(USAGE)),
-            }
-        }
-        if result.mode.is_none() && result.threads.is_some() {
+    /// Checks clap cannot express; returns the scan root.
+    fn validate(&self) -> Result<&Path> {
+        if self.mode == Mode::All && self.threads.is_some() {
             return Err("--threads requires a single --mode".into());
         }
-        if !result.root.is_dir() {
+        let root = self.root.as_deref().ok_or("missing profile root")?;
+        if !root.is_dir() {
             return Err("profile root must be an existing directory".into());
         }
-        Ok(result)
+        Ok(root)
     }
 
     fn cases(&self) -> Vec<(Mode, u64)> {
-        if let Some(mode) = self.mode {
-            return vec![(mode, self.threads.unwrap_or(0))];
+        if self.mode != Mode::All {
+            return vec![(self.mode, self.threads.unwrap_or(0))];
         }
         let mut cases = Vec::new();
         if cfg!(windows) {
@@ -89,14 +98,6 @@ impl Options {
         cases.extend([(Mode::Directory, 0), (Mode::Directory, 4), (Mode::Directory, 16), (Mode::Auto, 0)]);
         cases
     }
-}
-
-fn positive(value: &str) -> Result<u64> {
-    let n = value.parse()?;
-    if n == 0 {
-        return Err("counts and timeouts must be greater than zero".into());
-    }
-    Ok(n)
 }
 
 fn output_directory(workspace: &Path) -> Result<PathBuf> {
@@ -116,15 +117,12 @@ fn logged(command: &mut Command, output: &Path, name: &str, extension: &str) -> 
     crate::run_checked(command, &format!("{name} failed; logs: {}", output.display()))
 }
 
-pub fn run(workspace: &Path, args: &[String]) -> Result<()> {
-    if args.is_empty() || args == ["--help"] {
-        println!("Usage: {USAGE}");
-        return Ok(());
+pub fn run(workspace: &Path, args: &Args) -> Result<()> {
+    if let Some(probe) = &args.probe {
+        return run_probe(workspace, probe);
     }
-    if matches!(args[0].as_str(), "synthetic" | "metadata") {
-        return probe(workspace, args);
-    }
-    let options = Options::parse(args)?;
+    let options = &args.options;
+    let root = options.validate()?;
     let target = workspace.join("target");
     crate::run_checked(
         crate::cargo(workspace)
@@ -145,15 +143,15 @@ pub fn run(workspace: &Path, args: &[String]) -> Result<()> {
     )?;
     let executable = target.join("release/examples").join(format!("scan-profile{}", env::consts::EXE_SUFFIX));
     let output = output_directory(workspace)?;
-    let mode = options.mode.map_or("all", Mode::as_str);
     fs::write(
         output.join("environment.txt"),
         format!(
-            "root={}\nstorage={}\nrepeats={}\ntimeout_seconds={}\nmode={mode}\nthreads={:?}\n",
-            options.root.display(),
+            "root={}\nstorage={}\nrepeats={}\ntimeout_seconds={}\nmode={}\nthreads={:?}\n",
+            root.display(),
             options.storage.as_str(),
             options.repeats,
             options.timeout,
+            options.mode.as_str(),
             options.threads
         ),
     )?;
@@ -162,7 +160,7 @@ pub fn run(workspace: &Path, args: &[String]) -> Result<()> {
         let mut command = Command::new(&executable);
         command
             .current_dir(workspace)
-            .arg(&options.root)
+            .arg(root)
             .arg(mode.as_str())
             .arg(workers.to_string())
             .arg(options.repeats.to_string())
@@ -175,65 +173,83 @@ pub fn run(workspace: &Path, args: &[String]) -> Result<()> {
     Ok(())
 }
 
-fn probe(workspace: &Path, args: &[String]) -> Result<()> {
+fn run_probe(workspace: &Path, probe: &Probe) -> Result<()> {
     if !cfg!(windows) {
         return Err("The MFT and Windows metadata probes require Windows".into());
     }
     let mut command = crate::cargo(workspace);
     command.args(["test", "--release", "--locked", "-p", "clawback-core", "--features", "profiling"]);
-    match args {
-        [kind, files @ ..] if kind == "synthetic" && files.len() <= 1 => {
-            let files = files.first().map_or(Ok(200_000), |s| positive(s))?;
+    let name = match probe {
+        Probe::Synthetic { files } => {
             command.arg("profile_synthetic_mft").env("CLAWBACK_PROFILE_FILES", files.to_string());
+            "synthetic"
         }
-        [kind, root] if kind == "metadata" && Path::new(root).is_dir() => {
+        Probe::Metadata { root } => {
+            if !root.is_dir() {
+                return Err("metadata root must be an existing directory".into());
+            }
             command.arg("profile_metadata_calls").env("CLAWBACK_PROFILE_ROOT", fs::canonicalize(root)?);
+            "metadata"
         }
-        _ => return Err(crate::usage(USAGE)),
-    }
+    };
     command.args(["--", "--ignored", "--nocapture"]);
     let output = output_directory(workspace)?;
-    fs::write(output.join("environment.txt"), format!("probe_arguments={args:?}\n"))?;
+    fs::write(output.join("environment.txt"), format!("probe={probe:?}\n"))?;
     println!("Results: {}", output.display());
-    logged(&mut command, &output, &args[0], "txt")
+    logged(&mut command, &output, name, "txt")
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use clap::Parser;
+
+    #[derive(Debug, Parser)]
+    struct Cli {
+        #[command(flatten)]
+        args: Args,
+    }
+
+    fn parse(tail: &[&str]) -> Result<Args> {
+        let root = env::temp_dir().display().to_string();
+        let words = ["profile-scans", root.as_str()].into_iter().chain(tail.iter().copied());
+        let args = Cli::try_parse_from(words)?.args;
+        args.options.validate()?;
+        Ok(args)
+    }
 
     #[test]
     fn rejects_ambiguous_or_invalid_options_before_building() {
-        let root = env::temp_dir().display().to_string();
         for tail in [
-            vec!["--repeats", "0"],
-            vec!["--timeout", "oops"],
-            vec!["--storage", "bad"],
-            vec!["--mode", "bad"],
-            vec!["--mode"],
-            vec!["--threads", "4"],
-            vec!["--mode", "all", "--threads", "4"],
+            &["--repeats", "0"][..],
+            &["--timeout", "oops"],
+            &["--storage", "bad"],
+            &["--mode", "bad"],
+            &["--mode"],
+            &["--threads", "4"],
+            &["--mode", "all", "--threads", "4"],
+            &["--mode", "auto", "--threads", "257"],
         ] {
-            let mut args = vec![root.clone()];
-            args.extend(tail.into_iter().map(str::to_owned));
-            assert!(Options::parse(&args).is_err());
+            assert!(parse(tail).is_err(), "{tail:?}");
         }
+        assert!(Cli::try_parse_from(["profile-scans", "--mode", "auto"]).is_err());
     }
 
     #[test]
     fn single_mode_uses_requested_concurrency() -> Result<()> {
-        let args = [
-            env::temp_dir().display().to_string(),
-            "--mode".into(),
-            "directory".into(),
-            "--threads".into(),
-            "8".into(),
-            "--storage".into(),
-            "ssd".into(),
-        ];
-        let options = Options::parse(&args)?;
-        assert_eq!(options.cases(), [(Mode::Directory, 8)]);
-        assert_eq!(options.storage.as_str(), "ssd");
+        let args = parse(&["--mode", "directory", "--threads", "8", "--storage", "ssd"])?;
+        assert!(args.probe.is_none());
+        assert_eq!(args.options.cases(), [(Mode::Directory, 8)]);
+        assert_eq!(args.options.storage.as_str(), "ssd");
+        Ok(())
+    }
+
+    #[test]
+    fn probe_keywords_select_probes() -> Result<()> {
+        let args = Cli::try_parse_from(["profile-scans", "synthetic"])?.args;
+        assert!(matches!(args.probe, Some(Probe::Synthetic { files: 200_000 })));
+        let args = Cli::try_parse_from(["profile-scans", "metadata", "."])?.args;
+        assert!(matches!(args.probe, Some(Probe::Metadata { .. })));
         Ok(())
     }
 }

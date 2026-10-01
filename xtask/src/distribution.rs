@@ -1,21 +1,31 @@
 //! Generate package-manager metadata from an already-published stable release.
 use crate::{Result, package::exe_name, release::parse_version};
-use std::{collections::BTreeMap, fmt::Write as _, fs, path::Path};
+use std::{collections::BTreeMap, fmt::Write as _, fs, path::PathBuf};
 
-pub const USAGE: &str = "cargo xtask distribution <version> <SHA256SUMS.txt> <output-directory>";
+#[derive(Debug, clap::Args)]
+pub struct Args {
+    /// Published stable release tag
+    version: String,
+    /// The release's checksum file
+    #[arg(value_name = "SHA256SUMS.txt")]
+    checksums: PathBuf,
+    /// Where to write the manifests and formula
+    #[arg(value_name = "OUTPUT-DIRECTORY")]
+    output: PathBuf,
+}
+
 const REPOSITORY: &str = "https://github.com/Azazel-Labs/Clawback";
 /// Schema version of the generated winget manifests.
 const MANIFEST_VERSION: &str = "1.9.0";
 
-pub fn run(args: &[String]) -> Result<()> {
-    let [tag, checksums, output] = args else { return Err(crate::usage(USAGE)) };
-    let files = generate(tag, &fs::read_to_string(checksums)?)?;
+pub fn run(args: &Args) -> Result<()> {
+    let files = generate(&args.version, &fs::read_to_string(&args.checksums)?)?;
     for (name, content) in files {
-        let path = Path::new(output).join(name);
+        let path = args.output.join(name);
         fs::create_dir_all(path.parent().ok_or("Missing output parent")?)?;
         fs::write(path, content)?;
     }
-    println!("Wrote WinGet manifests and Homebrew formula to {output}");
+    println!("Wrote WinGet manifests and Homebrew formula to {}", args.output.display());
     Ok(())
 }
 

@@ -2,7 +2,14 @@
 use crate::Result;
 use std::{fs, path::Path};
 
-pub const USAGE: &str = "cargo xtask package <target> <tag>";
+#[derive(Debug, clap::Args)]
+pub struct Args {
+    /// Rust target triple of the release build
+    #[arg(value_parser = clap::builder::PossibleValuesParser::new(TARGETS))]
+    pub target: String,
+    /// Release tag (vMAJOR.MINOR.PATCH[-channel.N]) or nightly
+    pub tag: String,
+}
 
 pub const TARGETS: [&str; 6] = [
     "x86_64-pc-windows-msvc",
@@ -24,9 +31,8 @@ pub fn exe_name(target: &str) -> &'static str {
     if target.contains("windows") { "clawback.exe" } else { "clawback" }
 }
 
-pub fn run(root: &Path, args: &[String]) -> Result<()> {
-    let [target, tag] = args else { return Err(crate::usage(USAGE)) };
-    if !TARGETS.contains(&target.as_str()) {
+pub fn run(root: &Path, target: &str, tag: &str) -> Result<()> {
+    if !TARGETS.contains(&target) {
         return Err("Unsupported release target".into());
     }
     if tag != "nightly" {
@@ -128,7 +134,7 @@ mod tests {
             let build = temp.join("target").join(target).join("release");
             fs::create_dir_all(&build).expect("build");
             fs::write(build.join(exe), b"fixture executable").expect("exe");
-            run(&temp, &[target.into(), "v1.2.3".into()]).expect("package");
+            run(&temp, target, "v1.2.3").expect("package");
             let out = temp.join("dist").join(format!("clawback-v1.2.3-{target}"));
             assert_eq!(fs::read(out.join(exe)).expect("packaged exe"), b"fixture executable");
             assert_eq!(

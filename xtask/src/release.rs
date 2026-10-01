@@ -3,23 +3,36 @@ use crate::Result;
 use std::{fs, path::Path, process::Command};
 use toml_edit::{DocumentMut, value};
 
-pub const USAGE: &str = "cargo xtask release <prepare|validate|publish> <version>";
+#[derive(Debug, clap::Args)]
+pub struct Args {
+    action: Action,
+    /// MAJOR.MINOR.PATCH, optionally with a leading v and -alpha.N, -beta.N or -rc.N
+    version: String,
+}
 
-pub fn run(root: &Path, args: &[String]) -> Result<()> {
-    let [action, version] = args else { return Err(crate::usage_all()) };
-    let version = parse_version(version)?;
-    match action.as_str() {
-        "prepare" => {
+#[derive(Clone, Copy, Debug, clap::ValueEnum)]
+enum Action {
+    /// Bump Cargo.toml and Cargo.lock to the version
+    Prepare,
+    /// Check that Cargo.toml and Cargo.lock match the version
+    Validate,
+    /// Tag the current main and push the tag
+    Publish,
+}
+
+pub fn run(root: &Path, args: &Args) -> Result<()> {
+    let version = parse_version(&args.version)?;
+    match args.action {
+        Action::Prepare => {
             prepare(root, version)?;
             println!("Prepared v{version}. Review Cargo.toml and Cargo.lock, commit and push main.");
             println!("Then run: cargo xtask release publish {version}");
         }
-        "validate" => {
+        Action::Validate => {
             validate(root, version)?;
             println!("Validated v{version}.");
         }
-        "publish" => publish(root, version)?,
-        _ => return Err("Expected prepare, validate, or publish".into()),
+        Action::Publish => publish(root, version)?,
     }
     Ok(())
 }

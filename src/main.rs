@@ -36,38 +36,55 @@ mod turbo;
 mod watch_windows;
 mod watching;
 
+use clap::Parser;
 use clawback_core::{Settings, report, scan};
 use eframe::egui;
 use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-const USAGE: &str = "\
-Clawback - see where your disk space went.
-
-USAGE:
-    clawback [PATH]                 Desktop window (terminal map on headless systems)
-    clawback --report [OPTIONS] [PATH]
-                                Print a text report instead of opening a window
-
-OPTIONS:
-    --tui                      Force the interactive terminal map
-    --gui                      Force the desktop window
-    --top N                     Entries per report section (default 20)
-    --apparent-size             Use file lengths instead of space used on disk
-    --cross-filesystems         Descend into other mounted filesystems
-    --count-hardlinks           Count every hard link (default: count once)
-    -h, --help                  Show this help
-    -V, --version               Show the version";
-
-struct Args {
+#[derive(Debug, Parser)]
+#[command(
+    name = "clawback",
+    bin_name = "clawback",
+    version,
+    about = "Clawback - see where your disk space went.",
+    args_override_self = true
+)]
+struct Cli {
+    /// Folder to open: desktop window by default (terminal map on headless systems)
     path: Option<PathBuf>,
+    /// Print a text report instead of opening a window
+    #[arg(long, conflicts_with_all = ["tui", "gui"])]
     report: bool,
-    mode: Mode,
+    /// Force the interactive terminal map
+    #[arg(long, conflicts_with = "gui")]
+    tui: bool,
+    /// Force the desktop window
+    #[arg(long)]
+    gui: bool,
+    /// Entries per report section
+    #[arg(long, value_name = "N", default_value_t = 20)]
     top: usize,
+    /// Use file lengths instead of space used on disk
+    #[arg(long = "apparent-size")]
     apparent: bool,
+    /// Descend into other mounted filesystems
+    #[arg(long = "cross-filesystems")]
     cross_fs: bool,
+    /// Count every hard link (default: count once)
+    #[arg(long = "count-hardlinks")]
     all_links: bool,
+}
+
+impl Cli {
+    fn mode(&self) -> Mode {
+        match (self.tui, self.gui) {
+            (true, _) => Mode::Tui,
+            (_, true) => Mode::Gui,
+            _ => Mode::Auto,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -86,68 +103,6 @@ fn launch_mode(mode: Mode, graphical: bool, terminal: bool, dumb: bool) -> Optio
         Mode::Auto if terminal && !dumb => Some(Mode::Tui),
         Mode::Auto => None,
     }
-}
-
-fn parse_args() -> Result<Option<Args>, String> {
-    parse_args_from(std::env::args_os().skip(1))
-}
-
-fn parse_args_from(args: impl IntoIterator<Item = std::ffi::OsString>) -> Result<Option<Args>, String> {
-    let mut a = Args {
-        path: None,
-        report: false,
-        mode: Mode::Auto,
-        top: 20,
-        apparent: false,
-        cross_fs: false,
-        all_links: false,
-    };
-    let mut it = args.into_iter();
-    while let Some(arg) = it.next() {
-        match arg.to_str() {
-            Some("-h" | "--help") => {
-                platform::attach_console();
-                println!("{USAGE}");
-                return Ok(None);
-            }
-            Some("-V" | "--version") => {
-                platform::attach_console();
-                println!("clawback {}", env!("CARGO_PKG_VERSION"));
-                return Ok(None);
-            }
-            Some("--report") => a.report = true,
-            Some("--tui" | "--gui") => {
-                let mode = if arg == "--tui" { Mode::Tui } else { Mode::Gui };
-                if a.mode != Mode::Auto && a.mode != mode {
-                    return Err("--tui and --gui cannot be combined".into());
-                }
-                a.mode = mode;
-            }
-            Some("--") => {
-                for path in it.by_ref() {
-                    if a.path.replace(path.into()).is_some() {
-                        return Err("only one PATH may be supplied".into());
-                    }
-                }
-            }
-            Some("--top") => {
-                a.top = it.next().and_then(|v| v.to_str()?.parse().ok()).ok_or("--top needs a number")?;
-            }
-            Some("--apparent-size") => a.apparent = true,
-            Some("--cross-filesystems") => a.cross_fs = true,
-            Some("--count-hardlinks") => a.all_links = true,
-            Some(s) if s.starts_with('-') && s.len() > 1 => return Err(format!("unknown option {s}\n\n{USAGE}")),
-            _ => {
-                if a.path.replace(PathBuf::from(arg)).is_some() {
-                    return Err("only one PATH may be supplied".into());
-                }
-            }
-        }
-    }
-    if a.report && a.mode != Mode::Auto {
-        return Err("--report cannot be combined with --tui or --gui".into());
-    }
-    Ok(Some(a))
 }
 
 fn main() -> ExitCode {
@@ -171,31 +126,27 @@ fn main() -> ExitCode {
             Err(_) => ExitCode::FAILURE,
         };
     }
-    let args = match parse_args() {
-        Ok(Some(a)) => a,
-        Ok(None) => return ExitCode::SUCCESS,
-        Err(e) => {
+    let args = match Cli::try_parse() {
+        Ok(args) => args,
+        // Help and version are "errors" with a success exit code; all print to the console.
+        Err(error) => {
             platform::attach_console();
-            eprintln!("clawback: {e}");
-            return ExitCode::from(2);
+            let _ = error.print();
+            return ExitCode::from(u8::try_from(error.exit_code()).unwrap_or(2));
         }
     };
     if args.report {
         return run_report(&args);
     }
-    let graphical = args.mode == Mode::Gui || (args.mode == Mode::Auto && session::graphical());
+    let mode = args.mode();
+    let graphical = mode == Mode::Gui || (mode == Mode::Auto && session::graphical());
     // Attach only for a terminal launch, keeping default GUI launches console-free.
     if !graphical {
         platform::attach_console();
     }
     let input = std::io::stdin().is_terminal();
     let output = std::io::stdout().is_terminal();
-    match launch_mode(
-        args.mode,
-        graphical,
-        input && output,
-        std::env::var_os("TERM").is_some_and(|term| term == "dumb"),
-    ) {
+    match launch_mode(mode, graphical, input && output, std::env::var_os("TERM").is_some_and(|term| term == "dumb")) {
         None => {
             eprintln!(
                 "clawback: no usable interactive interface; use --report for headless or redirected output, or --gui to force a window"
@@ -215,7 +166,7 @@ fn main() -> ExitCode {
     }
 }
 
-fn scan_settings(args: &Args) -> Settings {
+fn scan_settings(args: &Cli) -> Settings {
     let mut settings = Settings::load();
     settings.apparent_size |= args.apparent;
     settings.one_filesystem &= !args.cross_fs;
@@ -223,7 +174,7 @@ fn scan_settings(args: &Args) -> Settings {
     settings
 }
 
-fn run_report(args: &Args) -> ExitCode {
+fn run_report(args: &Cli) -> ExitCode {
     platform::attach_console();
     let settings = scan_settings(args);
     let root = args.path.clone().unwrap_or_else(|| PathBuf::from("."));
@@ -354,13 +305,41 @@ mod cli_tests {
     }
 
     #[test]
+    fn command_line_definition_is_valid() {
+        use clap::CommandFactory;
+        Cli::command().debug_assert();
+    }
+
+    fn parse(args: &[&str]) -> Result<Cli, clap::Error> {
+        Cli::try_parse_from(std::iter::once("clawback").chain(args.iter().copied()))
+    }
+
+    #[test]
     fn modes_conflict_and_paths_can_follow_double_dash() {
         for args in [["--tui", "--gui"], ["--report", "--tui"], ["--gui", "--report"]] {
-            assert!(parse_args_from(args.map(Into::into)).is_err());
+            assert!(parse(&args).is_err(), "{args:?}");
         }
-        let args = parse_args_from(["--tui", "--apparent-size", "--", "-folder"].map(Into::into)).unwrap().unwrap();
-        assert_eq!(args.mode, Mode::Tui);
+        let args = parse(&["--tui", "--apparent-size", "--", "-folder"]).unwrap();
+        assert_eq!(args.mode(), Mode::Tui);
         assert_eq!(args.path, Some(PathBuf::from("-folder")));
         assert!(args.apparent);
+    }
+
+    #[test]
+    fn report_options_defaults_and_errors() {
+        let args = parse(&[]).unwrap();
+        assert_eq!(args.mode(), Mode::Auto);
+        assert!(!args.report && !args.apparent && !args.cross_fs && !args.all_links);
+        assert_eq!((args.top, args.path), (20, None));
+        let args = parse(&["--report", "--top", "3", "--cross-filesystems", "--count-hardlinks", "crates"]).unwrap();
+        assert!(args.report && args.cross_fs && args.all_links);
+        assert_eq!((args.top, args.path), (3, Some(PathBuf::from("crates"))));
+        assert_eq!(parse(&["--gui", "--gui"]).unwrap().mode(), Mode::Gui);
+        for args in [&["--top"][..], &["--top", "x"], &["a", "b"], &["--bogus"]] {
+            assert_eq!(parse(args).unwrap_err().exit_code(), 2, "{args:?}");
+        }
+        for args in ["--help", "-h", "--version", "-V"] {
+            assert_eq!(parse(&[args]).unwrap_err().exit_code(), 0, "{args}");
+        }
     }
 }

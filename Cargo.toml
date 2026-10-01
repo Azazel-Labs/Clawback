@@ -81,6 +81,7 @@ startup-probe = []
 perf-probe = []
 
 [dependencies]
+clap = { version = "4.6", features = ["derive"] }
 i18n-embed = { version = "0.16", features = ["fluent-system"] }
 i18n-embed-fl = "0.10"
 rust-embed = { version = "8", features = ["debug-embed"] }
