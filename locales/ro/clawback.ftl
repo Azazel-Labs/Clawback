@@ -1,4 +1,4 @@
-# Mesajele interfeței Clawback. Păstrați identificatorii și numele variabilelor.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % DIN SCANARE
@@ -34,6 +34,11 @@ date-time = Dată / Oră
 delay = Întârziere:
 delete = Șterge
 deleting = { "Se șterge...\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Moving to Recycle Bin…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s elapsed
+delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
 density = Densitate:
 design-document = Document de proiectare
 directories = Directoare
@@ -59,8 +64,6 @@ file-size = Dimensiunea fișierelor
 file-types = Tipuri de fișiere
 filename = Nume de fișier
 files-2 = Fișiere:
-# Etichetele urmate de număr evită declinarea după numeral.
-# intl_pluralrules 7.0.2 clasifică greșit valori precum 101 și 102.
 contents-count = Fișiere: { $files }, dosare: { $folders }
 finding-drives = Se caută unități...
 folder-2 = Dosar
@@ -190,3 +193,20 @@ thai = Thailandeză
 swedish = Suedeză
 romanian = Română
 hungarian = Maghiară
+turbo-read-progress = Turbo: reading MFT { $percent }% · { $records } records
+turbo-resolving = Turbo: resolving file names…
+turbo-assembling = Turbo: assembling folders · { $files } files
+turbo-sorting = Turbo: sorting results…
+turbo-transferring = Turbo: loading results…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues.
+settings-appearance = Appearance
+settings-behavior = Behavior
+settings-save = Save changes
+settings-bias-help = Left favors horizontal shapes; center balances them; right favors vertical shapes.
+settings-name-tips = File names
+settings-info-tips = File details
+settings-window = Window & interaction
+settings-deletion = Deleting files
+settings-scan-scope = Scan boundaries
+settings-file-sizes = Size accounting
