@@ -1,4 +1,4 @@
-# Interfaccia di Clawback. Non modificare gli ID dei messaggi né i nomi delle variabili.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % DELLA SCANSIONE
@@ -34,6 +34,11 @@ date-time = Data / ora
 delay = Ritardo:
 delete = Elimina
 deleting = { "Eliminazione in corso…\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Moving to Recycle Bin…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s elapsed
+delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
 density = Densità:
 design-document = Documento di progettazione
 directories = Cartelle
@@ -59,7 +64,6 @@ file-size = Dimensione dei file
 file-types = Tipi di file
 filename = Nome del file
 files-2 = File:
-# «File» è invariabile; «cartella» cambia al plurale. Solo 1 usa il singolare.
 contents-count =
     { $files } file, { $folders ->
         [one] { $folders } cartella
@@ -78,13 +82,13 @@ hidden = Nascosto
 horz = Orizz.
 icon = Icona
 image = Immagine
-italian = Italiano
-japanese = Giapponese
-korean = Coreano
 language = Lingua
+korean = Coreano
+japanese = Giapponese
+italian = Italiano
 polish = Polacco
-portuguese-brazil = Portoghese brasiliano
 russian = Russo
+portuguese-brazil = Portoghese brasiliano
 licensed-under-mit-0-mit-no-attribution-no = Distribuito con licenza MIT-0 (MIT No Attribution). Senza garanzie di alcun tipo.
 location = Percorso:
 lots-of-files = Molti file
@@ -197,3 +201,20 @@ thai = Thailandese
 swedish = Svedese
 romanian = Rumeno
 hungarian = Ungherese
+turbo-read-progress = Turbo: reading MFT { $percent }% · { $records } records
+turbo-resolving = Turbo: resolving file names…
+turbo-assembling = Turbo: assembling folders · { $files } files
+turbo-sorting = Turbo: sorting results…
+turbo-transferring = Turbo: loading results…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues.
+settings-appearance = Appearance
+settings-behavior = Behavior
+settings-save = Save changes
+settings-bias-help = Left favors horizontal shapes; center balances them; right favors vertical shapes.
+settings-name-tips = File names
+settings-info-tips = File details
+settings-window = Window & interaction
+settings-deletion = Deleting files
+settings-scan-scope = Scan boundaries
+settings-file-sizes = Size accounting
