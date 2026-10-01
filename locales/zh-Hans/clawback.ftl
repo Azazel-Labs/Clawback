@@ -1,4 +1,4 @@
-# Clawback 简体中文界面。请勿修改消息标识符和变量名。
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   确定   " }
 of-scan = % 扫描进度
@@ -34,6 +34,11 @@ date-time = 日期 / 时间
 delay = 延迟：
 delete = 删除
 deleting = { "正在删除…\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Moving to Recycle Bin…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s elapsed
+delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
 density = 密度：
 design-document = 设计文档
 directories = 文件夹
@@ -59,7 +64,6 @@ file-size = 文件大小
 file-types = 文件类型
 filename = 文件名
 files-2 = 文件：
-# 中文的数量表达不区分单复数。
 contents-count = { $files } 个文件，{ $folders } 个文件夹
 finding-drives = 正在查找驱动器…
 folder-2 = 文件夹
@@ -189,3 +193,20 @@ thai = 泰语
 swedish = 瑞典语
 romanian = 罗马尼亚语
 hungarian = 匈牙利语
+turbo-read-progress = Turbo: reading MFT { $percent }% · { $records } records
+turbo-resolving = Turbo: resolving file names…
+turbo-assembling = Turbo: assembling folders · { $files } files
+turbo-sorting = Turbo: sorting results…
+turbo-transferring = Turbo: loading results…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues.
+settings-appearance = Appearance
+settings-behavior = Behavior
+settings-save = Save changes
+settings-bias-help = Left favors horizontal shapes; center balances them; right favors vertical shapes.
+settings-name-tips = File names
+settings-info-tips = File details
+settings-window = Window & interaction
+settings-deletion = Deleting files
+settings-scan-scope = Scan boundaries
+settings-file-sizes = Size accounting
