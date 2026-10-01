@@ -261,8 +261,13 @@ mod tests {
         fs::hard_link(dir.0.join("regular"), dir.0.join("alias")).unwrap();
         fs::create_dir(dir.0.join("child")).unwrap();
         std::os::unix::fs::symlink(&dir.0, dir.0.join("loop")).unwrap();
+        // APFS rejects names that are not valid UTF-8; fall back to a
+        // multibyte name there so raw name bytes are still round-tripped.
         let name = OsString::from_vec(vec![b'n', 0xff]);
-        fs::write(dir.0.join(&name), b"bytes").unwrap();
+        if let Err(error) = fs::write(dir.0.join(&name), b"bytes") {
+            assert_eq!(error.raw_os_error(), Some(92), "{error}"); // EILSEQ
+            fs::write(dir.0.join("n\u{e9}"), b"bytes").unwrap();
+        }
         let mut bulk = Bulk::open(&dir.0).unwrap();
         let mut count = 0;
         while let Some(record) = bulk.next().unwrap() {
