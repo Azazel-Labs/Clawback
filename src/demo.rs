@@ -3,7 +3,7 @@ use clawback_core::{Kind, NodeId, ROOT, Tree, tree::NewEntry};
 use std::path::Path;
 
 /// The fictional drive's name and mount point.
-const DRIVE: &str = "Demo Drive";
+pub(crate) const DRIVE: &str = "Demo Drive";
 
 /// A capture run: fictional data, no saved state, and a screenshot written on exit.
 pub fn capturing() -> bool {

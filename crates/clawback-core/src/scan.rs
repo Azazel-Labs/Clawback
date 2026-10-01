@@ -182,11 +182,38 @@ impl Progress {
     }
 }
 
+/// The stages of an MFT scan, in order.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+#[repr(u8)]
+pub enum MftPhase {
+    #[default]
+    Reading,
+    /// Resolving file names.
+    Resolving,
+    Assembling,
+    Sorting,
+    /// The finished tree is being sent to another process.
+    Transferring,
+}
+
+impl TryFrom<u64> for MftPhase {
+    type Error = u64;
+    fn try_from(value: u64) -> Result<Self, u64> {
+        Ok(match value {
+            0 => Self::Reading,
+            1 => Self::Resolving,
+            2 => Self::Assembling,
+            3 => Self::Sorting,
+            4 => Self::Transferring,
+            _ => return Err(value),
+        })
+    }
+}
+
 /// Provisional MFT telemetry, separate from the validated tree and scan totals.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct MftProgress {
-    /// 0 reading, 1 resolving names, 2 assembling, 3 sorting, 4 transferring.
-    pub phase: u64,
+    pub phase: MftPhase,
     pub read: u64,
     pub total: u64,
     pub records: u64,

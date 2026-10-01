@@ -1,6 +1,7 @@
 //! Terminal frontend. Uses the same scan snapshots and nested layout as the GUI.
 
 use crate::scanning::{Running, Update};
+use crate::watching::LiveStatus;
 use clawback_core::{NodeId, ROOT, Settings, Tree, format, layout, palette};
 use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
 use ratatui::layout::{Constraint, Layout, Rect};
@@ -27,6 +28,8 @@ struct App {
     settings: Settings,
     running: Option<Running>,
     live: Option<crate::watching::Live>,
+    /// The live status the status line shows, if it shows one.
+    live_status: Option<LiveStatus>,
     tree: Arc<Tree>,
     view: NodeId,
     entries: Vec<NodeId>,
@@ -50,6 +53,7 @@ impl App {
             settings,
             running: None,
             live: None,
+            live_status: None,
             tree: Arc::new(tree),
             view: ROOT,
             entries: Vec::new(),
@@ -79,22 +83,22 @@ impl App {
     fn updates(&mut self) -> bool {
         let update = self.running.as_ref().map(|running| running.rx.try_recv());
         let mut changed = match update {
-            Some(Ok(Update::Preview(preview))) => {
+            Some(Ok(Update::Preview { tree, progress, current })) => {
                 self.status = format!(
                     "{} · {} files · {} · {} not readable · up to {} workers · {}",
                     if self.paused() { "Scan paused" } else { "Scanning" },
-                    format::count(preview.progress.files),
-                    format::size(preview.progress.bytes),
-                    preview.progress.denied,
-                    preview.progress.workers,
-                    preview.current.display()
+                    format::count(progress.files),
+                    format::size(progress.bytes),
+                    progress.denied,
+                    progress.workers,
+                    current.display()
                 );
-                crate::background::retire(std::mem::replace(&mut self.tree, Arc::new(preview.tree)));
+                crate::background::retire(std::mem::replace(&mut self.tree, Arc::new(tree)));
                 self.view = ROOT;
                 self.refresh_entries();
                 true
             }
-            Some(Ok(Update::Finished(result, _, _, started))) => {
+            Some(Ok(Update::Finished { result, started })) => {
                 self.status = format!(
                     "{} · {} files · {} folders · {} not readable · {} skipped · {} · {}",
                     if result.cancelled { "Partial scan" } else { "Scan complete" },
@@ -103,9 +107,10 @@ impl App {
                     result.denied,
                     result.skipped.len(),
                     format::duration(result.elapsed),
-                    started.status
+                    started.status.text()
                 );
                 self.live = started.live;
+                self.live_status = None;
                 crate::background::retire(std::mem::replace(&mut self.tree, Arc::new(result.tree)));
                 self.view = ROOT;
                 self.running = None;
@@ -150,14 +155,15 @@ impl App {
                 changed = true;
             }
             Some(Ok(crate::watching::Update::Status(status))) => {
-                if status.starts_with("Live stopped:") {
+                if status.is_stopped() {
                     crate::background::retire(self.live.take());
                 }
-                self.status = status;
+                self.status = status.text();
+                self.live_status = Some(status);
                 changed = true;
             }
             Some(Err(std::sync::mpsc::TryRecvError::Disconnected)) => {
-                if self.status.starts_with("Live ·") {
+                if self.live_status.take().is_some_and(|status| status.is_live()) {
                     self.status = "Live stopped · Press r to reconnect".into();
                 }
                 crate::background::retire(self.live.take());

@@ -253,6 +253,13 @@ fn ntfs_name(filesystem: &[u16]) -> bool {
     "NTFS\0".encode_utf16().eq(filesystem.iter().copied().take(5))
 }
 
+/// Whether the volume holding `path` is one the MFT reader accepts: local
+/// (fixed, removable or RAM disk) and NTFS. Scanning it raw also requires
+/// administrator rights and the scan root being the volume's mount point.
+pub fn raw_volume_eligible(path: &Path) -> bool {
+    mount_point(path).is_some_and(|mount| local_ntfs(&mount).is_some())
+}
+
 /// The serial number of a local NTFS volume.
 fn local_ntfs(mount: &[u16]) -> Option<u32> {
     // SAFETY: only terminated paths returned by GetVolumePathNameW reach here.

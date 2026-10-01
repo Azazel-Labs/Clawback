@@ -3,7 +3,7 @@ mod wire;
 use crate::platform::{Apartment, wide};
 use clawback_core::{
     ScanOptions,
-    scan::{MftProgress, MftScan, ScanResult, lock},
+    scan::{MftPhase, MftProgress, MftScan, ScanResult, lock},
 };
 use std::{
     ffi::{OsStr, OsString},
@@ -25,8 +25,7 @@ use std::{
 use windows_sys::Win32::{
     Foundation::{ERROR_CANCELLED, ERROR_PIPE_CONNECTED, ERROR_PIPE_LISTENING, INVALID_HANDLE_VALUE, WAIT_OBJECT_0},
     Storage::FileSystem::{
-        FILE_FLAG_FIRST_PIPE_INSTANCE, GetDriveTypeW, PIPE_ACCESS_DUPLEX, SECURITY_IDENTIFICATION,
-        SECURITY_SQOS_PRESENT,
+        FILE_FLAG_FIRST_PIPE_INSTANCE, PIPE_ACCESS_DUPLEX, SECURITY_IDENTIFICATION, SECURITY_SQOS_PRESENT,
     },
     System::{
         Pipes::{
@@ -35,7 +34,6 @@ use windows_sys::Win32::{
             SetNamedPipeHandleState,
         },
         Threading::{GetExitCodeProcess, GetProcessId, WaitForSingleObject},
-        WindowsProgramming::{DRIVE_FIXED, DRIVE_REMOVABLE},
     },
     UI::{
         Shell::{SEE_MASK_FLAG_NO_UI, SEE_MASK_NOASYNC, SEE_MASK_NOCLOSEPROCESS, SHELLEXECUTEINFOW, ShellExecuteExW},
@@ -99,7 +97,7 @@ impl Control {
         self.state().progress = progress;
     }
     fn transferring(&self) {
-        self.state().progress.phase = wire::TRANSFERRING;
+        self.state().progress.phase = MftPhase::Transferring;
     }
     pub fn failed(&self, error: &io::Error) {
         self.set(if error.raw_os_error() == Some(ERROR_CANCELLED as i32) {
@@ -149,17 +147,10 @@ impl Drop for Attempt {
     }
 }
 
-/// Only offer Turbo after disk discovery identifies a whole NTFS drive.
-/// The elevated core independently checks the actual volume (including remote drives).
+/// Only offer Turbo after disk discovery identifies a whole drive the MFT
+/// reader accepts. The elevated core checks the actual volume again.
 pub fn eligible(disk: Option<&crate::platform::DiskInfo>, is_mount: bool) -> bool {
-    is_mount
-        && disk.is_some_and(|d| {
-            d.fs.eq_ignore_ascii_case("NTFS") && {
-                let path = wide(d.mount.as_os_str());
-                // SAFETY: a terminated path, no output pointers.
-                matches!(unsafe { GetDriveTypeW(path.as_ptr()) }, DRIVE_FIXED | DRIVE_REMOVABLE)
-            }
-        })
+    is_mount && disk.is_some_and(|d| clawback_core::raw_volume_eligible(&d.mount))
 }
 
 fn stopped() -> io::Error {
@@ -370,7 +361,7 @@ fn launch(
         match wire::read_tag(&mut input)? {
             wire::Tag::Progress => {
                 let progress = wire::read_progress(&mut input)?;
-                crate::perf::counter("turbo.phase", progress.phase as f64);
+                crate::perf::counter("turbo.phase", f64::from(progress.phase as u8));
                 crate::perf::counter("turbo.mft_bytes_read", progress.read as f64);
                 crate::perf::counter("turbo.records", progress.records as f64);
                 crate::perf::counter("turbo.files_assembled", progress.files as f64);
@@ -458,7 +449,7 @@ fn worker(parent: u32, name: &str) -> io::Result<()> {
         match rx.recv_timeout(Duration::from_millis(250)) {
             Ok(Ok(result)) => {
                 let progress = MftProgress {
-                    phase: wire::TRANSFERRING,
+                    phase: MftPhase::Transferring,
                     files: result.files,
                     dirs: result.dirs,
                     bytes: result.bytes,
@@ -568,7 +559,7 @@ fn probe(args: &[OsString]) -> io::Result<()> {
     match result {
         Ok(result) if mode != "decline" => {
             let progress = control.progress().ok_or_else(wire::invalid)?;
-            if progress.phase != wire::TRANSFERRING
+            if progress.phase != MftPhase::Transferring
                 || (progress.files, progress.dirs, progress.bytes) != (result.files, result.dirs, result.bytes)
             {
                 return Err(io::Error::other("Turbo telemetry did not round-trip"));

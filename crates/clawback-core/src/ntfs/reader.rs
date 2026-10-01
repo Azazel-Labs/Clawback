@@ -5,7 +5,7 @@ use super::{
     parse_with_reparse, runs, u16_at, u32_at, u64_at,
 };
 use crate::profiling::Phase;
-use crate::scan::{Shared, lock};
+use crate::scan::{MftPhase, Shared, lock};
 use crate::tree::{Kind, NewEntry, NodeId, ROOT, Tree, flags};
 use crate::windows;
 use std::collections::{HashMap, HashSet};
@@ -247,7 +247,7 @@ pub(crate) fn scan(shared: &Shared) -> io::Result<bool> {
 
 fn ingest(shared: &Shared, serial: u64, volume: &mut Volume, mapping: &[Run]) -> io::Result<()> {
     let (mut records, extensions) = read_records(shared, volume, mapping)?;
-    lock(&shared.mft_progress).phase = 1;
+    lock(&shared.mft_progress).phase = MftPhase::Resolving;
     merge_extensions(shared, &mut records, extensions)?;
     let tree = build_tree(shared, serial, records).map_err(|e| context(&e, "Assembling the MFT directory tree"))?;
     publish(shared, tree)
@@ -358,7 +358,7 @@ fn build_tree(shared: &Shared, serial: u64, mut records: HashMap<u64, Record>) -
         assemble(shared, serial, &records, root, &mut children, &mut tree)?;
     }
     let _phase = shared.profile.timer(Phase::Sort);
-    lock(&shared.mft_progress).phase = 3;
+    lock(&shared.mft_progress).phase = MftPhase::Sorting;
     tree.sort_all();
     Ok(tree)
 }
@@ -425,7 +425,7 @@ fn assemble(
     let mut visited_dirs = HashSet::from([root]);
     let mut counted = HashSet::new();
     let mut total_bytes = 0u64;
-    lock(&shared.mft_progress).phase = 2;
+    lock(&shared.mft_progress).phase = MftPhase::Assembling;
     while let Some((reference, node)) = pending.pop() {
         shared.progress.checkpoint()?;
         let Some(entries) = children.remove(&reference) else { continue };
@@ -594,7 +594,7 @@ mod tests {
         assert_eq!(tree.root().size, 8192);
         assert_eq!(tree.root().files, 3);
         let telemetry = *lock(&shared.mft_progress);
-        assert_eq!(telemetry.phase, 3);
+        assert_eq!(telemetry.phase, MftPhase::Sorting);
         assert_eq!(telemetry.read, telemetry.total);
         assert_eq!((telemetry.files, telemetry.dirs, telemetry.bytes), (3, 2, 8192));
         assert_eq!(tree.dir_count(ROOT), 2);
