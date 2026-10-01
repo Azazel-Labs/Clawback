@@ -1,6 +1,6 @@
 //! Incremental metadata reconciliation. All calls run on a background worker.
 use crate::hardlinks::LinkIndex;
-use crate::scan::{cluster_size, mtime_secs};
+use crate::scan::{FileAccounting, mtime_secs};
 use crate::tree::{NewEntry, flags};
 use crate::{Kind, NodeId, ROOT, Scan, ScanOptions, Tree};
 use std::{
@@ -13,16 +13,22 @@ use std::{
 
 pub struct Refresh {
     options: ScanOptions,
-    #[cfg_attr(unix, allow(dead_code))]
-    cluster: u64,
+    accounting: FileAccounting,
     links: Option<LinkIndex>,
     pub dirs: u64,
 }
 
 impl Refresh {
     pub fn new(tree: &Tree, options: ScanOptions) -> Self {
-        let links = (cfg!(unix) && options.dedupe_hardlinks).then(|| LinkIndex::new(tree));
-        Self { cluster: cluster_size(tree.root_path()), dirs: tree.dir_count(ROOT), options, links }
+        let links = options.dedupe_hardlinks.then(|| LinkIndex::new(tree));
+        let accounting = FileAccounting::new(tree.root_path());
+        #[cfg(windows)]
+        let accounting = {
+            let mut accounting = accounting;
+            accounting.exact = tree.root().file_id.is_some();
+            accounting
+        };
+        Self { accounting, dirs: tree.dir_count(ROOT), options, links }
     }
 
     pub fn path(&mut self, tree: &mut Tree, path: &Path, stop: &AtomicBool) -> io::Result<bool> {
@@ -158,7 +164,11 @@ impl Refresh {
             // Keep raw allocated sizes while scanning the new subtree; the
             // document-wide inode index then deduplicates against existing files.
             options.dedupe_hardlinks = false;
-            let scan = Scan::start(path, options, None)?;
+            #[cfg(windows)]
+            let exact = self.accounting.exact;
+            #[cfg(not(windows))]
+            let exact = false;
+            let scan = Scan::start_with_accounting(path, options, None, exact)?;
             while !scan.is_finished() {
                 if stop.load(Ordering::Relaxed) {
                     scan.cancel();
@@ -211,27 +221,15 @@ impl Refresh {
             }
             return Ok(true);
         }
-        let size = if self.options.apparent_size {
-            md.len()
-        } else {
-            #[cfg(unix)]
-            {
-                use std::os::unix::fs::MetadataExt;
-                md.blocks() * 512
-            }
-            #[cfg(not(unix))]
-            {
-                md.len().div_ceil(self.cluster.max(1)) * self.cluster.max(1)
-            }
-        };
+        let (size, len, file_id) = self.accounting.measure(path, &md, self.options.apparent_size)?;
         let entry = NewEntry {
             name: path.file_name().unwrap_or_default().into(),
             kind,
             size,
-            len: md.len(),
+            len,
             mtime: mtime_secs(&md),
             flags: 0,
-            file_id: crate::scan::file_id(&md),
+            file_id,
         };
         if let Some(links) = &mut self.links {
             if let Some(id) = old {
@@ -293,16 +291,22 @@ mod tests {
         }
     }
 
-    #[cfg(unix)]
+    #[cfg(any(unix, windows))]
     #[test]
-    fn unix_hardlinks_remain_incremental_across_edits_moves_and_subtree_deletes() {
+    fn hardlinks_remain_incremental_across_edits_moves_and_subtree_deletes() {
         let dir = Temp::new();
         let root = &dir.0;
         fs::create_dir(root.join("sub")).unwrap();
         fs::write(root.join("a"), [1; 100]).unwrap();
         fs::hard_link(root.join("a"), root.join("sub/b")).unwrap();
         let options = ScanOptions { apparent_size: true, threads: 1, ..ScanOptions::default() };
-        let mut tree = crate::scan::scan(root, options.clone()).unwrap().tree;
+        let mut tree = Scan::start_with_accounting(root, options.clone(), None, true).unwrap().wait().tree;
+        // Model an MFT document: its root has a volume/file identity. Ordinary
+        // Windows directory documents intentionally do not deduplicate links.
+        #[cfg(windows)]
+        {
+            tree.node_mut(ROOT).file_id = Some((0, 5));
+        }
         let mut refresh = Refresh::new(&tree, options.clone());
         assert!(refresh.links.is_some());
         let stop = AtomicBool::new(false);

@@ -31,10 +31,10 @@ pub struct ScanOptions {
     /// (mount points, other volumes). Unix only; Windows never follows
     /// mounted-folder junctions anyway.
     pub one_filesystem: bool,
-    /// Report file lengths instead of space actually allocated on disk.
-    /// (Allocated size is only available on Unix; Windows always uses length.)
+    /// Report file lengths instead of allocation (estimated by cluster rounding
+    /// for Windows directory traversal).
     pub apparent_size: bool,
-    /// Count hard-linked files only once. Unix only.
+    /// Count hard-linked files only once when the backend supplies identities.
     pub dedupe_hardlinks: bool,
     /// Skip pseudo filesystems such as `/proc`, `/sys` and `/dev`.
     pub skip_virtual: bool,
@@ -106,6 +106,9 @@ pub struct Progress {
     pub workers: AtomicU64,
     pub cancel: AtomicBool,
     pub done: AtomicBool,
+    paused: AtomicBool,
+    pause_lock: Mutex<()>,
+    resume: Condvar,
     current: Mutex<PathBuf>,
 }
 
@@ -120,6 +123,35 @@ pub struct ProgressSnapshot {
 }
 
 impl Progress {
+    /// Pause cooperatively between filesystem operations, preserving all work.
+    pub fn set_paused(&self, paused: bool) {
+        let _guard = lock(&self.pause_lock);
+        self.paused.store(paused, Ordering::Relaxed);
+        if !paused {
+            self.resume.notify_all();
+        }
+    }
+
+    pub fn is_paused(&self) -> bool {
+        self.paused.load(Ordering::Relaxed)
+    }
+
+    /// Wait without holding tree or queue locks. Cancellation always wins.
+    pub(crate) fn wait_if_paused(&self) {
+        if !self.is_paused() {
+            return;
+        }
+        let mut guard = lock(&self.pause_lock);
+        while self.is_paused() && !self.cancel.load(Ordering::Relaxed) {
+            // Also support callers that directly set the public cancel flag.
+            guard = self
+                .resume
+                .wait_timeout(guard, Duration::from_millis(100))
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .0;
+        }
+    }
+
     pub fn snapshot(&self) -> ProgressSnapshot {
         ProgressSnapshot {
             files: self.files.load(Ordering::Relaxed),
@@ -135,16 +167,61 @@ impl Progress {
     }
 }
 
+/// Provisional MFT telemetry, separate from the validated tree and scan totals.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct MftProgress {
+    /// 0 reading, 1 resolving names, 2 assembling, 3 sorting, 4 transferring.
+    pub phase: u64,
+    pub read: u64,
+    pub total: u64,
+    pub records: u64,
+    pub files: u64,
+    pub dirs: u64,
+    pub bytes: u64,
+}
+
 /// State shared between the scan threads and whoever is watching.
 pub struct Shared {
+    #[cfg(windows)]
+    exact_updates: bool,
+    #[cfg(feature = "profiling")]
+    pub(crate) profile: crate::profiling::Metrics,
     pub root: PathBuf,
     pub options: ScanOptions,
     pub started: Instant,
     /// The tree being built. Lock briefly to draw a live view.
     pub tree: Mutex<Tree>,
     pub progress: Progress,
+    pub mft_progress: Mutex<MftProgress>,
     pub skipped: Mutex<Vec<Skipped>>,
     elapsed: Mutex<Option<Duration>>,
+    pub(crate) backend: Mutex<ScanBackend>,
+}
+
+impl Shared {
+    pub(crate) fn new(root: PathBuf, options: ScanOptions) -> Self {
+        Self {
+            #[cfg(windows)]
+            exact_updates: false,
+            #[cfg(feature = "profiling")]
+            profile: crate::profiling::Metrics::default(),
+            tree: Mutex::new(Tree::new(&root)),
+            root,
+            options,
+            started: Instant::now(),
+            progress: Progress::default(),
+            mft_progress: Mutex::default(),
+            skipped: Mutex::new(Vec::new()),
+            elapsed: Mutex::new(None),
+            backend: Mutex::new(ScanBackend::Directory),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ScanBackend {
+    Directory,
+    NtfsMft,
 }
 
 pub type Notify = Arc<dyn Fn() + Send + Sync>;
@@ -157,6 +234,7 @@ pub struct Scan {
 
 #[derive(Debug)]
 pub struct ScanResult {
+    pub backend: ScanBackend,
     pub root: PathBuf,
     pub tree: Tree,
     pub skipped: Vec<Skipped>,
@@ -170,24 +248,80 @@ pub struct ScanResult {
 
 const MAX_SKIPPED_RECORDED: usize = 100_000;
 
+/// Read-only, strict MFT scan for an elevated Windows helper. Never falls back
+/// to directory traversal. The shared progress supports cooperative controls.
+#[cfg(windows)]
+pub struct MftScan {
+    shared: Arc<Shared>,
+}
+
+#[cfg(windows)]
+impl MftScan {
+    pub fn new(root: &Path, options: ScanOptions) -> io::Result<Self> {
+        Ok(Self { shared: Arc::new(Shared::new(std::path::absolute(root)?, options)) })
+    }
+
+    pub fn shared(&self) -> &Arc<Shared> {
+        &self.shared
+    }
+
+    pub fn run(self) -> io::Result<ScanResult> {
+        let s = &self.shared;
+        if s.progress.cancel.load(Ordering::Relaxed) {
+            return Err(io::Error::new(io::ErrorKind::Interrupted, "Turbo cancelled"));
+        }
+        if !crate::ntfs::scan(s)? {
+            return Err(io::Error::new(io::ErrorKind::Unsupported, "Turbo requires a whole local NTFS volume"));
+        }
+        if s.progress.cancel.load(Ordering::Relaxed) {
+            return Err(io::Error::new(io::ErrorKind::Interrupted, "Turbo cancelled"));
+        }
+        let progress = s.progress.snapshot();
+        Ok(ScanResult {
+            backend: ScanBackend::NtfsMft,
+            root: s.root.clone(),
+            tree: std::mem::replace(&mut *lock(&s.tree), Tree::placeholder()),
+            skipped: Vec::new(),
+            cancelled: false,
+            elapsed: s.started.elapsed(),
+            files: progress.files,
+            dirs: progress.dirs,
+            bytes: progress.bytes,
+            denied: 0,
+        })
+    }
+}
+
 impl Scan {
     /// Start scanning `root` on background threads. `notify` is called once
     /// when the scan finishes (e.g. to wake a GUI event loop).
     pub fn start(root: impl AsRef<Path>, options: ScanOptions, notify: Option<Notify>) -> io::Result<Scan> {
+        Self::start_with_accounting(root, options, notify, false)
+    }
+
+    /// Exact per-file queries are reserved for newly added subtrees in an
+    /// existing MFT document, never ordinary directory scans.
+    pub(crate) fn start_with_accounting(
+        root: impl AsRef<Path>,
+        options: ScanOptions,
+        notify: Option<Notify>,
+        exact: bool,
+    ) -> io::Result<Scan> {
         let root = std::path::absolute(root.as_ref())?;
         let md = fs::metadata(&root)?;
         if !md.is_dir() {
             return Err(io::Error::new(io::ErrorKind::InvalidInput, format!("{} is not a folder", root.display())));
         }
-        let shared = Arc::new(Shared {
-            tree: Mutex::new(Tree::new(&root)),
-            root: root.clone(),
-            options,
-            started: Instant::now(),
-            progress: Progress::default(),
-            skipped: Mutex::new(Vec::new()),
-            elapsed: Mutex::new(None),
-        });
+        let shared = Shared::new(root, options);
+        #[cfg(windows)]
+        let shared = {
+            let mut shared = shared;
+            shared.exact_updates = exact;
+            shared
+        };
+        #[cfg(not(windows))]
+        let _ = exact;
+        let shared = Arc::new(shared);
         let ctx_shared = shared.clone();
         let thread = std::thread::Builder::new().name("clawback-scan".into()).spawn(move || {
             run(&ctx_shared, &md);
@@ -214,6 +348,11 @@ impl Scan {
 
     pub fn cancel(&self) {
         self.shared.progress.cancel.store(true, Ordering::Relaxed);
+        self.shared.progress.set_paused(false);
+    }
+
+    pub fn set_paused(&self, paused: bool) {
+        self.shared.progress.set_paused(paused);
     }
 
     pub fn is_cancelled(&self) -> bool {
@@ -229,6 +368,7 @@ impl Scan {
         let snap = s.progress.snapshot();
         let elapsed = lock(&s.elapsed).unwrap_or_else(|| s.started.elapsed());
         ScanResult {
+            backend: *lock(&s.backend),
             root: s.root.clone(),
             tree: std::mem::replace(&mut *lock(&s.tree), Tree::placeholder()),
             skipped: std::mem::take(&mut *lock(&s.skipped)),
@@ -279,13 +419,38 @@ struct Ctx<'a> {
     #[cfg_attr(not(unix), allow(dead_code))]
     allowed_devs: Vec<u64>,
     excludes: Vec<PathBuf>,
-    #[cfg_attr(not(unix), allow(dead_code))]
     hardlinks: Mutex<HashSet<(u64, u64)>>,
-    #[cfg_attr(unix, allow(dead_code))]
-    cluster: u64,
+    #[cfg(not(target_os = "macos"))]
+    accounting: FileAccounting,
 }
 
-fn run(shared: &Shared, root_md: &fs::Metadata) {
+pub(crate) fn run(shared: &Shared, root_md: &fs::Metadata) {
+    shared.progress.wait_if_paused();
+    if shared.progress.cancel.load(Ordering::Relaxed) {
+        return;
+    }
+    lock(&shared.tree).node_mut(ROOT).mtime = mtime_secs(root_md);
+    #[cfg(windows)]
+    {
+        let attempt = crate::ntfs::scan(shared);
+        #[cfg(feature = "profiling")]
+        if let Err(error) = &attempt {
+            *lock(&shared.profile.fallback) = Some(error.to_string());
+        }
+        if attempt.unwrap_or(false) {
+            *lock(&shared.backend) = ScanBackend::NtfsMft;
+            return;
+        }
+        // MFT ingestion publishes only after validation. A failed attempt has
+        // no partial tree to merge or double count; cancellation never retries.
+        if shared.progress.cancel.load(Ordering::Relaxed) {
+            return;
+        }
+    }
+    run_directory(shared, root_md);
+}
+
+pub(crate) fn run_directory(shared: &Shared, root_md: &fs::Metadata) {
     lock(&shared.tree).node_mut(ROOT).mtime = mtime_secs(root_md);
     let maximum = shared.options.thread_count();
     let mut controller = (shared.options.threads == 0).then(|| Controller::new(shared.options.storage, maximum));
@@ -306,7 +471,13 @@ fn run(shared: &Shared, root_md: &fs::Metadata) {
         allowed_devs: allowed_devices(&shared.root, root_md),
         excludes: if shared.options.skip_virtual { virtual_paths(&shared.root) } else { Vec::new() },
         hardlinks: Mutex::new(HashSet::new()),
-        cluster: cluster_size(&shared.root),
+        #[cfg(not(target_os = "macos"))]
+        accounting: {
+            let accounting = FileAccounting::new(&shared.root);
+            #[cfg(windows)]
+            let accounting = FileAccounting { exact: shared.exact_updates, ..accounting };
+            accounting
+        },
     };
     std::thread::scope(|s| {
         let mut spawned = 0;
@@ -356,6 +527,12 @@ fn run(shared: &Shared, root_md: &fs::Metadata) {
             let now = Instant::now();
             let next_entries = ctx.measured_entries.load(Ordering::Relaxed);
             let next_work = ctx.work_nanos.load(Ordering::Relaxed);
+            if shared.progress.is_paused() {
+                last = now;
+                entries = next_entries;
+                work = next_work;
+                continue;
+            }
             if let Some(controller) = &mut controller {
                 let limit = controller.observe(Sample {
                     entries: next_entries.saturating_sub(entries),
@@ -389,6 +566,8 @@ fn run(shared: &Shared, root_md: &fs::Metadata) {
             work = next_work;
         }
     });
+    #[cfg(feature = "profiling")]
+    let _phase = shared.profile.timer(crate::profiling::Phase::Sort);
     lock(&shared.tree).sort_all();
 }
 
@@ -415,6 +594,7 @@ fn worker(ctx: &Ctx<'_>) {
                 q = ctx.wake.wait(q).unwrap_or_else(std::sync::PoisonError::into_inner);
             }
         };
+        ctx.shared.progress.wait_if_paused();
         let cancelled = ctx.shared.progress.cancel.load(Ordering::Relaxed);
         let mut new_jobs = if cancelled { Vec::new() } else { process(ctx, &job) };
         let mut q = lock(&ctx.queue);
@@ -448,7 +628,10 @@ fn process(ctx: &Ctx<'_>, job: &Job) -> Vec<Job> {
         cur.clone_from(&job.path);
     }
     let opened = Instant::now();
+    #[cfg(not(target_os = "macos"))]
     let rd = fs::read_dir(&job.path);
+    #[cfg(target_os = "macos")]
+    let rd = crate::macos::read_dir(&job.path, &shared.progress.cancel);
     ctx.record_work(1, opened.elapsed());
     let rd = match rd {
         Ok(rd) => rd,
@@ -471,6 +654,12 @@ fn process(ctx: &Ctx<'_>, job: &Job) -> Vec<Job> {
     let mut batch_started = Instant::now();
 
     for ent in rd {
+        if shared.progress.is_paused() {
+            let paused_at = Instant::now();
+            shared.progress.wait_if_paused();
+            // Paused time is not filesystem latency for adaptive tuning.
+            batch_started += paused_at.elapsed();
+        }
         if shared.progress.cancel.load(Ordering::Relaxed) {
             break;
         }
@@ -486,7 +675,10 @@ fn process(ctx: &Ctx<'_>, job: &Job) -> Vec<Job> {
         // DirEntry::metadata never follows symlinks. On Windows it is free
         // (it comes from the directory listing); on Unix it is one lstat.
         let md = ent.metadata().ok();
+        #[cfg(not(target_os = "macos"))]
         let mtime = md.as_ref().map_or(i64::MIN, mtime_secs);
+        #[cfg(target_os = "macos")]
+        let mtime = md.as_ref().map_or(i64::MIN, crate::macos::Metadata::mtime);
         if ft.is_dir() {
             let path = ent.path();
             let mut f = 0;
@@ -505,11 +697,57 @@ fn process(ctx: &Ctx<'_>, job: &Job) -> Vec<Job> {
             }
             entries.push(NewEntry { name, kind: Kind::Dir, size: 0, len: 0, mtime, flags: f, file_id: None });
         } else {
-            let (size, len, f) = if let Some(md) = &md {
-                ctx.file_size(md)
+            let (size, len, f, identity) = if let Some(md) = &md {
+                #[cfg(windows)]
+                let metadata_path = ctx.accounting.exact.then(|| ent.path());
+                #[cfg(windows)]
+                let metadata_path = metadata_path.as_deref().unwrap_or_else(|| Path::new(""));
+                #[cfg(not(windows))]
+                let metadata_path = Path::new("");
+                #[cfg(not(target_os = "macos"))]
+                let measured = {
+                    #[cfg(feature = "profiling")]
+                    let _phase = shared.profile.timer(crate::profiling::Phase::Metadata);
+                    ctx.accounting.measure(metadata_path, md, shared.options.apparent_size)
+                };
+                #[cfg(target_os = "macos")]
+                let measured: io::Result<_> = {
+                    let _ = metadata_path;
+                    Ok((
+                        if shared.options.apparent_size { md.len() } else { md.allocated() },
+                        md.len(),
+                        Some((md.dev(), md.ino())),
+                    ))
+                };
+                match measured {
+                    Ok((size, len, identity)) => {
+                        #[cfg(unix)]
+                        let may_have_aliases = {
+                            #[cfg(not(target_os = "macos"))]
+                            use std::os::unix::fs::MetadataExt;
+                            md.nlink() > 1
+                        };
+                        #[cfg(not(unix))]
+                        let may_have_aliases = true;
+                        let duplicate = shared.options.dedupe_hardlinks
+                            && may_have_aliases
+                            && identity.is_some_and(|key| !lock(&ctx.hardlinks).insert(key));
+                        (
+                            if duplicate { 0 } else { size },
+                            len,
+                            if duplicate { flags::HARDLINK_DUP } else { 0 },
+                            identity,
+                        )
+                    }
+                    Err(error) => {
+                        ctx.skip(&ent.path(), &error);
+                        partial = true;
+                        (if shared.options.apparent_size { md.len() } else { 0 }, md.len(), flags::PARTIAL, None)
+                    }
+                }
             } else {
                 partial = true;
-                (0, 0, 0)
+                (0, 0, flags::PARTIAL, None)
             };
             let kind = if ft.is_symlink() {
                 Kind::Symlink
@@ -520,7 +758,7 @@ fn process(ctx: &Ctx<'_>, job: &Job) -> Vec<Job> {
             };
             files += 1;
             bytes += size;
-            entries.push(NewEntry { name, kind, size, len, mtime, flags: f, file_id: md.as_ref().and_then(file_id) });
+            entries.push(NewEntry { name, kind, size, len, mtime, flags: f, file_id: identity });
         }
         if entries.len() >= 256
             || (entries.len().is_multiple_of(16) && batch_started.elapsed() >= Duration::from_millis(100))
@@ -578,7 +816,7 @@ impl Ctx<'_> {
         }
     }
 
-    #[cfg(unix)]
+    #[cfg(all(unix, not(target_os = "macos")))]
     fn same_filesystem(&self, md: Option<&fs::Metadata>) -> bool {
         use std::os::unix::fs::MetadataExt;
         if !self.shared.options.one_filesystem {
@@ -588,46 +826,82 @@ impl Ctx<'_> {
         md.is_none_or(|md| self.allowed_devs.contains(&md.dev()))
     }
 
+    #[cfg(target_os = "macos")]
+    fn same_filesystem(&self, md: Option<&crate::macos::Metadata>) -> bool {
+        !self.shared.options.one_filesystem || md.is_none_or(|md| self.allowed_devs.contains(&md.dev()))
+    }
+
     #[cfg(not(unix))]
     #[allow(clippy::unused_self)] // Same method interface as the Unix device check.
     fn same_filesystem(&self, _md: Option<&fs::Metadata>) -> bool {
         true
     }
+}
 
-    /// (layout size, actual length, flags) for a non-directory entry.
-    #[cfg(unix)]
-    fn file_size(&self, md: &fs::Metadata) -> (u64, u64, u8) {
-        use std::os::unix::fs::MetadataExt;
-        let opts = &self.shared.options;
-        if opts.dedupe_hardlinks && md.nlink() > 1 && !lock(&self.hardlinks).insert((md.dev(), md.ino())) {
-            return (0, md.len(), flags::HARDLINK_DUP);
+/// Volume geometry is resolved once per scan, not once per file.
+pub(crate) struct FileAccounting {
+    #[cfg(windows)]
+    ntfs_cluster: Option<u64>,
+    #[cfg(windows)]
+    cluster: u64,
+    #[cfg(windows)]
+    pub(crate) exact: bool,
+}
+
+impl FileAccounting {
+    pub(crate) fn new(root: &Path) -> Self {
+        #[cfg(not(windows))]
+        let _ = root;
+        Self {
+            #[cfg(windows)]
+            ntfs_cluster: crate::windows::ntfs_cluster(root),
+            #[cfg(windows)]
+            cluster: crate::windows::cluster_size(root),
+            #[cfg(windows)]
+            exact: false,
         }
-        let size = if opts.apparent_size { md.len() } else { md.blocks() * 512 };
-        (size, md.len(), 0)
     }
 
-    /// (layout size, actual length, flags) for a non-directory entry.
-    /// Like SpaceMonger, on-disk size is the length rounded up to whole clusters.
-    #[cfg(not(unix))]
-    fn file_size(&self, md: &fs::Metadata) -> (u64, u64, u8) {
-        let len = md.len();
-        if self.shared.options.apparent_size || self.cluster <= 1 {
-            return (len, len, 0);
+    /// Allocated/estimated (or apparent) bytes, length, and optional identity.
+    #[allow(clippy::unnecessary_wraps)]
+    #[cfg_attr(not(windows), allow(clippy::unused_self))]
+    pub(crate) fn measure(
+        &self,
+        path: &Path,
+        md: &fs::Metadata,
+        apparent: bool,
+    ) -> io::Result<(u64, u64, Option<crate::tree::FileId>)> {
+        #[cfg(windows)]
+        {
+            if self.exact {
+                // Only incremental edits to a tree built from the MFT need
+                // exact identities/allocation to preserve that tree's totals.
+                let info = crate::windows::metadata(path, apparent, self.ntfs_cluster)?;
+                return Ok((info.size, info.len, Some(info.id)));
+            }
+            let len = md.len();
+            let size = if apparent { len } else { len.div_ceil(self.cluster).saturating_mul(self.cluster) };
+            Ok((size, len, None))
         }
-        (len.div_ceil(self.cluster) * self.cluster, len, 0)
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::MetadataExt;
+            let _ = path;
+            Ok((if apparent { md.len() } else { md.blocks() * 512 }, md.len(), file_id(md)))
+        }
+        #[cfg(not(any(windows, unix)))]
+        {
+            let _ = (path, apparent);
+            Ok((md.len(), md.len(), None))
+        }
     }
 }
 
 #[cfg(unix)]
-#[allow(clippy::unnecessary_wraps)] // The Windows implementation has no inode identity.
+#[allow(clippy::unnecessary_wraps)] // Matches the optional identity in the shared tree.
 pub(crate) fn file_id(md: &fs::Metadata) -> Option<crate::tree::FileId> {
     use std::os::unix::fs::MetadataExt;
     Some((md.dev(), md.ino()))
-}
-
-#[cfg(not(unix))]
-pub(crate) fn file_id(_md: &fs::Metadata) -> Option<crate::tree::FileId> {
-    None
 }
 
 #[cfg(unix)]
@@ -670,34 +944,6 @@ pub(crate) fn allowed_devices(root: &Path, root_md: &fs::Metadata) -> Vec<u64> {
 #[cfg(not(unix))]
 pub(crate) fn allowed_devices(_root: &Path, _root_md: &fs::Metadata) -> Vec<u64> {
     Vec::new()
-}
-
-/// Allocation unit of the volume holding `path` (Windows only; Unix reports
-/// allocated blocks directly).
-#[cfg(windows)]
-pub(crate) fn cluster_size(path: &Path) -> u64 {
-    use std::os::windows::ffi::OsStrExt;
-    #[link(name = "kernel32")]
-    unsafe extern "system" {
-        fn GetVolumePathNameW(file: *const u16, volume: *mut u16, len: u32) -> i32;
-        fn GetDiskFreeSpaceW(root: *const u16, spc: *mut u32, bps: *mut u32, free: *mut u32, total: *mut u32) -> i32;
-    }
-    let wide: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
-    let mut vol = [0u16; 1024];
-    let (mut spc, mut bps, mut free, mut total) = (0u32, 0u32, 0u32, 0u32);
-    // SAFETY: both buffers are NUL-terminated and sized as declared.
-    let found = unsafe { GetVolumePathNameW(wide.as_ptr(), vol.as_mut_ptr(), vol.len() as u32) } != 0;
-    // SAFETY: a successful lookup populated vol with a NUL-terminated path;
-    // each output pointer refers to a live, writable u32.
-    let ok = found
-        && unsafe { GetDiskFreeSpaceW(vol.as_ptr(), &raw mut spc, &raw mut bps, &raw mut free, &raw mut total) } != 0;
-    let c = u64::from(spc) * u64::from(bps);
-    if ok && c > 0 { c } else { 4096 }
-}
-
-#[cfg(not(windows))]
-pub(crate) fn cluster_size(_path: &Path) -> u64 {
-    1
 }
 
 /// Pseudo filesystems and double-mounted paths that should never be scanned.
@@ -757,6 +1003,52 @@ mod tests {
 
     fn apparent() -> ScanOptions {
         ScanOptions { apparent_size: true, ..Default::default() }
+    }
+
+    #[test]
+    fn paused_scan_resumes_without_losing_files() {
+        let d = TempDir::new("pause_resume");
+        for i in 0..32 {
+            write(&d.0.join(format!("dir{i}/file")), 100);
+        }
+        let shared = Arc::new(Shared::new(d.0.clone(), ScanOptions { threads: 4, ..apparent() }));
+        shared.progress.set_paused(true);
+        let worker_shared = shared.clone();
+        let (tx, rx) = std::sync::mpsc::channel();
+        let thread = std::thread::spawn(move || {
+            run(&worker_shared, &fs::metadata(&worker_shared.root).unwrap());
+            tx.send(()).unwrap();
+        });
+        let blocked =
+            matches!(rx.recv_timeout(Duration::from_millis(100)), Err(std::sync::mpsc::RecvTimeoutError::Timeout));
+        let before = shared.progress.snapshot();
+        // Resume before asserting so a failed assertion cannot leave parked workers.
+        shared.progress.set_paused(false);
+        rx.recv_timeout(Duration::from_secs(10)).unwrap();
+        thread.join().unwrap();
+        assert!(blocked);
+        assert_eq!(before.files, 0);
+        assert_eq!(shared.progress.snapshot().files, 32);
+        assert_eq!(lock(&shared.tree).root().size, 3200);
+        assert!(!shared.progress.cancel.load(Ordering::Relaxed));
+    }
+
+    #[test]
+    fn cancellation_releases_paused_scan() {
+        let d = TempDir::new("pause_cancel");
+        write(&d.0.join("file"), 100);
+        let shared = Arc::new(Shared::new(d.0.clone(), apparent()));
+        shared.progress.set_paused(true);
+        let worker_shared = shared.clone();
+        let (tx, rx) = std::sync::mpsc::channel();
+        let thread = std::thread::spawn(move || {
+            run(&worker_shared, &fs::metadata(&worker_shared.root).unwrap());
+            tx.send(()).unwrap();
+        });
+        shared.progress.cancel.store(true, Ordering::Relaxed);
+        rx.recv_timeout(Duration::from_secs(5)).unwrap();
+        thread.join().unwrap();
+        assert_eq!(shared.progress.snapshot().files, 0);
     }
 
     #[test]

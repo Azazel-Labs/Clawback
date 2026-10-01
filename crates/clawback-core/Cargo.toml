@@ -11,5 +11,12 @@ authors.workspace = true
 [dependencies]
 # Intentionally none: the core is pure std so it builds anywhere Rust does.
 
+[features]
+profiling = []
+
+[[example]]
+name = "scan-profile"
+required-features = ["profiling"]
+
 [lints]
 workspace = true

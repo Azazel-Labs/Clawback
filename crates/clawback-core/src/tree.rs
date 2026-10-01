@@ -75,7 +75,7 @@ impl std::ops::IndexMut<usize> for Nodes {
 pub type NodeId = u32;
 pub const NO_NODE: NodeId = u32::MAX;
 pub const ROOT: NodeId = 0;
-/// Filesystem device and inode; shared by every Unix hard link to a file.
+/// Filesystem volume/device and file identity; shared by hard links to a file.
 pub type FileId = (u64, u64);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
