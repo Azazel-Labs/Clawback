@@ -24,6 +24,8 @@ pub enum Phase {
 }
 
 /// How a Recycle Bin attempt ended without an error.
+// Only the Windows shell declines or refuses items; other platforms always finish.
+#[cfg_attr(not(windows), allow(dead_code))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Recycled {
     Done,
