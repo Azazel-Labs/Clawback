@@ -231,6 +231,10 @@ impl Read for Incoming {
                 self.pipe.write_all(&[if paused { b'P' } else { b'R' }])?;
                 self.sent_pause = paused;
             }
+            // Check for exit before peeking: the helper writes its last bytes and exits
+            // immediately, so checking after an empty peek can discard the end of the tree.
+            // SAFETY: owned process handle; zero timeout never blocks.
+            let exited = unsafe { WaitForSingleObject(self.process.as_raw_handle(), 0) } == WAIT_OBJECT_0;
             let mut available = 0;
             // SAFETY: live pipe, valid count pointer; no data is consumed here.
             if unsafe {
@@ -244,6 +248,12 @@ impl Read for Incoming {
                 )
             } == 0
             {
+                if exited {
+                    return Err(io::Error::new(
+                        io::ErrorKind::UnexpectedEof,
+                        "Turbo helper exited without a complete result",
+                    ));
+                }
                 return Err(io::Error::last_os_error());
             }
             if available != 0 {
@@ -251,8 +261,7 @@ impl Read for Incoming {
                 let length = data.len().min(available as usize);
                 return self.pipe.read(&mut data[..length]);
             }
-            // SAFETY: owned process handle; zero timeout never blocks.
-            if unsafe { WaitForSingleObject(self.process.as_raw_handle(), 0) } == WAIT_OBJECT_0 {
+            if exited {
                 return Err(io::Error::new(
                     io::ErrorKind::UnexpectedEof,
                     "Turbo helper exited without a complete result",
@@ -666,6 +675,32 @@ mod tests {
         let scan = MftScan::new(Path::new(env!("CARGO_MANIFEST_DIR")), ScanOptions::default()).expect("start");
         assert_eq!(scan.run().expect_err("not a volume").kind(), io::ErrorKind::Unsupported);
     }
+    #[test]
+    fn data_written_before_the_helper_exits_is_still_read() {
+        use std::os::windows::io::IntoRawHandle;
+        let name = pipe_name().expect("unique pipe");
+        let pipe = server(&name).expect("server");
+        let mut client = OpenOptions::new().read(true).write(true).open(&name).expect("client");
+        client.write_all(b"end").expect("write");
+        drop(client);
+        let mut helper = std::process::Command::new("cmd").args(["/c", "exit"]).spawn().expect("spawn");
+        helper.wait().expect("exit");
+        // SAFETY: the child's process handle, now owned by the reader.
+        let process = unsafe { OwnedHandle::from_raw_handle(helper.into_raw_handle()) };
+        let mut input = Incoming {
+            pipe,
+            process,
+            stop: Arc::new(AtomicBool::new(false)),
+            paused: Arc::new(AtomicBool::new(false)),
+            sent_pause: false,
+            last_data: Instant::now(),
+        };
+        let mut data = [0; 3];
+        input.read_exact(&mut data).expect("buffered data");
+        assert_eq!(&data, b"end");
+        assert_eq!(input.read_exact(&mut [0]).expect_err("drained").kind(), io::ErrorKind::UnexpectedEof);
+    }
+
     #[test]
     fn cancellation_escapes_read_exact_instead_of_retrying_forever() {
         use windows_sys::Win32::System::Threading::{OpenProcess, PROCESS_SYNCHRONIZE};
