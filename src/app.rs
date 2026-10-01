@@ -11,10 +11,11 @@ use crate::scanning::{Running, Update};
 use crate::theme;
 use crate::watching::LiveStatus;
 use crate::{background::retire, icon};
-use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree, format};
+use clawback_core::format::{self, dir_display, display_name, fraction};
+use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree};
 use eframe::egui::{self, Align, Align2, Id, Key, Layout, Modifiers, RichText, Ui, vec2};
 use std::collections::VecDeque;
-use std::path::{MAIN_SEPARATOR, Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::{Arc, mpsc};
 use std::time::{Duration, Instant};
 
@@ -901,18 +902,12 @@ impl ClawbackApp {
                     let response =
                         ui.add_sized(vec2(row_width, 28.0), egui::Button::selectable(selected, name).right_text(()));
                     let preview_x = response.rect.right() - preview_width - 8.0;
-                    for depth in 0..8 {
-                        let [r, g, b] =
-                            clawback_core::palette::display_color(scheme, depth, self.settings.mute_palette);
-                        let rect = egui::Rect::from_min_size(
-                            egui::pos2(
-                                preview_x + depth as f32 * (swatch_width + swatch_gap),
-                                response.rect.center().y - 8.0,
-                            ),
-                            vec2(swatch_width, 16.0),
-                        );
-                        ui.painter().rect_filled(rect, 2.0, egui::Color32::from_rgb(r, g, b));
-                    }
+                    let preview = egui::Rect::from_min_size(
+                        egui::pos2(preview_x, response.rect.center().y - 8.0),
+                        vec2(preview_width, 16.0),
+                    );
+                    let muted = self.settings.mute_palette;
+                    theme::paint_swatches(ui.painter(), preview, scheme, muted, swatch_gap, 2.0);
                     if response.clicked() {
                         self.settings.file_color = scheme;
                         self.settings.folder_color = scheme;
@@ -1064,61 +1059,45 @@ impl ClawbackApp {
         let drive = self.doc.as_ref().map(|d| d.tree.root_path().display().to_string()).unwrap_or_default();
         let details = tr!("delete-size-files", size = format::size(job.size), files = job.files);
         let mut answer = None;
-        let modal = egui::Modal::new(Id::new("clawback-confirm-purge"))
-            .backdrop_color(egui::Color32::from_black_alpha(170))
-            .frame(
-                egui::Frame::new()
-                    .fill(theme::SURFACE)
-                    .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
-                    .corner_radius(14)
-                    .inner_margin(22),
-            )
-            .show(ctx, |ui| {
-                ui.set_width((ctx.content_rect().width() - 64.0).clamp(280.0, 440.0));
-                ui.spacing_mut().item_spacing.y = 8.0;
-                ui.horizontal(|ui| {
-                    ui.label(RichText::new(egui_phosphor::regular::WARNING).size(26.0).color(theme::DANGER));
-                    ui.label(
-                        RichText::new(if empty_bin {
-                            tr!("empty-recycle-bin-title")
-                        } else {
-                            tr!("delete-permanently-title")
-                        })
-                        .size(20.0)
-                        .strong()
-                        .color(theme::TEXT),
-                    );
-                });
-                ui.add(
-                    egui::Label::new(if empty_bin {
-                        tr!("empty-recycle-bin-body", drive = drive)
+        let flat = theme::modal_frame().shadow(egui::Shadow::NONE);
+        let modal = theme::modal("clawback-confirm-purge").frame(flat).show(ctx, |ui| {
+            ui.set_width((ctx.content_rect().width() - 64.0).clamp(280.0, 440.0));
+            ui.spacing_mut().item_spacing.y = 8.0;
+            ui.horizontal(|ui| {
+                ui.label(RichText::new(egui_phosphor::regular::WARNING).size(26.0).color(theme::DANGER));
+                ui.label(
+                    RichText::new(if empty_bin {
+                        tr!("empty-recycle-bin-title")
                     } else {
-                        tr!("delete-too-big-for-recycle-bin", name = name)
+                        tr!("delete-permanently-title")
                     })
-                    .wrap(),
-                )
-                .on_hover_text(job.path.display().to_string());
-                ui.label(RichText::new(details).color(theme::MUTED));
-                ui.label(RichText::new(tr!("delete-cannot-be-undone")).strong().color(theme::DANGER));
-                ui.add_space(8.0);
-                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    let label =
-                        if empty_bin { tr!("empty-recycle-bin-button") } else { tr!("delete-permanently-button") };
-                    if ui
-                        .add(
-                            egui::Button::new(RichText::new(label).strong().color(theme::BG))
-                                .fill(theme::DANGER)
-                                .min_size(vec2(0.0, 34.0)),
-                        )
-                        .clicked()
-                    {
-                        answer = Some(true);
-                    }
-                    if ui.add(egui::Button::new(tr!("cancel")).min_size(vec2(88.0, 34.0))).clicked() {
-                        answer = Some(false);
-                    }
-                });
+                    .size(20.0)
+                    .strong()
+                    .color(theme::TEXT),
+                );
             });
+            ui.add(
+                egui::Label::new(if empty_bin {
+                    tr!("empty-recycle-bin-body", drive = drive)
+                } else {
+                    tr!("delete-too-big-for-recycle-bin", name = name)
+                })
+                .wrap(),
+            )
+            .on_hover_text(job.path.display().to_string());
+            ui.label(RichText::new(details).color(theme::MUTED));
+            ui.label(RichText::new(tr!("delete-cannot-be-undone")).strong().color(theme::DANGER));
+            ui.add_space(8.0);
+            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                let label = if empty_bin { tr!("empty-recycle-bin-button") } else { tr!("delete-permanently-button") };
+                if ui.add(theme::primary_button(label, theme::DANGER)).clicked() {
+                    answer = Some(true);
+                }
+                if ui.add(theme::secondary_button(tr!("cancel"))).clicked() {
+                    answer = Some(false);
+                }
+            });
+        });
         if modal.should_close() {
             answer = Some(false);
         }
@@ -1622,11 +1601,6 @@ fn previous_view(history: &mut Vec<PathBuf>, tree: &Tree, current: NodeId) -> Op
     None
 }
 
-/// `part` as a share of `whole`, capped at 1; nothing of nothing is 0.
-pub(crate) fn fraction(part: u64, whole: u64) -> f32 {
-    if whole == 0 { 0.0 } else { (part as f64 / whole as f64).min(1.0) as f32 }
-}
-
 /// Settings store the directory split in thousandths of the height below the toolbar.
 fn from_permille(permille: u32, whole: f32) -> f32 {
     whole * permille as f32 / 1000.0
@@ -1671,23 +1645,10 @@ fn menu_item(ui: &mut Ui, label: impl Into<egui::WidgetText>, enabled: bool, sho
     clicked
 }
 
-/// The last path component, or the whole path for a drive root.
-pub(crate) fn display_name(p: &Path) -> String {
-    p.file_name().map_or_else(|| p.display().to_string(), |n| n.to_string_lossy().into_owned())
-}
-
-/// A folder path with a trailing separator, as SpaceMonger titled folders.
-pub(crate) fn dir_display(p: &Path) -> String {
-    let mut s = p.display().to_string();
-    if !s.ends_with(MAIN_SEPARATOR) {
-        s.push(MAIN_SEPARATOR);
-    }
-    s
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::Path;
 
     #[test]
     fn menu_bar_switches_menus_on_hover_once_one_is_open() {
@@ -1750,7 +1711,7 @@ mod tests {
 
     impl DeleteFixture {
         fn new(name: &str, layout: &[(&str, bool)], is_mount: bool) -> Self {
-            use clawback_core::tree::{Kind, NewEntry};
+            use clawback_core::tree::NewEntry;
             let root = Path::new(env!("CARGO_MANIFEST_DIR"))
                 .join("target")
                 .join("delete-flow-tests")
@@ -1768,14 +1729,9 @@ mod tests {
                 let parent = path.parent().and_then(|p| tree.find_path(p)).expect("parent listed first");
                 tree.add_children(
                     parent,
-                    vec![NewEntry {
-                        name: path.file_name().unwrap().into(),
-                        kind: if *dir { Kind::Dir } else { Kind::File },
-                        size: if *dir { 0 } else { 8 },
-                        len: if *dir { 0 } else { 8 },
-                        mtime: 0,
-                        flags: 0,
-                        file_id: None,
+                    vec![{
+                        let name = path.file_name().unwrap();
+                        if *dir { NewEntry::dir(name) } else { NewEntry::file(name, 8) }
                     }],
                 );
             }
@@ -1959,23 +1915,9 @@ mod tests {
 
     #[test]
     fn back_follows_visited_views_and_skips_deleted_folders() {
-        use clawback_core::tree::{Kind, NewEntry};
+        use clawback_core::tree::NewEntry;
         let mut tree = Tree::new(Path::new("/scan"));
-        let mut add = |parent, name: &str| {
-            tree.add_children(
-                parent,
-                vec![NewEntry {
-                    name: name.into(),
-                    kind: Kind::Dir,
-                    size: 0,
-                    len: 0,
-                    mtime: 0,
-                    flags: 0,
-                    file_id: None,
-                }],
-            )
-            .start
-        };
+        let mut add = |parent, name: &str| tree.add_children(parent, vec![NewEntry::dir(name)]).start;
         let a = add(ROOT, "a");
         let deep = add(a, "deep");
         let b = add(ROOT, "b");
@@ -1984,10 +1926,5 @@ mod tests {
         assert_eq!(previous_view(&mut history, &tree, a), Some(deep));
         assert_eq!(previous_view(&mut history, &tree, deep), Some(ROOT));
         assert_eq!(previous_view(&mut history, &tree, ROOT), None);
-    }
-
-    #[test]
-    fn directory_display_has_trailing_separator() {
-        assert!(dir_display(Path::new("/a/b")).ends_with(MAIN_SEPARATOR));
     }
 }

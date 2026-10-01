@@ -1,13 +1,13 @@
 //! A virtualized directory navigator. Flattening and formatting run off-thread;
 //! the UI only draws the rows currently inside the scroll viewport.
 use crate::i18n::tr;
-use crate::{background::retire, theme};
+use crate::{
+    background::{Job, retire},
+    theme,
+};
 use clawback_core::{NodeId, ROOT, Tree, format, tree::flags};
 use eframe::egui::{self, Align2, Color32, FontId, Pos2, Rect, Sense, Ui, vec2};
-use std::{
-    collections::HashSet,
-    sync::{Arc, mpsc},
-};
+use std::{collections::HashSet, sync::Arc};
 
 const ROW_HEIGHT: f32 = 22.0;
 /// Right edges of the size and share columns, measured from the row's right.
@@ -56,7 +56,7 @@ pub struct DirectoryView {
     scanning: bool,
     displayed: Option<Key>,
     rows: Vec<Row>,
-    pending: Option<(Key, mpsc::Receiver<Rows>)>,
+    pending: Option<Job<Key, Rows>>,
     reveal: bool,
     scroll_to: Option<f32>,
 }
@@ -80,7 +80,7 @@ impl DirectoryView {
             self.revision += 1;
             self.displayed = None;
             retire(std::mem::take(&mut self.rows));
-            retire(self.pending.take());
+            self.pending = None;
         }
         self.scanning = scanning;
         if self.focused != Some(view) {
@@ -90,39 +90,28 @@ impl DirectoryView {
             self.reveal = true;
         }
         let key = Key { document, generation, revision: self.revision, scanning };
-        if let Some((pending_key, rx)) = &self.pending {
-            match rx.try_recv() {
-                Ok(result) => {
-                    let compatible = *pending_key == key || (scanning && Key { generation, ..*pending_key } == key);
-                    if compatible {
-                        retire(std::mem::replace(&mut self.rows, result.rows));
-                        self.displayed = Some(*pending_key);
-                        if self.reveal {
-                            self.scroll_to = result.focus.map(|index| index as f32 * ROW_HEIGHT);
-                            self.reveal = false;
-                        }
-                    } else {
-                        retire(result);
-                    }
-                    self.pending = None;
+        if let Some((pending_key, result)) = Job::poll(&mut self.pending) {
+            let compatible = pending_key == key || (scanning && Key { generation, ..pending_key } == key);
+            if compatible {
+                retire(std::mem::replace(&mut self.rows, result.rows));
+                self.displayed = Some(pending_key);
+                if self.reveal {
+                    self.scroll_to = result.focus.map(|index| index as f32 * ROW_HEIGHT);
+                    self.reveal = false;
                 }
-                Err(mpsc::TryRecvError::Disconnected) => self.pending = None,
-                Err(mpsc::TryRecvError::Empty) => {}
+            } else {
+                retire(result);
             }
         }
         if self.displayed != Some(key) && self.pending.is_none() {
             let tree = tree.clone();
             let expanded = self.expanded.clone();
-            let repaint = ui.ctx().clone();
-            let (tx, rx) = mpsc::channel();
-            std::thread::spawn(move || {
+            self.pending = Some(Job::spawn(key, ui.ctx(), move || {
                 let _span = crate::perf::span("worker.directories");
                 let rows = flatten(&tree, &expanded);
                 let focus = rows.iter().position(|r| r.node == view);
-                let _ = tx.send(Rows { rows, focus });
-                repaint.request_repaint();
-            });
-            self.pending = Some((key, rx));
+                Rows { rows, focus }
+            }));
         }
 
         ui.spacing_mut().item_spacing.y = 4.0;
@@ -248,26 +237,13 @@ fn flatten(tree: &Tree, expanded: &HashSet<NodeId>) -> Vec<Row> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use clawback_core::tree::{Kind, NewEntry};
+    use clawback_core::tree::NewEntry;
     use std::path::Path;
 
     #[test]
     fn large_directory_lists_only_render_visible_rows() {
         let mut tree = Tree::new(Path::new("/large"));
-        tree.add_children(
-            ROOT,
-            (0..10_000)
-                .map(|i| NewEntry {
-                    name: format!("folder-{i}").into(),
-                    kind: Kind::Dir,
-                    size: 0,
-                    len: 0,
-                    mtime: 0,
-                    flags: 0,
-                    file_id: None,
-                })
-                .collect(),
-        );
+        tree.add_children(ROOT, (0..10_000).map(|i| NewEntry::dir(format!("folder-{i}"))).collect());
         let tree = Arc::new(tree);
         let mut directories = DirectoryView::default();
         let ctx = egui::Context::default();
@@ -295,12 +271,9 @@ mod tests {
 
     #[test]
     fn tree_rows_expand_only_directories_and_hide_removed_nodes() {
-        let entry =
-            |name: &str, kind| NewEntry { name: name.into(), kind, size: 0, len: 0, mtime: 0, flags: 0, file_id: None };
         let mut tree = Tree::new(Path::new("/root"));
-        let ids =
-            tree.add_children(ROOT, vec![entry("one", Kind::Dir), entry("file", Kind::File), entry("two", Kind::Dir)]);
-        let nested = tree.add_children(ids.start, vec![entry("nested", Kind::Dir)]).start;
+        let ids = tree.add_children(ROOT, vec![NewEntry::dir("one"), NewEntry::file("file", 0), NewEntry::dir("two")]);
+        let nested = tree.add_children(ids.start, vec![NewEntry::dir("nested")]).start;
         let mut expanded = HashSet::from([ROOT]);
         let rows = flatten(&tree, &expanded);
         assert_eq!(rows.iter().map(|r| r.node).collect::<Vec<_>>(), vec![ROOT, ids.start, ids.start + 2]);

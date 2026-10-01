@@ -1,7 +1,11 @@
 //! Selection-scoped extension totals, prepared on one worker and virtualized in the UI.
 mod cache;
 use crate::i18n::tr;
-use crate::{background::retire, filetype_icons::Icons, theme};
+use crate::{
+    background::{Job, retire},
+    filetype_icons::Icons,
+    theme,
+};
 use clawback_core::{NodeId, Tree, format, tree::flags};
 use eframe::egui::{self, Align2, FontId, Sense, Ui, vec2};
 use std::{
@@ -10,7 +14,6 @@ use std::{
     sync::{
         Arc,
         atomic::{AtomicBool, Ordering},
-        mpsc,
     },
     time::{Duration, Instant},
 };
@@ -53,11 +56,6 @@ struct Summary {
     rows: Vec<Row>,
     name: String,
 }
-struct Pending {
-    key: Key,
-    rx: mpsc::Receiver<Summary>,
-    cancel: Arc<AtomicBool>,
-}
 
 #[derive(Default)]
 pub struct FileTypes {
@@ -65,7 +63,7 @@ pub struct FileTypes {
     icons: Icons,
     displayed: Option<Key>,
     summary: Option<Summary>,
-    pending: Option<Pending>,
+    pending: Option<Job<Key, Summary>>,
     last_started: Option<Instant>,
     /// When the shown summary stopped matching the tree; brief refreshes stay silent.
     stale_since: Option<Instant>,
@@ -73,10 +71,6 @@ pub struct FileTypes {
 
 impl Drop for FileTypes {
     fn drop(&mut self) {
-        if let Some(pending) = self.pending.take() {
-            pending.cancel.store(true, Ordering::Relaxed);
-            retire(pending);
-        }
         if let Some(summary) = self.summary.take() {
             retire(summary);
         }
@@ -117,30 +111,23 @@ impl FileTypes {
     /// Collect finished work, reuse cached totals, and start a worker when `key` needs one.
     fn sync(&mut self, ctx: &egui::Context, tree: &Arc<Tree>, key: Key) {
         self.cache.prepare(key);
-        if let Some(pending) = &self.pending {
-            let current = pending.key.same_scope(key);
-            if !current {
-                pending.cancel.store(true, Ordering::Relaxed);
-            }
-            match pending.rx.try_recv() {
-                Ok(summary) => {
-                    if current {
-                        let completed = pending.key;
-                        self.show_summary(completed, summary);
-                    } else {
-                        retire(summary);
-                    }
-                    self.pending = None;
-                }
-                Err(mpsc::TryRecvError::Disconnected) => self.pending = None,
-                Err(mpsc::TryRecvError::Empty) => {}
+        if let Some(pending) = &self.pending
+            && !pending.key().same_scope(key)
+        {
+            pending.cancel();
+        }
+        if let Some((completed, summary)) = Job::poll(&mut self.pending) {
+            if completed.same_scope(key) {
+                self.show_summary(completed, summary);
+            } else {
+                retire(summary);
             }
         }
         if self.displayed != Some(key)
             && let Some(summary) = self.cache.take(key)
         {
             if let Some(pending) = &self.pending {
-                pending.cancel.store(true, Ordering::Relaxed);
+                pending.cancel();
             }
             self.show_summary(key, summary);
             crate::perf::instant("file_types.cache_hit");
@@ -149,17 +136,7 @@ impl FileTypes {
         let ready = self.last_started.is_none_or(|at| at.elapsed() >= Duration::from_millis(750));
         if self.pending.is_none() && self.displayed != Some(key) && (!same_scope || ready) {
             let tree = tree.clone();
-            let repaint = ctx.clone();
-            let (tx, rx) = mpsc::channel();
-            let cancel = Arc::new(AtomicBool::new(false));
-            let worker_cancel = cancel.clone();
-            std::thread::spawn(move || {
-                if let Some(summary) = summarize(&tree, key.scope, &worker_cancel) {
-                    let _ = tx.send(summary);
-                }
-                repaint.request_repaint();
-            });
-            self.pending = Some(Pending { key, rx, cancel });
+            self.pending = Some(Job::spawn_cancellable(key, ctx, move |cancel| summarize(&tree, key.scope, cancel)));
             self.last_started = Some(Instant::now());
         }
         if self.displayed == Some(key) {
@@ -346,29 +323,20 @@ fn summarize(tree: &Tree, scope: NodeId, cancel: &AtomicBool) -> Option<Summary>
 #[cfg(test)]
 mod tests {
     use super::*;
-    use clawback_core::{Kind, ROOT, tree::NewEntry};
+    use clawback_core::{ROOT, tree::NewEntry};
 
     #[test]
     fn totals_follow_scope_normalize_extensions_and_skip_removed_files() {
         let mut tree = Tree::new(Path::new("demo"));
-        let entry = |name: &str, kind, size| NewEntry {
-            name: name.into(),
-            kind,
-            size,
-            len: size,
-            mtime: 0,
-            flags: 0,
-            file_id: None,
-        };
-        let folder = tree.add_children(ROOT, vec![entry("Photos", Kind::Dir, 0)]).start;
-        tree.add_children(ROOT, vec![entry("outside.zip", Kind::File, 900)]);
+        let folder = tree.add_children(ROOT, vec![NewEntry::dir("Photos")]).start;
+        tree.add_children(ROOT, vec![NewEntry::file("outside.zip", 900)]);
         let ids = tree.add_children(
             folder,
             vec![
-                entry("one.JPG", Kind::File, 30),
-                entry("two.jpg", Kind::File, 70),
-                entry(".gitignore", Kind::File, 10),
-                entry("removed.jpg", Kind::File, 500),
+                NewEntry::file("one.JPG", 30),
+                NewEntry::file("two.jpg", 70),
+                NewEntry::file(".gitignore", 10),
+                NewEntry::file("removed.jpg", 500),
             ],
         );
         tree.node_mut(ids.end - 1).flags |= flags::REMOVED;

@@ -1,12 +1,11 @@
 //! The drive picker: drives as cards with usage bars, recent folders, and a native folder browser.
-use crate::app::{dir_display, display_name, fraction};
+use crate::background::Job;
 use crate::i18n::tr;
 use crate::platform::{self, DiskInfo};
 use crate::theme;
-use clawback_core::format;
-use eframe::egui::{self, Align, Align2, Id, Key, Layout, RichText, Ui, vec2};
+use clawback_core::format::{self, dir_display, display_name, fraction};
+use eframe::egui::{self, Align, Align2, Key, Layout, RichText, Ui, vec2};
 use std::path::{Path, PathBuf};
-use std::sync::mpsc;
 use std::time::Duration;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -24,27 +23,23 @@ struct PickerDrive {
 pub struct OpenDialog {
     drives: Vec<PickerDrive>,
     choice: Option<Choice>,
-    loading: Option<mpsc::Receiver<Vec<PickerDrive>>>,
+    loading: Option<Job<(), Vec<PickerDrive>>>,
 }
 
 impl OpenDialog {
     /// Open the picker; drives are listed on a worker, since probing them can stall.
     pub fn start(ctx: &egui::Context) -> Self {
-        let (tx, rx) = mpsc::channel();
-        let repaint = ctx.clone();
-        std::thread::spawn(move || {
-            let drives = platform::drive_list()
+        let loading = Job::spawn((), ctx, || {
+            platform::drive_list()
                 .into_iter()
                 .map(|disk| PickerDrive {
                     #[cfg(windows)]
                     turbo: crate::turbo::eligible(Some(&disk), true),
                     disk,
                 })
-                .collect();
-            let _ = tx.send(drives);
-            repaint.request_repaint();
+                .collect()
         });
-        OpenDialog { drives: Vec::new(), choice: None, loading: Some(rx) }
+        OpenDialog { drives: Vec::new(), choice: None, loading: Some(loading) }
     }
 }
 
@@ -96,15 +91,10 @@ pub fn show(
     browse_from: Option<&Path>,
 ) -> Option<Picked> {
     let _span = crate::perf::span("ui.drive_picker");
-    if let Some(rx) = &dlg.loading {
-        match rx.try_recv() {
-            Ok(drives) => {
-                dlg.drives = drives;
-                dlg.loading = None;
-            }
-            Err(mpsc::TryRecvError::Disconnected) => dlg.loading = None,
-            Err(mpsc::TryRecvError::Empty) => ctx.request_repaint_after(Duration::from_millis(100)),
-        }
+    if let Some(((), drives)) = Job::poll(&mut dlg.loading) {
+        dlg.drives = drives;
+    } else if dlg.loading.is_some() {
+        ctx.request_repaint_after(Duration::from_millis(100));
     }
     let mut chosen: Option<PathBuf> = None;
     #[cfg(windows)]
@@ -116,98 +106,82 @@ pub fn show(
         Choice::Drive(i) => dlg.drives[i].disk.mount.clone(),
         Choice::Recent(i) => recent[i].clone(),
     };
-    let modal = egui::Modal::new(Id::new("clawback-open-drive"))
-        .backdrop_color(egui::Color32::from_black_alpha(170))
-        .frame(
-            egui::Frame::new()
-                .fill(theme::SURFACE)
-                .stroke(egui::Stroke::new(1.0, theme::PANEL_EDGE))
-                .corner_radius(14)
-                .inner_margin(22)
-                .shadow(egui::epaint::Shadow {
-                    offset: [0, 12],
-                    blur: 40,
-                    spread: 0,
-                    color: egui::Color32::from_black_alpha(120),
-                }),
-        )
-        .show(ctx, |ui| {
-            ui.set_width((ctx.content_rect().width() - 64.0).clamp(300.0, 560.0));
-            ui.spacing_mut().item_spacing.y = 8.0;
-            ui.label(RichText::new(tr!("select-drive-to-view")).size(24.0).strong().color(theme::TEXT));
-            ui.add_space(4.0);
-            ui.style_mut().spacing.scroll = egui::style::ScrollStyle::solid();
-            egui::ScrollArea::vertical()
-                .max_height((ctx.content_rect().height() - 240.0).clamp(160.0, 420.0))
-                .auto_shrink([false, true])
-                .show(ui, |ui| {
-                    if dlg.loading.is_some() {
-                        ui.horizontal(|ui| {
-                            ui.spinner();
-                            ui.weak(tr!("finding-drives"));
-                        });
-                    } else if dlg.drives.is_empty() {
-                        ui.weak(tr!("no-drives-found-use-other-folder-to-pick"));
+    let modal = theme::modal("clawback-open-drive").show(ctx, |ui| {
+        ui.set_width((ctx.content_rect().width() - 64.0).clamp(300.0, 560.0));
+        ui.spacing_mut().item_spacing.y = 8.0;
+        ui.label(RichText::new(tr!("select-drive-to-view")).size(24.0).strong().color(theme::TEXT));
+        ui.add_space(4.0);
+        ui.style_mut().spacing.scroll = egui::style::ScrollStyle::solid();
+        egui::ScrollArea::vertical()
+            .max_height((ctx.content_rect().height() - 240.0).clamp(160.0, 420.0))
+            .auto_shrink([false, true])
+            .show(ui, |ui| {
+                if dlg.loading.is_some() {
+                    ui.horizontal(|ui| {
+                        ui.spinner();
+                        ui.weak(tr!("finding-drives"));
+                    });
+                } else if dlg.drives.is_empty() {
+                    ui.weak(tr!("no-drives-found-use-other-folder-to-pick"));
+                }
+                for (i, drive) in dlg.drives.iter().enumerate() {
+                    #[cfg(windows)]
+                    let turbo = drive.turbo;
+                    #[cfg(not(windows))]
+                    let turbo = false;
+                    let icon = icons.drive(drive.disk.removable);
+                    let r = drive_card(ui, &drive.disk, icon, turbo, dlg.choice == Some(Choice::Drive(i)));
+                    if r.clicked() {
+                        dlg.choice = Some(Choice::Drive(i));
                     }
-                    for (i, drive) in dlg.drives.iter().enumerate() {
-                        #[cfg(windows)]
-                        let turbo = drive.turbo;
-                        #[cfg(not(windows))]
-                        let turbo = false;
-                        let icon = icons.drive(drive.disk.removable);
-                        let r = drive_card(ui, &drive.disk, icon, turbo, dlg.choice == Some(Choice::Drive(i)));
+                    if r.double_clicked() {
+                        chosen = Some(drive.disk.mount.clone());
+                    }
+                }
+                if !recent.is_empty() {
+                    ui.add_space(8.0);
+                    ui.label(RichText::new(tr!("recent")).size(11.0).strong().color(theme::MUTED));
+                    for (i, p) in recent.iter().enumerate() {
+                        let r = folder_card(ui, p, icons.folder.as_ref(), dlg.choice == Some(Choice::Recent(i)));
                         if r.clicked() {
-                            dlg.choice = Some(Choice::Drive(i));
+                            dlg.choice = Some(Choice::Recent(i));
                         }
                         if r.double_clicked() {
-                            chosen = Some(drive.disk.mount.clone());
+                            chosen = Some(p.clone());
                         }
                     }
-                    if !recent.is_empty() {
-                        ui.add_space(8.0);
-                        ui.label(RichText::new(tr!("recent")).size(11.0).strong().color(theme::MUTED));
-                        for (i, p) in recent.iter().enumerate() {
-                            let r = folder_card(ui, p, icons.folder.as_ref(), dlg.choice == Some(Choice::Recent(i)));
-                            if r.clicked() {
-                                dlg.choice = Some(Choice::Recent(i));
-                            }
-                            if r.double_clicked() {
-                                chosen = Some(p.clone());
-                            }
-                        }
-                    }
-                });
-            ui.add_space(6.0);
-            ui.horizontal(|ui| {
-                if ui.add(egui::Button::new(tr!("other-folder")).min_size(vec2(0.0, 34.0))).clicked() {
-                    browse = true;
                 }
-                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    let open = egui::Button::new(RichText::new(tr!("ok").trim()).strong().color(theme::BG))
-                        .fill(theme::ACCENT)
-                        .min_size(vec2(96.0, 34.0));
-                    if ui.add_enabled(dlg.choice.is_some(), open).clicked()
-                        && let Some(c) = dlg.choice
-                    {
-                        chosen = Some(path_of(c, dlg));
-                    }
-                    #[cfg(windows)]
-                    if let Some(Choice::Drive(i)) = dlg.choice
-                        && dlg.drives[i].turbo
-                        && ui
-                            .add(turbo_button())
-                            .on_hover_text(tr!("try-a-faster-ntfs-scan-with-administrator-permission"))
-                            .clicked()
-                    {
-                        chosen = Some(dlg.drives[i].disk.mount.clone());
-                        turbo = true;
-                    }
-                    if ui.add(egui::Button::new(tr!("cancel")).min_size(vec2(88.0, 34.0))).clicked() {
-                        cancel = true;
-                    }
-                });
+            });
+        ui.add_space(6.0);
+        ui.horizontal(|ui| {
+            if ui.add(egui::Button::new(tr!("other-folder")).min_size(vec2(0.0, 34.0))).clicked() {
+                browse = true;
+            }
+            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                let open =
+                    theme::primary_button(tr!("ok").trim(), theme::ACCENT).min_size(vec2(96.0, theme::BUTTON_HEIGHT));
+                if ui.add_enabled(dlg.choice.is_some(), open).clicked()
+                    && let Some(c) = dlg.choice
+                {
+                    chosen = Some(path_of(c, dlg));
+                }
+                #[cfg(windows)]
+                if let Some(Choice::Drive(i)) = dlg.choice
+                    && dlg.drives[i].turbo
+                    && ui
+                        .add(turbo_button())
+                        .on_hover_text(tr!("try-a-faster-ntfs-scan-with-administrator-permission"))
+                        .clicked()
+                {
+                    chosen = Some(dlg.drives[i].disk.mount.clone());
+                    turbo = true;
+                }
+                if ui.add(theme::secondary_button(tr!("cancel"))).clicked() {
+                    cancel = true;
+                }
             });
         });
+    });
     if chosen.is_none()
         && ctx.input(|i| i.key_pressed(Key::Enter))
         && let Some(c) = dlg.choice
@@ -232,9 +206,7 @@ pub fn show(
 /// Prominent, consistent action shared by the picker and scan status.
 #[cfg(windows)]
 pub fn turbo_button() -> egui::Button<'static> {
-    egui::Button::new(RichText::new(format!("⚡  {}", tr!("turbo"))).strong().color(theme::BG))
-        .fill(theme::ACCENT)
-        .min_size(vec2(112.0, 34.0))
+    theme::primary_button(format!("⚡  {}", tr!("turbo")), theme::ACCENT).min_size(vec2(112.0, theme::BUTTON_HEIGHT))
 }
 
 /// One drive in the picker: a large native icon, its name, a usage bar and free space.
@@ -305,7 +277,7 @@ fn picker_card(ui: &mut Ui, height: f32, selected: bool) -> (egui::Rect, egui::R
     let (rect, response) = ui.allocate_exact_size(vec2(ui.available_width(), height), egui::Sense::click());
     let hover = ui.ctx().animate_bool(response.id, response.hovered());
     let p = ui.painter();
-    let fill = if selected { egui::Color32::from_rgb(35, 47, 58) } else { theme::NAVIGATOR };
+    let fill = if selected { theme::SELECTED_FILL } else { theme::NAVIGATOR };
     p.rect_filled(rect, 10, fill.lerp_to_gamma(theme::ROW_ALT, if selected { 0.0 } else { hover }));
     p.rect_stroke(
         rect,

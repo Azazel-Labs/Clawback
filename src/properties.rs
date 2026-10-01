@@ -1,4 +1,5 @@
 //! The Properties window: an item's details, read off the UI thread.
+use crate::background::Job;
 use crate::i18n::tr;
 use crate::platform;
 use clawback_core::{Kind, NodeId, Tree, format};
@@ -46,27 +47,21 @@ impl Properties {
 
 /// An open Properties window.
 pub enum Props {
-    Loading(mpsc::Receiver<Properties>),
+    Loading(Job<(), Properties>),
     Shown(Properties),
 }
 
 impl Props {
     /// Start reading `n`'s details; the window shows a spinner until they arrive.
     pub fn request(tree: Arc<Tree>, n: NodeId, ctx: &egui::Context) -> Self {
-        let (tx, rx) = mpsc::channel();
-        let repaint = ctx.clone();
-        std::thread::spawn(move || {
-            let _ = tx.send(Properties::read(&tree, n));
-            repaint.request_repaint();
-        });
-        Props::Loading(rx)
+        Props::Loading(Job::spawn((), ctx, move || Properties::read(&tree, n)))
     }
 }
 
 /// Pick up finished details; a worker that died closes the window.
 pub fn poll(props: &mut Option<Props>) {
-    if let Some(Props::Loading(rx)) = props {
-        match rx.try_recv() {
+    if let Some(Props::Loading(job)) = props {
+        match job.try_recv() {
             Ok(p) => *props = Some(Props::Shown(p)),
             Err(mpsc::TryRecvError::Disconnected) => *props = None,
             Err(mpsc::TryRecvError::Empty) => {}

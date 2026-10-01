@@ -1,6 +1,6 @@
 //! Shared visual language for the shell, dialogs and disk map.
 use clawback_core::palette::{self, Rgb};
-use eframe::egui::{self, Color32, CornerRadius, FontId, Rect, Stroke, TextStyle, vec2};
+use eframe::egui::{self, Color32, CornerRadius, FontId, Rect, RichText, Stroke, TextStyle, vec2};
 
 pub const BG: Color32 = Color32::from_rgb(17, 18, 18);
 pub const SURFACE: Color32 = Color32::from_rgb(24, 25, 25);
@@ -25,6 +25,10 @@ pub const TOGGLE_OFF: Color32 = Color32::from_rgb(57, 62, 68);
 pub const NOTE_BG: Color32 = Color32::from_rgb(29, 38, 46);
 /// Free-space cells on the map, shaded like palette colours.
 pub const FREE_SPACE: Rgb = [29, 30, 30];
+/// Dims the window behind a modal dialog.
+pub const BACKDROP: Color32 = Color32::from_black_alpha(170);
+/// Height of dialog action buttons.
+pub const BUTTON_HEIGHT: f32 = 34.0;
 
 /// Bundled fonts, so CJK and Thai labels and filenames render without installed OS fonts.
 const FONTS: [(&str, &[u8]); 5] = [
@@ -77,6 +81,31 @@ pub fn paint_swatches(painter: &egui::Painter, rect: Rect, scheme: usize, muted:
         let tile = Rect::from_min_size(rect.min + vec2(depth as f32 * step, 0.0), vec2(step - gap, rect.height()));
         painter.rect_filled(tile, radius, rgb(palette::display_color(scheme, depth, muted)));
     }
+}
+
+/// The raised panel of a large modal dialog.
+pub fn modal_frame() -> egui::Frame {
+    egui::Frame::new()
+        .fill(SURFACE)
+        .stroke(Stroke::new(1.0, PANEL_EDGE))
+        .corner_radius(14)
+        .inner_margin(22)
+        .shadow(egui::epaint::Shadow { offset: [0, 12], blur: 40, spread: 0, color: Color32::from_black_alpha(120) })
+}
+
+/// A modal dialog over a dimmed window, in [`modal_frame`].
+pub fn modal(id: &str) -> egui::Modal {
+    egui::Modal::new(egui::Id::new(id)).backdrop_color(BACKDROP).frame(modal_frame())
+}
+
+/// A dialog's main action: bold dark text on `fill`.
+pub fn primary_button(text: impl Into<String>, fill: Color32) -> egui::Button<'static> {
+    egui::Button::new(RichText::new(text).strong().color(BG)).fill(fill).min_size(vec2(0.0, BUTTON_HEIGHT))
+}
+
+/// A dialog's dismissing action, such as Cancel.
+pub fn secondary_button(text: impl Into<String>) -> egui::Button<'static> {
+    egui::Button::new(text.into()).min_size(vec2(88.0, BUTTON_HEIGHT))
 }
 
 pub fn apply(ctx: &egui::Context, language: &str) {
@@ -173,34 +202,8 @@ mod tests {
                 // false for valid characters in the replacement glyph's face.
                 let mut family = coverage.fonts.font(&font.family);
                 let characters = family.characters();
-                for catalog in [
-                    include_str!("../locales/zh-Hans/clawback.ftl"),
-                    include_str!("../locales/zh-Hant/clawback.ftl"),
-                    include_str!("../locales/ko/clawback.ftl"),
-                    include_str!("../locales/ja/clawback.ftl"),
-                    include_str!("../locales/pl/clawback.ftl"),
-                    include_str!("../locales/ru/clawback.ftl"),
-                    include_str!("../locales/pt-BR/clawback.ftl"),
-                    include_str!("../locales/it/clawback.ftl"),
-                    include_str!("../locales/tr/clawback.ftl"),
-                    include_str!("../locales/uk/clawback.ftl"),
-                    include_str!("../locales/cs/clawback.ftl"),
-                    include_str!("../locales/pt-PT/clawback.ftl"),
-                    include_str!("../locales/nl/clawback.ftl"),
-                    include_str!("../locales/id/clawback.ftl"),
-                    include_str!("../locales/vi/clawback.ftl"),
-                    include_str!("../locales/th/clawback.ftl"),
-                    include_str!("../locales/sv/clawback.ftl"),
-                    include_str!("../locales/ro/clawback.ftl"),
-                    include_str!("../locales/hu/clawback.ftl"),
-                    include_str!("../locales/af/clawback.ftl"),
-                    include_str!("../locales/ca/clawback.ftl"),
-                    include_str!("../locales/sr-Cyrl/clawback.ftl"),
-                    include_str!("../locales/da/clawback.ftl"),
-                    include_str!("../locales/fi/clawback.ftl"),
-                    include_str!("../locales/el/clawback.ftl"),
-                    include_str!("../locales/nb/clawback.ftl"),
-                ] {
+                // Every bundled catalog, so new locales are covered automatically.
+                for catalog in crate::i18n::languages().map(crate::i18n::catalog) {
                     for ch in catalog.chars().filter(|c| !c.is_whitespace()) {
                         assert!(characters.contains_key(&ch), "Missing glyph: {ch}");
                     }
