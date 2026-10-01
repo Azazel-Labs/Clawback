@@ -70,7 +70,8 @@ impl App {
         match update {
             Some(Ok(Update::Preview(preview))) => {
                 self.status = format!(
-                    "Scanning · {} files · {} · {} not readable · up to {} workers · {}",
+                    "{} · {} files · {} · {} not readable · up to {} workers · {}",
+                    if self.running.as_ref().is_some_and(Running::is_paused) { "Scan paused" } else { "Scanning" },
                     format::count(preview.progress.files),
                     format::size(preview.progress.bytes),
                     preview.progress.denied,
@@ -181,11 +182,12 @@ impl App {
                 {
                     return Ok(());
                 }
-                if key.code == KeyCode::Esc {
+                if key.code == KeyCode::Esc || key.code == KeyCode::Char('p') {
                     if let Some(running) = &self.running {
-                        running.cancel();
-                        self.status = "Cancelling scan…".into();
-                    } else {
+                        running.toggle_pause();
+                        self.status =
+                            if running.is_paused() { "Scan paused · Press p to resume" } else { "Scanning…" }.into();
+                    } else if key.code == KeyCode::Esc {
                         self.up();
                     }
                 }
@@ -266,7 +268,9 @@ impl App {
             Constraint::Length(1),
         ])
         .areas(area);
-        let spinner = if self.running.is_some() {
+        let spinner = if self.running.as_ref().is_some_and(Running::is_paused) {
+            "Ⅱ"
+        } else if self.running.is_some() {
             ["◐", "◓", "◑", "◒"][(self.started.elapsed().as_millis() / 150 % 4) as usize]
         } else {
             "◆"
@@ -341,7 +345,11 @@ impl App {
         frame.render_widget(Paragraph::new(info), detail);
         frame.render_widget(Paragraph::new(format!(" {}", self.status)).fg(Color::Gray), status);
         let help = if self.running.is_some() {
-            " Esc cancel scan   Tab map only   q quit"
+            if self.running.as_ref().is_some_and(Running::is_paused) {
+                " p/Esc resume scan   Tab map only   q quit"
+            } else {
+                " p/Esc pause scan   Tab map only   q quit"
+            }
         } else if area.width < 80 {
             " ↑↓ select  Enter zoom  ← up  q quit"
         } else if area.width < 110 {
@@ -382,7 +390,7 @@ impl App {
                 continue;
             }
             let scheme = if b.folder { self.settings.folder_color } else { self.settings.file_color };
-            let rgb = palette::map_color(scheme, b.depth);
+            let rgb = palette::display_color(scheme, b.depth, self.settings.mute_palette);
             let [r, g, blue] = rgb;
             let color = Color::Rgb(r, g, blue);
             let is_selected = b.node().is_some() && b.node() == selected;

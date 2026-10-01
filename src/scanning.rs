@@ -11,6 +11,8 @@ use std::sync::{Arc, mpsc};
 use std::time::Duration;
 
 pub struct Preview {
+    #[cfg(windows)]
+    pub turbo_available: bool,
     pub tree: Tree,
     pub progress: ProgressSnapshot,
     pub current: PathBuf,
@@ -26,6 +28,8 @@ pub enum Update {
 }
 
 pub struct Running {
+    #[cfg(windows)]
+    pub turbo_available: bool,
     pub root: PathBuf,
     pub progress: ProgressSnapshot,
     pub current: PathBuf,
@@ -33,9 +37,47 @@ pub struct Running {
     pub is_mount: bool,
     pub rx: mpsc::Receiver<Update>,
     cancel: Arc<AtomicBool>,
+    paused: Arc<AtomicBool>,
+    #[cfg(windows)]
+    pub turbo: crate::turbo::Control,
 }
 
 impl Running {
+    /// A scan-shaped fixture for screenshots: no filesystem access or elevation.
+    #[cfg(feature = "screenshots")]
+    pub fn demo(paused: bool) -> Self {
+        let (tx, rx) = mpsc::channel();
+        let cancel = Arc::new(AtomicBool::new(false));
+        let stop = cancel.clone();
+        std::thread::spawn(move || {
+            let _sender = tx;
+            while !stop.load(Ordering::Relaxed) {
+                std::thread::sleep(Duration::from_millis(100));
+            }
+        });
+        Self {
+            root: PathBuf::from("Demo Drive"),
+            current: PathBuf::from("Demo Drive/Projects/Lunar Garden/Assets"),
+            progress: ProgressSnapshot { files: 184_302, dirs: 12_408, bytes: 94_983_340_321, workers: 8, denied: 0 },
+            disk: Some(DiskInfo {
+                name: "Demo Drive".into(),
+                mount: "Demo Drive".into(),
+                fs: "NTFS".into(),
+                total: 500 << 30,
+                free: 200 << 30,
+                removable: false,
+                kind: clawback_core::adaptive::StorageKind::Unknown,
+            }),
+            is_mount: true,
+            rx,
+            cancel,
+            paused: Arc::new(AtomicBool::new(paused)),
+            #[cfg(windows)]
+            turbo_available: true,
+            #[cfg(windows)]
+            turbo: crate::turbo::Control::default(),
+        }
+    }
     pub fn start(root: PathBuf, options: ScanOptions, repaint: eframe::egui::Context) -> std::io::Result<Self> {
         Self::start_with_disk(
             root,
@@ -59,17 +101,31 @@ impl Running {
         let (tx, rx) = mpsc::sync_channel(1);
         let cancel = Arc::new(AtomicBool::new(false));
         let stop = cancel.clone();
+        let paused = Arc::new(AtomicBool::new(false));
+        let pause_requested = paused.clone();
         let path = root.clone();
         let repaint: Arc<dyn Fn() + Send + Sync> = Arc::new(repaint);
+        #[cfg(windows)]
+        let turbo = crate::turbo::Control::default();
+        #[cfg(windows)]
+        let turbo_control = turbo.clone();
         std::thread::Builder::new().name("clawback-preview".into()).spawn(move || {
+            let _span = crate::perf::span("worker.scan_lifetime");
             // Arm before any scan work so edits during the scan are retained.
+            let setup_span = crate::perf::span("worker.scan_setup");
             let watcher = Watch::start(&path);
             let disk = find_disk(&path);
+            drop(setup_span);
             let mut options = options;
             if let Some(disk) = &disk {
                 options.storage = disk.kind;
             }
             let is_mount = disk.as_ref().is_some_and(|d| platform::same_path(&d.mount, &path));
+            #[cfg(windows)]
+            let turbo_available = crate::turbo::eligible(disk.as_ref(), is_mount);
+            while pause_requested.load(Ordering::Relaxed) && !stop.load(Ordering::Relaxed) {
+                std::thread::sleep(Duration::from_millis(50));
+            }
             if stop.load(Ordering::Relaxed) {
                 let _ = tx.send(Update::Cancelled);
                 repaint();
@@ -84,12 +140,55 @@ impl Running {
                 }
             };
             let mut published = None;
+            #[cfg(windows)]
+            let mut attempt: Option<crate::turbo::Attempt> = None;
+            #[cfg(windows)]
+            let mut turbo_result = None;
             loop {
+                let user_paused = pause_requested.load(Ordering::Relaxed);
+                // Once Turbo leads, park traversal workers to avoid competing
+                // for CPU/disk. Retain their tree so a failed helper can resume.
+                #[cfg(windows)]
+                let turbo_leads =
+                    turbo_control.progress().and_then(|p| turbo_lead(scan.shared().progress.snapshot(), p)).is_some();
+                #[cfg(not(windows))]
+                let turbo_leads = false;
+                scan.set_paused(user_paused || turbo_leads);
                 if stop.load(Ordering::Relaxed) {
                     scan.cancel();
+                    #[cfg(windows)]
+                    drop(attempt.take());
                 }
                 if scan.is_finished() {
                     break;
+                }
+                #[cfg(windows)]
+                if !stop.load(Ordering::Relaxed) {
+                    if turbo_available && attempt.is_none() && turbo_control.take_request() {
+                        match crate::turbo::Attempt::start(
+                            path.clone(),
+                            options.clone(),
+                            pause_requested.clone(),
+                            turbo_control.clone(),
+                        ) {
+                            Ok(started) => attempt = Some(started),
+                            Err(error) => turbo_control.failed(&error),
+                        }
+                    }
+                    if let Some(active) = &attempt {
+                        match active.rx.try_recv() {
+                            Ok(Ok(result)) => {
+                                turbo_result = Some(result);
+                                break;
+                            }
+                            Ok(Err(_)) => attempt = None, // status already records decline/failure
+                            Err(mpsc::TryRecvError::Disconnected) => {
+                                turbo_control.failed(&std::io::Error::other("Turbo launcher stopped"));
+                                attempt = None;
+                            }
+                            Err(mpsc::TryRecvError::Empty) => {}
+                        }
+                    }
                 }
                 let shared = scan.shared();
                 let progress = shared.progress.snapshot();
@@ -97,13 +196,17 @@ impl Running {
                     std::thread::sleep(Duration::from_millis(100));
                     continue;
                 }
+                let preview_span = crate::perf::span("worker.scan_preview");
                 let preview = Preview {
+                    #[cfg(windows)]
+                    turbo_available,
                     tree: lock(&shared.tree).preview(4096),
                     progress,
                     current: shared.progress.current_path(),
                     disk: disk.clone(),
                     is_mount,
                 };
+                drop(preview_span);
                 match tx.try_send(Update::Preview(preview)) {
                     Ok(()) => {
                         published = Some(progress);
@@ -115,6 +218,16 @@ impl Running {
                 std::thread::sleep(Duration::from_millis(100));
             }
             // Final sorting, joining and ownership transfer all happen here.
+            #[cfg(windows)]
+            drop(attempt); // cancels a losing helper, including pending consent
+            #[cfg(windows)]
+            let result = if let Some(result) = turbo_result {
+                drop(scan); // cooperatively cancel directory workers, never join them on the UI
+                result
+            } else {
+                scan.wait()
+            };
+            #[cfg(not(windows))]
             let result = scan.wait();
             let started = if result.cancelled || stop.load(Ordering::Relaxed) {
                 Started::unavailable("scan cancelled")
@@ -134,6 +247,8 @@ impl Running {
             repaint();
         })?;
         Ok(Self {
+            #[cfg(windows)]
+            turbo_available: false,
             current: root.clone(),
             root,
             progress: ProgressSnapshot::default(),
@@ -141,12 +256,39 @@ impl Running {
             is_mount: false,
             rx,
             cancel,
+            paused,
+            #[cfg(windows)]
+            turbo,
         })
+    }
+
+    /// Show whichever scanner has assembled more entries. MFT records alone
+    /// are not comparable: they include extensions and filesystem metadata.
+    pub fn display_progress(&self) -> ProgressSnapshot {
+        #[cfg(windows)]
+        if let Some(progress) = self.turbo.progress().and_then(|p| turbo_lead(self.progress, p)) {
+            return progress;
+        }
+        self.progress
     }
 
     pub fn cancel(&self) {
         self.cancel.store(true, Ordering::Relaxed);
     }
+
+    pub fn is_paused(&self) -> bool {
+        self.paused.load(Ordering::Relaxed)
+    }
+
+    pub fn toggle_pause(&self) {
+        self.paused.fetch_xor(true, Ordering::Relaxed);
+    }
+}
+
+#[cfg(windows)]
+fn turbo_lead(normal: ProgressSnapshot, mft: clawback_core::scan::MftProgress) -> Option<ProgressSnapshot> {
+    (mft.phase >= 2 && mft.files.saturating_add(mft.dirs) > normal.files.saturating_add(normal.dirs))
+        .then_some(ProgressSnapshot { files: mft.files, dirs: mft.dirs, bytes: mft.bytes, denied: 0, workers: 1 })
 }
 
 impl Drop for Running {
@@ -158,6 +300,24 @@ impl Drop for Running {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(windows)]
+    #[test]
+    fn turbo_overtakes_only_with_assembled_entries() {
+        use clawback_core::scan::MftProgress;
+        let normal = ProgressSnapshot { files: 100, dirs: 10, ..Default::default() };
+        let mut mft = MftProgress { records: 1_000_000, ..Default::default() };
+        assert!(turbo_lead(normal, mft).is_none());
+        mft.phase = 2;
+        mft.files = 99;
+        mft.dirs = 11;
+        assert!(turbo_lead(normal, mft).is_none());
+        mft.files = 101;
+        mft.bytes = 8192;
+        let lead = turbo_lead(normal, mft).unwrap();
+        assert_eq!((lead.files, lead.dirs, lead.bytes, lead.workers), (101, 11, 8192, 1));
+        assert!(turbo_lead(ProgressSnapshot { files: 200, ..normal }, mft).is_none());
+    }
 
     #[test]
     fn slow_disk_discovery_does_not_block_start_or_cancel() {
@@ -176,6 +336,19 @@ mod tests {
         .unwrap();
         entered_rx.recv_timeout(Duration::from_secs(5)).unwrap();
         assert!(matches!(running.rx.try_recv(), Err(mpsc::TryRecvError::Empty)));
+        running.toggle_pause();
+        assert!(running.is_paused());
+        #[cfg(windows)]
+        {
+            running.turbo.request();
+            assert!(running.turbo.take_request());
+            running
+                .turbo
+                .failed(&std::io::Error::from_raw_os_error(windows_sys::Win32::Foundation::ERROR_CANCELLED as i32));
+            assert_eq!(running.turbo.status(), crate::turbo::Status::Declined);
+            assert!(!running.cancel.load(Ordering::Relaxed));
+            assert!(running.is_paused());
+        }
         running.cancel();
         release_tx.send(()).unwrap();
         assert!(matches!(running.rx.recv_timeout(Duration::from_secs(5)), Ok(Update::Cancelled)));

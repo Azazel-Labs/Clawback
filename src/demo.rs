@@ -73,7 +73,14 @@ pub fn capture(ctx: &eframe::egui::Context) {
     let Some(destination) = std::env::var_os("CLAWBACK_DEMO_CAPTURE") else { return };
     ctx.request_repaint_after(std::time::Duration::from_millis(100));
     if ctx.cumulative_frame_nr() == 0 {
-        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(vec2(1280.0, 820.0)));
+        let size = std::env::var("CLAWBACK_DEMO_SIZE")
+            .ok()
+            .and_then(|value| {
+                let (width, height) = value.split_once('x')?;
+                Some(vec2(width.parse().ok()?, height.parse().ok()?))
+            })
+            .unwrap_or(vec2(1280.0, 820.0));
+        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(size));
     }
     let image = ctx.input(|i| {
         i.events

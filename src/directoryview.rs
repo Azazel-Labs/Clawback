@@ -9,7 +9,7 @@ use std::{
     sync::{Arc, mpsc},
 };
 
-const ROW_HEIGHT: f32 = 25.0;
+const ROW_HEIGHT: f32 = 22.0;
 
 struct Row {
     node: NodeId,
@@ -59,6 +59,7 @@ impl DirectoryView {
         view: NodeId,
         scanning: bool,
     ) -> Option<NodeId> {
+        let _span = crate::perf::span("ui.directories");
         if self.document != Some(document) || (self.scanning && !scanning) {
             self.document = Some(document);
             self.expanded.clear();
@@ -105,6 +106,7 @@ impl DirectoryView {
             let repaint = ui.ctx().clone();
             let (tx, rx) = mpsc::channel();
             std::thread::spawn(move || {
+                let _span = crate::perf::span("worker.directories");
                 let rows = flatten(&tree, &expanded);
                 let focus = rows.iter().position(|r| r.node == view);
                 let _ = tx.send(Rows { rows, focus });
@@ -113,13 +115,21 @@ impl DirectoryView {
             self.pending = Some((key, rx));
         }
 
+        ui.spacing_mut().item_spacing.y = 4.0;
         ui.horizontal(|ui| {
             ui.strong(tr!("directories"));
             ui.weak(if scanning { tr!("discovering-folders") } else { tr!("expand-to-browse-click-a-folder-to-view") });
         });
         let (header, _) = ui.allocate_exact_size(vec2(ui.available_width(), 20.0), Sense::hover());
+        ui.painter().rect_filled(header, 3.0, theme::BG);
         let font = FontId::proportional(11.0);
-        ui.painter().text(header.left_center(), Align2::LEFT_CENTER, tr!("folder"), font.clone(), theme::MUTED);
+        ui.painter().text(
+            header.left_center() + vec2(6.0, 0.0),
+            Align2::LEFT_CENTER,
+            tr!("folder"),
+            font.clone(),
+            theme::MUTED,
+        );
         ui.painter().text(
             header.right_center() - vec2(80.0, 0.0),
             Align2::RIGHT_CENTER,
@@ -145,64 +155,71 @@ impl DirectoryView {
         {
             self.drawn_rows = 0;
         }
-        scroll.show_rows(ui, ROW_HEIGHT, self.rows.len(), |ui, range| {
-            for row in &self.rows[range] {
-                #[cfg(test)]
-                {
-                    self.drawn_rows += 1;
-                }
-                let (rect, response) = ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::click());
-                let p = ui.painter();
-                if row.node == view {
-                    p.rect_filled(rect, 4.0, theme::BORDER);
-                } else if response.hovered() {
-                    p.rect_filled(rect, 4.0, theme::BORDER.gamma_multiply(0.45));
-                }
-                let indent = (row.depth as f32 * 16.0).min((rect.width() - 220.0).max(0.0));
-                let arrow = Rect::from_min_size(rect.min + vec2(indent, 0.0), vec2(22.0, ROW_HEIGHT));
-                if row.expandable {
-                    let center = arrow.center();
-                    let points = if self.expanded.contains(&row.node) {
-                        [center + vec2(-4.0, -2.0), center + vec2(0.0, 2.0), center + vec2(4.0, -2.0)]
-                    } else {
-                        [center + vec2(-2.0, -4.0), center + vec2(2.0, 0.0), center + vec2(-2.0, 4.0)]
-                    };
-                    p.add(egui::Shape::line(points.to_vec(), egui::Stroke::new(1.5, theme::TEXT)));
-                }
-                let text = Rect::from_min_max(
-                    Pos2::new(arrow.max.x, rect.min.y),
-                    Pos2::new((rect.max.x - 168.0).max(arrow.max.x), rect.max.y),
-                );
-                p.with_clip_rect(text.intersect(ui.clip_rect())).text(
-                    text.left_center(),
-                    Align2::LEFT_CENTER,
-                    &row.name,
-                    FontId::proportional(13.0),
-                    theme::TEXT,
-                );
-                p.text(
-                    rect.right_center() - vec2(80.0, 0.0),
-                    Align2::RIGHT_CENTER,
-                    &row.size,
-                    FontId::proportional(12.0),
-                    theme::TEXT,
-                );
-                p.text(
-                    rect.right_center() - vec2(8.0, 0.0),
-                    Align2::RIGHT_CENTER,
-                    &row.share,
-                    FontId::proportional(12.0),
-                    theme::MUTED,
-                );
-                if enabled && response.clicked() {
-                    if row.expandable && response.interact_pointer_pos().is_some_and(|pos| arrow.contains(pos)) {
-                        toggle = Some(row.node);
-                    } else {
-                        selected = Some(row.node);
+        ui.scope(|ui| {
+            ui.spacing_mut().item_spacing.y = 0.0;
+            scroll.show_rows(ui, ROW_HEIGHT, self.rows.len(), |ui, range| {
+                for index in range {
+                    let row = &self.rows[index];
+                    #[cfg(test)]
+                    {
+                        self.drawn_rows += 1;
                     }
+                    let (rect, response) =
+                        ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::click());
+                    let p = ui.painter();
+                    p.rect_filled(rect, 0.0, if index % 2 == 0 { theme::NAVIGATOR } else { theme::ROW_ALT });
+                    if row.node == view {
+                        p.rect_filled(rect, 3.0, egui::Color32::from_rgb(43, 61, 78));
+                        p.rect_filled(Rect::from_min_size(rect.min, vec2(3.0, rect.height())), 1.0, theme::ACCENT);
+                    } else if response.hovered() {
+                        p.rect_filled(rect, 3.0, theme::PANEL_EDGE);
+                    }
+                    let indent = (row.depth as f32 * 14.0).min((rect.width() - 220.0).max(0.0));
+                    let arrow = Rect::from_min_size(rect.min + vec2(indent + 5.0, 0.0), vec2(18.0, ROW_HEIGHT));
+                    if row.expandable {
+                        let center = arrow.center();
+                        let points = if self.expanded.contains(&row.node) {
+                            [center + vec2(-4.0, -2.0), center + vec2(0.0, 2.0), center + vec2(4.0, -2.0)]
+                        } else {
+                            [center + vec2(-2.0, -4.0), center + vec2(2.0, 0.0), center + vec2(-2.0, 4.0)]
+                        };
+                        p.add(egui::Shape::line(points.to_vec(), egui::Stroke::new(1.5, theme::TEXT)));
+                    }
+                    let text = Rect::from_min_max(
+                        Pos2::new(arrow.max.x, rect.min.y),
+                        Pos2::new((rect.max.x - 168.0).max(arrow.max.x), rect.max.y),
+                    );
+                    p.with_clip_rect(text.intersect(ui.clip_rect())).text(
+                        text.left_center(),
+                        Align2::LEFT_CENTER,
+                        &row.name,
+                        FontId::proportional(12.0),
+                        theme::TEXT,
+                    );
+                    p.text(
+                        rect.right_center() - vec2(80.0, 0.0),
+                        Align2::RIGHT_CENTER,
+                        &row.size,
+                        FontId::proportional(12.0),
+                        theme::TEXT,
+                    );
+                    p.text(
+                        rect.right_center() - vec2(8.0, 0.0),
+                        Align2::RIGHT_CENTER,
+                        &row.share,
+                        FontId::proportional(12.0),
+                        theme::MUTED,
+                    );
+                    if enabled && response.clicked() {
+                        if row.expandable && response.interact_pointer_pos().is_some_and(|pos| arrow.contains(pos)) {
+                            toggle = Some(row.node);
+                        } else {
+                            selected = Some(row.node);
+                        }
+                    }
+                    response.on_hover_text(&row.name);
                 }
-                response.on_hover_text(&row.name);
-            }
+            });
         });
         if let Some(node) = toggle {
             if !self.expanded.remove(&node) {

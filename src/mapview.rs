@@ -92,6 +92,7 @@ struct LayoutKey {
     origin: [u32; 2],
     pixels_per_point: u32,
     schemes: [usize; 2],
+    muted: bool,
 }
 
 // Generations may advance while labels prepare. A complete older snapshot is
@@ -110,6 +111,7 @@ struct InfoTip {
 type LayoutResult = (Arc<Tree>, Vec<DisplayBox>, PreparedMap);
 
 pub struct MapView {
+    layout_started: Option<std::time::Instant>,
     layout_rx: Option<(LayoutKey, mpsc::Receiver<LayoutResult>)>,
     display_tree: Option<Arc<Tree>>,
     prepared: Option<PreparedMap>,
@@ -130,6 +132,7 @@ pub struct MapView {
 impl Default for MapView {
     fn default() -> Self {
         Self {
+            layout_started: None,
             layout_rx: None,
             display_tree: None,
             prepared: None,
@@ -159,6 +162,7 @@ impl MapView {
 
     /// Forget the layout (new document, or none).
     pub fn reset(&mut self) {
+        self.layout_started = None;
         if let Some(pending) = self.layout_rx.take() {
             retire(pending);
         }
@@ -216,6 +220,7 @@ impl MapView {
 
     /// Draw the map and handle input. Returns commands for the application.
     pub fn ui(&mut self, ui: &mut Ui, input: Option<&MapInput<'_>>) -> Vec<Command> {
+        let _span = crate::perf::span("ui.map");
         let (rect, response) = ui.allocate_exact_size(ui.available_size(), Sense::click());
         self.rect = rect;
         let ctx = ui.ctx().clone();
@@ -248,6 +253,7 @@ impl MapView {
             origin: [rect.min.x.to_bits(), rect.min.y.to_bits()],
             pixels_per_point: ctx.pixels_per_point().to_bits(),
             schemes: [input.settings.file_color, input.settings.folder_color],
+            muted: input.settings.mute_palette,
         };
         if let Some((pending_key, rx)) = &self.layout_rx {
             match rx.try_recv() {
@@ -270,6 +276,10 @@ impl MapView {
             prepared.prepare(&painter, &mut self.label_cache);
         }
         if self.staging.as_ref().is_some_and(|(_, (_, _, prepared))| prepared.is_ready()) {
+            crate::perf::instant("map.ready");
+            if let Some(started) = self.layout_started.take() {
+                crate::perf::counter("map.request_to_ready_ms", started.elapsed().as_secs_f64() * 1000.0);
+            }
             let (ready_key, (tree, boxes, prepared)) = self.staging.take().expect("ready map");
             if let Some(old) = self.display_tree.replace(tree) {
                 retire(old);
@@ -284,14 +294,18 @@ impl MapView {
             self.info_rx = None;
         }
         if self.key != Some(key) && self.layout_rx.is_none() && self.staging.is_none() {
+            self.layout_started = crate::perf::enabled().then(std::time::Instant::now);
+            crate::perf::instant("map.requested");
             let tree = Arc::clone(input.tree);
             let repaint = ctx.clone();
             let (tx, rx) = mpsc::channel();
             let origin = rect.min;
             let free = [input.disk_free, input.disk_total];
             std::thread::spawn(move || {
+                let _span = crate::perf::span("worker.map_layout");
                 let boxes = layout::build(&tree, key.view, key.w, key.h, &key.layout, key.free);
-                let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, free);
+                crate::perf::counter("map.boxes", boxes.len() as f64);
+                let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, key.muted, free);
                 let _ = tx.send((tree, boxes, prepared));
                 repaint.request_repaint();
             });
@@ -580,7 +594,7 @@ fn info_tip(tree: &Tree, node: NodeId, s: &Settings) -> InfoTip {
 
     let mut second = String::new();
     if s.tip_size {
-        second.push_str(&format::bytes_exact(n.display_len()));
+        second.push_str(&format::size(n.display_len()));
     }
     if s.tip_attrib {
         let attrs = crate::platform::attributes(&path);
@@ -809,7 +823,7 @@ mod tests {
                 folder: false,
             })
             .collect();
-        let prepared = PreparedMap::build(&replacement, &boxes, map.rect.min, [0, 0], [0, 0]);
+        let prepared = PreparedMap::build(&replacement, &boxes, map.rect.min, [0, 0], false, [0, 0]);
         map.staging = Some((key, (replacement.clone(), boxes, prepared)));
         frame(&mut map, &replacement, 1);
         assert!(Arc::ptr_eq(map.display_tree.as_ref().unwrap(), &old));

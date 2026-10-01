@@ -23,10 +23,6 @@ use crate::tree::{NodeId, Tree, flags};
 /// Minimum box sizes (width, height) for density -3 ..= 3.
 pub const MIN_SIZES: [(i32, i32); 7] = [(96, 64), (64, 48), (48, 32), (32, 24), (24, 16), (16, 12), (8, 6)];
 
-/// Density choices as SpaceMonger named them (density -3 ..= 2).
-pub const DENSITY_NAMES: [&str; 6] =
-    ["Too Few Files", "Very Few Files", "Normal", "Lots of Files", "Very Many Files", "Too Many Files"];
-
 /// Folder frame: left/right/bottom border width and top title band height.
 pub const FRAME: i32 = 3;
 pub const TITLE: i32 = 12;

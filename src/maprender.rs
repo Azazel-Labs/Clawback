@@ -18,7 +18,9 @@ fn label_color(rgb: [u8; 3]) -> Color32 {
 }
 
 const MAX_LABELS: usize = 384;
-const LABELS_PER_FRAME: usize = 8;
+// Cheap labels should not hold a completed map back for dozens of frames.
+// The elapsed-time budget remains the primary bound on UI work.
+const LABELS_PER_FRAME: usize = 64;
 const LABEL_BUDGET: Duration = Duration::from_millis(1);
 
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -58,7 +60,15 @@ impl PreparedMap {
         self.labels.len()
     }
     /// Called by the layout worker. No font/context locks are taken here.
-    pub fn build(tree: &Tree, boxes: &[DisplayBox], origin: Pos2, schemes: [usize; 2], free: [u64; 2]) -> Self {
+    pub fn build(
+        tree: &Tree,
+        boxes: &[DisplayBox],
+        origin: Pos2,
+        schemes: [usize; 2],
+        muted: bool,
+        free: [u64; 2],
+    ) -> Self {
+        let _span = crate::perf::span("worker.map_geometry");
         let mut mesh = Mesh::default();
         mesh.reserve_vertices(boxes.len() * 8);
         mesh.reserve_triangles(boxes.len() * 4);
@@ -71,20 +81,24 @@ impl PreparedMap {
                 continue;
             }
             let scheme = schemes[usize::from(b.folder)];
-            let base = if b.item == Item::Free { [29, 30, 30] } else { palette::map_color(scheme, b.depth) };
+            let base = if b.item == Item::Free { [29, 30, 30] } else { palette::display_color(scheme, b.depth, muted) };
             mesh.add_colored_rect(rect, theme::BORDER);
             let rect = rect.shrink(0.6);
             if !rect.is_positive() {
                 continue;
             }
-            let top = base.map(|c| c.saturating_add(3));
-            let bottom = base.map(|c| c.saturating_sub(3));
+            // Broad directional light, baked once into the cached mesh. Tiny
+            // cells and free space stay quiet rather than becoming shiny beads.
+            let strength = if b.item == Item::Free || rect.width().min(rect.height()) < 10.0 { 0.025 } else { 0.14 };
+            let top = base.map(|c| (f32::from(c) + (255.0 - f32::from(c)) * strength) as u8);
+            let middle = base;
+            let bottom = base.map(|c| (f32::from(c) * (1.0 - strength)) as u8);
             let start = mesh.vertices.len() as u32;
             for (pos, color) in [
                 (rect.left_top(), top),
-                (rect.right_top(), top),
+                (rect.right_top(), middle),
                 (rect.right_bottom(), bottom),
-                (rect.left_bottom(), bottom),
+                (rect.left_bottom(), middle),
             ] {
                 mesh.vertices.push(egui::epaint::Vertex {
                     pos,
@@ -132,7 +146,7 @@ impl PreparedMap {
                     color: if b.item == Item::Free {
                         theme::TEXT
                     } else {
-                        label_color(palette::map_color(schemes[usize::from(b.folder)], b.depth))
+                        label_color(palette::display_color(schemes[usize::from(b.folder)], b.depth, muted))
                     },
                 }
             })
@@ -147,6 +161,8 @@ impl PreparedMap {
     /// Prepare a replacement without exposing partially populated labels.
     /// Reuse shaped text across redraws; only cache misses spend the font budget.
     pub fn prepare(&mut self, painter: &egui::Painter, cache: &mut LabelCache) {
+        let _span = crate::perf::span("ui.map_labels");
+        crate::perf::counter("map.pending_labels", self.pending.len() as f64);
         let scale = painter.ctx().pixels_per_point().to_bits();
         if cache.scale != Some(scale) {
             cache.shaped.clear();
@@ -199,6 +215,7 @@ impl PreparedMap {
     }
 
     pub fn paint(&self, painter: &egui::Painter) {
+        let _span = crate::perf::span("ui.map_paint");
         painter.add(Shape::Mesh(self.mesh.clone()));
         for label in &self.labels {
             let clipped = painter.with_clip_rect(label.clip.intersect(painter.clip_rect()));
@@ -246,7 +263,7 @@ mod tests {
                 folder: false,
             })
             .collect();
-        let mut prepared = PreparedMap::build(&tree, &boxes, Pos2::ZERO, [0, 0], [0, 0]);
+        let mut prepared = PreparedMap::build(&tree, &boxes, Pos2::ZERO, [0, 0], false, [0, 0]);
         assert_eq!(prepared.pending.len(), MAX_LABELS);
         let mesh = prepared.mesh.clone();
         let ctx = egui::Context::default();

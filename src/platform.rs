@@ -399,9 +399,9 @@ mod tests {
             removable: false,
             kind: clawback_core::adaptive::StorageKind::Unknown,
         };
-        let disks = [d("/"), d("/home"), d("/home/nick/media")];
-        let found = disk_for(Path::new("/home/nick/media/x/y-that-does-not-exist"), &disks).unwrap();
-        assert_eq!(found.mount, PathBuf::from("/home/nick/media"));
+        let disks = [d("/"), d("/home"), d("/home/azazel-labs/media")];
+        let found = disk_for(Path::new("/home/azazel-labs/media/x/y-that-does-not-exist"), &disks).unwrap();
+        assert_eq!(found.mount, PathBuf::from("/home/azazel-labs/media"));
         assert!(same_path(Path::new("/home"), Path::new("/home")));
     }
 }

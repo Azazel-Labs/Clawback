@@ -10,6 +10,7 @@ pub fn retire(value: impl Send + 'static) {
             .name("clawback-cleanup".into())
             .spawn(move || {
                 for value in rx {
+                    let _span = crate::perf::span("worker.cleanup");
                     drop(value);
                 }
             })

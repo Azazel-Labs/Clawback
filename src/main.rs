@@ -9,15 +9,24 @@ mod background;
 #[cfg(feature = "screenshots")]
 mod demo;
 mod directoryview;
+mod filetype_icons;
+mod filetypes;
 mod i18n;
 mod icon;
 mod maprender;
 mod mapview;
+mod perf;
+#[cfg(feature = "perf-probe")]
+mod perf_probe;
 mod platform;
 mod scanning;
 mod session;
+mod settings_ui;
+mod startup;
 mod theme;
 mod tui;
+#[cfg(windows)]
+mod turbo;
 #[cfg(windows)]
 mod watch_windows;
 mod watching;
@@ -137,6 +146,19 @@ fn parse_args_from(args: impl IntoIterator<Item = std::ffi::OsString>) -> Result
 }
 
 fn main() -> ExitCode {
+    #[cfg(all(windows, feature = "turbo-probe"))]
+    if let Some(result) = turbo::probe_entry() {
+        return if result.is_ok() { ExitCode::SUCCESS } else { ExitCode::FAILURE };
+    }
+    #[cfg(windows)]
+    if let Some(result) = turbo::worker_entry() {
+        return match result {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => std::process::exit(error.raw_os_error().unwrap_or(1)),
+        };
+    }
+    let _perf_session = perf::start();
+    startup::mark("main");
     #[cfg(feature = "screenshots")]
     if let Some(path) = std::env::var_os("CLAWBACK_TERMINAL_CAPTURE") {
         return match tui::capture_demo(&PathBuf::from(path)) {
@@ -184,7 +206,7 @@ fn main() -> ExitCode {
                 }
             }
         }
-        Some(_) => run_gui(args.path),
+        Some(_) => run_gui(args.path.as_deref()),
     }
 }
 
@@ -216,23 +238,64 @@ fn run_report(args: &Args) -> ExitCode {
     }
 }
 
-fn run_gui(path: Option<PathBuf>) -> ExitCode {
+fn run_gui(path: Option<&std::path::Path>) -> ExitCode {
     let settings = Settings::load();
-    let options = eframe::NativeOptions {
+    startup::mark("settings_loaded");
+    let mut options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title("Clawback")
             .with_app_id("clawback")
-            .with_inner_size([1120.0, 760.0])
+            .with_inner_size([1280.0, 860.0])
             .with_min_inner_size([420.0, 300.0])
             .with_icon(icon::icon()),
         persist_window: settings.save_pos,
         ..Default::default()
     };
-    let result = eframe::run_native(
-        "Clawback",
-        options,
-        Box::new(move |cc| Ok(Box::new(app::ClawbackApp::new(cc, settings, path)))),
-    );
+    #[cfg(feature = "screenshots")]
+    if let Some(capture) = std::env::var_os("CLAWBACK_DEMO_CAPTURE") {
+        options.persist_window = false;
+        options.viewport = options.viewport.with_app_id("clawback-demo-capture");
+        options.persistence_path = Some(PathBuf::from(capture).with_extension(format!("{}.egui", std::process::id())));
+    }
+    #[cfg(feature = "perf-probe")]
+    if std::env::var_os("CLAWBACK_PERF_SCENARIO").is_some() {
+        options.persist_window = false;
+        options.viewport = options.viewport.with_app_id("clawback-perf-probe");
+    }
+    startup::mark("native_options_ready");
+    if let eframe::egui_wgpu::WgpuSetup::CreateNew(setup) = &mut options.wgpu_options.wgpu_setup {
+        let descriptor = setup.device_descriptor.clone();
+        setup.device_descriptor = std::sync::Arc::new(move |adapter| {
+            startup::mark("graphics_adapter_selected");
+            if perf::enabled() {
+                perf::instant(&format!("adapter.{:?}", adapter.get_info()));
+            }
+            descriptor(adapter)
+        });
+    }
+    // Initialize one backend at a time on Windows, with DX12 preferred.
+    // Other platforms and explicit environment overrides retain their defaults.
+    let prefer_dx12 = cfg!(windows) && std::env::var_os("WGPU_BACKEND").is_none();
+    let mut fallback_options = options.clone();
+    if prefer_dx12 && let eframe::egui_wgpu::WgpuSetup::CreateNew(setup) = &mut options.wgpu_options.wgpu_setup {
+        setup.instance_descriptor.backends = eframe::wgpu::Backends::DX12;
+        if let eframe::egui_wgpu::WgpuSetup::CreateNew(fallback) = &mut fallback_options.wgpu_options.wgpu_setup {
+            fallback.instance_descriptor.backends = eframe::wgpu::Backends::VULKAN;
+        }
+        #[cfg(feature = "startup-probe")]
+        if std::env::var_os("CLAWBACK_STARTUP_FORCE_FALLBACK").is_some() {
+            setup.instance_descriptor.backends = eframe::wgpu::Backends::empty();
+        }
+    }
+    let app_created = std::cell::Cell::new(false);
+    let mut result = launch_gui(options, &settings, path, &app_created);
+    // Only retry an initialization failure, never restart a running application.
+    // eframe's run-and-return mode reuses its event loop for this second attempt.
+    if prefer_dx12 && !app_created.get() && matches!(result, Err(eframe::Error::Wgpu(_))) {
+        startup::mark("graphics_fallback");
+        result = launch_gui(fallback_options, &settings, path, &app_created);
+    }
+    startup::mark("graphics_run_returned");
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
@@ -241,6 +304,26 @@ fn run_gui(path: Option<PathBuf>) -> ExitCode {
             ExitCode::FAILURE
         }
     }
+}
+
+fn launch_gui(
+    options: eframe::NativeOptions,
+    settings: &Settings,
+    path: Option<&std::path::Path>,
+    app_created: &std::cell::Cell<bool>,
+) -> eframe::Result {
+    eframe::run_native(
+        "Clawback",
+        options,
+        Box::new(move |cc| {
+            app_created.set(true);
+            startup::mark("graphics_ready");
+            if let Some(state) = &cc.wgpu_render_state {
+                startup::mark(&format!("graphics_backend_{:?}", state.adapter.get_info().backend));
+            }
+            Ok(Box::new(app::ClawbackApp::new(cc, settings.clone(), path.map(std::path::Path::to_path_buf))))
+        }),
+    )
 }
 
 #[cfg(test)]

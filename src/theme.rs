@@ -3,6 +3,9 @@ use eframe::egui::{self, Color32, CornerRadius, FontId, Stroke, TextStyle, vec2}
 
 pub const BG: Color32 = Color32::from_rgb(17, 18, 18);
 pub const SURFACE: Color32 = Color32::from_rgb(24, 25, 25);
+pub const NAVIGATOR: Color32 = Color32::from_rgb(27, 30, 34);
+pub const ROW_ALT: Color32 = Color32::from_rgb(33, 37, 42);
+pub const PANEL_EDGE: Color32 = Color32::from_rgb(62, 69, 78);
 pub const BORDER: Color32 = Color32::from_rgb(43, 44, 44);
 pub const TEXT: Color32 = Color32::from_rgb(216, 216, 216);
 pub const MUTED: Color32 = Color32::from_rgb(153, 153, 153);
