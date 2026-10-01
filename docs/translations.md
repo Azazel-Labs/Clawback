@@ -8,7 +8,8 @@ Simplified Chinese (`zh-Hans`), Traditional Chinese (`zh-Hant`), Korean (`ko`), 
 Russian (`ru`), Brazilian Portuguese (`pt-BR`), Italian (`it`), Turkish (`tr`),
 Ukrainian (`uk`), Czech (`cs`), European Portuguese (`pt-PT`), Dutch (`nl`),
 Indonesian (`id`), Vietnamese (`vi`), Thai (`th`), Swedish (`sv`), Romanian (`ro`),
-and Hungarian (`hu`) are included: 24 catalogs including English.
+Hungarian (`hu`), Afrikaans (`af`), Catalan (`ca`), and Serbian Cyrillic
+(`sr-Cyrl`) are included: 27 catalogs including English.
 Catalogs are embedded in debug and release builds. No network connection,
 Crowdin credentials, or separately installed files are needed at runtime.
 
@@ -36,7 +37,10 @@ Brazilian Portuguese matches `pt-BR` (including `pt_BR.UTF-8`). Unspecified
 Portuguese matches `pt-PT` and its CLDR parent locales, including `pt-AO` and
 `pt-MZ`; an exact catalog always takes precedence. The new generic catalogs
 also match regional OS preferences, such as `tr-TR`, `uk-UA`, `cs-CZ`, `nl-BE`,
-`id-ID`, `vi-VN`, `th-TH`, `sv-FI`, `ro-MD`, and `hu-HU`.
+`id-ID`, `vi-VN`, `th-TH`, `sv-FI`, `ro-MD`, `hu-HU`, `af-ZA`, and `ca-ES`.
+Serbian follows CLDR likely subtags: `sr`, `sr-RS`, `sr-BA`, and `sr-XK` select
+`sr-Cyrl`, while explicit Latin (`sr-Latn-RS`, glibc `sr_RS@latin`) and
+Montenegrin `sr-ME` do not, falling through to the next preference.
 Saved explicit language choices override the OS. Settings entries show the
 native name followed by its name in the active UI language, such as
 **Français (French)**, **English (Anglais)**, or **Deutsch (German)**.
@@ -105,7 +109,9 @@ Both have fractional variants. Romanian uses label-first counts such as
 `Fișiere: 101, dosare: 2` and `Sarcini simultane: 4`. This avoids incorrect
 numeral agreement caused by `intl_pluralrules` 7.0.2's Romanian rule, which
 omits the modulo-100 condition for counts such as 101 and 102.
-Dutch and Swedish distinguish singular and plural. Turkish and Hungarian keep
+Dutch, Swedish, Afrikaans, and Catalan distinguish singular and plural.
+Serbian uses `[one]`, `[few]`, and `[other]`: 1 and 21 датотека/фасцикла,
+2 датотеке/фасцикле, 5 and 11 датотека/фасцикли. Turkish and Hungarian keep
 the noun singular after a numeral; Indonesian, Vietnamese, and Thai also use
 one count pattern. Tests cover file, folder, and worker labels.
 
@@ -154,8 +160,9 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
    Chinese Simplified (`zh-CN`), Chinese Traditional (`zh-TW`), Korean (`ko`), Japanese (`ja`), Polish (`pl`), Russian (`ru`),
    Portuguese, Brazilian (`pt-BR`), Italian (`it`), Turkish (`tr`), Ukrainian
    (`uk`), Czech (`cs`), Portuguese (`pt-PT`), Dutch (`nl`), Indonesian (`id`),
-   Vietnamese (`vi`), Thai (`th`), Swedish (`sv-SE`), Romanian (`ro`), and
-   Hungarian (`hu`) as target languages.
+   Vietnamese (`vi`), Thai (`th`), Swedish (`sv-SE`), Romanian (`ro`),
+   Hungarian (`hu`), Afrikaans (`af`), Catalan (`ca`), and Serbian (Cyrillic)
+   (`sr`) as target languages.
 2. Set the GitHub repository variable `CROWDIN_PROJECT_ID` and secret
    `CROWDIN_PERSONAL_TOKEN` to the project's ID and an authorized token.
 3. Upload `locales/en/clawback.ftl` as the source file and import
@@ -164,7 +171,7 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
    `locales/zh-Hans/clawback.ftl`, `locales/zh-Hant/clawback.ftl`, `locales/ko/clawback.ftl`,
    `locales/ja/clawback.ftl`, `locales/pl/clawback.ftl`, `locales/ru/clawback.ftl`,
    `locales/pt-BR/clawback.ftl`, `locales/it/clawback.ftl`, and the catalogs for
-   the eleven additional targets listed above as their respective translations.
+   the fourteen additional targets listed above as their respective translations.
    Review and approve the translations before the
    first approved-only download.
 4. Allow GitHub Actions to create pull requests, then run **Crowdin translations**.
@@ -172,7 +179,7 @@ Cyrillic. Other scripts and bidirectional layout still need verification before 
 The configuration maps French and German exports to the generic `fr` and `de`
 directories so regional OS preferences share their language's translation.
 Crowdin's Simplified Chinese (`zh-CN`) exports map to `zh-Hans`, and Traditional
-Chinese (`zh-TW`) exports map to `zh-Hant`. Swedish (`sv-SE`) maps to `sv`;
+Chinese (`zh-TW`) exports map to `zh-Hant`. Swedish (`sv-SE`) maps to `sv`, and Serbian (Cyrillic) (`sr`) maps to `sr-Cyrl`;
 the other new generic languages map to their two-letter catalog directories.
 Portuguese (`pt-PT`) keeps its regional code, separate from `pt-BR`.
 The workflow uploads sources, downloads approved
