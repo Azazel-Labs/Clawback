@@ -1,4 +1,4 @@
-# Interfejs Clawback. Nie zmieniaj identyfikatorów komunikatów ani nazw zmiennych.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % SKANOWANIA
@@ -34,6 +34,11 @@ date-time = Data / godzina
 delay = Opóźnienie:
 delete = Usuń
 deleting = { "Usuwanie…\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Moving to Recycle Bin…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s elapsed
+delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
 density = Gęstość:
 design-document = Dokument projektowy
 directories = Foldery
@@ -59,7 +64,6 @@ file-size = Rozmiar pliku
 file-types = Typy plików
 filename = Nazwa pliku
 files-2 = Pliki:
-# Przykłady: 1 plik, 2 pliki, 5 plików, 12 plików, 22 pliki, 21 plików.
 contents-count =
     { $files ->
         [one] { $files } plik
@@ -85,10 +89,10 @@ hidden = Ukryty
 horz = Poziomo
 icon = Ikona
 image = Obraz
+language = Język
+korean = Koreański
 japanese = Japoński
 italian = Włoski
-korean = Koreański
-language = Język
 polish = Polski
 russian = Rosyjski
 portuguese-brazil = Portugalski brazylijski
@@ -206,3 +210,20 @@ thai = Tajski
 swedish = Szwedzki
 romanian = Rumuński
 hungarian = Węgierski
+turbo-read-progress = Turbo: reading MFT { $percent }% · { $records } records
+turbo-resolving = Turbo: resolving file names…
+turbo-assembling = Turbo: assembling folders · { $files } files
+turbo-sorting = Turbo: sorting results…
+turbo-transferring = Turbo: loading results…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues.
+settings-appearance = Appearance
+settings-behavior = Behavior
+settings-save = Save changes
+settings-bias-help = Left favors horizontal shapes; center balances them; right favors vertical shapes.
+settings-name-tips = File names
+settings-info-tips = File details
+settings-window = Window & interaction
+settings-deletion = Deleting files
+settings-scan-scope = Scan boundaries
+settings-file-sizes = Size accounting
