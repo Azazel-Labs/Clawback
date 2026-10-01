@@ -100,9 +100,9 @@ crates/clawback-core/     the engine, pure std with no dependencies
   windows.rs          read-only Windows metadata, allocation and volume APIs
   adaptive.rs         disk hints and measured concurrency trials
   tree.rs             arena-backed size tree (delete, graft, largest-files queries)
-  layout.rs           SpaceMonger's box layout and hit-testing, reproduced exactly
+  layout.rs           treemap box layout and hit-testing
   live.rs             incremental metadata refresh and ancestor size updates
-  palette.rs          SpaceMonger's colour tables
+  palette.rs          map colour palettes
   format.rs           size, percent and date formatting (local time without a date crate)
   settings.rs         Setup dialog settings, stored as key = value text
   report.rs           the --report output
