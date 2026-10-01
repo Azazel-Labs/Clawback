@@ -16,6 +16,8 @@ include!(concat!(env!("OUT_DIR"), "/translations.rs"));
 pub static LOADER: LazyLock<FluentLanguageLoader> = LazyLock::new(|| {
     let loader = fluent_language_loader!();
     loader.load_languages(&Localizations, &[loader.fallback_language().clone()]).expect("embedded English catalog");
+    // Every catalog is left-to-right; bidi isolation marks would only show up as stray glyphs.
+    loader.set_use_isolating(false);
     loader
 });
 
@@ -150,7 +152,6 @@ pub fn language_name(code: &str) -> String {
 
 /// Skip the translation when it repeats the native name ("English (English)").
 fn display_name(native: &str, translated: &str) -> String {
-    let translated = translated.trim_matches(['\u{2068}', '\u{2069}']);
     if translated.to_lowercase() == native.to_lowercase() {
         native.to_owned()
     } else {
@@ -510,7 +511,7 @@ mod tests {
     #[test]
     fn active_language_name_is_not_repeated() {
         assert_eq!(display_name("English", "English"), "English");
-        assert_eq!(display_name("Svenska", "\u{2068}svenska\u{2069}"), "Svenska");
+        assert_eq!(display_name("Svenska", "svenska"), "Svenska");
         assert_eq!(display_name("English", "Englisch"), "English (Englisch)");
     }
 
