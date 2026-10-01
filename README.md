@@ -1,85 +1,61 @@
 # Clawback
 
-**Your disk is full. See why. Claw it back.**
+Clawback shows where your disk space went. It scans a drive or folder and draws it as a treemap, where each file is a box sized by how much space it uses, nested inside boxes for its folders. It runs on Windows, macOS, and Linux, with a desktop app and a terminal mode.
 
-Clawback turns files and folders into a map you can explore. Big boxes mean big files. Follow the space, find what you no longer need, and watch the map update as you clean up.
+[Releases](https://github.com/Azazel-Labs/Clawback/releases) · [User guide](docs/usage.md) · [Building](docs/development.md) · [License (MIT-0)](LICENSE)
 
-A modern, open-source homage to SpaceMonger, with a dark desktop interface and a full terminal mode. Built in Rust for Windows, macOS, and Linux.
+![Clawback desktop window showing a directory tree, a file-type breakdown, and a treemap of a demo drive](docs/images/desktop.png)
 
-[**Downloads**](https://github.com/Azazel-Labs/Clawback/releases) · [Getting started](#get-started) · [User guide](docs/usage.md) · [MIT-0 license](LICENSE)
+*Screenshots use a built-in demo drive; the file names and sizes are made up.*
 
-![Clawback's dark desktop interface with compact stats, a directory tree, and a disk-space map](docs/images/desktop.png)
+## Features
 
-*Actual app rendering with a fictional demo drive. All screenshot names, sizes, and dates are synthetic.*
+- Treemap of a drive or folder, with a size-sorted directory tree and a breakdown by file extension for the selected folder.
+- Double-click a folder to zoom into it. Back, Escape, and the mouse Back button return to previous views.
+- The map is usable while the scan is running, and scans can be paused and resumed.
+- After a scan finishes, Clawback watches for filesystem changes and updates the map, so deleted or moved files disappear without a rescan.
+- Open files, view properties, or move items to the Recycle Bin / Trash from the right-click menu. Deletion can be turned off in Settings.
+- Ten color palettes, an option to mute them, and settings for map density, tooltips, and how sizes are counted.
+- Interface translated into 31 languages.
 
-## Find the space hogs at a glance
+![Zoomed into the Projects folder of the demo drive](docs/images/explore.png)
 
-No digging through folder properties one directory at a time. Clawback puts the big picture and the details together: a size-sorted directory tree above a colorful, nested space map.
+## Install
 
-- **Follow the big boxes.** Double-click a folder bucket to zoom in. File tiles take you into their containing folder.
-- **Go back to where you were.** Back, Escape, and your mouse's Back button retrace your visited views.
-- **See what a folder contains.** The file-type pane groups extensions by size, share, and file count as you select folders.
-- **Keep the data front and center.** Compact progress and stats leave the window for your folders and map. Resize the directory pane to suit your workflow.
-- **Make it yours.** Adjust map density, colors, tooltips, and size-accounting options.
+Download a build from [Releases](https://github.com/Azazel-Labs/Clawback/releases).
 
-![Exploring fictional creative projects in Clawback, with nested folders and file sizes](docs/images/explore.png)
+- **Windows:** run `clawback.exe`.
+- **macOS:** drag `Clawback.app` into Applications.
+- **Linux:** run `clawback`. See the user guide for [adding a desktop launcher](docs/usage.md#native-application-icons).
 
-*Drill into a folder without losing your way.*
+Then choose **File → Open folder** and pick a drive or folder.
 
-## Quiet chrome. Colorful space.
+To build from source, see [docs/development.md](docs/development.md).
 
-**Electric** is the default: bright color with soft directional shading. Choose **Palette** to try **Aurora**, **Arcade**, **Citrus**, **Orchid**, or **Gemstone**, alongside **Material**, **Candy**, **Sunset**, **Lagoon**. Enable **Mute colors** to soften any palette while keeping its hues. The panels stay charcoal; the map gets the color. Labels automatically use light or dark text for contrast. Existing saved palette choices are preserved.
-
-![Clawback's ten map palettes, with Electric as the default](docs/images/palettes.svg)
-
-## Start exploring before the scan finishes
-
-The map fills in as files are discovered. Scanning runs in the background, so you can navigate the preview, resize the window, or pause and resume the scan without losing progress.
-
-On Windows, whole NTFS volumes use a read-only MFT scan when volume access is available (normally as administrator). This path publishes the map after validating the metadata. Folder scans and other cases use the progressive directory scanner.
-
-Windows directory scans estimate disk usage from file lengths rounded to clusters, keeping scans fast without opening every file. MFT scans retain their allocation metadata and hard-link accounting.
-
-On macOS, the directory scanner uses `getattrlistbulk` to read file metadata in batches. Filesystems that cannot supply bulk metadata automatically fall back to ordinary directory reads. No administrator access is needed.
-
-The directory scanner starts conservatively, using disk type as a hint. It measures throughput and latency, adds workers when they help, and backs off when they hurt. Small scans can finish before tuning is needed.
-
-## Clean up. Watch it change.
-
-After a successful scan, Clawback listens for filesystem changes and updates the map in the background. Delete or move files elsewhere and see the space change without manually rescanning.
-
-Open files, inspect properties, or move unwanted items to the Recycle Bin / Trash from the desktop context menu. **Trash actions happen immediately**; restore items from your system's trash if needed, or disable deletion in Settings.
-
-## Desktop when you want it. Terminal when you need it.
-
-Prefer a keyboard? The terminal interface pairs a colored space map with a size-sorted file list, folder navigation, scan progress, and live updates. Text reports work in scripts and redirected output too.
+## Terminal mode
 
 ```sh
-clawback                   # Desktop app (also from a terminal)
-clawback --tui .           # Interactive terminal map
-clawback --report --top 10 .
+clawback                       # desktop app
+clawback --tui .               # interactive treemap in the terminal
+clawback --report --top 10 .   # print a text summary, 10 entries per section
 ```
 
-![Clawback terminal interface showing the same fictional drive, a size-sorted directory list, and a colorful space map](docs/images/terminal.png)
+The terminal interface supports browsing, zooming, and live updates, but not file actions. `--report` works in scripts and with redirected output. See the [command-line reference](docs/usage.md#command-line) for all options.
 
-*Captured from the actual terminal renderer using the same fictional dataset as the desktop views.*
+![Terminal mode showing the demo drive](docs/images/terminal.png)
 
-The terminal interface is for browsing; file actions are available in the desktop app.
+## How scanning works
 
-## Get started
+- **Windows:** scanning a whole NTFS volume as administrator reads the Master File Table directly, which is much faster than walking directories. Other scans walk the directory tree and estimate disk usage from file sizes rounded up to the cluster size.
+- **macOS:** directory metadata is read in batches with `getattrlistbulk`, falling back to ordinary directory reads on filesystems that don't support it. No administrator access is needed.
+- **All platforms:** the directory scanner adjusts how many threads it uses based on measured throughput and latency.
 
-1. Choose a build from [Releases](https://github.com/Azazel-Labs/Clawback/releases). Nightly builds are available through the project's release workflow.
-2. Launch `clawback.exe` on Windows, or drag `Clawback.app` into Applications on macOS. On Linux, run `clawback` and follow the [desktop launcher setup](docs/usage.md#native-application-icons) for menu integration.
-3. Choose **File → Open folder**, choose a drive or folder, and follow the biggest boxes.
+Clawback only counts what your account can read and lists the folders it couldn't. It doesn't follow symlinks or Windows junctions. Permissions and size accounting are covered in the [user guide](docs/usage.md).
 
-Clawback measures what your account can read and reports skipped folders. It does not follow symlinks or Windows junctions. Platform permissions and size-accounting details are in the [user guide](docs/usage.md).
+## Contributing
 
-Want to build it yourself? See [Building and development](docs/development.md). Maintainers: [publish a version](docs/releases.md).
+Build instructions and project layout are in [docs/development.md](docs/development.md). Translations are managed through Crowdin. Maintainers can find the release process in [docs/releases.md](docs/releases.md).
 
-Want to help translate the desktop app? See [Crowdin and translation development](docs/translations.md).
+## License
 
-## Inspired by a classic. Built for today.
-
-Clawback is a from-scratch Rust homage to [SpaceMonger 1.4](https://github.com/seanofw/spacemonger1), created by Sean Werkema. It reimplements the nested-map experience without including SpaceMonger source code.
-
-**MIT-0 licensed.** Use it, modify it, and make it your own. Copyright © 2026 Azazel Labs. See [LICENSE](LICENSE).
+Copyright © 2026 Azazel Labs. Released under [MIT-0](LICENSE).

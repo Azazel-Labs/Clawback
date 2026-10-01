@@ -27,26 +27,28 @@ Event queues and pending paths are capped at 4,096 each. Overflow triggers a bac
 
 macOS and Linux use native notifications too, but whole-drive watch limits depend on the OS. Hard-link deduplication on Unix and Windows stays incremental: a filesystem identity index updates each affected group, counts its bytes once, and transfers those bytes to a surviving link when the counted name is removed. The index uses identities captured during scanning, with no additional filesystem walk.
 
-**Delete** moves the item to the Recycle Bin / Trash immediately, with no confirmation, just like SpaceMonger (you can restore it from the trash). If that makes you nervous, turn on **Disable "Delete" Command** in Setup. And the original's advice still stands: if you don't know what something is, don't delete it.
+**Delete** moves the item to the Recycle Bin / Trash immediately, with no confirmation (you can restore it from there). Deletes queue up and run in the background, with progress in the lower-right corner, so you can keep working and delete more. If something is too large for the Recycle Bin, or the drive has none, Clawback asks before deleting it permanently, then deletes it quickly with its own progress and a Cancel button. If that makes you nervous, turn on **Disable "Delete" Command** in Setup. If you don't know what something is, don't delete it.
 
-Selection clears when you zoom, resize the window, change settings or switch to another app, as it did in SpaceMonger.
+On Windows, the Recycle Bin appears on a drive's map as a single cell. Click it to empty your Recycle Bin on that drive, after a confirmation.
+
+Selection clears when you zoom, resize the window, change settings or switch to another app.
 
 **View → Back** and the mouse Back button also return through visited views. **View → Up a level** navigates to the parent directory.
 
-**Keyboard shortcuts** (additions, since SpaceMonger had none): Ctrl/⌘+O Open, F5 Rescan, Home Zoom Full, Escape / Backspace / Alt+Left Back to the previous view, Enter Zoom In (folder) or Run / Open (file), Delete Delete.
+**Keyboard shortcuts:** Ctrl/⌘+O Open, F5 Rescan, Home Zoom Full, Escape / Backspace / Alt+Left Back to the previous view, Enter Zoom In (folder) or Run / Open (file), Delete Delete.
 
 Use the **Palette** menu for preset previews and one-click switching. Click anywhere in a preset row, including its color swatches, to select it. It applies the chosen palette to files and folders together; Settings also lets you choose them independently. **Mute colors** softens the selected palette without replacing it, and stays enabled when you switch palettes. The setting is saved and also applies to terminal maps. Older saved Muted presets migrate to Electric with muting enabled.
 
 ### Setup
 
-Settings adapted from SpaceMonger's Setup dialog:
+Settings:
 
 - **File Layout:** Density (from "Too Few Files" to "Too Many Files") and a Horizontal ↔ Vertical Bias slider.
-- **Display Colors:** Electric (default), Aurora, Arcade, Citrus, Orchid, Gemstone, Material, Candy, Sunset, Lagoon, Windows Colors, White, Gray shades, Red … Violet, separately for files and folders.
-- **ToolTips:** name tips and info tips, their delays, and which details the info tip shows (path, name, icon, date, size, attributes).
+- **Display Colors:** Arcade, Aurora, Blackbody Radiation, Candy, Citrus, Electric (default), Gemstone, Lagoon, Material, Orchid and Sunset, separately for files and folders.
+- **ToolTips:** name tips and info tips, their delays, and which details the info tip adds to the name (full path, icon, date, size, attributes).
 - **Miscellaneous:** Auto Rescan on Delete, Disable Delete, Remember Window Position, Show Rollover Boxes.
 
-Plus a **Scanning** group that SpaceMonger didn't need: stay on one filesystem, use file lengths instead of size on disk, and count hard links once.
+- **Scanning:** stay on one filesystem, use file lengths instead of size on disk, and count hard links once.
 
 Settings are saved to `%APPDATA%\Clawback\settings.ini` on Windows, `~/Library/Application Support/Clawback/settings.ini` on macOS, and `~/.config/clawback/settings.ini` (or `$XDG_CONFIG_HOME/clawback/`) elsewhere.
 
