@@ -1,6 +1,6 @@
 [package]
 name = "clawback-core"
-description = "Filesystem scanner, size tree and SpaceMonger-style layout behind Clawback. Depends only on std."
+description = "Filesystem scanner, size tree and treemap layout behind Clawback. Depends only on std."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

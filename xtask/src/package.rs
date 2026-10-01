@@ -32,6 +32,7 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
     copy_dir(&root.join("docs"), &out.join("docs"))?;
     fs::copy(root.join("assets/fonts/OFL.txt"), out.join("NotoSans-OFL.txt"))?;
     fs::copy(root.join("assets/fonts/NotoSansThai-OFL.txt"), out.join("NotoSansThai-OFL.txt"))?;
+    fs::copy(root.join("assets/fonts/Phosphor-LICENSE.txt"), out.join("Phosphor-LICENSE.txt"))?;
     let exe = if target.contains("windows") { "clawback.exe" } else { "clawback" };
     let binary = root.join("target").join(target).join("release").join(exe);
     fs::copy(&binary, out.join(exe))?;
@@ -43,6 +44,7 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
         fs::copy(root.join("assets/icons/clawback.icns"), contents.join("Resources/clawback.icns"))?;
         fs::copy(root.join("assets/fonts/OFL.txt"), contents.join("Resources/NotoSans-OFL.txt"))?;
         fs::copy(root.join("assets/fonts/NotoSansThai-OFL.txt"), contents.join("Resources/NotoSansThai-OFL.txt"))?;
+        fs::copy(root.join("assets/fonts/Phosphor-LICENSE.txt"), contents.join("Resources/Phosphor-LICENSE.txt"))?;
         let manifest: toml_edit::DocumentMut = fs::read_to_string(root.join("Cargo.toml"))?.parse()?;
         let version = manifest["workspace"]["package"]["version"].as_str().ok_or("Missing version")?;
         fs::write(contents.join("Info.plist"), plist(version))?;
