@@ -265,7 +265,12 @@ impl ClawbackApp {
         if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
             let tree = crate::demo::tree();
             let view = crate::demo::view(&tree);
-            app.settings = Settings { show_free: false, ..Settings::default() };
+            app.settings = Settings {
+                show_free: true,
+                file_color: crate::demo::PALETTE,
+                folder_color: crate::demo::PALETTE,
+                ..Settings::default()
+            };
             if let Ok(language) = std::env::var("CLAWBACK_DEMO_LANGUAGE") {
                 app.settings.language = language;
                 let language = crate::i18n::set_language(&app.settings.language);
@@ -284,8 +289,8 @@ impl ClawbackApp {
                 folders: tree.dir_count(ROOT),
                 tree: Arc::new(tree),
                 skipped: Arc::new(Vec::new()),
-                disk: None,
-                is_mount: false,
+                disk: Some(crate::demo::disk()),
+                is_mount: true,
             });
             if let Ok(mode) = std::env::var("CLAWBACK_DEMO_SCAN") {
                 app.scan = Some(Running::demo(mode == "paused"));
@@ -1684,11 +1689,14 @@ impl Drop for ClawbackApp {
 }
 
 impl eframe::App for ClawbackApp {
-    #[cfg(feature = "perf-probe")]
+    #[cfg(any(feature = "perf-probe", feature = "screenshots"))]
     fn raw_input_hook(&mut self, _ctx: &egui::Context, input: &mut egui::RawInput) {
+        #[cfg(feature = "perf-probe")]
         if let Some(probe) = &self.probe {
             probe.pointer(input);
         }
+        #[cfg(feature = "screenshots")]
+        crate::demo::isolate_input(input);
     }
     fn ui(&mut self, ui: &mut Ui, frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
