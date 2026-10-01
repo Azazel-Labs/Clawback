@@ -4,28 +4,54 @@ use std::path::Path;
 
 pub fn tree() -> Tree {
     let mut tree = Tree::new(Path::new("Demo Drive"));
+    // Deep, realistic paths: the map colours boxes by nesting depth, so files reach seven
+    // folders down and every step of a palette (Blackbody Radiation's included) appears.
     let groups: &[(&str, &[(&str, u64)])] = &[
-        ("Games/Starfall", &[("worlds.pak", 24000), ("textures.pak", 16000), ("audio.pak", 6000)]),
-        ("Games/Neon Circuit", &[("tracks.pak", 18000), ("cars.pak", 9000), ("soundtrack.ogg", 3000)]),
-        ("Movies", &[("Ocean Expedition.mkv", 22000), ("Night Sky.mkv", 14000), ("Desert Roads.mkv", 11000)]),
+        ("Games/Starfall/Content/Paks/Windows", &[("worlds.pak", 24000), ("textures.pak", 16000)]),
+        ("Games/Starfall/Content/Audio", &[("audio.pak", 6000)]),
+        ("Games/Neon Circuit/Content/Tracks/City/Night", &[("tracks.pak", 18000)]),
+        ("Games/Neon Circuit/Content/Vehicles", &[("cars.pak", 9000)]),
+        ("Games/Neon Circuit/Soundtrack", &[("soundtrack.ogg", 3000)]),
+        ("Movies/Documentaries/Nature", &[("Ocean Expedition.mkv", 22000)]),
+        ("Movies/Documentaries/Space", &[("Night Sky.mkv", 14000)]),
+        ("Movies/Road Trips", &[("Desert Roads.mkv", 11000)]),
         (
-            "Projects/Lunar Garden",
+            "Projects/Lunar Garden/Assets",
             &[
-                ("Assets/Environments.blend", 12000),
-                ("Assets/Characters.blend", 8000),
-                ("Builds/preview.zip", 6500),
-                ("Cache/shaders.bin", 3500),
+                ("Scenes/Environments.blend", 7000),
+                ("Scenes/Characters.blend", 4500),
+                ("Textures/4K/Terrain/terrain_albedo.exr", 3600),
+                ("Textures/4K/Terrain/terrain_normal.exr", 2400),
+                ("Textures/4K/Characters/hero_albedo.exr", 1900),
             ],
         ),
-        ("Projects/Studio Website", &[("design.fig", 1400), ("media.zip", 2800), ("build-cache.bin", 1900)]),
-        ("Photos/Coastal Weekend", &[("Sunrise.raw", 1800), ("Harbor.raw", 1400), ("Cliffs.raw", 2100)]),
-        ("Photos/Mountain Trails", &[("Alpine Lake.raw", 2400), ("Summit.raw", 1800)]),
-        ("Backups", &[("workstation-may.zip", 26000), ("workstation-april.zip", 23000), ("phone-backup.zip", 10000)]),
-        ("Downloads", &[("texture-library.zip", 9500), ("sample-pack.zip", 6200), ("old-installer.iso", 4800)]),
         (
-            "Music",
-            &[("Synthwave Collection.flac", 3200), ("Piano Sessions.flac", 1900), ("Field Recordings.wav", 4200)],
+            "Projects/Lunar Garden/Saved/Cooked/Windows/Content",
+            &[("Maps/moon_base.umap", 5200), ("Maps/crater_rim.umap", 3100), ("Shaders/shaders.bin", 3500)],
         ),
+        ("Projects/Lunar Garden/Builds/Windows/Shipping", &[("preview.zip", 6500)]),
+        (
+            "Projects/Studio Website",
+            &[
+                ("Design/design.fig", 1400),
+                ("Public/Media/media.zip", 2800),
+                ("node_modules/.cache/build-cache.bin", 1900),
+            ],
+        ),
+        (
+            "Photos/2026/05 May/Coastal Weekend/RAW",
+            &[("Sunrise.raw", 1800), ("Harbor.raw", 1400), ("Cliffs.raw", 2100)],
+        ),
+        ("Photos/2025/09 September/Mountain Trails/RAW", &[("Alpine Lake.raw", 2400), ("Summit.raw", 1800)]),
+        ("Backups/Workstation/2026/May/Week 4", &[("workstation-may.zip", 26000)]),
+        ("Backups/Workstation/2026/April", &[("workstation-april.zip", 23000)]),
+        ("Backups/Phone/2026", &[("phone-backup.zip", 10000)]),
+        ("Downloads", &[("texture-library.zip", 9500)]),
+        ("Downloads/Audio", &[("sample-pack.zip", 6200)]),
+        ("Downloads/Installers/Archive", &[("old-installer.iso", 4800)]),
+        ("Music/Library/Electronic/Synthwave", &[("Synthwave Collection.flac", 3200)]),
+        ("Music/Library/Classical/Piano", &[("Piano Sessions.flac", 1900)]),
+        ("Music/Recordings/Field/2026", &[("Field Recordings.wav", 4200)]),
     ];
     for (folder, files) in groups {
         for (name, megabytes) in *files {
@@ -67,6 +93,14 @@ pub fn view(tree: &Tree) -> NodeId {
         .unwrap_or(ROOT)
 }
 
+/// Ignore the real pointer and keyboard so a capture never depends on where
+/// its window opens relative to the cursor.
+pub fn isolate_input(input: &mut eframe::egui::RawInput) {
+    if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
+        input.events.retain(|event| matches!(event, eframe::egui::Event::Screenshot { .. }));
+    }
+}
+
 pub fn capture(ctx: &eframe::egui::Context) {
     use eframe::egui::{self, vec2};
     use std::io::Write;
@@ -97,3 +131,19 @@ pub fn capture(ctx: &eframe::egui::Context) {
         ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(egui::UserData::default()));
     }
 }
+
+/// The fictional drive: 384 GB with 64 GB free, so captures show a modest free-space box.
+pub fn disk() -> crate::platform::DiskInfo {
+    crate::platform::DiskInfo {
+        name: "Demo Drive".into(),
+        mount: "Demo Drive".into(),
+        fs: "NTFS".into(),
+        total: 384 << 30,
+        free: 64 << 30,
+        removable: false,
+        kind: clawback_core::adaptive::StorageKind::Unknown,
+    }
+}
+
+/// README screenshots use the Blackbody Radiation palette for files and folders.
+pub const PALETTE: usize = 22;

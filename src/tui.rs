@@ -424,7 +424,11 @@ pub fn capture_demo(path: &std::path::Path) -> io::Result<()> {
     let mut app = App {
         root: tree.root_path().to_path_buf(),
         tree: Arc::new(tree),
-        settings: Settings::default(),
+        settings: Settings {
+            file_color: crate::demo::PALETTE,
+            folder_color: crate::demo::PALETTE,
+            ..Settings::default()
+        },
         running: None,
         live: None,
         view: ROOT,
