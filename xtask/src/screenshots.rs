@@ -10,14 +10,15 @@ use std::{
     time::{Duration, Instant},
 };
 
-pub const USAGE: &str = "cargo xtask screenshots [--render-only]";
+#[derive(Debug, clap::Args)]
+pub struct Args {
+    /// Rerender the existing captures without opening the app
+    #[arg(long)]
+    render_only: bool,
+}
 
-pub fn run(root: &Path, args: &[String]) -> Result<()> {
-    let render_only = match args {
-        [] => false,
-        [arg] if arg == "--render-only" => true,
-        _ => return Err(crate::usage(USAGE)),
-    };
+pub fn run(root: &Path, args: &Args) -> Result<()> {
+    let render_only = args.render_only;
     let target = root.join("target");
     if !render_only {
         println!("Building the fictional demo capture feature…");

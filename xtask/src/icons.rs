@@ -2,7 +2,6 @@
 use crate::{Result, hex};
 use std::{fmt::Write as _, fs, path::Path};
 
-pub const USAGE: &str = "cargo xtask icons";
 const SIZES: &[u32] = &[16, 20, 24, 28, 30, 32, 36, 40, 48, 60, 64, 72, 80, 96, 128, 256, 512, 1024];
 
 /// One rendered size, as straight RGBA and its PNG encoding.

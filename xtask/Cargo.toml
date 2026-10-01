@@ -8,6 +8,7 @@ authors.workspace = true
 publish = false
 
 [dependencies]
+clap = { version = "4.6", features = ["derive"] }
 fluent-syntax = "0.12"
 unic-langid = "0.9"
 proc-macro2 = "1"

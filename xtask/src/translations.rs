@@ -99,15 +99,22 @@ fn extract(directory: &Path, extractor: &mut Extractor) -> Result<()> {
     Ok(())
 }
 
-pub const USAGE: &str = "cargo xtask translations <check|fmt [--check]>";
+#[derive(Clone, Copy, Debug, clap::Subcommand)]
+pub enum Action {
+    /// Validate tr! messages against the English catalog and check formatting
+    Check,
+    /// Format the Fluent catalogs in place
+    Fmt {
+        /// Report unformatted catalogs instead of rewriting them
+        #[arg(long)]
+        check: bool,
+    },
+}
 
-pub fn run(root: &Path, args: &[String]) -> Result<()> {
+pub fn run(root: &Path, action: Action) -> Result<()> {
     let directory = root.join("locales");
-    match args {
-        [command] if command == "check" => {}
-        [command] if command == "fmt" => return format_catalogs(&directory, true),
-        [command, flag] if command == "fmt" && flag == "--check" => return format_catalogs(&directory, false),
-        _ => return Err(crate::usage(USAGE)),
+    if let Action::Fmt { check } = action {
+        return format_catalogs(&directory, !check);
     }
     let mut extractor = Extractor::default();
     extract(&root.join("src"), &mut extractor)?;
