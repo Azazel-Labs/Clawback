@@ -5,9 +5,11 @@ use std::time::Duration;
 
 const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-/// `"12.3 Gb"`: binary units, one truncated decimal (SpaceMonger's `size_format`).
+/// Human-readable bytes using Windows-style labels and powers of 1024.
+/// Keep one truncated decimal above bytes, matching SpaceMonger's size values.
 pub fn size(bytes: u64) -> String {
-    const UNITS: [(u64, &str); 4] = [(1 << 40, "Tb"), (1 << 30, "Gb"), (1 << 20, "Mb"), (1 << 10, "Kb")];
+    const UNITS: [(u64, &str); 6] =
+        [(1 << 60, "EB"), (1 << 50, "PB"), (1 << 40, "TB"), (1 << 30, "GB"), (1 << 20, "MB"), (1 << 10, "KB")];
     for (unit, name) in UNITS {
         if bytes >= unit {
             let full = bytes / unit;
@@ -15,7 +17,7 @@ pub fn size(bytes: u64) -> String {
             return format!("{full}.{tenth} {name}");
         }
     }
-    format!("{bytes}.0 bytes")
+    format!("{bytes} B")
 }
 
 /// `"12.3%"`, truncated like the original.
@@ -165,14 +167,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn sizes_like_spacemonger() {
-        assert_eq!(size(0), "0.0 bytes");
-        assert_eq!(size(1023), "1023.0 bytes");
-        assert_eq!(size(1024), "1.0 Kb");
-        assert_eq!(size(1535), "1.4 Kb"); // truncated, not rounded
-        assert_eq!(size(5 * 1024 * 1024 + 1024 * 1023), "5.9 Mb");
-        assert_eq!(size(3 << 30), "3.0 Gb");
-        assert_eq!(size(2 << 40), "2.0 Tb");
+    fn readable_sizes_keep_binary_values() {
+        assert_eq!(size(0), "0 B");
+        assert_eq!(size(1023), "1023 B");
+        assert_eq!(size(1024), "1.0 KB");
+        assert_eq!(size(1535), "1.4 KB"); // truncated, not rounded
+        assert_eq!(size(5 * 1024 * 1024 + 1024 * 1023), "5.9 MB");
+        assert_eq!(size(3 << 30), "3.0 GB");
+        assert_eq!(size(2 << 40), "2.0 TB");
+        assert_eq!(size(94_983_340_321), "88.4 GB");
+        assert_eq!(size(1 << 50), "1.0 PB");
+        assert_eq!(size(u64::MAX), "15.9 EB");
     }
 
     #[test]

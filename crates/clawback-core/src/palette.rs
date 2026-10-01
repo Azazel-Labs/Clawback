@@ -34,11 +34,97 @@ pub const BOX_COLORS: [Rgb; 24] = [
 ];
 
 /// Desktop map presets. Existing scheme IDs remain stable in saved settings.
-pub const MAP_PRESETS: [(usize, &str); 5] =
-    [(0, "Material"), (12, "Candy"), (13, "Sunset"), (14, "Lagoon"), (15, "Muted")];
+pub const DEFAULT_MAP_SCHEME: usize = 16;
+
+pub const MAP_PRESETS: [(usize, &str); 10] = [
+    (16, "Electric"),
+    (17, "Aurora"),
+    (18, "Arcade"),
+    (19, "Citrus"),
+    (20, "Orchid"),
+    (21, "Gemstone"),
+    (0, "Material"),
+    (12, "Candy"),
+    (13, "Sunset"),
+    (14, "Lagoon"),
+];
+
+/// Apply a restrained saturation reduction while retaining palette identity.
+/// Shared by the cached desktop mesh, label contrast, previews, and terminal.
+pub fn display_color(scheme: usize, depth: i32, muted: bool) -> Rgb {
+    let rgb = map_color(scheme, depth);
+    if !muted {
+        return rgb;
+    }
+    let gray = (u32::from(rgb[0]) * 54 + u32::from(rgb[1]) * 183 + u32::from(rgb[2]) * 19 + 128) / 256;
+    rgb.map(|channel| ((u32::from(channel) * 2 + gray * 3 + 2) / 5) as u8)
+}
+fn from_hex(colors: [u32; 8]) -> [Rgb; 8] {
+    colors.map(|rgb| [(rgb >> 16) as u8, (rgb >> 8) as u8, rgb as u8])
+}
 
 pub fn map_color(scheme: usize, depth: i32) -> Rgb {
     let colors = match scheme {
+        16 => from_hex([
+            0x0044_8AFF,
+            0x0000_BFA5,
+            0x007C_4DFF,
+            0x00E0_40FB,
+            0x00FF_4081,
+            0x00FF_6E40,
+            0x00FF_D740,
+            0x0076_FF03,
+        ]),
+        17 => from_hex([
+            0x003B_82F6,
+            0x0022_D3EE,
+            0x002D_D4BF,
+            0x00A3_E635,
+            0x0081_8CF8,
+            0x00C0_84FC,
+            0x00E8_79F9,
+            0x0038_BDF8,
+        ]),
+        18 => from_hex([
+            0x0000_D9FF,
+            0x00FF_3DAE,
+            0x009D_5CFF,
+            0x00FF_E14A,
+            0x0000_E6A8,
+            0x00FF_784F,
+            0x005B_8CFF,
+            0x00D4_FF42,
+        ]),
+        19 => from_hex([
+            0x00FF_B300,
+            0x00FF_7043,
+            0x00F0_6292,
+            0x00AB_47BC,
+            0x0029_B6F6,
+            0x0026_C6DA,
+            0x0066_BB6A,
+            0x00D4_E157,
+        ]),
+        20 => from_hex([
+            0x008B_5CF6,
+            0x00C0_84FC,
+            0x00F4_72B6,
+            0x00FB_7185,
+            0x00FD_BA74,
+            0x00FD_E68A,
+            0x0067_E8F9,
+            0x0060_A5FA,
+        ]),
+        21 => from_hex([
+            0x0025_63EB,
+            0x000D_9488,
+            0x007C_3AED,
+            0x00BE_185D,
+            0x00DC_2626,
+            0x00EA_580C,
+            0x00CA_8A04,
+            0x0016_A34A,
+        ]),
         // Google Material Design 400 swatches: blue, teal, indigo, purple,
         // pink, orange, amber, green. https://m1.material.io/style/color.html
         0 => [
@@ -150,7 +236,7 @@ pub const WHITE: Rgb = [0xFF, 0xFF, 0xFF];
 
 /// Colour scheme names, preserving legacy IDs. Index 0 is "Material"
 /// (colour by depth), 1 is the system 3D colours, 2.. are fixed colours.
-pub const SCHEME_NAMES: [&str; 16] = [
+pub const SCHEME_NAMES: [&str; 22] = [
     "Material",
     "Windows Colors",
     "White",
@@ -167,6 +253,12 @@ pub const SCHEME_NAMES: [&str; 16] = [
     "Sunset",
     "Lagoon",
     "Muted",
+    "Electric",
+    "Aurora",
+    "Arcade",
+    "Citrus",
+    "Orchid",
+    "Gemstone",
 ];
 
 /// Base, bright (top-left bevel) and dark (bottom-right bevel) colours.
@@ -205,7 +297,32 @@ mod tests {
     use super::*;
 
     #[test]
+    fn muting_reduces_saturation_without_changing_channel_order() {
+        let spread = |rgb: Rgb| rgb.iter().max().expect("RGB") - rgb.iter().min().expect("RGB");
+        for (scheme, _) in MAP_PRESETS {
+            for depth in 0..8 {
+                let original = map_color(scheme, depth);
+                assert_eq!(display_color(scheme, depth, false), original);
+                let muted = display_color(scheme, depth, true);
+                assert!(spread(muted) < spread(original));
+                for a in 0..3 {
+                    for b in 0..3 {
+                        if original[a] > original[b] {
+                            assert!(muted[a] >= muted[b]);
+                        }
+                    }
+                }
+            }
+        }
+        assert_eq!(display_color(2, 0, true), map_color(2, 0)); // white stays neutral
+    }
+    #[test]
     fn depth_wraps_every_eight() {
+        for (scheme, name) in MAP_PRESETS {
+            assert_eq!(SCHEME_NAMES[scheme], name);
+            assert_eq!(map_color(scheme, 0), map_color(scheme, 8));
+            assert_eq!(map_color(scheme, -1), map_color(scheme, 7));
+        }
         assert_eq!(shades(0, 0), shades(0, 8));
         assert_eq!(shades(0, 3).color, [0x7F, 0xFF, 0x7F]);
         assert_eq!(shades(11, 0).color, [0xFF, 0x7F, 0xFF]);

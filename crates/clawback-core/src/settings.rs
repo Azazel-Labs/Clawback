@@ -16,6 +16,7 @@ pub struct Settings {
     // Display colours (indices into `palette::SCHEME_NAMES`)
     pub file_color: usize,
     pub folder_color: usize,
+    pub mute_palette: bool,
     // Tool tips
     pub show_name_tips: bool,
     pub nametip_delay_ms: u32,
@@ -43,14 +44,15 @@ pub struct Settings {
 }
 
 impl Default for Settings {
-    /// SpaceMonger 1.4's defaults (`CCurrentSettings::Reset`).
+    /// Clawback defaults, based on SpaceMonger with the Electric map palette.
     fn default() -> Self {
         Settings {
             language: "auto".into(),
             density: 0,
             bias: 0,
-            file_color: 0,
-            folder_color: 0,
+            file_color: crate::palette::DEFAULT_MAP_SCHEME,
+            folder_color: crate::palette::DEFAULT_MAP_SCHEME,
+            mute_palette: false,
             show_name_tips: true,
             nametip_delay_ms: 125,
             show_info_tips: true,
@@ -105,10 +107,17 @@ impl Settings {
         self.density = self.density.clamp(-3, 3);
         self.bias = self.bias.clamp(-20, 20);
         if self.file_color >= crate::palette::SCHEME_NAMES.len() {
-            self.file_color = 0;
+            self.file_color = crate::palette::DEFAULT_MAP_SCHEME;
         }
         if self.folder_color >= crate::palette::SCHEME_NAMES.len() {
-            self.folder_color = 0;
+            self.folder_color = crate::palette::DEFAULT_MAP_SCHEME;
+        }
+        // ID 15 was a standalone Muted preset. Keep other saved IDs stable.
+        for scheme in [&mut self.file_color, &mut self.folder_color] {
+            if *scheme == 15 {
+                *scheme = crate::palette::DEFAULT_MAP_SCHEME;
+                self.mute_palette = true;
+            }
         }
         self.nametip_delay_ms = self.nametip_delay_ms.min(99_999);
         self.infotip_delay_ms = self.infotip_delay_ms.min(99_999);
@@ -120,11 +129,12 @@ impl Settings {
         let mut kv = |k: &str, v: &dyn std::fmt::Display| {
             let _ = writeln!(s, "{k} = {v}");
         };
-        kv("language", &self.language);
         kv("density", &self.density);
+        kv("language", &self.language);
         kv("bias", &self.bias);
         kv("file_color", &self.file_color);
         kv("folder_color", &self.folder_color);
+        kv("mute_palette", &self.mute_palette);
         kv("show_name_tips", &self.show_name_tips);
         kv("nametip_delay", &self.nametip_delay_ms);
         kv("show_info_tips", &self.show_info_tips);
@@ -171,6 +181,7 @@ impl Settings {
                 "bias" => set(&mut s.bias, int()),
                 "file_color" => set(&mut s.file_color, v.parse().ok()),
                 "folder_color" => set(&mut s.folder_color, v.parse().ok()),
+                "mute_palette" => set(&mut s.mute_palette, flag()),
                 "show_name_tips" => set(&mut s.show_name_tips, flag()),
                 "nametip_delay" => set(&mut s.nametip_delay_ms, ms()),
                 "show_info_tips" => set(&mut s.show_info_tips, flag()),
@@ -242,6 +253,17 @@ mod tests {
     use super::*;
 
     #[test]
+    fn mute_preserves_selected_palettes_and_migrates_legacy_preset() {
+        let settings = Settings { file_color: 18, folder_color: 20, mute_palette: true, ..Settings::default() };
+        assert_eq!(Settings::from_text(&settings.to_text()), settings);
+        let migrated = Settings::from_text("file_color=15\nfolder_color=18\n");
+        assert_eq!(migrated.file_color, crate::palette::DEFAULT_MAP_SCHEME);
+        assert_eq!(migrated.folder_color, 18);
+        assert!(migrated.mute_palette);
+        assert!(!Settings::from_text("file_color=18\n").mute_palette);
+    }
+
+    #[test]
     fn map_presets_survive_save_and_reload() {
         for (scheme, _) in crate::palette::MAP_PRESETS {
             let settings = Settings { file_color: scheme, folder_color: scheme, ..Settings::default() };
@@ -282,7 +304,7 @@ mod tests {
         let s = Settings::from_text("density = 99\nbias=-99\nnonsense\nfile_color = 50\nshow_free = maybe\n");
         assert_eq!(s.density, 3);
         assert_eq!(s.bias, -20);
-        assert_eq!(s.file_color, 0);
+        assert_eq!(s.file_color, crate::palette::DEFAULT_MAP_SCHEME);
         assert!(s.show_free);
     }
 }
