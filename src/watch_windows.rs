@@ -1,21 +1,22 @@
 //! One asynchronous subtree watch. Zero-byte completions mean lost events.
 use crate::watching::{Change, Inbox};
 use std::{
+    fs::OpenOptions,
     io,
     os::windows::{
         ffi::OsStringExt,
+        fs::OpenOptionsExt,
         io::{AsRawHandle, FromRawHandle, OwnedHandle},
     },
     path::{Path, PathBuf},
     sync::{Arc, mpsc},
 };
 use windows_sys::Win32::{
-    Foundation::{ERROR_NOTIFY_ENUM_DIR, INVALID_HANDLE_VALUE, WAIT_OBJECT_0},
+    Foundation::{ERROR_NOTIFY_ENUM_DIR, WAIT_OBJECT_0},
     Storage::FileSystem::{
-        CreateFileW, FILE_ACTION_RENAMED_NEW_NAME, FILE_ACTION_RENAMED_OLD_NAME, FILE_FLAG_BACKUP_SEMANTICS,
-        FILE_FLAG_OVERLAPPED, FILE_LIST_DIRECTORY, FILE_NOTIFY_CHANGE_DIR_NAME, FILE_NOTIFY_CHANGE_FILE_NAME,
-        FILE_NOTIFY_CHANGE_LAST_WRITE, FILE_NOTIFY_CHANGE_SIZE, FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE,
-        OPEN_EXISTING, ReadDirectoryChangesW,
+        FILE_ACTION_RENAMED_NEW_NAME, FILE_ACTION_RENAMED_OLD_NAME, FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OVERLAPPED,
+        FILE_LIST_DIRECTORY, FILE_NOTIFY_CHANGE_DIR_NAME, FILE_NOTIFY_CHANGE_FILE_NAME, FILE_NOTIFY_CHANGE_LAST_WRITE,
+        FILE_NOTIFY_CHANGE_SIZE, FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE, ReadDirectoryChangesW,
     },
     System::{
         IO::{CancelIoEx, GetOverlappedResult, OVERLAPPED},
@@ -66,25 +67,12 @@ fn event() -> io::Result<OwnedHandle> {
 }
 
 fn run(root: &Path, stop: &OwnedHandle, inbox: &Inbox, ready: &mpsc::SyncSender<Result<(), String>>) -> io::Result<()> {
-    use std::os::windows::ffi::OsStrExt;
-    let name: Vec<u16> = root.as_os_str().encode_wide().chain(Some(0)).collect();
-    // SAFETY: name is NUL-terminated; other pointers are optional and null.
-    let handle = unsafe {
-        CreateFileW(
-            name.as_ptr(),
-            FILE_LIST_DIRECTORY,
-            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-            std::ptr::null(),
-            OPEN_EXISTING,
-            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,
-            std::ptr::null_mut(),
-        )
-    };
-    if handle == INVALID_HANDLE_VALUE {
-        return Err(io::Error::last_os_error());
-    }
-    // SAFETY: the successfully opened handle is now owned by this worker.
-    let directory = unsafe { OwnedHandle::from_raw_handle(handle) };
+    // Overlapped and only ever used through its raw handle, never std I/O.
+    let directory = OpenOptions::new()
+        .access_mode(FILE_LIST_DIRECTORY)
+        .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE)
+        .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED)
+        .open(root)?;
     let completed = event()?;
     let mut overlapped = OVERLAPPED { hEvent: completed.as_raw_handle(), ..OVERLAPPED::default() };
     // DWORD-aligned buffer, at most 64 KiB (also works with network shares).

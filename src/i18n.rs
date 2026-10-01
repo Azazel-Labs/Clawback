@@ -25,108 +25,70 @@ pub fn languages() -> impl Iterator<Item = &'static str> {
 
 pub fn set_language(code: &str) -> &'static str {
     let preferences = if code == "auto" { system::languages() } else { vec![code.to_owned()] };
-    let code = preferred_catalog(&preferences, LANGUAGES).map_or("en", |index| LANGUAGES[index]);
+    let code = preferred_catalog(&preferences, LANGUAGES).unwrap_or("en");
     LOADER
         .load_languages(&Localizations, &[code.parse().expect("validated catalog language")])
         .expect("validated embedded Fluent catalogs");
     code
 }
 
+/// The untranslated C/POSIX locale, with or without a codeset or modifier.
+fn is_c_locale(locale: &str) -> bool {
+    matches!(locale.split(['.', '@']).next(), Some("C" | "POSIX"))
+}
+
+/// CLDR parents, checked after an exact match and before truncation. Explicit
+/// scripts (zh-Hans-CN) retain priority through the normal truncation.
+/// <https://github.com/unicode-org/cldr/blob/main/common/supplemental/supplementalData.xml>
+const PARENTS: &[(&str, &[&str])] = &[
+    // Region-only OS locales for Chinese.
+    ("zh-Hans", &["zh-cn", "zh-sg"]),
+    ("zh-Hant", &["zh-tw", "zh-hk", "zh-mo"]),
+    // parentLocales: Latin American Spanish, before the generic `es` fallback.
+    (
+        "es-419",
+        &[
+            "es-ar", "es-bo", "es-br", "es-bz", "es-cl", "es-co", "es-cr", "es-cu", "es-do", "es-ec", "es-gt", "es-hn",
+            "es-jp", "es-mx", "es-ni", "es-pa", "es-pe", "es-pr", "es-py", "es-sv", "es-us", "es-uy", "es-ve",
+        ],
+    ),
+    // parentLocales: European Portuguese.
+    ("pt-PT", &["pt-ao", "pt-ch", "pt-cv", "pt-fr", "pt-gq", "pt-gw", "pt-lu", "pt-mo", "pt-mz", "pt-st", "pt-tl"]),
+    // Legacy macrolanguage `no` (e.g. glibc no_NO) means Bokmål in practice.
+    ("nb", &["no"]),
+];
+/// Serbian locales whose likely script is Cyrillic, unless Latin is requested.
+const SERBIAN_CYRILLIC: &[&str] = &["sr", "sr-rs", "sr-ba", "sr-xk"];
+
 /// Match preferences in order, allowing a regional locale to use its generic
-/// catalog (fr-CA -> fr), with CLDR's explicit es-419 and pt-PT parents.
+/// catalog (fr-CA -> fr), with CLDR's explicit parents above.
 /// Never guess between sibling regional or script variants.
-fn preferred_catalog(preferences: &[String], available: &[&str]) -> Option<usize> {
+fn preferred_catalog<'a>(preferences: &[String], available: &[&'a str]) -> Option<&'a str> {
+    let find = |code: &str| available.iter().copied().find(|c| c.eq_ignore_ascii_case(code));
     for preference in preferences {
-        let mut code = preference.split(['.', '@']).next().unwrap_or_default().replace('_', "-");
-        if code == "C" || code == "POSIX" {
-            code = "en".into();
-        }
+        let lower = preference.to_ascii_lowercase();
         // CLDR likely subtags: Serbian is Cyrillic except in Montenegro or when
         // Latin is requested by script tag or glibc's @latin modifier.
-        let lower = preference.to_ascii_lowercase();
         let serbian_latin = lower.contains("latn")
             || lower.contains("@latin")
             || lower.split(['-', '_', '.', '@']).nth(1) == Some("me");
+        let code = if is_c_locale(preference) {
+            "en".to_owned()
+        } else {
+            lower.split(['.', '@']).next().unwrap_or_default().replace('_', "-")
+        };
+        let mut code = code.as_str();
         loop {
-            if let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case(&code)) {
-                return Some(index);
-            }
-            // Region-only OS locales for Chinese. Explicit scripts
-            // (zh-Hans/zh-Hant) retain priority through the normal truncation.
-            if matches!(code.to_ascii_lowercase().as_str(), "zh-cn" | "zh-sg")
-                && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("zh-Hans"))
-            {
-                return Some(index);
-            }
-            if matches!(code.to_ascii_lowercase().as_str(), "zh-tw" | "zh-hk" | "zh-mo")
-                && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("zh-Hant"))
-            {
-                return Some(index);
-            }
-            // CLDR supplementalData.xml parentLocales: Latin American Spanish.
-            // Check after the exact locale and before the generic `es` fallback.
-            // https://github.com/unicode-org/cldr/blob/main/common/supplemental/supplementalData.xml
-            if matches!(
-                code.to_ascii_lowercase().as_str(),
-                "es-ar"
-                    | "es-bo"
-                    | "es-br"
-                    | "es-bz"
-                    | "es-cl"
-                    | "es-co"
-                    | "es-cr"
-                    | "es-cu"
-                    | "es-do"
-                    | "es-ec"
-                    | "es-gt"
-                    | "es-hn"
-                    | "es-jp"
-                    | "es-mx"
-                    | "es-ni"
-                    | "es-pa"
-                    | "es-pe"
-                    | "es-pr"
-                    | "es-py"
-                    | "es-sv"
-                    | "es-us"
-                    | "es-uy"
-                    | "es-ve"
-            ) && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("es-419"))
-            {
-                return Some(index);
-            }
-            // CLDR's European Portuguese parents, after any exact match.
-            if matches!(
-                code.to_ascii_lowercase().as_str(),
-                "pt-ao"
-                    | "pt-ch"
-                    | "pt-cv"
-                    | "pt-fr"
-                    | "pt-gq"
-                    | "pt-gw"
-                    | "pt-lu"
-                    | "pt-mo"
-                    | "pt-mz"
-                    | "pt-st"
-                    | "pt-tl"
-            ) && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("pt-PT"))
-            {
-                return Some(index);
-            }
-            if !serbian_latin
-                && matches!(code.to_ascii_lowercase().as_str(), "sr" | "sr-rs" | "sr-ba" | "sr-xk")
-                && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("sr-Cyrl"))
-            {
-                return Some(index);
-            }
-            // Legacy macrolanguage `no` (e.g. glibc no_NO) means Bokmål in practice.
-            if code.eq_ignore_ascii_case("no")
-                && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("nb"))
-            {
-                return Some(index);
+            let parent = PARENTS
+                .iter()
+                .find(|(_, children)| children.contains(&code))
+                .map(|(parent, _)| *parent)
+                .or_else(|| (!serbian_latin && SERBIAN_CYRILLIC.contains(&code)).then_some("sr-Cyrl"));
+            if let Some(catalog) = find(code).or_else(|| parent.and_then(find)) {
+                return Some(catalog);
             }
             let Some(end) = code.rfind('-') else { break };
-            code.truncate(end);
+            code = &code[..end];
         }
     }
     None
@@ -200,207 +162,165 @@ mod tests {
         loader
     }
 
+    fn pick<'a>(preferences: &[&str], available: &[&'a str]) -> Option<&'a str> {
+        preferred_catalog(&preferences.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>(), available)
+    }
+
+    /// Each OS locale, on its own, selects `expected` from the embedded catalogs.
+    fn resolves(locales: &[&str], expected: &str) {
+        for locale in locales {
+            assert_eq!(pick(&[locale], LANGUAGES), Some(expected), "{locale}");
+        }
+    }
+
+    /// Plural forms of `contents-count` and `workers`, the scan summary for one
+    /// file and two folders, and a literal path inside `scan-path-error`.
+    fn renders(language: &FluentLanguageLoader, counts: &[(i32, &str, &str)], summary: &str, path_error: &str) {
+        for &(count, contents, workers) in counts {
+            assert_eq!(i18n_embed_fl::fl!(language, "contents-count", files = count, folders = count), contents);
+            assert_eq!(i18n_embed_fl::fl!(language, "workers", count = count), workers);
+        }
+        assert_eq!(i18n_embed_fl::fl!(language, "scan-summary", size = "1 KiB", files = 1, folders = 2), summary);
+        assert_eq!(i18n_embed_fl::fl!(language, "scan-path-error", path = r"C:\{error}", error = "Denied"), path_error);
+    }
+
     #[test]
     fn bundled_french_is_selected_for_regional_os_preferences() {
-        for locale in ["fr-FR", "fr-CA", "fr-BE", "fr_CH.UTF-8"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("French catalog is embedded");
-            assert_eq!(LANGUAGES[index], "fr");
-            assert_eq!(loader(LANGUAGES[index]).get("cancel"), "Annuler");
-        }
+        resolves(&["fr-FR", "fr-CA", "fr-BE", "fr_CH.UTF-8"], "fr");
+        assert_eq!(loader("fr").get("cancel"), "Annuler");
     }
 
     #[test]
     fn bundled_german_matches_regional_preferences_and_plural_rules() {
-        for locale in ["de-DE", "de-AT", "de-CH", "de_DE.UTF-8"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("German catalog is embedded");
-            assert_eq!(LANGUAGES[index], "de");
-        }
+        resolves(&["de-DE", "de-AT", "de-CH", "de_DE.UTF-8"], "de");
         let de = loader("de");
         assert_eq!(de.get("cancel"), "Abbrechen");
-        for (count, contents, workers) in [
-            (0, "0 Dateien, 0 Ordner", "0 gleichzeitige Aufgaben"),
-            (1, "1 Datei, 1 Ordner", "1 gleichzeitige Aufgabe"),
-            (2, "2 Dateien, 2 Ordner", "2 gleichzeitige Aufgaben"),
-        ] {
-            assert_eq!(i18n_embed_fl::fl!(de, "contents-count", files = count, folders = count), contents);
-            assert_eq!(i18n_embed_fl::fl!(de, "workers", count = count), workers);
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(de, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 Datei, 2 Ordner"
+        renders(
+            &de,
+            &[
+                (0, "0 Dateien, 0 Ordner", "0 gleichzeitige Aufgaben"),
+                (1, "1 Datei, 1 Ordner", "1 gleichzeitige Aufgabe"),
+                (2, "2 Dateien, 2 Ordner", "2 gleichzeitige Aufgaben"),
+            ],
+            "1 KiB | 1 Datei, 2 Ordner",
+            "Clawback konnte C:\\{error} nicht scannen.\n\nDenied",
         );
     }
 
     #[test]
     fn latin_american_spanish_matches_parents_without_overriding_exact_locales() {
-        for locale in ["es-419", "es-MX", "es_AR.UTF-8", "es-CO", "es-US", "ES-cl"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Latin American Spanish is embedded");
-            assert_eq!(LANGUAGES[index], "es-419");
-        }
+        resolves(&["es-419", "es-MX", "es_AR.UTF-8", "es-CO", "es-US", "ES-cl"], "es-419");
         let available = ["en", "es", "es-419", "es-MX"];
-        let pick = |prefs: &[&str], available: &[&str]| {
-            preferred_catalog(&prefs.iter().map(|s| (*s).into()).collect::<Vec<_>>(), available)
-        };
-        assert_eq!(pick(&["es-MX"], &available), Some(3));
-        assert_eq!(pick(&["es-AR", "en"], &available), Some(2));
-        assert_eq!(pick(&["en", "es-AR"], &available), Some(0));
-        assert_eq!(pick(&["es-ES"], &available), Some(1));
-        assert_eq!(pick(&["es"], &available), Some(1));
+        assert_eq!(pick(&["es-MX"], &available), Some("es-MX"));
+        assert_eq!(pick(&["es-AR", "en"], &available), Some("es-419"));
+        assert_eq!(pick(&["en", "es-AR"], &available), Some("en"));
+        assert_eq!(pick(&["es-ES"], &available), Some("es"));
+        assert_eq!(pick(&["es"], &available), Some("es"));
         assert_eq!(pick(&["es-ES", "es-GQ", "es"], &["en", "es-419"]), None);
-        assert_eq!(pick(&["es-AR"], &["en", "es"]), Some(1));
+        assert_eq!(pick(&["es-AR"], &["en", "es"]), Some("es"));
     }
+
+    const SPANISH_COUNTS: &[(i32, &str, &str)] = &[
+        (0, "0 archivos, 0 carpetas", "0 tareas simultáneas"),
+        (1, "1 archivo, 1 carpeta", "1 tarea simultánea"),
+        (2, "2 archivos, 2 carpetas", "2 tareas simultáneas"),
+    ];
 
     #[test]
     fn latin_american_spanish_renders_counts_and_literal_paths() {
         let es = loader("es-419");
         assert_eq!(es.get("cancel"), "Cancelar");
-        for (count, contents, workers) in [
-            (0, "0 archivos, 0 carpetas", "0 tareas simultáneas"),
-            (1, "1 archivo, 1 carpeta", "1 tarea simultánea"),
-            (2, "2 archivos, 2 carpetas", "2 tareas simultáneas"),
-        ] {
-            assert_eq!(i18n_embed_fl::fl!(es, "contents-count", files = count, folders = count), contents);
-            assert_eq!(i18n_embed_fl::fl!(es, "workers", count = count), workers);
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(es, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 archivo, 2 carpetas"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(es, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "Clawback no pudo analizar C:\\{error}.\n\nDenied"
+        renders(
+            &es,
+            SPANISH_COUNTS,
+            "1 KiB | 1 archivo, 2 carpetas",
+            "Clawback no pudo analizar C:\\{error}.\n\nDenied",
         );
     }
 
     #[test]
     fn european_spanish_is_selected_independently_and_renders_plural_forms() {
-        for locale in ["es-ES", "es_ES.UTF-8", "ES-es"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("European Spanish is embedded");
-            assert_eq!(LANGUAGES[index], "es-ES");
-        }
-        for (preferences, expected) in [(["es-ES", "es-MX"], "es-ES"), (["es-MX", "es-ES"], "es-419")] {
-            let index = preferred_catalog(&preferences.map(String::from), LANGUAGES).expect("Spanish catalog");
-            assert_eq!(LANGUAGES[index], expected);
-        }
+        resolves(&["es-ES", "es_ES.UTF-8", "ES-es"], "es-ES");
+        assert_eq!(pick(&["es-ES", "es-MX"], LANGUAGES), Some("es-ES"));
+        assert_eq!(pick(&["es-MX", "es-ES"], LANGUAGES), Some("es-419"));
         let es = loader("es-ES");
         assert_eq!(es.get("show-rollover-boxes"), "Resaltar elementos al pasar el ratón");
         assert_eq!(es.get("spanish-spain"), "Español de España");
-        for (count, contents, workers) in [
-            (0, "0 archivos, 0 carpetas", "0 tareas simultáneas"),
-            (1, "1 archivo, 1 carpeta", "1 tarea simultánea"),
-            (2, "2 archivos, 2 carpetas", "2 tareas simultáneas"),
-        ] {
-            assert_eq!(i18n_embed_fl::fl!(es, "contents-count", files = count, folders = count), contents);
-            assert_eq!(i18n_embed_fl::fl!(es, "workers", count = count), workers);
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(es, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 archivo, 2 carpetas"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(es, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "Clawback no ha podido analizar C:\\{error}.\n\nDenied"
+        renders(
+            &es,
+            SPANISH_COUNTS,
+            "1 KiB | 1 archivo, 2 carpetas",
+            "Clawback no ha podido analizar C:\\{error}.\n\nDenied",
         );
     }
 
     #[test]
     fn simplified_chinese_matches_regions_but_preserves_explicit_scripts() {
-        for locale in ["zh-Hans", "zh-Hans-CN", "zh-Hans-SG", "zh-Hans-HK", "zh-CN", "zh_SG.UTF-8"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Simplified Chinese is embedded");
-            assert_eq!(LANGUAGES[index], "zh-Hans");
-        }
-        for locale in ["zh-Hant", "zh-Hant-CN", "zh-Hant-TW", "zh-TW", "zh_HK.UTF-8", "zh-MO"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Traditional Chinese is embedded");
-            assert_eq!(LANGUAGES[index], "zh-Hant");
-        }
-        assert_eq!(preferred_catalog(&["zh".into()], LANGUAGES), None);
-        assert_eq!(preferred_catalog(&["zh-CN".into()], &["zh-Hans", "zh-CN"]), Some(1));
-        assert_eq!(preferred_catalog(&["zh-TW".into()], &["zh-Hant", "zh-TW"]), Some(1));
-        let preferences = ["zh-TW".into(), "zh-SG".into(), "en-US".into()];
-        let index = preferred_catalog(&preferences, LANGUAGES).expect("first preference matches");
-        assert_eq!(LANGUAGES[index], "zh-Hant");
-        assert_eq!(preferred_catalog(&preferences, &["zh-Hans", "en"]), Some(0));
+        resolves(&["zh-Hans", "zh-Hans-CN", "zh-Hans-SG", "zh-Hans-HK", "zh-CN", "zh_SG.UTF-8"], "zh-Hans");
+        resolves(&["zh-Hant", "zh-Hant-CN", "zh-Hant-TW", "zh-TW", "zh_HK.UTF-8", "zh-MO"], "zh-Hant");
+        assert_eq!(pick(&["zh"], LANGUAGES), None);
+        assert_eq!(pick(&["zh-CN"], &["zh-Hans", "zh-CN"]), Some("zh-CN"));
+        assert_eq!(pick(&["zh-TW"], &["zh-Hant", "zh-TW"]), Some("zh-TW"));
+        let preferences = ["zh-TW", "zh-SG", "en-US"];
+        assert_eq!(pick(&preferences, LANGUAGES), Some("zh-Hant"));
+        assert_eq!(pick(&preferences, &["zh-Hans", "en"]), Some("zh-Hans"));
     }
 
     #[test]
     fn simplified_chinese_counts_and_paths_render_without_plural_inflection() {
         let zh = loader("zh-Hans");
         assert_eq!(zh.get("cancel"), "取消");
-        for count in [0, 1, 2] {
-            assert_eq!(
-                i18n_embed_fl::fl!(zh, "contents-count", files = count, folders = count),
-                format!("{count} 个文件，{count} 个文件夹")
-            );
-            assert_eq!(i18n_embed_fl::fl!(zh, "workers", count = count), format!("{count} 个并发任务"));
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(zh, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 个文件，2 个文件夹"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(zh, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "Clawback 无法扫描 C:\\{error}。\n\nDenied"
+        renders(
+            &zh,
+            &[
+                (0, "0 个文件，0 个文件夹", "0 个并发任务"),
+                (1, "1 个文件，1 个文件夹", "1 个并发任务"),
+                (2, "2 个文件，2 个文件夹", "2 个并发任务"),
+            ],
+            "1 KiB | 1 个文件，2 个文件夹",
+            "Clawback 无法扫描 C:\\{error}。\n\nDenied",
         );
     }
 
     #[test]
     fn korean_matches_os_locales_and_formats_counts_and_paths() {
-        for locale in ["ko", "ko-KR", "ko_KR.UTF-8", "KO-kr"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Korean is embedded");
-            assert_eq!(LANGUAGES[index], "ko");
-        }
+        resolves(&["ko", "ko-KR", "ko_KR.UTF-8", "KO-kr"], "ko");
         let ko = loader("ko");
         assert_eq!(ko.get("cancel"), "취소");
         assert_eq!(ko.get("korean"), "한국어");
-        for count in [0, 1, 2] {
-            assert_eq!(
-                i18n_embed_fl::fl!(ko, "contents-count", files = count, folders = count),
-                format!("파일 {count}개, 폴더 {count}개")
-            );
-            assert_eq!(i18n_embed_fl::fl!(ko, "workers", count = count), format!("동시 작업 {count}개"));
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(ko, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 파일 1개, 폴더 2개"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(ko, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "다음 경로를 스캔하지 못했습니다: C:\\{error}\n\nDenied"
+        renders(
+            &ko,
+            &[
+                (0, "파일 0개, 폴더 0개", "동시 작업 0개"),
+                (1, "파일 1개, 폴더 1개", "동시 작업 1개"),
+                (2, "파일 2개, 폴더 2개", "동시 작업 2개"),
+            ],
+            "1 KiB | 파일 1개, 폴더 2개",
+            "다음 경로를 스캔하지 못했습니다: C:\\{error}\n\nDenied",
         );
     }
 
     #[test]
     fn japanese_matches_os_locales_and_formats_counts_and_paths() {
-        for locale in ["ja", "ja-JP", "ja_JP.UTF-8", "JA-jp"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Japanese is embedded");
-            assert_eq!(LANGUAGES[index], "ja");
-        }
+        resolves(&["ja", "ja-JP", "ja_JP.UTF-8", "JA-jp"], "ja");
         let ja = loader("ja");
         assert_eq!(ja.get("cancel"), "キャンセル");
         assert_eq!(ja.get("japanese"), "日本語");
-        for count in [0, 1, 2] {
-            assert_eq!(
-                i18n_embed_fl::fl!(ja, "contents-count", files = count, folders = count),
-                format!("ファイル {count} 個、フォルダー {count} 個")
-            );
-            assert_eq!(i18n_embed_fl::fl!(ja, "workers", count = count), format!("同時実行タスク {count} 件"));
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(ja, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | ファイル 1 個、フォルダー 2 個"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(ja, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "次のパスをスキャンできませんでした: C:\\{error}\n\nDenied"
+        renders(
+            &ja,
+            &[
+                (0, "ファイル 0 個、フォルダー 0 個", "同時実行タスク 0 件"),
+                (1, "ファイル 1 個、フォルダー 1 個", "同時実行タスク 1 件"),
+                (2, "ファイル 2 個、フォルダー 2 個", "同時実行タスク 2 件"),
+            ],
+            "1 KiB | ファイル 1 個、フォルダー 2 個",
+            "次のパスをスキャンできませんでした: C:\\{error}\n\nDenied",
         );
     }
 
     #[test]
     fn polish_matches_os_locales_and_uses_all_plural_forms() {
-        for locale in ["pl", "pl-PL", "pl_PL.UTF-8", "PL-pl"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Polish is embedded");
-            assert_eq!(LANGUAGES[index], "pl");
-        }
+        resolves(&["pl", "pl-PL", "pl_PL.UTF-8", "PL-pl"], "pl");
         let pl = loader("pl");
         assert_eq!(pl.get("cancel"), "Anuluj");
         for (count, file, folder, worker) in [
@@ -437,10 +357,7 @@ mod tests {
 
     #[test]
     fn russian_matches_os_locales_and_uses_all_plural_forms() {
-        for locale in ["ru", "ru-RU", "ru_RU.UTF-8", "RU-ru", "ru-KZ"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Russian is embedded");
-            assert_eq!(LANGUAGES[index], "ru");
-        }
+        resolves(&["ru", "ru-RU", "ru_RU.UTF-8", "RU-ru", "ru-KZ"], "ru");
         let ru = loader("ru");
         assert_eq!(ru.get("cancel"), "Отмена");
         for (count, file, folder, worker) in [
@@ -480,30 +397,21 @@ mod tests {
 
     #[test]
     fn brazilian_portuguese_matches_os_locale_and_formats_counts() {
-        for locale in ["pt-BR", "pt_BR.UTF-8", "PT-br"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Brazilian Portuguese is embedded");
-            assert_eq!(LANGUAGES[index], "pt-BR");
-        }
-        assert_eq!(preferred_catalog(&["pt".into()], LANGUAGES), None);
+        resolves(&["pt-BR", "pt_BR.UTF-8", "PT-br"], "pt-BR");
+        assert_eq!(pick(&["pt"], LANGUAGES), None);
         let pt = loader("pt-BR");
         assert_eq!(pt.get("cancel"), "Cancelar");
-        for (count, contents, workers) in [
-            (0, "0 arquivo, 0 pasta", "0 tarefa simultânea"),
-            (1, "1 arquivo, 1 pasta", "1 tarefa simultânea"),
-            (2, "2 arquivos, 2 pastas", "2 tarefas simultâneas"),
-        ] {
-            assert_eq!(i18n_embed_fl::fl!(pt, "contents-count", files = count, folders = count), contents);
-            assert_eq!(i18n_embed_fl::fl!(pt, "workers", count = count), workers);
-        }
+        renders(
+            &pt,
+            &[
+                (0, "0 arquivo, 0 pasta", "0 tarefa simultânea"),
+                (1, "1 arquivo, 1 pasta", "1 tarefa simultânea"),
+                (2, "2 arquivos, 2 pastas", "2 tarefas simultâneas"),
+            ],
+            "1 KiB | 1 arquivo, 2 pastas",
+            "Não foi possível verificar o caminho: C:\\{error}\n\nDenied",
+        );
         assert!(i18n_embed_fl::fl!(pt, "workers", count = 1_000_000).ends_with(" tarefas simultâneas"));
-        assert_eq!(
-            i18n_embed_fl::fl!(pt, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 arquivo, 2 pastas"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(pt, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "Não foi possível verificar o caminho: C:\\{error}\n\nDenied"
-        );
     }
 
     #[test]
@@ -531,8 +439,7 @@ mod tests {
             ("nb-NO", "nb", "Avbryt"),
             ("no_NO.UTF-8", "nb", "Avbryt"),
         ] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("embedded locale");
-            assert_eq!(LANGUAGES[index], code);
+            resolves(&[locale], code);
             let language = loader(code);
             assert_eq!(language.get("cancel"), cancel);
             let contents = i18n_embed_fl::fl!(language, "contents-count", files = 1, folders = 2);
@@ -570,14 +477,15 @@ mod tests {
 
     #[test]
     fn european_portuguese_parents_and_plural_rules() {
-        for locale in
-            ["pt-PT", "pt-AO", "pt-CH", "pt-CV", "pt-FR", "pt-GQ", "pt-GW", "pt-LU", "pt-MO", "pt-MZ", "pt-ST", "pt-TL"]
-        {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("European Portuguese");
-            assert_eq!(LANGUAGES[index], "pt-PT");
-        }
-        assert_eq!(preferred_catalog(&["pt-AO".into()], &["pt-PT", "pt-AO"]), Some(1));
-        assert_eq!(preferred_catalog(&["pt-AO".into()], &["pt-BR"]), None);
+        resolves(
+            &[
+                "pt-PT", "pt-AO", "pt-CH", "pt-CV", "pt-FR", "pt-GQ", "pt-GW", "pt-LU", "pt-MO", "pt-MZ", "pt-ST",
+                "pt-TL",
+            ],
+            "pt-PT",
+        );
+        assert_eq!(pick(&["pt-AO"], &["pt-PT", "pt-AO"]), Some("pt-AO"));
+        assert_eq!(pick(&["pt-AO"], &["pt-BR"]), None);
         let pt = loader("pt-PT");
         for (count, files, folders, workers) in [
             (0, "ficheiros", "pastas", "tarefas simultâneas"),
@@ -608,15 +516,11 @@ mod tests {
 
     #[test]
     fn serbian_defaults_to_cyrillic_but_never_for_latin_preferences() {
-        for locale in ["sr", "sr-RS", "sr_RS.UTF-8", "sr-BA", "sr-XK", "sr-Cyrl", "sr-Cyrl-ME"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Serbian Cyrillic");
-            assert_eq!(LANGUAGES[index], "sr-Cyrl", "{locale}");
-        }
+        resolves(&["sr", "sr-RS", "sr_RS.UTF-8", "sr-BA", "sr-XK", "sr-Cyrl", "sr-Cyrl-ME"], "sr-Cyrl");
         for locale in ["sr-Latn", "sr-Latn-RS", "sr_RS@latin", "sr_RS.UTF-8@latin", "sr-ME", "sr_ME.UTF-8"] {
-            assert_eq!(preferred_catalog(&[locale.into()], LANGUAGES), None, "{locale}");
+            assert_eq!(pick(&[locale], LANGUAGES), None, "{locale}");
         }
-        let index = preferred_catalog(&["sr-Latn-RS".into(), "en-US".into()], LANGUAGES).expect("English fallback");
-        assert_eq!(LANGUAGES[index], "en");
+        assert_eq!(pick(&["sr-Latn-RS", "en-US"], LANGUAGES), Some("en"));
     }
 
     #[test]
@@ -692,29 +596,20 @@ mod tests {
 
     #[test]
     fn italian_matches_os_locales_and_formats_counts_and_paths() {
-        for locale in ["it", "it-IT", "it-CH", "it_IT.UTF-8", "IT-it"] {
-            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Italian is embedded");
-            assert_eq!(LANGUAGES[index], "it");
-        }
+        resolves(&["it", "it-IT", "it-CH", "it_IT.UTF-8", "IT-it"], "it");
         let it = loader("it");
         assert_eq!(it.get("cancel"), "Annulla");
-        for (count, contents, workers) in [
-            (0, "0 file, 0 cartelle", "0 attività simultanee"),
-            (1, "1 file, 1 cartella", "1 attività simultanea"),
-            (2, "2 file, 2 cartelle", "2 attività simultanee"),
-        ] {
-            assert_eq!(i18n_embed_fl::fl!(it, "contents-count", files = count, folders = count), contents);
-            assert_eq!(i18n_embed_fl::fl!(it, "workers", count = count), workers);
-        }
+        renders(
+            &it,
+            &[
+                (0, "0 file, 0 cartelle", "0 attività simultanee"),
+                (1, "1 file, 1 cartella", "1 attività simultanea"),
+                (2, "2 file, 2 cartelle", "2 attività simultanee"),
+            ],
+            "1 KiB | 1 file, 2 cartelle",
+            "Impossibile analizzare il percorso: C:\\{error}\n\nDenied",
+        );
         assert!(i18n_embed_fl::fl!(it, "workers", count = 1_000_000).ends_with(" attività simultanee"));
-        assert_eq!(
-            i18n_embed_fl::fl!(it, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 file, 2 cartelle"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(it, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "Impossibile analizzare il percorso: C:\\{error}\n\nDenied"
-        );
     }
 
     #[test]
@@ -722,36 +617,39 @@ mod tests {
         let zh = loader("zh-Hant");
         assert_eq!(zh.get("chinese-traditional"), "繁體中文");
         assert_eq!(zh.get("settings"), "設定…");
-        for count in [0, 1, 2] {
-            assert_eq!(
-                i18n_embed_fl::fl!(zh, "contents-count", files = count, folders = count),
-                format!("{count} 個檔案，{count} 個資料夾")
-            );
-            assert_eq!(i18n_embed_fl::fl!(zh, "workers", count = count), format!("{count} 個並行工作"));
-        }
-        assert_eq!(
-            i18n_embed_fl::fl!(zh, "scan-summary", size = "1 KiB", files = 1, folders = 2),
-            "1 KiB | 1 個檔案，2 個資料夾"
-        );
-        assert_eq!(
-            i18n_embed_fl::fl!(zh, "scan-path-error", path = r"C:\{error}", error = "Denied"),
-            "Clawback 無法掃描 C:\\{error}。\n\nDenied"
+        renders(
+            &zh,
+            &[
+                (0, "0 個檔案，0 個資料夾", "0 個並行工作"),
+                (1, "1 個檔案，1 個資料夾", "1 個並行工作"),
+                (2, "2 個檔案，2 個資料夾", "2 個並行工作"),
+            ],
+            "1 KiB | 1 個檔案，2 個資料夾",
+            "Clawback 無法掃描 C:\\{error}。\n\nDenied",
         );
     }
 
     #[test]
     fn os_preferences_match_in_order_with_safe_locale_fallbacks() {
         let available = ["en", "fr", "pt-BR", "zh-Hant", "zh-Hans"];
-        let pick = |prefs: &[&str]| {
-            preferred_catalog(&prefs.iter().map(|s| (*s).into()).collect::<Vec<_>>(), &available).map(|i| available[i])
-        };
-        assert_eq!(pick(&["de-DE", "fr_CA.UTF-8", "en-US"]), Some("fr"));
-        assert_eq!(pick(&["PT_br", "fr"]), Some("pt-BR"));
-        assert_eq!(pick(&["zh-Hant-TW"]), Some("zh-Hant"));
-        assert_eq!(pick(&["pt-PT"]), None);
-        assert_eq!(pick(&["zh-CN"]), Some("zh-Hans"));
-        assert_eq!(pick(&["C.UTF-8"]), Some("en"));
-        assert_eq!(pick(&[]), None);
+        assert_eq!(pick(&["de-DE", "fr_CA.UTF-8", "en-US"], &available), Some("fr"));
+        assert_eq!(pick(&["PT_br", "fr"], &available), Some("pt-BR"));
+        assert_eq!(pick(&["zh-Hant-TW"], &available), Some("zh-Hant"));
+        assert_eq!(pick(&["pt-PT"], &available), None);
+        assert_eq!(pick(&["zh-CN"], &available), Some("zh-Hans"));
+        assert_eq!(pick(&["C.UTF-8"], &available), Some("en"));
+        assert_eq!(pick(&["POSIX"], &available), Some("en"));
+        assert_eq!(pick(&[], &available), None);
+    }
+
+    #[test]
+    fn c_locale_ignores_codesets_and_modifiers() {
+        for locale in ["C", "POSIX", "C.UTF-8", "C@euro", "POSIX.UTF-8"] {
+            assert!(is_c_locale(locale), "{locale}");
+        }
+        for locale in ["", "c", "ca_ES.UTF-8", "Catalan", "en_US.UTF-8"] {
+            assert!(!is_c_locale(locale), "{locale}");
+        }
     }
 
     #[test]

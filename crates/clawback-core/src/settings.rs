@@ -8,6 +8,12 @@ use std::path::{Path, PathBuf};
 
 /// Allowed `directory_split` range, in thousandths.
 pub const DIRECTORY_SPLIT: (u32, u32) = (100, 650);
+/// Allowed `density` range: big boxes to tiny boxes.
+pub const DENSITY: (i32, i32) = (-3, 3);
+/// Allowed `bias` range: prefer horizontal to prefer vertical splits.
+pub const BIAS: (i32, i32) = (-20, 20);
+/// Longest tooltip delay, in milliseconds.
+pub const TIP_DELAY_MAX_MS: u32 = 99_999;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Settings {
@@ -16,7 +22,7 @@ pub struct Settings {
     // File layout
     pub density: i32,
     pub bias: i32,
-    // Display colours (indices into `palette::SCHEME_NAMES`)
+    // Display colours (scheme IDs from `palette::MAP_PRESETS`)
     pub file_color: usize,
     pub folder_color: usize,
     pub mute_palette: bool,
@@ -108,8 +114,8 @@ impl Settings {
         if self.language.is_empty() || !self.language.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-') {
             self.language = "auto".into();
         }
-        self.density = self.density.clamp(-3, 3);
-        self.bias = self.bias.clamp(-20, 20);
+        self.density = self.density.clamp(DENSITY.0, DENSITY.1);
+        self.bias = self.bias.clamp(BIAS.0, BIAS.1);
         // ID 15 was a standalone Muted preset. Retired single-hue and grey schemes use the default.
         for scheme in [&mut self.file_color, &mut self.folder_color] {
             if *scheme == 15 {
@@ -119,45 +125,18 @@ impl Settings {
                 *scheme = crate::palette::DEFAULT_MAP_SCHEME;
             }
         }
-        self.nametip_delay_ms = self.nametip_delay_ms.min(99_999);
-        self.infotip_delay_ms = self.infotip_delay_ms.min(99_999);
+        self.nametip_delay_ms = self.nametip_delay_ms.min(TIP_DELAY_MAX_MS);
+        self.infotip_delay_ms = self.infotip_delay_ms.min(TIP_DELAY_MAX_MS);
         self.directory_split = self.directory_split.clamp(DIRECTORY_SPLIT.0, DIRECTORY_SPLIT.1);
         self.recent.truncate(MAX_RECENT);
     }
 
     pub fn to_text(&self) -> String {
         let mut s = String::from("# Clawback settings\n");
-        let mut kv = |k: &str, v: &dyn std::fmt::Display| {
-            let _ = writeln!(s, "{k} = {v}");
-        };
-        kv("density", &self.density);
-        kv("language", &self.language);
-        kv("bias", &self.bias);
-        kv("file_color", &self.file_color);
-        kv("folder_color", &self.folder_color);
-        kv("mute_palette", &self.mute_palette);
-        kv("show_name_tips", &self.show_name_tips);
-        kv("nametip_delay", &self.nametip_delay_ms);
-        kv("show_info_tips", &self.show_info_tips);
-        kv("infotip_delay", &self.infotip_delay_ms);
-        kv("tip_path", &self.tip_path);
-        kv("tip_icon", &self.tip_icon);
-        kv("tip_date", &self.tip_date);
-        kv("tip_size", &self.tip_size);
-        kv("tip_attrib", &self.tip_attrib);
-        kv("auto_rescan", &self.auto_rescan);
-        kv("disable_delete", &self.disable_delete);
-        kv("animated_zoom", &self.animated_zoom);
-        kv("save_pos", &self.save_pos);
-        kv("directory_split", &self.directory_split);
-        kv("rollover_box", &self.rollover_box);
-        kv("show_free", &self.show_free);
-        kv("one_filesystem", &self.one_filesystem);
-        kv("apparent_size", &self.apparent_size);
-        kv("dedupe_hardlinks", &self.dedupe_hardlinks);
+        self.write_fields(&mut s);
         for r in &self.recent {
             if let Some(p) = r.to_str() {
-                kv("recent", &p);
+                let _ = writeln!(s, "recent = {p}");
             }
         }
         s
@@ -173,37 +152,12 @@ impl Settings {
             }
             let Some((k, v)) = line.split_once('=') else { continue };
             let (k, v) = (k.trim(), v.trim());
-            let flag = || v.parse::<bool>().ok();
-            let int = || v.parse::<i32>().ok();
-            let ms = || v.parse::<u32>().ok();
-            match k {
-                "language" => v.clone_into(&mut s.language),
-                "density" => set(&mut s.density, int()),
-                "bias" => set(&mut s.bias, int()),
-                "file_color" => set(&mut s.file_color, v.parse().ok()),
-                "folder_color" => set(&mut s.folder_color, v.parse().ok()),
-                "mute_palette" => set(&mut s.mute_palette, flag()),
-                "show_name_tips" => set(&mut s.show_name_tips, flag()),
-                "nametip_delay" => set(&mut s.nametip_delay_ms, ms()),
-                "show_info_tips" => set(&mut s.show_info_tips, flag()),
-                "infotip_delay" => set(&mut s.infotip_delay_ms, ms()),
-                "tip_path" => set(&mut s.tip_path, flag()),
-                "tip_icon" => set(&mut s.tip_icon, flag()),
-                "tip_date" => set(&mut s.tip_date, flag()),
-                "tip_size" => set(&mut s.tip_size, flag()),
-                "tip_attrib" => set(&mut s.tip_attrib, flag()),
-                "auto_rescan" => set(&mut s.auto_rescan, flag()),
-                "disable_delete" => set(&mut s.disable_delete, flag()),
-                "animated_zoom" => set(&mut s.animated_zoom, flag()),
-                "save_pos" => set(&mut s.save_pos, flag()),
-                "directory_split" => set(&mut s.directory_split, ms()),
-                "rollover_box" => set(&mut s.rollover_box, flag()),
-                "show_free" => set(&mut s.show_free, flag()),
-                "one_filesystem" => set(&mut s.one_filesystem, flag()),
-                "apparent_size" => set(&mut s.apparent_size, flag()),
-                "dedupe_hardlinks" => set(&mut s.dedupe_hardlinks, flag()),
-                "recent" if !v.is_empty() => s.recent.push(PathBuf::from(v)),
-                _ => {}
+            if k == "recent" {
+                if !v.is_empty() {
+                    s.recent.push(PathBuf::from(v));
+                }
+            } else {
+                s.read_field(k, v);
             }
         }
         s.sanitize();
@@ -233,8 +187,55 @@ fn set<T>(slot: &mut T, v: Option<T>) {
     }
 }
 
+/// The `key = value` lines of the settings file, in file order. Values that
+/// fail to parse keep their current setting.
+macro_rules! fields {
+    ($($key:literal => $field:ident),* $(,)?) => {
+        impl Settings {
+            fn write_fields(&self, s: &mut String) {
+                $(let _ = writeln!(s, "{} = {}", $key, self.$field);)*
+            }
+
+            fn read_field(&mut self, key: &str, value: &str) {
+                match key {
+                    $($key => set(&mut self.$field, value.parse().ok()),)*
+                    _ => {}
+                }
+            }
+        }
+    };
+}
+
+fields! {
+    "density" => density,
+    "language" => language,
+    "bias" => bias,
+    "file_color" => file_color,
+    "folder_color" => folder_color,
+    "mute_palette" => mute_palette,
+    "show_name_tips" => show_name_tips,
+    "nametip_delay" => nametip_delay_ms,
+    "show_info_tips" => show_info_tips,
+    "infotip_delay" => infotip_delay_ms,
+    "tip_path" => tip_path,
+    "tip_icon" => tip_icon,
+    "tip_date" => tip_date,
+    "tip_size" => tip_size,
+    "tip_attrib" => tip_attrib,
+    "auto_rescan" => auto_rescan,
+    "disable_delete" => disable_delete,
+    "animated_zoom" => animated_zoom,
+    "save_pos" => save_pos,
+    "directory_split" => directory_split,
+    "rollover_box" => rollover_box,
+    "show_free" => show_free,
+    "one_filesystem" => one_filesystem,
+    "apparent_size" => apparent_size,
+    "dedupe_hardlinks" => dedupe_hardlinks,
+}
+
 /// Platform configuration directory for Clawback.
-pub fn config_dir() -> Option<PathBuf> {
+fn config_dir() -> Option<PathBuf> {
     let env = |k: &str| std::env::var_os(k).filter(|v| !v.is_empty()).map(PathBuf::from);
     if cfg!(windows) {
         env("APPDATA").map(|p| p.join("Clawback"))
@@ -313,6 +314,42 @@ folder_color = 10
         s.push_recent(Path::new("/a"));
         assert_eq!(s.recent, [PathBuf::from("/a"), PathBuf::from("/b")]);
         assert_eq!(Settings::from_text(&s.to_text()), s);
+    }
+
+    #[test]
+    fn file_format_is_stable() {
+        let mut s = Settings::default();
+        s.push_recent(Path::new("/r"));
+        let expected = "# Clawback settings
+density = 0
+language = auto
+bias = 0
+file_color = 16
+folder_color = 16
+mute_palette = false
+show_name_tips = true
+nametip_delay = 125
+show_info_tips = true
+infotip_delay = 250
+tip_path = false
+tip_icon = true
+tip_date = true
+tip_size = true
+tip_attrib = false
+auto_rescan = false
+disable_delete = false
+animated_zoom = true
+save_pos = false
+directory_split = 300
+rollover_box = false
+show_free = true
+one_filesystem = true
+apparent_size = false
+dedupe_hardlinks = true
+recent = /r
+";
+        assert_eq!(s.to_text(), expected);
+        assert_eq!(Settings::from_text(expected), s);
     }
 
     #[test]

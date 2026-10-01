@@ -1,34 +1,44 @@
 //! Incremental metadata reconciliation. All calls run on a background worker.
 use crate::hardlinks::LinkIndex;
-use crate::scan::{FileAccounting, mtime_secs};
+use crate::scan::{FileAccounting, mtime_secs, virtual_paths};
 use crate::tree::{NewEntry, flags};
 use crate::{Kind, NodeId, ROOT, Scan, ScanOptions, Tree};
 use std::{
     collections::HashSet,
     fs, io,
-    path::Path,
+    path::{Path, PathBuf},
     sync::atomic::{AtomicBool, Ordering},
-    time::Duration,
 };
 
 pub struct Refresh {
     options: ScanOptions,
     accounting: FileAccounting,
     links: Option<LinkIndex>,
+    /// Devices new subdirectories may live on under `one_filesystem`.
+    #[cfg(unix)]
+    allowed_devs: Vec<u64>,
+    excludes: Vec<PathBuf>,
     pub dirs: u64,
+}
+
+/// Non-directory nodes at or below `id`, collected before the tree is edited.
+fn files_below(tree: &Tree, id: NodeId) -> Vec<NodeId> {
+    tree.descendants(id).filter(|&n| !tree.node(n).is_dir()).collect()
 }
 
 impl Refresh {
     pub fn new(tree: &Tree, options: ScanOptions) -> Self {
-        let links = options.dedupe_hardlinks.then(|| LinkIndex::new(tree));
-        let accounting = FileAccounting::new(tree.root_path());
-        #[cfg(windows)]
-        let accounting = {
-            let mut accounting = accounting;
-            accounting.exact = tree.root().file_id.is_some();
-            accounting
-        };
-        Self { accounting, dirs: tree.dir_count(ROOT), options, links }
+        let root = tree.root_path();
+        Self {
+            // Only a tree built from the MFT carries a root identity.
+            accounting: FileAccounting::new(root, tree.root().file_id.is_some()),
+            links: options.dedupe_hardlinks.then(|| LinkIndex::new(tree)),
+            #[cfg(unix)]
+            allowed_devs: fs::metadata(root).map(|md| crate::scan::allowed_devices(root, &md)).unwrap_or_default(),
+            excludes: if options.skip_virtual { virtual_paths(root) } else { Vec::new() },
+            dirs: tree.dir_count(ROOT),
+            options,
+        }
     }
 
     pub fn path(&mut self, tree: &mut Tree, path: &Path, stop: &AtomicBool) -> io::Result<bool> {
@@ -36,15 +46,15 @@ impl Refresh {
             return Ok(false);
         }
         // Reconcile the nearest known parent if a whole new hierarchy appeared.
-        let mut target = path;
-        while target != tree.root_path() && target.parent().and_then(|p| tree.find_path(p)).is_none() {
-            let Some(parent) = target.parent() else { return Ok(false) };
-            target = parent;
-        }
+        let Some(target) =
+            path.ancestors().find(|t| *t == tree.root_path() || t.parent().and_then(|p| tree.find_path(p)).is_some())
+        else {
+            return Ok(false);
+        };
         if let Some(parent) = target.parent().and_then(|p| tree.find_path(p))
-            && tree.chain(parent).iter().any(|&id| {
+            && tree.ancestors(parent).any(|id| {
                 let node = tree.node(id);
-                !node.is_dir() || node.flags & (flags::OTHER_FS | flags::VIRTUAL) != 0
+                !node.is_dir() || node.has(flags::OTHER_FS | flags::VIRTUAL)
             })
         {
             return Ok(false);
@@ -55,13 +65,8 @@ impl Refresh {
     fn remove(&mut self, tree: &mut Tree, id: NodeId) -> bool {
         self.dirs = self.dirs.saturating_sub(tree.dir_count(id));
         if let Some(links) = &mut self.links {
-            let mut stack = vec![id];
-            while let Some(node) = stack.pop() {
-                if tree.node(node).is_dir() {
-                    stack.extend(tree.node(node).children.iter().copied());
-                } else {
-                    links.detach(tree, node);
-                }
+            for node in files_below(tree, id) {
+                links.detach(tree, node);
             }
         }
         tree.remove(id)
@@ -93,15 +98,7 @@ impl Refresh {
         {
             return self.entry(tree, &parent.join(name), list_existing, stop);
         }
-        let kind = if md.is_symlink() {
-            Kind::Symlink
-        } else if md.is_dir() {
-            Kind::Dir
-        } else if md.is_file() {
-            Kind::File
-        } else {
-            Kind::Other
-        };
+        let kind = Kind::from(md.file_type());
         if let Some(id) = old
             && tree.node(id).kind != kind
         {
@@ -113,10 +110,10 @@ impl Refresh {
         }
         if kind == Kind::Dir {
             if let Some(id) = old {
-                if !list_existing || tree.node(id).flags & (flags::OTHER_FS | flags::VIRTUAL) != 0 {
+                if !list_existing || tree.node(id).has(flags::OTHER_FS | flags::VIRTUAL) {
                     return Ok(false);
                 }
-                if tree.node(id).flags & (flags::DENIED | flags::PARTIAL) != 0 {
+                if tree.node(id).has(flags::DENIED | flags::PARTIAL) {
                     return Err(io::Error::other("Reconcile previously unreadable directory"));
                 }
                 // Directory notifications need only enumerate direct children.
@@ -147,16 +144,11 @@ impl Refresh {
             #[cfg(unix)]
             {
                 use std::os::unix::fs::MetadataExt;
-                if self.options.one_filesystem {
-                    let root_md = fs::metadata(tree.root_path())?;
-                    if !crate::scan::allowed_devices(tree.root_path(), &root_md).contains(&md.dev()) {
-                        return Ok(false);
-                    }
+                if self.options.one_filesystem && !self.allowed_devs.contains(&md.dev()) {
+                    return Ok(false);
                 }
             }
-            if self.options.skip_virtual
-                && crate::scan::virtual_paths(tree.root_path()).iter().any(|p| path.starts_with(p))
-            {
+            if self.excludes.iter().any(|p| path.starts_with(p)) {
                 return Ok(false);
             }
             let mut options = self.options.clone();
@@ -164,18 +156,7 @@ impl Refresh {
             // Keep raw allocated sizes while scanning the new subtree; the
             // document-wide inode index then deduplicates against existing files.
             options.dedupe_hardlinks = false;
-            #[cfg(windows)]
-            let exact = self.accounting.exact;
-            #[cfg(not(windows))]
-            let exact = false;
-            let scan = Scan::start_with_accounting(path, options, None, exact)?;
-            while !scan.is_finished() {
-                if stop.load(Ordering::Relaxed) {
-                    scan.cancel();
-                }
-                std::thread::sleep(Duration::from_millis(20));
-            }
-            let result = scan.wait();
+            let result = Scan::start_with_accounting(path, options, None, self.accounting.exact())?.wait_or_stop(stop);
             if result.cancelled {
                 return Ok(false);
             }
@@ -200,23 +181,18 @@ impl Refresh {
             self.dirs += result.dirs;
             tree.graft(id, result.tree);
             if let Some(links) = &mut self.links {
-                let mut stack = vec![id];
-                while let Some(node_id) = stack.pop() {
+                for node_id in files_below(tree, id) {
                     let node = tree.node(node_id);
-                    if node.is_dir() {
-                        stack.extend(node.children.iter().copied());
-                    } else {
-                        let entry = NewEntry {
-                            name: node.name.clone().into(),
-                            kind: node.kind,
-                            size: node.size,
-                            len: node.len,
-                            mtime: node.mtime,
-                            flags: node.flags,
-                            file_id: node.file_id,
-                        };
-                        links.update(tree, node_id, &entry);
-                    }
+                    let entry = NewEntry {
+                        name: node.name.clone().into(),
+                        kind: node.kind,
+                        size: node.size,
+                        len: node.len,
+                        mtime: node.mtime,
+                        flags: node.flags,
+                        file_id: node.file_id,
+                    };
+                    links.update(tree, node_id, &entry);
                 }
             }
             return Ok(true);
@@ -236,18 +212,9 @@ impl Refresh {
                 return Ok(links.update(tree, id, &entry));
             }
             if let Some(parent) = path.parent().and_then(|p| tree.find_path(p)) {
-                let physical = NewEntry {
-                    name: entry.name.clone(),
-                    kind: entry.kind,
-                    size: entry.size,
-                    len: entry.len,
-                    mtime: entry.mtime,
-                    flags: entry.flags,
-                    file_id: entry.file_id,
-                };
-                let id = tree.add_children(parent, vec![entry]).start;
-                links.update(tree, id, &physical);
-                tree.resort_from(id);
+                let id = tree.add_children(parent, vec![entry.clone()]).start;
+                links.update(tree, id, &entry);
+                tree.resort_upwards(id);
                 return Ok(true);
             }
             return Ok(false);
@@ -261,7 +228,7 @@ impl Refresh {
         } else if let Some(parent) = path.parent().and_then(|p| tree.find_path(p)) {
             let id = tree.add_children(parent, vec![entry]).start;
             // Also restore ancestor ordering after an insertion.
-            tree.resort_from(id);
+            tree.resort_upwards(id);
         }
         Ok(true)
     }
@@ -270,31 +237,16 @@ impl Refresh {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{path::PathBuf, sync::atomic::AtomicU64};
+    use crate::testing::TempDir;
 
-    struct Temp(PathBuf);
-    impl Temp {
-        fn new() -> Self {
-            static NEXT: AtomicU64 = AtomicU64::new(0);
-            let path = std::env::temp_dir().join(format!(
-                "clawback-refresh-{}-{}",
-                std::process::id(),
-                NEXT.fetch_add(1, Ordering::Relaxed)
-            ));
-            fs::create_dir_all(&path).unwrap();
-            Self(path)
-        }
-    }
-    impl Drop for Temp {
-        fn drop(&mut self) {
-            let _ = fs::remove_dir_all(&self.0);
-        }
+    fn temp() -> TempDir {
+        TempDir::new("refresh")
     }
 
     #[cfg(any(unix, windows))]
     #[test]
     fn hardlinks_remain_incremental_across_edits_moves_and_subtree_deletes() {
-        let dir = Temp::new();
+        let dir = temp();
         let root = &dir.0;
         fs::create_dir(root.join("sub")).unwrap();
         fs::write(root.join("a"), [1; 100]).unwrap();
@@ -355,8 +307,8 @@ mod tests {
     #[cfg(unix)]
     #[test]
     fn unix_sparse_hardlinks_use_allocated_blocks_and_ignore_outside_aliases() {
-        let dir = Temp::new();
-        let outside = Temp::new();
+        let dir = temp();
+        let outside = temp();
         let file = fs::File::create(dir.0.join("sparse")).unwrap();
         file.set_len(8 * 1024 * 1024).unwrap();
         fs::hard_link(dir.0.join("sparse"), outside.0.join("outside")).unwrap();
@@ -374,7 +326,7 @@ mod tests {
 
     #[test]
     fn incremental_edits_match_fresh_scan_and_preserve_snapshots() {
-        let dir = Temp::new();
+        let dir = temp();
         fs::create_dir(dir.0.join("keep")).unwrap();
         fs::write(dir.0.join("keep/a"), [1; 10]).unwrap();
         fs::write(dir.0.join("b"), [2; 20]).unwrap();

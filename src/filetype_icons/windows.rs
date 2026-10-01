@@ -16,16 +16,32 @@ use windows_sys::Win32::{
     },
 };
 
+/// COM for the calling thread, initialized on first use and released when the thread exits.
+struct Com;
+impl Drop for Com {
+    fn drop(&mut self) {
+        // SAFETY: Balances this thread's successful CoInitializeEx.
+        unsafe { CoUninitialize() };
+    }
+}
+thread_local! {
+    static COM: Option<Com> = {
+        // SAFETY: Initializes COM for this thread only; Com releases it on thread exit.
+        let result = unsafe { CoInitializeEx(ptr::null(), COINIT_APARTMENTTHREADED as u32) };
+        (result >= 0).then_some(Com)
+    };
+}
+
 #[allow(clippy::multiple_unsafe_ops_per_block)]
-pub fn load(extension: &str, size: u32) -> Option<ColorImage> {
-    let name: Vec<u16> = if extension == "(none)" { "file" } else { extension }.encode_utf16().chain(Some(0)).collect();
+pub fn load(extension: Option<&str>, size: u32) -> Option<ColorImage> {
+    if !COM.with(Option::is_some) {
+        return None;
+    }
+    let name: Vec<u16> = extension.unwrap_or("file").encode_utf16().chain(Some(0)).collect();
     // SAFETY: All pointers reference initialized, correctly sized native structures
     // or owned GDI buffers. Every successful allocation is released on each exit.
     // USEFILEATTRIBUTES queries associations without touching a scanned file.
     unsafe {
-        if CoInitializeEx(ptr::null(), COINIT_APARTMENTTHREADED as u32) < 0 {
-            return None;
-        }
         let mut info: SHFILEINFOW = std::mem::zeroed();
         let result = SHGetFileInfoW(
             name.as_ptr(),
@@ -35,12 +51,10 @@ pub fn load(extension: &str, size: u32) -> Option<ColorImage> {
             SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES,
         );
         if result == 0 || info.hIcon.is_null() {
-            CoUninitialize();
             return None;
         }
         let image = rasterize(info.hIcon, size);
         DestroyIcon(info.hIcon);
-        CoUninitialize();
         image
     }
 }
@@ -124,7 +138,7 @@ pub(crate) fn stock(id: SHSTOCKICONID, size: u32) -> Option<ColorImage> {
 mod tests {
     #[test]
     fn shell_returns_type_icons_without_existing_files() {
-        for extension in [".txt", ".zip", ".clawback-unknown-extension", "(none)"] {
+        for extension in [Some(".txt"), Some(".zip"), Some(".clawback-unknown-extension"), None] {
             let icon = super::load(extension, 32).expect("Windows shell type icon");
             assert_eq!(icon.size, [32, 32]);
             assert!(icon.pixels.iter().any(|pixel| pixel.a() > 0));

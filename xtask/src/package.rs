@@ -2,24 +2,35 @@
 use crate::Result;
 use std::{fs, path::Path};
 
+pub const USAGE: &str = "cargo xtask package <target> <tag>";
+
+pub const TARGETS: [&str; 6] = [
+    "x86_64-pc-windows-msvc",
+    "aarch64-pc-windows-msvc",
+    "x86_64-apple-darwin",
+    "aarch64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "aarch64-unknown-linux-gnu",
+];
+
+/// Font and icon licenses, from the repository to their packaged names.
+const NOTICES: [(&str, &str); 3] = [
+    ("assets/fonts/OFL.txt", "NotoSans-OFL.txt"),
+    ("assets/fonts/NotoSansThai-OFL.txt", "NotoSansThai-OFL.txt"),
+    ("assets/fonts/Phosphor-LICENSE.txt", "Phosphor-LICENSE.txt"),
+];
+
+pub fn exe_name(target: &str) -> &'static str {
+    if target.contains("windows") { "clawback.exe" } else { "clawback" }
+}
+
 pub fn run(root: &Path, args: &[String]) -> Result<()> {
-    let [target, tag] = args else {
-        return Err("Usage: cargo xtask package <target> <tag>".into());
-    };
-    if ![
-        "x86_64-pc-windows-msvc",
-        "aarch64-pc-windows-msvc",
-        "x86_64-apple-darwin",
-        "aarch64-apple-darwin",
-        "x86_64-unknown-linux-gnu",
-        "aarch64-unknown-linux-gnu",
-    ]
-    .contains(&target.as_str())
-    {
+    let [target, tag] = args else { return Err(crate::usage(USAGE)) };
+    if !TARGETS.contains(&target.as_str()) {
         return Err("Unsupported release target".into());
     }
     if tag != "nightly" {
-        crate::parse_version(tag)?;
+        crate::release::parse_version(tag)?;
     }
     let out = root.join("dist").join(format!("clawback-{tag}-{target}"));
     if out.exists() {
@@ -30,10 +41,8 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
         fs::copy(root.join(name), out.join(name))?;
     }
     copy_dir(&root.join("docs"), &out.join("docs"))?;
-    fs::copy(root.join("assets/fonts/OFL.txt"), out.join("NotoSans-OFL.txt"))?;
-    fs::copy(root.join("assets/fonts/NotoSansThai-OFL.txt"), out.join("NotoSansThai-OFL.txt"))?;
-    fs::copy(root.join("assets/fonts/Phosphor-LICENSE.txt"), out.join("Phosphor-LICENSE.txt"))?;
-    let exe = if target.contains("windows") { "clawback.exe" } else { "clawback" };
+    copy_notices(root, &out)?;
+    let exe = exe_name(target);
     let binary = root.join("target").join(target).join("release").join(exe);
     fs::copy(&binary, out.join(exe))?;
     if target.contains("apple") {
@@ -42,12 +51,8 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
         fs::create_dir_all(contents.join("Resources"))?;
         fs::copy(&binary, contents.join("MacOS/clawback"))?;
         fs::copy(root.join("assets/icons/clawback.icns"), contents.join("Resources/clawback.icns"))?;
-        fs::copy(root.join("assets/fonts/OFL.txt"), contents.join("Resources/NotoSans-OFL.txt"))?;
-        fs::copy(root.join("assets/fonts/NotoSansThai-OFL.txt"), contents.join("Resources/NotoSansThai-OFL.txt"))?;
-        fs::copy(root.join("assets/fonts/Phosphor-LICENSE.txt"), contents.join("Resources/Phosphor-LICENSE.txt"))?;
-        let manifest: toml_edit::DocumentMut = fs::read_to_string(root.join("Cargo.toml"))?.parse()?;
-        let version = manifest["workspace"]["package"]["version"].as_str().ok_or("Missing version")?;
-        fs::write(contents.join("Info.plist"), plist(version))?;
+        copy_notices(root, &contents.join("Resources"))?;
+        fs::write(contents.join("Info.plist"), plist(&crate::release::workspace_version(root)?))?;
     } else if target.contains("linux") {
         let share = out.join("share");
         fs::create_dir_all(share.join("applications"))?;
@@ -60,6 +65,13 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
         let scalable = share.join("icons/hicolor/scalable/apps");
         fs::create_dir_all(&scalable)?;
         fs::copy(root.join("assets/icons/clawback.svg"), scalable.join("clawback.svg"))?;
+    }
+    Ok(())
+}
+
+fn copy_notices(root: &Path, to: &Path) -> Result<()> {
+    for (from, name) in NOTICES {
+        fs::copy(root.join(from), to.join(name))?;
     }
     Ok(())
 }
@@ -111,15 +123,8 @@ mod tests {
             fs::copy(workspace.join(file), temp.join(file)).expect("fixture file");
         }
         copy_dir(&workspace.join("assets"), &temp.join("assets")).expect("assets");
-        for target in [
-            "x86_64-pc-windows-msvc",
-            "aarch64-pc-windows-msvc",
-            "x86_64-apple-darwin",
-            "aarch64-apple-darwin",
-            "x86_64-unknown-linux-gnu",
-            "aarch64-unknown-linux-gnu",
-        ] {
-            let exe = if target.contains("windows") { "clawback.exe" } else { "clawback" };
+        for target in TARGETS {
+            let exe = exe_name(target);
             let build = temp.join("target").join(target).join("release");
             fs::create_dir_all(&build).expect("build");
             fs::write(build.join(exe), b"fixture executable").expect("exe");

@@ -1,21 +1,37 @@
 //! Whole-volume MFT ingestion. Bootstrap $MFT's extents with documented NTFS
 //! control codes, then read records in 1 mebibyte batches, not one ioctl per file.
 use super::{
-    INDEX_MASK, Record, Run, attributes, bytes, fixup, invalid, parse_with_reparse, runs, u16_at, u32_at, u64_at,
+    ATTRIBUTE_LIST, DATA, IN_USE, INDEX_MASK, Record, Run, attributes, bytes, fixup, invalid, is_file_record,
+    parse_with_reparse, runs, u16_at, u32_at, u64_at,
 };
+use crate::profiling::Phase;
 use crate::scan::{Shared, lock};
-use crate::tree::{Kind, NewEntry, ROOT, Tree, flags};
+use crate::tree::{Kind, NewEntry, NodeId, ROOT, Tree, flags};
 use crate::windows;
 use std::collections::{HashMap, HashSet};
+use std::ffi::OsString;
 use std::fs::File;
 use std::io::{self, Read, Seek, SeekFrom};
 use std::os::windows::ffi::OsStringExt;
 use std::sync::atomic::Ordering;
 
-const GET_VOLUME: u32 = 0x0009_0064;
-const GET_RECORD: u32 = 0x0009_0068;
+const GET_VOLUME: u32 = 0x0009_0064; // FSCTL_GET_NTFS_VOLUME_DATA
+const GET_RECORD: u32 = 0x0009_0068; // FSCTL_GET_NTFS_FILE_RECORD
 const BATCH: usize = 1024 * 1024;
-const IO_ALIGNMENT: usize = 65536;
+/// Assembled entries are added to the tree in groups of this many.
+const ASSEMBLE_BATCH: usize = 256;
+/// The root directory's record number. Lower numbers are reserved metadata.
+const ROOT_RECORD: u64 = 5;
+const FIRST_USER_RECORD: u64 = 16;
+/// Attribute lists are metadata; never let an on-disk length allocate an
+/// unbounded buffer. Larger lists use fallback.
+const MAX_ATTRIBUTE_LIST: u64 = 16 * 1024 * 1024;
+
+/// DASD handles obey noncached I/O restrictions even without an explicit
+/// flag, so physical reads go through a buffer aligned for any sector size.
+/// <https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-createfilew>
+#[repr(C, align(65536))]
+struct ReadBuffer([u8; BATCH]);
 
 fn context(error: &io::Error, phase: impl std::fmt::Display) -> io::Error {
     io::Error::new(error.kind(), format!("{phase}: {error}"))
@@ -28,10 +44,16 @@ struct Volume {
     clusters: u64,
     record_size: usize,
     valid_len: u64,
-    read_buffer: Vec<u8>,
+    read_buffer: Box<ReadBuffer>,
 }
 
 impl Volume {
+    fn new(file: File, cluster: u64, sector: usize, clusters: u64, record_size: usize, valid_len: u64) -> Self {
+        // SAFETY: ReadBuffer contains only bytes, for which all-zero is valid.
+        let read_buffer = unsafe { Box::<ReadBuffer>::new_zeroed().assume_init() };
+        Self { file, cluster, sector, clusters, record_size, valid_len, read_buffer }
+    }
+
     fn reparse_tag(&mut self, attribute: &[u8]) -> io::Result<u32> {
         // Only the tag is needed. Read one aligned sector, never allocate the
         // whole payload or follow the reparse target. Reject compressed/sparse
@@ -67,25 +89,17 @@ impl Volume {
         {
             return Err(invalid());
         }
-        Ok(Self {
-            file,
-            cluster,
-            sector: sector as usize,
-            clusters: u64_at(&data, 16)?,
-            record_size,
-            valid_len,
-            read_buffer: vec![0; BATCH + IO_ALIGNMENT],
-        })
+        Ok(Self::new(file, cluster, sector as usize, u64_at(&data, 16)?, record_size, valid_len))
     }
 
-    fn record(file: &File, record_size: usize, reference: u64) -> io::Result<Vec<u8>> {
-        let mut data = vec![0u8; record_size + 16];
+    fn record(&self, reference: u64) -> io::Result<Vec<u8>> {
+        let mut data = vec![0u8; self.record_size + 16];
         let index = reference & INDEX_MASK;
-        let len = windows::control(file, GET_RECORD, &index.to_le_bytes(), &mut data)?;
-        if len < 12 || u64_at(&data, 0)? & INDEX_MASK != index || u32_at(&data, 8)? as usize != record_size {
+        let len = windows::control(&self.file, GET_RECORD, &index.to_le_bytes(), &mut data)?;
+        if len < 12 || u64_at(&data, 0)? & INDEX_MASK != index || u32_at(&data, 8)? as usize != self.record_size {
             return Err(invalid());
         }
-        let record = bytes(&data[..len], 12, record_size)?.to_vec();
+        let record = bytes(&data[..len], 12, self.record_size)?.to_vec();
         if reference >> 48 != 0 && u64::from(u16_at(&record, 16)?) != reference >> 48 {
             return Err(invalid());
         }
@@ -108,15 +122,12 @@ impl Volume {
         Ok(())
     }
 
+    /// Read `output.len()` bytes of a stream through the aligned buffer; the
+    /// caller's destination need not itself be aligned.
     fn read_stream(&mut self, extents: &[Run], offset: u64, output: &mut [u8]) -> io::Result<()> {
         if !offset.is_multiple_of(self.sector as u64) || !output.len().is_multiple_of(self.sector) {
             return Err(invalid());
         }
-        // DASD handles obey noncached I/O restrictions even without an explicit
-        // flag. Align every physical read, including reads across fragmented
-        // extents; the caller's destination need not itself be aligned.
-        // https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-createfilew
-        let aligned = self.read_buffer.as_ptr().align_offset(IO_ALIGNMENT);
         let mut offset = offset;
         let mut remaining = output;
         while !remaining.is_empty() {
@@ -138,7 +149,7 @@ impl Volume {
                 .and_then(|n| n.checked_add(within))
                 .ok_or_else(invalid)?;
             self.file.seek(SeekFrom::Start(position))?;
-            let chunk = &mut self.read_buffer[aligned..aligned + count];
+            let chunk = &mut self.read_buffer.0[..count];
             self.file.read_exact(chunk)?;
             remaining[..count].copy_from_slice(chunk);
             remaining = &mut remaining[count..];
@@ -148,33 +159,30 @@ impl Volume {
     }
 
     fn mft_runs(&mut self, shared: &Shared) -> io::Result<Vec<Run>> {
-        let file = self.file.try_clone()?;
-        let record_size = self.record_size;
-        self.mft_runs_with(shared, |reference| Self::record(&file, record_size, reference))
+        self.mft_runs_with(shared, Self::record)
     }
 
     fn mft_runs_with(
         &mut self,
         shared: &Shared,
-        mut read_record: impl FnMut(u64) -> io::Result<Vec<u8>>,
+        mut read_record: impl FnMut(&Self, u64) -> io::Result<Vec<u8>>,
     ) -> io::Result<Vec<Run>> {
-        let first = read_record(0)?;
+        let first = read_record(self, 0)?;
         let mut extents = Vec::new();
         let mut references = HashSet::new();
         for attr in attributes(&first)? {
-            if attr.kind == 0x80 && attr.unnamed() {
+            let attr = attr?;
+            if attr.is_contents() {
                 extents.extend(runs(attr.data)?);
             }
-            if attr.kind != 0x20 {
+            if attr.kind != ATTRIBUTE_LIST {
                 continue;
             }
-            let list = if attr.data[8] == 0 {
+            let list = if attr.is_resident() {
                 attr.resident()?.to_vec()
             } else {
                 let len = u64_at(attr.data, 48)?;
-                // Attribute lists are metadata, never allow an on-disk length
-                // to allocate an unbounded buffer. Larger lists use fallback.
-                if len > 16 * 1024 * 1024 {
+                if len > MAX_ATTRIBUTE_LIST {
                     return Err(invalid());
                 }
                 let mut mapping = runs(attr.data)?;
@@ -186,14 +194,15 @@ impl Volume {
             };
             let mut offset = 0;
             while offset < list.len() {
-                checkpoint(shared)?;
+                shared.progress.checkpoint()?;
                 let entry = bytes(&list, offset, 26)?;
                 let len = usize::from(u16_at(entry, 4)?);
                 if len < 26 {
                     return Err(invalid());
                 }
                 bytes(&list, offset, len)?;
-                if u32_at(entry, 0)? == 0x80 && entry[6] == 0 {
+                // An unnamed $DATA extent held in another record.
+                if u32_at(entry, 0)? == DATA && entry[6] == 0 {
                     let reference = u64_at(entry, 16)?;
                     if reference & INDEX_MASK != 0 {
                         references.insert(reference);
@@ -203,13 +212,14 @@ impl Volume {
             }
         }
         for reference in references {
-            checkpoint(shared)?;
-            let record = read_record(reference)?;
+            shared.progress.checkpoint()?;
+            let record = read_record(self, reference)?;
             if u64_at(&record, 32)? != u64::from(u16_at(&first, 16)?) << 48 {
                 return Err(invalid());
             }
             for attr in attributes(&record)? {
-                if attr.kind == 0x80 && attr.unnamed() {
+                let attr = attr?;
+                if attr.is_contents() {
                     extents.extend(runs(attr.data)?);
                 }
             }
@@ -219,27 +229,16 @@ impl Volume {
     }
 }
 
-fn checkpoint(shared: &Shared) -> io::Result<()> {
-    shared.progress.wait_if_paused();
-    if shared.progress.cancel.load(Ordering::Relaxed) {
-        Err(io::Error::new(io::ErrorKind::Interrupted, "Scan cancelled"))
-    } else {
-        Ok(())
-    }
-}
-
 pub(crate) fn scan(shared: &Shared) -> io::Result<bool> {
-    #[cfg(feature = "profiling")]
-    let volume_phase = shared.profile.timer(crate::profiling::Phase::Volume);
-    let Some((file, serial)) = windows::volume(&shared.root)? else { return Ok(false) };
-    let mut volume = Volume::open(file).map_err(|e| context(&e, "Reading NTFS volume information"))?;
-    #[cfg(feature = "profiling")]
-    drop(volume_phase);
-    checkpoint(shared)?;
+    let (mut volume, serial) = {
+        let _phase = shared.profile.timer(Phase::Volume);
+        let Some((file, serial)) = windows::volume(&shared.root)? else { return Ok(false) };
+        (Volume::open(file).map_err(|e| context(&e, "Reading NTFS volume information"))?, serial)
+    };
+    shared.progress.checkpoint()?;
     shared.progress.workers.store(1, Ordering::Relaxed);
     let mapping = {
-        #[cfg(feature = "profiling")]
-        let _phase = shared.profile.timer(crate::profiling::Phase::Bootstrap);
+        let _phase = shared.profile.timer(Phase::Bootstrap);
         volume.mft_runs(shared).map_err(|e| context(&e, "Locating the MFT data extents"))?
     };
     ingest(shared, serial, &mut volume, &mapping)?;
@@ -247,31 +246,42 @@ pub(crate) fn scan(shared: &Shared) -> io::Result<bool> {
 }
 
 fn ingest(shared: &Shared, serial: u64, volume: &mut Volume, mapping: &[Run]) -> io::Result<()> {
+    let (mut records, extensions) = read_records(shared, volume, mapping)?;
+    lock(&shared.mft_progress).phase = 1;
+    merge_extensions(shared, &mut records, extensions)?;
+    let tree = build_tree(shared, serial, records).map_err(|e| context(&e, "Assembling the MFT directory tree"))?;
+    publish(shared, tree)
+}
+
+/// Parse every in-use record: base records by id, then extension records.
+fn read_records(
+    shared: &Shared,
+    volume: &mut Volume,
+    mapping: &[Run],
+) -> io::Result<(HashMap<u64, Record>, Vec<Record>)> {
     let mut buffer = vec![0u8; BATCH];
     let mut records = HashMap::new();
     let mut extensions = Vec::new();
     let mut offset = 0;
     lock(&shared.mft_progress).total = volume.valid_len;
     while offset < volume.valid_len {
-        checkpoint(shared)?;
+        shared.progress.checkpoint()?;
         let count = (volume.valid_len - offset).min(BATCH as u64) as usize;
         {
-            #[cfg(feature = "profiling")]
-            let _phase = shared.profile.timer(crate::profiling::Phase::Read);
+            let _phase = shared.profile.timer(Phase::Read);
             volume.read_stream(mapping, offset, &mut buffer[..count.next_multiple_of(volume.sector)])?;
         }
-        #[cfg(feature = "profiling")]
-        let _phase = shared.profile.timer(crate::profiling::Phase::Parse);
+        let _phase = shared.profile.timer(Phase::Parse);
         for (i, record) in buffer[..count].chunks_exact_mut(volume.record_size).enumerate() {
             let index = offset / volume.record_size as u64 + i as u64;
             // Unused slots can be zero-filled or contain old FILE records.
             if record.iter().all(|&b| b == 0) {
                 continue;
             }
-            if bytes(record, 0, 4)? != b"FILE" {
+            if !is_file_record(record)? {
                 return Err(invalid());
             }
-            if u16_at(record, 22)? & 1 == 0 {
+            if u16_at(record, 22)? & IN_USE == 0 {
                 continue;
             }
             fixup(record).map_err(|e| context(&e, format_args!("Validating MFT record {index}")))?;
@@ -294,11 +304,14 @@ fn ingest(shared: &Shared, serial: u64, volume: &mut Volume, mapping: &[Run]) ->
         progress.read = offset;
         progress.records = records.len() as u64;
     }
-    lock(&shared.mft_progress).phase = 1;
-    #[cfg(feature = "profiling")]
-    let merge_phase = shared.profile.timer(crate::profiling::Phase::Merge);
+    Ok((records, extensions))
+}
+
+/// Fold extension records' names, reparse state and sizes into their bases.
+fn merge_extensions(shared: &Shared, records: &mut HashMap<u64, Record>, extensions: Vec<Record>) -> io::Result<()> {
+    let _phase = shared.profile.timer(Phase::Merge);
     for extension in extensions {
-        checkpoint(shared)?;
+        shared.progress.checkpoint()?;
         let base = records.get_mut(&extension.base).ok_or_else(invalid)?;
         base.names.extend(extension.names);
         base.surrogate |= extension.surrogate;
@@ -308,12 +321,13 @@ fn ingest(shared: &Shared, serial: u64, volume: &mut Volume, mapping: &[Run]) ->
             return Err(invalid());
         }
     }
-    #[cfg(feature = "profiling")]
-    drop(merge_phase);
-    let tree = build_tree(shared, serial, records).map_err(|e| context(&e, "Assembling the MFT directory tree"))?;
-    #[cfg(feature = "profiling")]
-    let _phase = shared.profile.timer(crate::profiling::Phase::Publish);
-    checkpoint(shared)?;
+    Ok(())
+}
+
+/// Publish a validated tree and its totals.
+fn publish(shared: &Shared, tree: Tree) -> io::Result<()> {
+    let _phase = shared.profile.timer(Phase::Publish);
+    shared.progress.checkpoint()?;
     shared.progress.files.store(tree.root().files, Ordering::Relaxed);
     shared.progress.bytes.store(tree.root().size, Ordering::Relaxed);
     shared.progress.dirs.store(tree.dir_count(ROOT), Ordering::Relaxed);
@@ -321,68 +335,110 @@ fn ingest(shared: &Shared, serial: u64, volume: &mut Volume, mapping: &[Run]) ->
     Ok(())
 }
 
+type Children = HashMap<u64, Vec<(u64, OsString)>>;
+
 fn build_tree(shared: &Shared, serial: u64, mut records: HashMap<u64, Record>) -> io::Result<Tree> {
-    #[cfg(feature = "profiling")]
-    let index_phase = shared.profile.timer(crate::profiling::Phase::Index);
-    let root = records.keys().copied().find(|id| id & INDEX_MASK == 5).ok_or_else(invalid)?;
-    if !records[&root].directory {
-        return Err(invalid());
-    }
+    let (root, mut children) = {
+        let _phase = shared.profile.timer(Phase::Index);
+        let root = records.keys().copied().find(|id| id & INDEX_MASK == ROOT_RECORD).ok_or_else(invalid)?;
+        if !records[&root].directory {
+            return Err(invalid());
+        }
+        let mut children = index_children(shared, &mut records, root)?;
+        exclude_reserved(shared, &records, root, &mut children)?;
+        (root, children)
+    };
     let mut tree = Tree::new(&shared.root);
     tree.node_mut(ROOT).mtime = records[&root].mtime;
     // Also identifies MFT accounting to incremental reconciliation. Directory
     // traversal deliberately uses listing-only estimates on Windows.
     tree.node_mut(ROOT).file_id = Some((serial, root));
-    let mut children: HashMap<u64, Vec<(u64, std::ffi::OsString)>> = HashMap::new();
+    {
+        let _phase = shared.profile.timer(Phase::Assemble);
+        assemble(shared, serial, &records, root, &mut children, &mut tree)?;
+    }
+    let _phase = shared.profile.timer(Phase::Sort);
+    lock(&shared.mft_progress).phase = 3;
+    tree.sort_all();
+    Ok(tree)
+}
+
+/// Each directory's named children. Takes every record's names.
+fn index_children(shared: &Shared, records: &mut HashMap<u64, Record>, root: u64) -> io::Result<Children> {
+    let mut children: Children = HashMap::new();
     for record in records.values_mut() {
-        checkpoint(shared)?;
+        shared.progress.checkpoint()?;
         if record.id == root {
             continue;
         }
-        let mut names = HashSet::new();
-        for name in record.names.drain(..) {
-            if name.text == [46] {
+        // Base and extension records may repeat a link.
+        let mut names = std::mem::take(&mut record.names);
+        names.sort_unstable();
+        names.dedup();
+        for name in names {
+            if name.text == [u16::from(b'.')] {
                 return Err(invalid());
             }
-            let text = std::ffi::OsString::from_wide(&name.text);
-            if names.insert((name.parent, text.clone())) {
-                children.entry(name.parent).or_default().push((record.id, text));
-            }
+            children.entry(name.parent).or_default().push((record.id, OsString::from_wide(&name.text)));
         }
     }
-    // Keep the same user-file scope as directory traversal. Reserved NTFS
-    // records ($MFT, $Bitmap, $Extend, etc.) and their descendants account for
-    // filesystem overhead, not ordinary directory contents. Including them
-    // would also make live directory reconciliation remove invisible entries.
-    let mut excluded: Vec<_> = records.keys().copied().filter(|id| id & INDEX_MASK < 16 && *id != root).collect();
-    let mut excluded_seen = HashSet::new();
+    Ok(children)
+}
+
+/// Keep the same user-file scope as directory traversal. Reserved NTFS
+/// records ($MFT, $Bitmap, $Extend, etc.) and their descendants account for
+/// filesystem overhead, not ordinary directory contents. Including them
+/// would also make live directory reconciliation remove invisible entries.
+fn exclude_reserved(
+    shared: &Shared,
+    records: &HashMap<u64, Record>,
+    root: u64,
+    children: &mut Children,
+) -> io::Result<()> {
+    let mut excluded: Vec<_> =
+        records.keys().copied().filter(|id| id & INDEX_MASK < FIRST_USER_RECORD && *id != root).collect();
+    let mut seen = HashSet::new();
     while let Some(id) = excluded.pop() {
-        checkpoint(shared)?;
-        if excluded_seen.insert(id)
+        shared.progress.checkpoint()?;
+        if seen.insert(id)
             && let Some(entries) = children.remove(&id)
         {
             excluded.extend(entries.into_iter().map(|(id, _)| id));
         }
     }
     for entries in children.values_mut() {
-        entries.retain(|(id, _)| !excluded_seen.contains(id));
+        entries.retain(|(id, _)| !seen.contains(id));
     }
-    #[cfg(feature = "profiling")]
-    drop(index_phase);
-    #[cfg(feature = "profiling")]
-    let assemble_phase = shared.profile.timer(crate::profiling::Phase::Assemble);
+    Ok(())
+}
+
+/// Add every entry reachable from `root` to `tree`.
+fn assemble(
+    shared: &Shared,
+    serial: u64,
+    records: &HashMap<u64, Record>,
+    root: u64,
+    children: &mut Children,
+    tree: &mut Tree,
+) -> io::Result<()> {
     let mut pending = vec![(root, ROOT)];
     let mut visited_dirs = HashSet::from([root]);
     let mut counted = HashSet::new();
     let mut total_bytes = 0u64;
     lock(&shared.mft_progress).phase = 2;
     while let Some((reference, node)) = pending.pop() {
-        checkpoint(shared)?;
+        shared.progress.checkpoint()?;
         let Some(entries) = children.remove(&reference) else { continue };
-        let mut batch = Vec::with_capacity(256);
+        let mut batch = Vec::with_capacity(ASSEMBLE_BATCH);
+        // Subdirectories to visit, by index into `batch`.
         let mut dirs = Vec::new();
+        let mut add = |tree: &mut Tree, batch: Vec<NewEntry>, dirs: &mut Vec<(u64, usize)>| {
+            let range = tree.add_children(node, batch);
+            pending.extend(dirs.drain(..).map(|(id, i)| (id, range.start + i as NodeId)));
+            report_assembled(shared, tree);
+        };
         for (reference, name) in entries {
-            checkpoint(shared)?;
+            shared.progress.checkpoint()?;
             let record = &records[&reference];
             let kind = if record.surrogate {
                 Kind::Symlink
@@ -416,28 +472,18 @@ fn build_tree(shared: &Shared, serial: u64, mut records: HashMap<u64, Record>) -
                 flags: if duplicate { flags::HARDLINK_DUP } else { 0 },
                 file_id: (kind != Kind::Dir).then_some((serial, reference)),
             });
-            if batch.len() == 256 {
-                let range = tree.add_children(node, std::mem::take(&mut batch));
-                pending.extend(dirs.drain(..).map(|(id, i)| (id, range.start + i as u32)));
-                report_assembled(shared, &tree);
+            if batch.len() == ASSEMBLE_BATCH {
+                add(tree, std::mem::take(&mut batch), &mut dirs);
             }
         }
-        let range = tree.add_children(node, batch);
-        pending.extend(dirs.into_iter().map(|(id, i)| (id, range.start + i as u32)));
-        report_assembled(shared, &tree);
+        add(tree, batch, &mut dirs);
     }
     // A missing parent or a cycle means the live MFT was not coherent. Children
     // of name-surrogate directories are intentionally not traversed.
     if children.keys().any(|id| !records.get(id).is_some_and(|r| r.surrogate)) {
         return Err(invalid());
     }
-    #[cfg(feature = "profiling")]
-    drop(assemble_phase);
-    #[cfg(feature = "profiling")]
-    let _phase = shared.profile.timer(crate::profiling::Phase::Sort);
-    lock(&shared.mft_progress).phase = 3;
-    tree.sort_all();
-    Ok(tree)
+    Ok(())
 }
 
 fn report_assembled(shared: &Shared, tree: &Tree) {
@@ -495,15 +541,7 @@ mod tests {
         disk[4 * 512..36 * 512].copy_from_slice(&image[..32 * 512]);
         disk[50 * 512..90 * 512].copy_from_slice(&image[32 * 512..]);
         std::fs::write(&path, disk).unwrap();
-        let volume = Volume {
-            file: File::open(&path).unwrap(),
-            cluster: 512,
-            sector: 512,
-            clusters: 100,
-            record_size: 1024,
-            valid_len: image.len() as u64,
-            read_buffer: vec![0; BATCH + IO_ALIGNMENT],
-        };
+        let volume = Volume::new(File::open(&path).unwrap(), 512, 512, 100, 1024, image.len() as u64);
         (
             Image(path),
             volume,
@@ -601,10 +639,10 @@ mod tests {
     fn cancelled_or_invalid_ingestion_never_publishes_an_unvalidated_tree() {
         let (_image, mut volume, mapping) = disk();
         let shared = state();
-        shared.progress.cancel.store(true, Ordering::Relaxed);
+        shared.progress.cancel();
         assert_eq!(ingest(&shared, 123, &mut volume, &mapping).unwrap_err().kind(), io::ErrorKind::Interrupted);
         assert_eq!(lock(&shared.tree).root().files, 0);
-        shared.progress.cancel.store(false, Ordering::Relaxed);
+        let shared = state();
         volume.valid_len += 1024 * 100;
         assert!(ingest(&shared, 123, &mut volume, &mapping).is_err());
         assert_eq!(lock(&shared.tree).root().files, 0);
@@ -653,7 +691,7 @@ mod tests {
         let first = record(&[first_data, resident(0x20, &list)], false, 0);
         let extension = record(&[next_data], false, reference(0));
         let mapping = volume
-            .mft_runs_with(&shared, |id| match id {
+            .mft_runs_with(&shared, |_, id| match id {
                 0 => Ok(first.clone()),
                 id if id == reference(22) => Ok(extension.clone()),
                 _ => Err(invalid()),
@@ -662,7 +700,9 @@ mod tests {
         assert_eq!(mapping, expected);
         let mut wrong = extension;
         wrong[32..40].copy_from_slice(&reference(99).to_le_bytes());
-        assert!(volume.mft_runs_with(&shared, |id| Ok(if id == 0 { first.clone() } else { wrong.clone() })).is_err());
+        assert!(
+            volume.mft_runs_with(&shared, |_, id| Ok(if id == 0 { first.clone() } else { wrong.clone() })).is_err()
+        );
     }
 
     #[test]
@@ -727,15 +767,7 @@ mod tests {
         println!("{}", crate::profiling::header());
         for _ in 0..3 {
             let shared = state();
-            let mut volume = Volume {
-                file: File::open(&image.0).unwrap(),
-                cluster: 512,
-                sector: 512,
-                clusters: len / 512,
-                record_size: 1024,
-                valid_len: len,
-                read_buffer: vec![0; BATCH + IO_ALIGNMENT],
-            };
+            let mut volume = Volume::new(File::open(&image.0).unwrap(), 512, 512, len / 512, 1024, len);
             let mapping = [Run { vcn: 0, lcn: Some(0), clusters: len / 512 }];
             let start = Instant::now();
             ingest(&shared, 1, &mut volume, &mapping).unwrap();

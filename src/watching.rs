@@ -3,6 +3,7 @@ use crate::platform::{self, DiskInfo};
 use clawback_core::{Scan, ScanOptions, Skipped, Tree, live::Refresh};
 use std::{
     collections::BTreeSet,
+    io,
     path::{Path, PathBuf},
     sync::{
         Arc, Mutex,
@@ -15,6 +16,11 @@ use std::{
 const CAPACITY: usize = 4096;
 const BATCH: Duration = Duration::from_secs(1);
 const RECOVERY_INTERVAL: Duration = Duration::from_secs(30);
+const WATCHING: &str = "Live · Watching for changes";
+
+fn stopped(error: impl std::fmt::Display) -> Update {
+    Update::Status(format!("Live stopped: {error} · Rescan to reconnect"))
+}
 
 pub enum Change {
     Path(PathBuf),
@@ -89,11 +95,11 @@ pub struct Watch {
 
 impl Watch {
     /// Called before the initial scan, exclusively on the coordinator thread.
-    pub fn start(root: &Path) -> Result<Self, String> {
+    pub fn start(root: &Path) -> io::Result<Self> {
         let (tx, rx) = mpsc::sync_channel(CAPACITY);
         let inbox = Inbox { tx, overflow: Arc::new(AtomicBool::new(false)), failed: Arc::new(Mutex::new(None)) };
         #[cfg(windows)]
-        let watcher = crate::watch_windows::Watcher::start(root, inbox.clone()).map_err(|e| e.to_string())?;
+        let watcher = crate::watch_windows::Watcher::start(root, inbox.clone())?;
         #[cfg(not(windows))]
         let watcher = {
             use notify::Watcher;
@@ -102,8 +108,8 @@ impl Watch {
             // events in the same namespace as the scanner, including aliases
             // such as /var -> /private/var. Resolve only the root, never an
             // individual event: deleted and renamed paths may no longer exist.
-            let scan_root = std::path::absolute(root).map_err(|e| e.to_string())?;
-            let watched_root = root.canonicalize().map_err(|e| e.to_string())?;
+            let scan_root = std::path::absolute(root)?;
+            let watched_root = root.canonicalize()?;
             let event_root = watched_root.clone();
             let mut watcher = notify::RecommendedWatcher::new(
                 move |event: notify::Result<notify::Event>| match event {
@@ -122,8 +128,8 @@ impl Watch {
                 },
                 notify::Config::default().with_follow_symlinks(false),
             )
-            .map_err(|e| e.to_string())?;
-            watcher.watch(&watched_root, notify::RecursiveMode::Recursive).map_err(|e| e.to_string())?;
+            .map_err(io::Error::other)?;
+            watcher.watch(&watched_root, notify::RecursiveMode::Recursive).map_err(io::Error::other)?;
             watcher
         };
         Ok(Self { _watcher: watcher, inbox, rx })
@@ -141,25 +147,17 @@ impl Watch {
         let stop = Arc::new(AtomicBool::new(false));
         let cancel = stop.clone();
         let inbox = self.inbox.clone();
+        let baseline = Baseline { tree, options, skipped, disk };
         match std::thread::Builder::new().name("clawback-live".into()).spawn(move || {
-            self.run(tree, &options, skipped, disk, &cancel, &tx, &*repaint);
+            self.run(baseline, &cancel, &tx, &*repaint);
         }) {
-            Ok(_) => Started { live: Some(Live { rx, inbox, stop }), status: "Live · Watching for changes".into() },
+            Ok(_) => Started { live: Some(Live { rx, inbox, stop }), status: WATCHING.into() },
             Err(error) => Started::unavailable(error),
         }
     }
 
-    #[allow(clippy::too_many_arguments)] // Worker inputs are transferred once at startup.
-    fn run(
-        self,
-        mut tree: Tree,
-        options: &ScanOptions,
-        skipped: Vec<Skipped>,
-        mut disk: Option<DiskInfo>,
-        stop: &AtomicBool,
-        tx: &mpsc::SyncSender<Update>,
-        repaint: &dyn Fn(),
-    ) {
+    fn run(self, baseline: Baseline, stop: &AtomicBool, tx: &mpsc::SyncSender<Update>, repaint: &dyn Fn()) {
+        let Baseline { mut tree, options, skipped, mut disk } = baseline;
         let publish = |update| {
             let sent = tx.send(update).is_ok();
             if sent {
@@ -203,7 +201,7 @@ impl Watch {
             }
             if let Some(error) = clawback_core::scan::lock(&self.inbox.failed).take().or_else(|| pending.failed.take())
             {
-                publish(Update::Status(format!("Live stopped: {error} · Rescan to reconnect")));
+                publish(stopped(error));
                 return;
             }
             let mut changed = false;
@@ -242,7 +240,7 @@ impl Watch {
                     }
                     Ok(_) => return,
                     Err(error) => {
-                        publish(Update::Status(format!("Live stopped: {error} · Rescan to reconnect")));
+                        publish(stopped(error));
                         return;
                     }
                 }
@@ -284,13 +282,21 @@ impl Watch {
                 pending.rescan = true;
             }
             if changed || pending.rescan {
-                let status = if pending.is_empty() { "Live · Watching for changes" } else { "Live · Catching up" };
+                let status = if pending.is_empty() { WATCHING } else { "Live · Catching up" };
                 if !publish(Update::Status(status.into())) {
                     return;
                 }
             }
         }
     }
+}
+
+/// What the initial scan hands to the live worker.
+struct Baseline {
+    tree: Tree,
+    options: ScanOptions,
+    skipped: Vec<Skipped>,
+    disk: Option<DiskInfo>,
 }
 
 #[cfg(any(not(windows), test))]

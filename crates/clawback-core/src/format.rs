@@ -40,11 +40,6 @@ pub fn count(n: u64) -> String {
     out
 }
 
-/// `"1,234,567 bytes"`.
-pub fn bytes_exact(n: u64) -> String {
-    format!("{} bytes", count(n))
-}
-
 /// `"29 Sep 2026   13:25:07"` in local time (empty if unknown).
 pub fn date(secs: i64) -> String {
     if secs == i64::MIN {
@@ -74,7 +69,7 @@ pub fn duration(d: Duration) -> String {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct CivilTime {
+struct CivilTime {
     pub year: i64,
     pub month: u32,
     pub day: u32,
@@ -85,7 +80,7 @@ pub struct CivilTime {
 
 /// Break seconds-since-epoch into a UTC calendar time
 /// (Howard Hinnant's `civil_from_days`).
-pub fn utc_time(secs: i64) -> CivilTime {
+fn utc_time(secs: i64) -> CivilTime {
     let days = secs.div_euclid(86_400);
     let rem = secs.rem_euclid(86_400);
     let z = days + 719_468;
@@ -108,8 +103,23 @@ pub fn utc_time(secs: i64) -> CivilTime {
 }
 
 /// Convert to the machine's local time zone (falls back to UTC).
-pub fn local_time(secs: i64) -> CivilTime {
+fn local_time(secs: i64) -> CivilTime {
     utc_time(secs + local_offset(secs).unwrap_or(0))
+}
+
+/// Windows FILETIMEs count 100 ns ticks since 1601-01-01 UTC.
+const FILETIME_TICKS_PER_SECOND: i64 = 10_000_000;
+const FILETIME_UNIX_EPOCH_SECONDS: i64 = 11_644_473_600;
+
+/// Whole seconds since the Unix epoch for a FILETIME tick count.
+#[cfg_attr(not(any(windows, test)), allow(dead_code))]
+pub(crate) fn unix_from_filetime(ticks: u64) -> Option<i64> {
+    Some(i64::try_from(ticks / FILETIME_TICKS_PER_SECOND as u64).ok()? - FILETIME_UNIX_EPOCH_SECONDS)
+}
+
+#[cfg(windows)]
+fn filetime_from_unix(secs: i64) -> Option<u64> {
+    u64::try_from(secs.checked_add(FILETIME_UNIX_EPOCH_SECONDS)?.checked_mul(FILETIME_TICKS_PER_SECOND)?).ok()
 }
 
 #[cfg(unix)]
@@ -137,24 +147,9 @@ fn local_offset(secs: i64) -> Option<i64> {
 
 #[cfg(windows)]
 fn local_offset(secs: i64) -> Option<i64> {
-    #[repr(C)]
-    struct FileTime {
-        low: u32,
-        high: u32,
-    }
-    #[link(name = "kernel32")]
-    unsafe extern "system" {
-        fn FileTimeToLocalFileTime(utc: *const FileTime, local: *mut FileTime) -> i32;
-    }
-    let ticks = u64::try_from((secs + 11_644_473_600).checked_mul(10_000_000)?).ok()?;
-    let utc = FileTime { low: ticks as u32, high: (ticks >> 32) as u32 };
-    let mut local = FileTime { low: 0, high: 0 };
-    // SAFETY: both pointers refer to valid FILETIME structs.
-    if unsafe { FileTimeToLocalFileTime(&raw const utc, &raw mut local) } == 0 {
-        return None;
-    }
-    let lt = (u64::from(local.high) << 32) | u64::from(local.low);
-    Some((lt as i64 - ticks as i64) / 10_000_000)
+    let ticks = filetime_from_unix(secs)?;
+    let local = crate::windows::local_filetime(ticks)?;
+    Some((local as i64 - ticks as i64) / FILETIME_TICKS_PER_SECOND)
 }
 
 #[cfg(not(any(unix, windows)))]
@@ -189,7 +184,12 @@ mod tests {
         assert_eq!(count(999), "999");
         assert_eq!(count(1000), "1,000");
         assert_eq!(count(1_234_567), "1,234,567");
-        assert_eq!(bytes_exact(12345), "12,345 bytes");
+    }
+
+    #[test]
+    fn filetimes_convert_to_unix_seconds() {
+        assert_eq!(unix_from_filetime(116_444_736_000_000_000), Some(0));
+        assert_eq!(unix_from_filetime(0), Some(-FILETIME_UNIX_EPOCH_SECONDS));
     }
 
     #[test]

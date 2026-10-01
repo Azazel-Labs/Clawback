@@ -13,12 +13,8 @@ pub(crate) struct LinkIndex {
 impl LinkIndex {
     pub fn new(tree: &Tree) -> Self {
         let mut index = Self::default();
-        let mut stack = vec![ROOT];
-        while let Some(id) = stack.pop() {
-            let node = tree.node(id);
-            if node.is_dir() {
-                stack.extend(node.children.iter().copied());
-            } else {
+        for id in tree.descendants(ROOT) {
+            if !tree.node(id).is_dir() {
                 index.insert(tree, id);
             }
         }
@@ -84,8 +80,6 @@ impl LinkIndex {
         let changed_identity = tree.node(id).file_id != entry.file_id;
         if changed_identity {
             self.detach(tree, id);
-        }
-        if changed_identity {
             tree.node_mut(id).file_id = entry.file_id;
         }
         self.insert(tree, id);

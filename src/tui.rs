@@ -38,20 +38,32 @@ struct App {
 
 impl App {
     fn new(root: PathBuf, settings: Settings) -> io::Result<Self> {
-        let running = Some(Running::start_terminal(root.clone(), settings.scan_options())?);
-        Ok(Self {
-            tree: Arc::new(Tree::new(&root)),
+        let running = Running::start_terminal(root.clone(), settings.scan_options())?;
+        let tree = Tree::new(&root);
+        Ok(Self { running: Some(running), ..Self::with_tree(root, tree, settings, "Starting scan…") })
+    }
+
+    /// An idle app showing `tree`, with no scan or live updates attached.
+    fn with_tree(root: PathBuf, tree: Tree, settings: Settings, status: &str) -> Self {
+        let mut app = Self {
             root,
             settings,
-            running,
+            running: None,
             live: None,
+            tree: Arc::new(tree),
             view: ROOT,
             entries: Vec::new(),
             selection: ListState::default(),
-            status: "Starting scan…".into(),
+            status: status.into(),
             started: Instant::now(),
             map_only: false,
-        })
+        };
+        app.refresh_entries();
+        app
+    }
+
+    fn paused(&self) -> bool {
+        self.running.as_ref().is_some_and(Running::is_paused)
     }
 
     fn refresh_entries(&mut self) {
@@ -65,13 +77,12 @@ impl App {
     }
 
     fn updates(&mut self) -> bool {
-        let mut changed = true;
         let update = self.running.as_ref().map(|running| running.rx.try_recv());
-        match update {
+        let mut changed = match update {
             Some(Ok(Update::Preview(preview))) => {
                 self.status = format!(
                     "{} · {} files · {} · {} not readable · up to {} workers · {}",
-                    if self.running.as_ref().is_some_and(Running::is_paused) { "Scan paused" } else { "Scanning" },
+                    if self.paused() { "Scan paused" } else { "Scanning" },
                     format::count(preview.progress.files),
                     format::size(preview.progress.bytes),
                     preview.progress.denied,
@@ -81,39 +92,43 @@ impl App {
                 crate::background::retire(std::mem::replace(&mut self.tree, Arc::new(preview.tree)));
                 self.view = ROOT;
                 self.refresh_entries();
+                true
             }
             Some(Ok(Update::Finished(result, _, _, started))) => {
                 self.status = format!(
-                    "{} · {} files · {} folders · {} not readable · {} skipped · {}",
+                    "{} · {} files · {} folders · {} not readable · {} skipped · {} · {}",
                     if result.cancelled { "Partial scan" } else { "Scan complete" },
                     format::count(result.files),
                     format::count(result.dirs),
                     result.denied,
                     result.skipped.len(),
-                    format::duration(result.elapsed)
+                    format::duration(result.elapsed),
+                    started.status
                 );
-                self.status.push_str(" · ");
-                self.status.push_str(&started.status);
                 self.live = started.live;
                 crate::background::retire(std::mem::replace(&mut self.tree, Arc::new(result.tree)));
                 self.view = ROOT;
                 self.running = None;
                 self.refresh_entries();
+                true
             }
             Some(Ok(Update::Failed(error))) => {
                 self.status = format!("Scan failed: {error} · Press r to retry");
                 self.running = None;
+                true
             }
             Some(Ok(Update::Cancelled)) => {
                 self.status = "Scan cancelled · Press r to rescan".into();
                 self.running = None;
+                true
             }
             Some(Err(std::sync::mpsc::TryRecvError::Disconnected)) => {
                 self.status = "Scanner stopped unexpectedly · Press r to retry".into();
                 self.running = None;
+                true
             }
-            _ => changed = false,
-        }
+            _ => false,
+        };
         let live_update = self.live.as_ref().map(|live| live.rx.try_recv());
         match live_update {
             Some(Ok(crate::watching::Update::Snapshot(snapshot))) => {
@@ -135,10 +150,8 @@ impl App {
                 changed = true;
             }
             Some(Ok(crate::watching::Update::Status(status))) => {
-                if status.starts_with("Live stopped:")
-                    && let Some(live) = self.live.take()
-                {
-                    crate::background::retire(live);
+                if status.starts_with("Live stopped:") {
+                    crate::background::retire(self.live.take());
                 }
                 self.status = status;
                 changed = true;
@@ -147,9 +160,7 @@ impl App {
                 if self.status.starts_with("Live ·") {
                     self.status = "Live stopped · Press r to reconnect".into();
                 }
-                if let Some(live) = self.live.take() {
-                    crate::background::retire(live);
-                }
+                crate::background::retire(self.live.take());
                 changed = true;
             }
             _ => {}
@@ -237,9 +248,7 @@ impl App {
                 self.refresh_entries();
             }
             KeyCode::Char('r') | KeyCode::F(5) => {
-                if let Some(live) = self.live.take() {
-                    crate::background::retire(live);
-                }
+                crate::background::retire(self.live.take());
                 self.running = Some(Running::start_terminal(self.root.clone(), self.settings.scan_options())?);
                 self.started = Instant::now();
                 self.status = "Starting scan…".into();
@@ -268,7 +277,7 @@ impl App {
             Constraint::Length(1),
         ])
         .areas(area);
-        let spinner = if self.running.as_ref().is_some_and(Running::is_paused) {
+        let spinner = if self.paused() {
             "Ⅱ"
         } else if self.running.is_some() {
             ["◐", "◓", "◑", "◒"][(self.started.elapsed().as_millis() / 150 % 4) as usize]
@@ -294,6 +303,7 @@ impl App {
         };
         self.draw_map(frame, map);
         if let Some(list) = list {
+            // Format only the rows that fit; folders can hold millions of entries.
             let rows = usize::from(list.height.saturating_sub(2));
             let start = self
                 .selection
@@ -344,12 +354,10 @@ impl App {
         );
         frame.render_widget(Paragraph::new(info), detail);
         frame.render_widget(Paragraph::new(format!(" {}", self.status)).fg(Color::Gray), status);
-        let help = if self.running.is_some() {
-            if self.running.as_ref().is_some_and(Running::is_paused) {
-                " p/Esc resume scan   Tab map only   q quit"
-            } else {
-                " p/Esc pause scan   Tab map only   q quit"
-            }
+        let help = if self.paused() {
+            " p/Esc resume scan   Tab map only   q quit"
+        } else if self.running.is_some() {
+            " p/Esc pause scan   Tab map only   q quit"
         } else if area.width < 80 {
             " ↑↓ select  Enter zoom  ← up  q quit"
         } else if area.width < 110 {
@@ -391,10 +399,12 @@ impl App {
             }
             let scheme = if b.folder { self.settings.folder_color } else { self.settings.file_color };
             let rgb = palette::display_color(scheme, b.depth, self.settings.mute_palette);
-            let [r, g, blue] = rgb;
-            let color = Color::Rgb(r, g, blue);
             let is_selected = b.node().is_some() && b.node() == selected;
-            let style = Style::default().bg(color).fg(if palette::dark_ink(rgb) { Color::Black } else { Color::White });
+            let style = Style::default().bg(Color::from(rgb)).fg(if palette::dark_ink(rgb) {
+                Color::Black
+            } else {
+                Color::White
+            });
             let border = if rect.height >= 3 && rect.width >= 6 { Borders::ALL } else { Borders::NONE };
             let block = Block::default()
                 .borders(border)
@@ -421,24 +431,10 @@ pub fn capture_demo(path: &std::path::Path) -> io::Result<()> {
     use ratatui::{Terminal, backend::TestBackend};
     use std::io::Write;
     let tree = crate::demo::tree();
-    let mut app = App {
-        root: tree.root_path().to_path_buf(),
-        tree: Arc::new(tree),
-        settings: Settings {
-            file_color: crate::demo::PALETTE,
-            folder_color: crate::demo::PALETTE,
-            ..Settings::default()
-        },
-        running: None,
-        live: None,
-        view: ROOT,
-        entries: Vec::new(),
-        selection: ListState::default(),
-        status: "Demo data - fictional files and sizes".into(),
-        started: Instant::now(),
-        map_only: false,
-    };
-    app.refresh_entries();
+    let settings =
+        Settings { file_color: crate::demo::PALETTE, folder_color: crate::demo::PALETTE, ..Settings::default() };
+    let mut app =
+        App::with_tree(tree.root_path().to_path_buf(), tree, settings, "Demo data - fictional files and sizes");
     let mut terminal = Terminal::new(TestBackend::new(132, 38)).expect("infallible test backend");
     terminal.draw(|frame| app.draw(frame)).expect("infallible test backend");
     let mut file = std::fs::File::create(path)?;
@@ -469,21 +465,7 @@ mod tests {
         };
         tree.add_children(ROOT, vec![entry("Photos", Kind::Dir, 0), entry("archive.zip", Kind::File, 4096)]);
         tree.add_children(1, vec![entry("Vacation.jpg", Kind::File, 8192), entry("家族.png", Kind::File, 2048)]);
-        let mut app = App {
-            root,
-            settings: Settings::default(),
-            running: None,
-            live: None,
-            tree: Arc::new(tree),
-            view: ROOT,
-            entries: Vec::new(),
-            selection: ListState::default(),
-            status: "Scan complete".into(),
-            started: Instant::now(),
-            map_only: false,
-        };
-        app.refresh_entries();
-        app
+        App::with_tree(root, tree, Settings::default(), "Scan complete")
     }
 
     #[test]

@@ -20,6 +20,19 @@ struct Event {
     name: Cow<'static, str>,
     value: f64,
 }
+impl Event {
+    /// A zero-length event on this thread, now.
+    fn now(trace: &Trace, kind: &'static str, name: impl Into<Cow<'static, str>>, value: f64) -> Self {
+        Self {
+            at: trace.start.elapsed().as_micros() as u64,
+            duration: 0,
+            thread: std::thread::current().id(),
+            kind,
+            name: name.into(),
+            value,
+        }
+    }
+}
 enum Message {
     Event(Event),
     Finish,
@@ -71,32 +84,12 @@ fn send(trace: &Trace, event: Event) {
 }
 pub fn instant(name: &str) {
     if let Some(trace) = trace() {
-        send(
-            trace,
-            Event {
-                at: trace.start.elapsed().as_micros() as u64,
-                duration: 0,
-                thread: std::thread::current().id(),
-                kind: "instant",
-                name: name.to_owned().into(),
-                value: 0.0,
-            },
-        );
+        send(trace, Event::now(trace, "instant", name.to_owned(), 0.0));
     }
 }
 pub fn counter(name: &'static str, value: f64) {
     if let Some(trace) = trace() {
-        send(
-            trace,
-            Event {
-                at: trace.start.elapsed().as_micros() as u64,
-                duration: 0,
-                thread: std::thread::current().id(),
-                kind: "counter",
-                name: name.into(),
-                value,
-            },
-        );
+        send(trace, Event::now(trace, "counter", name, value));
     }
 }
 
@@ -110,17 +103,12 @@ pub fn span(name: &'static str) -> Span {
 impl Drop for Span {
     fn drop(&mut self) {
         if let (Some(start), Some(trace)) = (self.start, trace()) {
-            send(
-                trace,
-                Event {
-                    at: start.duration_since(trace.start).as_micros() as u64,
-                    duration: start.elapsed().as_micros() as u64,
-                    thread: std::thread::current().id(),
-                    kind: "span",
-                    name: self.name.into(),
-                    value: 0.0,
-                },
-            );
+            let event = Event {
+                at: start.duration_since(trace.start).as_micros() as u64,
+                duration: start.elapsed().as_micros() as u64,
+                ..Event::now(trace, "span", self.name, 0.0)
+            };
+            send(trace, event);
         }
     }
 }
@@ -129,14 +117,7 @@ impl Drop for Session {
         let Some(trace) = trace() else { return };
         instant("process.main_return");
         // Only shutdown may wait for the writer. Runtime producers never wait for disk I/O.
-        let event = Event {
-            at: trace.start.elapsed().as_micros() as u64,
-            duration: 0,
-            thread: std::thread::current().id(),
-            kind: "counter",
-            name: "trace.dropped_events".into(),
-            value: trace.dropped.load(Ordering::Relaxed) as f64,
-        };
+        let event = Event::now(trace, "counter", "trace.dropped_events", trace.dropped.load(Ordering::Relaxed) as f64);
         let _ = trace.tx.send(Message::Event(event));
         let _ = trace.tx.send(Message::Finish);
         if let Some(writer) = clawback_core::scan::lock(&trace.writer).take() {
@@ -170,17 +151,7 @@ mod tests {
         let (tx, rx) = mpsc::sync_channel(1);
         let trace = Trace { start: Instant::now(), tx, dropped: AtomicU64::new(0), writer: Mutex::new(None) };
         for _ in 0..3 {
-            send(
-                &trace,
-                Event {
-                    at: 0,
-                    duration: 1,
-                    thread: std::thread::current().id(),
-                    kind: "span",
-                    name: "test".into(),
-                    value: 0.0,
-                },
-            );
+            send(&trace, Event::now(&trace, "span", "test", 0.0));
         }
         assert_eq!(trace.dropped.load(Ordering::Relaxed), 2);
         assert!(matches!(rx.try_recv(), Ok(Message::Event(_))));

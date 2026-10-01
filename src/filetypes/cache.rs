@@ -13,16 +13,24 @@ pub(super) struct Cache {
     rows: usize,
 }
 
+/// Summaries stay valid only within one snapshot of one document.
+fn epoch(key: Key) -> (u64, u64) {
+    (key.document, key.generation)
+}
+
 impl Cache {
     pub fn prepare(&mut self, key: Key) {
-        let epoch = (key.document, key.generation);
-        if self.epoch != Some(epoch) {
-            if !self.entries.is_empty() {
-                retire(std::mem::take(&mut self.entries));
-            }
-            self.rows = 0;
-            self.epoch = Some(epoch);
+        if self.epoch != Some(epoch(key)) {
+            self.clear();
+            self.epoch = Some(epoch(key));
         }
+    }
+
+    fn clear(&mut self) {
+        if !self.entries.is_empty() {
+            retire(std::mem::take(&mut self.entries));
+        }
+        self.rows = 0;
     }
 
     pub fn take(&mut self, key: Key) -> Option<Summary> {
@@ -33,7 +41,7 @@ impl Cache {
     }
 
     pub fn insert(&mut self, key: Key, summary: Summary) {
-        if self.epoch != Some((key.document, key.generation)) || summary.rows.len() > ROWS {
+        if self.epoch != Some(epoch(key)) || summary.rows.len() > ROWS {
             retire(summary);
             return;
         }
@@ -52,9 +60,7 @@ impl Cache {
 
 impl Drop for Cache {
     fn drop(&mut self) {
-        if !self.entries.is_empty() {
-            retire(std::mem::take(&mut self.entries));
-        }
+        self.clear();
     }
 }
 

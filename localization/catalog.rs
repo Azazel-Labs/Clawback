@@ -4,7 +4,7 @@ use std::{
     collections::{BTreeMap, BTreeSet},
     error::Error,
     fs,
-    path::Path,
+    path::{Path, PathBuf},
 };
 
 pub type Messages = BTreeMap<String, BTreeSet<String>>;
@@ -128,9 +128,9 @@ pub fn parse(text: &str) -> Result<Messages> {
     Ok(messages)
 }
 
-pub fn load(directory: &Path) -> Result<BTreeMap<String, Messages>> {
-    let source = parse(&fs::read_to_string(directory.join("en/clawback.ftl"))?)?;
-    let mut catalogs = BTreeMap::new();
+/// Every locale directory's catalog path, sorted by locale.
+pub fn files(directory: &Path) -> Result<Vec<(String, PathBuf)>> {
+    let mut files = Vec::new();
     for entry in fs::read_dir(directory)? {
         let path = entry?.path();
         if !path.is_dir() {
@@ -138,7 +138,20 @@ pub fn load(directory: &Path) -> Result<BTreeMap<String, Messages>> {
         }
         let locale = path.file_name().and_then(|s| s.to_str()).ok_or("invalid locale directory")?;
         locale.parse::<unic_langid::LanguageIdentifier>()?;
-        let messages = parse(&fs::read_to_string(path.join("clawback.ftl"))?).map_err(|e| format!("{locale}: {e}"))?;
+        files.push((locale.to_owned(), path.join("clawback.ftl")));
+    }
+    files.sort();
+    Ok(files)
+}
+
+pub fn load(directory: &Path) -> Result<BTreeMap<String, Messages>> {
+    let source = parse(&fs::read_to_string(directory.join("en/clawback.ftl"))?)?;
+    let mut catalogs = BTreeMap::new();
+    for (locale, path) in files(directory)? {
+        if locale == "en" {
+            continue;
+        }
+        let messages = parse(&fs::read_to_string(path)?).map_err(|e| format!("{locale}: {e}"))?;
         for (id, variables) in &messages {
             let expected = source.get(id).ok_or_else(|| format!("{locale}: unknown message {id}"))?;
             // Languages may omit arguments they don't need, but cannot invent new runtime inputs.
@@ -146,8 +159,9 @@ pub fn load(directory: &Path) -> Result<BTreeMap<String, Messages>> {
                 return Err(format!("{locale}: unexpected variables for {id}: {variables:?}").into());
             }
         }
-        catalogs.insert(locale.into(), messages);
+        catalogs.insert(locale, messages);
     }
+    catalogs.insert("en".into(), source);
     Ok(catalogs)
 }
 

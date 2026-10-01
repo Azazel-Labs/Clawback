@@ -1,5 +1,5 @@
 //! Capture the app's fictional dataset and render portable marketing images.
-use crate::Result;
+use crate::{Result, hex};
 use ab_glyph::{Font, FontRef, point};
 use std::{
     fmt::Write as _,
@@ -10,22 +10,23 @@ use std::{
     time::{Duration, Instant},
 };
 
+pub const USAGE: &str = "cargo xtask screenshots [--render-only]";
+
 pub fn run(root: &Path, args: &[String]) -> Result<()> {
     let render_only = match args {
         [] => false,
         [arg] if arg == "--render-only" => true,
-        _ => return Err("Usage: cargo xtask screenshots [--render-only]".into()),
+        _ => return Err(crate::usage(USAGE)),
     };
     let target = root.join("target");
     if !render_only {
         println!("Building the fictional demo capture feature…");
-        let status = Command::new("cargo")
-            .args(["build", "--package", "clawback", "--features", "screenshots", "--locked", "--target-dir"])
-            .arg(&target)
-            .status()?;
-        if !status.success() {
-            return Err("Screenshot build failed".into());
-        }
+        crate::run_checked(
+            crate::cargo(root)
+                .args(["build", "--package", "clawback", "--features", "screenshots", "--locked", "--target-dir"])
+                .arg(&target),
+            "Screenshot build failed",
+        )?;
         let capture = target.join("demo-capture");
         fs::create_dir_all(&capture)?;
         let binary = format!("clawback{}", std::env::consts::EXE_SUFFIX);
@@ -69,11 +70,11 @@ fn write_palettes(path: &Path) -> Result<()> {
             y + 27
         )?;
         for depth in 0..8 {
-            let [r, g, b] = map_color(*scheme, depth);
             writeln!(
                 svg,
-                "<rect x=\"{}\" y=\"{y}\" width=\"79\" height=\"40\" rx=\"3\" fill=\"#{r:02x}{g:02x}{b:02x}\"/>",
-                214 + depth * 84
+                "<rect x=\"{}\" y=\"{y}\" width=\"79\" height=\"40\" rx=\"3\" fill=\"{}\"/>",
+                214 + depth * 84,
+                hex(map_color(*scheme, depth))
             )?;
         }
     }
@@ -190,8 +191,19 @@ fn color(input: &str, reset: [u8; 3]) -> Result<[u8; 3]> {
         .ok_or_else(|| format!("Unsupported terminal color: {input}").into())
 }
 
-fn hex(rgb: [u8; 3]) -> String {
-    format!("#{:02x}{:02x}{:02x}", rgb[0], rgb[1], rgb[2])
+fn escape_xml(text: &str) -> String {
+    let mut escaped = String::with_capacity(text.len());
+    for c in text.chars() {
+        match c {
+            '&' => escaped.push_str("&amp;"),
+            '<' => escaped.push_str("&lt;"),
+            '>' => escaped.push_str("&gt;"),
+            '"' => escaped.push_str("&quot;"),
+            '\'' => escaped.push_str("&apos;"),
+            _ => escaped.push(c),
+        }
+    }
+    escaped
 }
 
 fn render_terminal(tsv: &str) -> Result<(u32, u32, Vec<u8>, String)> {
@@ -230,13 +242,7 @@ fn render_terminal(tsv: &str) -> Result<(u32, u32, Vec<u8>, String)> {
         }
         writeln!(svg, "<rect x=\"{x}\" y=\"{y}\" width=\"10\" height=\"20\" fill=\"{}\"/>", hex(bg))?;
         if !parts[0].trim().is_empty() {
-            let escaped = parts[0]
-                .replace('&', "&amp;")
-                .replace('<', "&lt;")
-                .replace('>', "&gt;")
-                .replace('"', "&quot;")
-                .replace('\'', "&apos;");
-            writeln!(text, "<text x=\"{x}\" y=\"{}\" fill=\"{}\">{escaped}</text>", y + 15, hex(fg))?;
+            writeln!(text, "<text x=\"{x}\" y=\"{}\" fill=\"{}\">{}</text>", y + 15, hex(fg), escape_xml(parts[0]))?;
             for c in parts[0].chars() {
                 let id = font.glyph_id(c);
                 if id.0 == 0 {

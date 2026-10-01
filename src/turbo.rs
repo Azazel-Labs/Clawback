@@ -1,23 +1,25 @@
 //! Windows-only read-only MFT helper. The GUI never elevates itself.
 mod wire;
+use crate::platform::{Apartment, wide};
 use clawback_core::{
     ScanOptions,
-    scan::{MftScan, ScanResult, lock},
+    scan::{MftProgress, MftScan, ScanResult, lock},
 };
 use std::{
+    ffi::{OsStr, OsString},
     fs::{File, OpenOptions},
     io::{self, BufReader, BufWriter, Read, Write},
     os::windows::{
-        ffi::OsStrExt,
         fs::OpenOptionsExt,
         io::{AsRawHandle, FromRawHandle, OwnedHandle},
     },
     path::{Path, PathBuf},
     sync::{
-        Arc, Mutex,
+        Arc, Mutex, MutexGuard,
         atomic::{AtomicBool, Ordering},
         mpsc,
     },
+    thread::JoinHandle,
     time::{Duration, Instant},
 };
 use windows_sys::Win32::{
@@ -27,7 +29,6 @@ use windows_sys::Win32::{
         SECURITY_SQOS_PRESENT,
     },
     System::{
-        Com::{COINIT_APARTMENTTHREADED, CoCreateGuid, CoInitializeEx, CoUninitialize},
         Pipes::{
             ConnectNamedPipe, CreateNamedPipeW, GetNamedPipeClientProcessId, GetNamedPipeServerProcessId, PIPE_NOWAIT,
             PIPE_READMODE_BYTE, PIPE_REJECT_REMOTE_CLIENTS, PIPE_TYPE_BYTE, PIPE_WAIT, PeekNamedPipe,
@@ -42,6 +43,9 @@ use windows_sys::Win32::{
     },
 };
 
+/// Buffering on each end of the snapshot stream.
+const STREAM_BUFFER: usize = 256 * 1024;
+
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub enum Status {
     #[default]
@@ -53,32 +57,49 @@ pub enum Status {
     Failed(String),
 }
 
+#[derive(Default)]
+struct State {
+    status: Status,
+    /// Provisional telemetry, shown only while `Reading`.
+    progress: MftProgress,
+}
+
+/// Consent and telemetry shared by the UI, the scan coordinator and the launcher.
 #[derive(Clone, Default)]
-pub struct Control(Arc<Mutex<Status>>, Arc<Mutex<clawback_core::scan::MftProgress>>);
+pub struct Control(Arc<Mutex<State>>);
 impl Control {
-    pub fn status(&self) -> Status {
-        lock(&self.0).clone()
+    fn state(&self) -> MutexGuard<'_, State> {
+        lock(&self.0)
     }
-    pub fn progress(&self) -> Option<clawback_core::scan::MftProgress> {
-        (self.status() == Status::Reading).then(|| *lock(&self.1))
+    pub fn status(&self) -> Status {
+        self.state().status.clone()
+    }
+    pub fn progress(&self) -> Option<MftProgress> {
+        let state = self.state();
+        (state.status == Status::Reading).then_some(state.progress)
     }
     pub fn request(&self) {
-        let mut status = lock(&self.0);
-        if matches!(*status, Status::Idle | Status::Declined | Status::Failed(_)) {
-            *lock(&self.1) = clawback_core::scan::MftProgress::default();
-            *status = Status::Requested;
+        let mut state = self.state();
+        if matches!(state.status, Status::Idle | Status::Declined | Status::Failed(_)) {
+            *state = State { status: Status::Requested, progress: MftProgress::default() };
         }
     }
     pub fn take_request(&self) -> bool {
-        let mut status = lock(&self.0);
-        if *status != Status::Requested {
+        let mut state = self.state();
+        if state.status != Status::Requested {
             return false;
         }
-        *status = Status::AwaitingConsent;
+        state.status = Status::AwaitingConsent;
         true
     }
     fn set(&self, status: Status) {
-        *lock(&self.0) = status;
+        self.state().status = status;
+    }
+    fn report(&self, progress: MftProgress) {
+        self.state().progress = progress;
+    }
+    fn transferring(&self) {
+        self.state().progress.phase = wire::TRANSFERRING;
     }
     pub fn failed(&self, error: &io::Error) {
         self.set(if error.raw_os_error() == Some(ERROR_CANCELLED as i32) {
@@ -89,23 +110,37 @@ impl Control {
     }
 }
 
+/// One elevated helper run on its launcher thread; dropping it cancels the helper.
 pub struct Attempt {
-    pub rx: mpsc::Receiver<io::Result<ScanResult>>,
+    thread: Option<JoinHandle<io::Result<ScanResult>>>,
     stop: Arc<AtomicBool>,
+    control: Control,
 }
 impl Attempt {
     pub fn start(root: PathBuf, options: ScanOptions, paused: Arc<AtomicBool>, control: Control) -> io::Result<Self> {
-        let (tx, rx) = mpsc::channel();
         let stop = Arc::new(AtomicBool::new(false));
         let cancelled = stop.clone();
-        std::thread::Builder::new().name("clawback-turbo".into()).spawn(move || {
-            let result = launch(&root, &options, cancelled, paused, &control, true);
+        let reporter = control.clone();
+        let thread = std::thread::Builder::new().name("clawback-turbo".into()).spawn(move || {
+            let result = launch(&root, &options, cancelled, paused, &reporter, true);
             if let Err(error) = &result {
-                control.failed(error);
+                reporter.failed(error);
             }
-            let _ = tx.send(result);
+            result
         })?;
-        Ok(Self { rx, stop })
+        Ok(Self { thread: Some(thread), stop, control })
+    }
+
+    /// The helper's result once the launcher is done. Failures are already in `Control`.
+    pub fn poll(&mut self) -> Option<io::Result<ScanResult>> {
+        if !self.thread.as_ref()?.is_finished() {
+            return None;
+        }
+        Some(self.thread.take()?.join().unwrap_or_else(|_| {
+            let error = io::Error::other("Turbo launcher stopped");
+            self.control.failed(&error);
+            Err(error)
+        }))
     }
 }
 impl Drop for Attempt {
@@ -127,32 +162,45 @@ pub fn eligible(disk: Option<&crate::platform::DiskInfo>, is_mount: bool) -> boo
         })
 }
 
-fn wide(value: &std::ffi::OsStr) -> Vec<u16> {
-    value.encode_wide().chain(Some(0)).collect()
-}
 fn stopped() -> io::Error {
     // Read::read_exact retries Interrupted forever; cancellation must escape it.
     io::Error::new(io::ErrorKind::ConnectionAborted, "Turbo cancelled")
 }
+fn helper_exited() -> io::Error {
+    io::Error::new(io::ErrorKind::UnexpectedEof, "Turbo helper exited without a complete result")
+}
+
+/// Polls without blocking.
+fn has_exited(process: &OwnedHandle) -> bool {
+    // SAFETY: live owned process handle; a zero timeout never blocks.
+    let state = unsafe { WaitForSingleObject(process.as_raw_handle(), 0) };
+    state == WAIT_OBJECT_0
+}
+
+/// Bytes waiting in `pipe`, without consuming them.
+fn available(pipe: &File) -> io::Result<u32> {
+    let mut available = 0;
+    // SAFETY: live pipe and valid count storage; no data is read.
+    let ok = unsafe {
+        PeekNamedPipe(
+            pipe.as_raw_handle(),
+            std::ptr::null_mut(),
+            0,
+            std::ptr::null_mut(),
+            &raw mut available,
+            std::ptr::null_mut(),
+        )
+    };
+    if ok == 0 { Err(io::Error::last_os_error()) } else { Ok(available) }
+}
 
 fn pipe_name() -> io::Result<String> {
-    let mut guid = windows_sys::core::GUID::default();
-    // SAFETY: writable GUID storage.
-    if unsafe { CoCreateGuid(&raw mut guid) } < 0 {
-        return Err(io::Error::other("Cannot create Turbo pipe ID"));
-    }
-    Ok(format!(
-        r"\\.\pipe\clawback-mft-{}-{:08x}{:04x}{:04x}{:016x}",
-        std::process::id(),
-        guid.data1,
-        guid.data2,
-        guid.data3,
-        u64::from_le_bytes(guid.data4)
-    ))
+    let guid = windows_core::GUID::new().map_err(|_| io::Error::other("Cannot create Turbo pipe ID"))?;
+    Ok(format!(r"\\.\pipe\clawback-mft-{}-{:032x}", std::process::id(), guid.to_u128()))
 }
 
 fn server(name: &str) -> io::Result<File> {
-    let name = wide(std::ffi::OsStr::new(name));
+    let name = wide(OsStr::new(name));
     // SAFETY: terminated unique name; default DACL, first-instance protection,
     // no remote clients. Peer PID is checked before sending any scan request.
     let handle = unsafe {
@@ -178,10 +226,10 @@ fn spawn_helper(name: &str, elevated: bool) -> io::Result<OwnedHandle> {
     let executable = wide(std::env::current_exe()?.as_os_str());
     // Only internally generated ASCII pipe names and a numeric PID are passed.
     // No shell, user-supplied command line, or root path interpolation.
-    let arguments = wide(std::ffi::OsStr::new(&format!("--mft-worker {} {name}", std::process::id())));
-    let verb = wide(std::ffi::OsStr::new(if elevated { "runas" } else { "open" }));
-    // SAFETY: COM is scoped to this dedicated launcher thread.
-    let com = unsafe { CoInitializeEx(std::ptr::null(), COINIT_APARTMENTTHREADED as u32) };
+    let arguments = wide(OsStr::new(&format!("--mft-worker {} {name}", std::process::id())));
+    let verb = wide(OsStr::new(if elevated { "runas" } else { "open" }));
+    // COM is scoped to this dedicated launcher thread; the shell manages without it.
+    let _apartment = Apartment::enter().ok();
     // SAFETY: Win32 structure permits zero initialization before setting cbSize.
     let mut info: SHELLEXECUTEINFOW = unsafe { std::mem::zeroed() };
     info.cbSize = size_of::<SHELLEXECUTEINFOW>() as u32;
@@ -191,16 +239,8 @@ fn spawn_helper(name: &str, elevated: bool) -> io::Result<OwnedHandle> {
     info.lpParameters = arguments.as_ptr();
     info.nShow = SW_HIDE;
     // SAFETY: all strings and structure storage live through this synchronous call.
-    let ok = unsafe { ShellExecuteExW(&raw mut info) };
-    let error = io::Error::last_os_error();
-    if com >= 0 {
-        // SAFETY: balances the successful initialization on this same thread.
-        unsafe {
-            CoUninitialize();
-        }
-    }
-    if ok == 0 {
-        return Err(error);
+    if unsafe { ShellExecuteExW(&raw mut info) } == 0 {
+        return Err(io::Error::last_os_error());
     }
     if info.hProcess.is_null() {
         return Err(io::Error::other("Turbo helper returned no process handle"));
@@ -228,44 +268,21 @@ impl Read for Incoming {
             }
             let paused = self.paused.load(Ordering::Relaxed);
             if paused != self.sent_pause {
-                self.pipe.write_all(&[if paused { b'P' } else { b'R' }])?;
+                let command = if paused { wire::Command::Pause } else { wire::Command::Resume };
+                wire::write_command(&mut self.pipe, command)?;
                 self.sent_pause = paused;
             }
             // Check for exit before peeking: the helper writes its last bytes and exits
             // immediately, so checking after an empty peek can discard the end of the tree.
-            // SAFETY: owned process handle; zero timeout never blocks.
-            let exited = unsafe { WaitForSingleObject(self.process.as_raw_handle(), 0) } == WAIT_OBJECT_0;
-            let mut available = 0;
-            // SAFETY: live pipe, valid count pointer; no data is consumed here.
-            if unsafe {
-                PeekNamedPipe(
-                    self.pipe.as_raw_handle(),
-                    std::ptr::null_mut(),
-                    0,
-                    std::ptr::null_mut(),
-                    &raw mut available,
-                    std::ptr::null_mut(),
-                )
-            } == 0
-            {
-                if exited {
-                    return Err(io::Error::new(
-                        io::ErrorKind::UnexpectedEof,
-                        "Turbo helper exited without a complete result",
-                    ));
-                }
-                return Err(io::Error::last_os_error());
-            }
+            let exited = has_exited(&self.process);
+            let available = available(&self.pipe).map_err(|error| if exited { helper_exited() } else { error })?;
             if available != 0 {
                 self.last_data = Instant::now();
                 let length = data.len().min(available as usize);
                 return self.pipe.read(&mut data[..length]);
             }
             if exited {
-                return Err(io::Error::new(
-                    io::ErrorKind::UnexpectedEof,
-                    "Turbo helper exited without a complete result",
-                ));
+                return Err(helper_exited());
             }
             if self.last_data.elapsed() > Duration::from_secs(120) {
                 return Err(io::Error::new(io::ErrorKind::TimedOut, "Turbo helper stopped responding"));
@@ -314,8 +331,7 @@ fn launch(
         if start.elapsed() > Duration::from_secs(30) {
             return Err(io::Error::new(io::ErrorKind::TimedOut, "Turbo helper did not connect"));
         }
-        // SAFETY: live owned process handle; polling without blocking.
-        if unsafe { WaitForSingleObject(process.as_raw_handle(), 0) } == WAIT_OBJECT_0 {
+        if has_exited(&process) {
             let mut code = 0;
             // SAFETY: owned process handle and writable exit-code storage.
             unsafe {
@@ -344,60 +360,50 @@ fn launch(
     }
     pipe.write_all(wire::MAGIC)?;
     wire::string(&mut pipe, root.as_os_str())?;
-    pipe.write_all(&[u8::from(options.apparent_size) | (u8::from(options.dedupe_hardlinks) << 1)])?;
+    wire::write_options(&mut pipe, options)?;
     control.set(Status::Reading);
     let mut input = BufReader::with_capacity(
-        256 * 1024,
+        STREAM_BUFFER,
         Incoming { pipe, process, stop, paused, sent_pause: false, last_data: Instant::now() },
     );
     loop {
-        let mut tag = [0];
-        input.read_exact(&mut tag)?;
-        match tag[0] {
-            0 => {} // heartbeat during raw MFT parsing, including pauses
-            1 => {
-                lock(&control.1).phase = 4;
-                let _span = crate::perf::span("worker.turbo_receive_tree");
-                return wire::read_tree(&mut input, &root);
-            }
-            3 => {
+        match wire::read_tag(&mut input)? {
+            wire::Tag::Progress => {
                 let progress = wire::read_progress(&mut input)?;
                 crate::perf::counter("turbo.phase", progress.phase as f64);
                 crate::perf::counter("turbo.mft_bytes_read", progress.read as f64);
                 crate::perf::counter("turbo.records", progress.records as f64);
                 crate::perf::counter("turbo.files_assembled", progress.files as f64);
-                *lock(&control.1) = progress;
+                control.report(progress);
             }
-            2 => {
-                let mut kind = [0];
-                input.read_exact(&mut kind)?;
-                let kind = match kind[0] {
-                    1 => io::ErrorKind::Unsupported,
-                    2 => io::ErrorKind::PermissionDenied,
-                    _ => io::ErrorKind::Other,
-                };
-                return Err(io::Error::new(kind, wire::read_string(&mut input)?.to_string_lossy().into_owned()));
+            wire::Tag::Tree => {
+                control.transferring();
+                let _span = crate::perf::span("worker.turbo_receive_tree");
+                return wire::read_tree(&mut input, &root);
             }
-            _ => return Err(wire::invalid()),
+            wire::Tag::Failed => return Err(wire::read_error(&mut input)?),
         }
     }
 }
 
 pub fn worker_entry() -> Option<io::Result<()>> {
     let mut args = std::env::args_os().skip(1);
-    if args.next().as_deref() != Some(std::ffi::OsStr::new("--mft-worker")) {
+    if args.next().as_deref() != Some(OsStr::new("--mft-worker")) {
         return None;
     }
-    Some((|| {
-        let parent: u32 = args.next().and_then(|v| v.to_str()?.parse().ok()).ok_or_else(wire::invalid)?;
-        let name = args.next().and_then(|s| s.into_string().ok()).ok_or_else(wire::invalid)?;
-        let prefix = format!(r"\\.\pipe\clawback-mft-{parent}-");
-        let suffix = name.strip_prefix(&prefix).ok_or_else(wire::invalid)?;
-        if suffix.len() != 32 || !suffix.bytes().all(|b| b.is_ascii_hexdigit()) || args.next().is_some() {
-            return Err(wire::invalid());
-        }
-        worker(parent, &name)
-    })())
+    Some(worker_args(args).and_then(|(parent, name)| worker(parent, &name)))
+}
+
+/// `<parent PID> <pipe name>`, where the name must be one that parent generates.
+fn worker_args(mut args: impl Iterator<Item = OsString>) -> io::Result<(u32, String)> {
+    let parent: u32 = args.next().and_then(|v| v.to_str()?.parse().ok()).ok_or_else(wire::invalid)?;
+    let name = args.next().and_then(|s| s.into_string().ok()).ok_or_else(wire::invalid)?;
+    let prefix = format!(r"\\.\pipe\clawback-mft-{parent}-");
+    let suffix = name.strip_prefix(&prefix).ok_or_else(wire::invalid)?;
+    if suffix.len() != 32 || !suffix.bytes().all(|b| b.is_ascii_hexdigit()) || args.next().is_some() {
+        return Err(wire::invalid());
+    }
+    Ok((parent, name))
 }
 
 fn worker(parent: u32, name: &str) -> io::Result<()> {
@@ -418,98 +424,61 @@ fn worker(parent: u32, name: &str) -> io::Result<()> {
         return Err(wire::invalid());
     }
     let root = PathBuf::from(wire::read_string(&mut pipe)?);
-    let mut options = [0];
-    pipe.read_exact(&mut options)?;
-    if options[0] & !3 != 0 {
-        return Err(wire::invalid());
-    }
-    let scan = MftScan::new(
-        &root,
-        ScanOptions {
-            apparent_size: options[0] & 1 != 0,
-            dedupe_hardlinks: options[0] & 2 != 0,
-            ..ScanOptions::default()
-        },
-    )?;
+    let scan = MftScan::new(&root, wire::read_options(&mut pipe)?)?;
     let telemetry = scan.shared().clone();
     let shared = telemetry.clone();
     let mut commands = pipe.try_clone()?;
     std::thread::Builder::new().name("clawback-turbo-control".into()).spawn(move || {
+        // Closing the parent's pipe (cancel, normal scan wins, parent exits)
+        // terminates this disposable read-only worker even during blocked I/O.
+        // Do not block in ReadFile on a duplicated synchronous pipe handle:
+        // that can serialize against the writer and prevent progress/results.
         loop {
-            let mut command = [0];
-            // Closing the parent's pipe (cancel, normal scan wins, parent exits)
-            // terminates this disposable read-only worker even during blocked I/O.
-            // Do not block in ReadFile on a duplicated synchronous pipe handle:
-            // that can serialize against the writer and prevent heartbeats/results.
-            let mut available = 0;
-            // SAFETY: owned pipe and valid count storage; this does not consume data.
-            if unsafe {
-                PeekNamedPipe(
-                    commands.as_raw_handle(),
-                    std::ptr::null_mut(),
-                    0,
-                    std::ptr::null_mut(),
-                    &raw mut available,
-                    std::ptr::null_mut(),
-                )
-            } == 0
-            {
-                std::process::exit(0);
-            }
-            if available == 0 {
-                std::thread::sleep(Duration::from_millis(10));
-                continue;
-            }
-            if commands.read_exact(&mut command).is_err() {
-                std::process::exit(0);
-            }
-            match command[0] {
-                b'P' => shared.progress.set_paused(true),
-                b'R' => shared.progress.set_paused(false),
-                _ => std::process::exit(0),
+            match available(&commands) {
+                Err(_) => std::process::exit(0),
+                Ok(0) => std::thread::sleep(Duration::from_millis(10)),
+                Ok(_) => match wire::read_command(&mut commands) {
+                    Ok(command) => shared.progress.set_paused(command == wire::Command::Pause),
+                    Err(_) => std::process::exit(0),
+                },
             }
         }
     })?;
     let (tx, rx) = mpsc::channel();
     std::thread::Builder::new().name("clawback-mft".into()).spawn(move || {
         #[cfg(feature = "turbo-probe")]
-        if root.file_name() == Some(std::ffi::OsStr::new("<clawback-turbo-fixture>")) {
+        if root.file_name() == Some(OsStr::new("<clawback-turbo-fixture>")) {
             let _ = tx.send(Ok(fixture(&root)));
             return;
         }
         let _ = tx.send(scan.run());
     })?;
-    let mut output = BufWriter::with_capacity(256 * 1024, pipe);
+    let mut output = BufWriter::with_capacity(STREAM_BUFFER, pipe);
     loop {
         match rx.recv_timeout(Duration::from_millis(250)) {
             Ok(Ok(result)) => {
-                let mut progress = *lock(&telemetry.mft_progress);
-                progress.phase = 4;
-                progress.files = result.files;
-                progress.dirs = result.dirs;
-                progress.bytes = result.bytes;
-                output.write_all(&[3])?;
+                let progress = MftProgress {
+                    phase: wire::TRANSFERRING,
+                    files: result.files,
+                    dirs: result.dirs,
+                    bytes: result.bytes,
+                    ..*lock(&telemetry.mft_progress)
+                };
+                wire::write_tag(&mut output, wire::Tag::Progress)?;
                 wire::write_progress(&mut output, progress)?;
-                output.write_all(&[1])?;
+                wire::write_tag(&mut output, wire::Tag::Tree)?;
                 wire::write_tree(&mut output, &result)?;
                 output.flush()?;
                 return Ok(());
             }
             Ok(Err(error)) => {
-                output.write_all(&[
-                    2,
-                    match error.kind() {
-                        io::ErrorKind::Unsupported => 1,
-                        io::ErrorKind::PermissionDenied => 2,
-                        _ => 0,
-                    },
-                ])?;
-                wire::string(&mut output, std::ffi::OsStr::new(&error.to_string()))?;
+                wire::write_tag(&mut output, wire::Tag::Failed)?;
+                wire::write_error(&mut output, &error)?;
                 output.flush()?;
                 return Ok(());
             }
             Err(mpsc::RecvTimeoutError::Timeout) => {
-                output.write_all(&[3])?;
+                wire::write_tag(&mut output, wire::Tag::Progress)?;
                 wire::write_progress(&mut output, *lock(&telemetry.mft_progress))?;
                 output.flush()?;
             }
@@ -567,72 +536,74 @@ pub fn probe_entry() -> Option<io::Result<()>> {
         return None;
     }
     crate::platform::attach_console();
-    let result = (|| {
-        if args.len() != 3 {
-            return Err(wire::invalid());
-        }
-        let mode = args[1].to_str().ok_or_else(wire::invalid)?;
-        if !matches!(mode, "smoke" | "fixture" | "elevated" | "decline") {
-            return Err(wire::invalid());
-        }
-        let root = std::path::absolute(Path::new(&args[2]))?;
-        let root = if mode == "fixture" { root.join("<clawback-turbo-fixture>") } else { root };
-        let control = Control::default();
-        let start = Instant::now();
-        let result = launch(
-            &root,
-            &ScanOptions::default(),
-            Arc::new(AtomicBool::new(false)),
-            Arc::new(AtomicBool::new(false)),
-            &control,
-            matches!(mode, "elevated" | "decline"),
-        );
-        match result {
-            Ok(result) if mode != "decline" => {
-                let progress = control.progress().ok_or_else(wire::invalid)?;
-                if progress.phase != 4
-                    || (progress.files, progress.dirs, progress.bytes) != (result.files, result.dirs, result.bytes)
-                {
-                    return Err(io::Error::other("Turbo telemetry did not round-trip"));
-                }
-                if mode == "fixture"
-                    && (result.files != 10240
-                        || result.bytes != 10240 * 4096
-                        || result.tree.root().file_id != Some((1, 5)))
-                {
-                    return Err(io::Error::other("Fixture snapshot did not round-trip"));
-                }
-                println!(
-                    "outcome={} files={} directories={} bytes={} helper_seconds={:.3} total_seconds={:.3}",
-                    if mode == "fixture" { "fixture" } else { "mft" },
-                    result.files,
-                    result.dirs,
-                    result.bytes,
-                    result.elapsed.as_secs_f64(),
-                    start.elapsed().as_secs_f64()
-                );
-                Ok(())
-            }
-            Err(error) if mode == "decline" && error.raw_os_error() == Some(ERROR_CANCELLED as i32) => {
-                println!("outcome=uac_cancelled normal_scan_would_continue=true");
-                Ok(())
-            }
-            Err(error)
-                if mode == "smoke"
-                    && control.status() == Status::Reading
-                    && matches!(error.kind(), io::ErrorKind::PermissionDenied | io::ErrorKind::Unsupported) =>
-            {
-                println!("outcome=helper_replied_unavailable reason={error}");
-                Ok(())
-            }
-            Err(error) => Err(error),
-            Ok(_) => Err(io::Error::other("Expected the user to cancel UAC")),
-        }
-    })();
+    let result = probe(&args);
     if let Err(error) = &result {
         eprintln!("Turbo probe failed: {error}");
     }
     Some(result)
+}
+
+/// `--turbo-probe <smoke|fixture|elevated|decline> <root>`.
+#[cfg(feature = "turbo-probe")]
+fn probe(args: &[OsString]) -> io::Result<()> {
+    if args.len() != 3 {
+        return Err(wire::invalid());
+    }
+    let mode = args[1].to_str().ok_or_else(wire::invalid)?;
+    if !matches!(mode, "smoke" | "fixture" | "elevated" | "decline") {
+        return Err(wire::invalid());
+    }
+    let root = std::path::absolute(Path::new(&args[2]))?;
+    let root = if mode == "fixture" { root.join("<clawback-turbo-fixture>") } else { root };
+    let control = Control::default();
+    let start = Instant::now();
+    let result = launch(
+        &root,
+        &ScanOptions::default(),
+        Arc::new(AtomicBool::new(false)),
+        Arc::new(AtomicBool::new(false)),
+        &control,
+        matches!(mode, "elevated" | "decline"),
+    );
+    match result {
+        Ok(result) if mode != "decline" => {
+            let progress = control.progress().ok_or_else(wire::invalid)?;
+            if progress.phase != wire::TRANSFERRING
+                || (progress.files, progress.dirs, progress.bytes) != (result.files, result.dirs, result.bytes)
+            {
+                return Err(io::Error::other("Turbo telemetry did not round-trip"));
+            }
+            if mode == "fixture"
+                && (result.files != 10240 || result.bytes != 10240 * 4096 || result.tree.root().file_id != Some((1, 5)))
+            {
+                return Err(io::Error::other("Fixture snapshot did not round-trip"));
+            }
+            println!(
+                "outcome={} files={} directories={} bytes={} helper_seconds={:.3} total_seconds={:.3}",
+                if mode == "fixture" { "fixture" } else { "mft" },
+                result.files,
+                result.dirs,
+                result.bytes,
+                result.elapsed.as_secs_f64(),
+                start.elapsed().as_secs_f64()
+            );
+            Ok(())
+        }
+        Err(error) if mode == "decline" && error.raw_os_error() == Some(ERROR_CANCELLED as i32) => {
+            println!("outcome=uac_cancelled normal_scan_would_continue=true");
+            Ok(())
+        }
+        Err(error)
+            if mode == "smoke"
+                && control.status() == Status::Reading
+                && matches!(error.kind(), io::ErrorKind::PermissionDenied | io::ErrorKind::Unsupported) =>
+        {
+            println!("outcome=helper_replied_unavailable reason={error}");
+            Ok(())
+        }
+        Err(error) => Err(error),
+        Ok(_) => Err(io::Error::other("Expected the user to cancel UAC")),
+    }
 }
 
 #[cfg(test)]
@@ -642,12 +613,12 @@ mod tests {
     fn failure_hides_provisional_progress_and_retry_resets_it() {
         let control = Control::default();
         control.set(Status::Reading);
-        lock(&control.1).files = 123;
+        control.report(MftProgress { files: 123, ..MftProgress::default() });
         assert_eq!(control.progress().unwrap().files, 123);
         control.failed(&io::Error::other("invalid MFT"));
         assert!(control.progress().is_none());
         control.request();
-        assert_eq!(lock(&control.1).files, 0);
+        assert_eq!(control.state().progress.files, 0);
     }
 
     #[test]
@@ -669,6 +640,15 @@ mod tests {
         assert!(matches!(control.status(), Status::Failed(_)));
         assert!(!control.take_request());
         assert!(!eligible(None, true));
+    }
+    #[test]
+    fn worker_accepts_only_the_parents_pipe_name() {
+        let args = |parent: &str, name: &str| [parent, name].map(OsString::from).into_iter();
+        let name = pipe_name().expect("unique pipe");
+        let pid = std::process::id().to_string();
+        assert_eq!(worker_args(args(&pid, &name)).expect("valid").1, name);
+        assert!(worker_args(args("1", &name)).is_err());
+        assert!(worker_args(args(&pid, &name[..name.len() - 1])).is_err());
     }
     #[test]
     fn strict_helper_never_falls_back_to_walking_a_folder() {

@@ -15,7 +15,7 @@ use crate::i18n::tr;
 
 use crate::{
     background::retire,
-    maprender::{LabelCache, PreparedMap},
+    maprender::{self, LabelCache, PreparedMap},
     theme,
 };
 use clawback_core::layout::{self, DisplayBox, LayoutSettings};
@@ -27,12 +27,9 @@ use eframe::egui::{
 use std::sync::{Arc, mpsc};
 use std::time::Duration;
 
-/// Font used for box labels. SpaceMonger used the 9px "Small Fonts".
-const LABEL_FONT: f32 = 10.0;
-/// Vertical distance between label lines.
-const LINE: f32 = 14.0;
 /// Info tips appear this far below-right of the cursor.
 const TIP_OFFSET: f32 = 16.0;
+
 /// Folder frames take precedence; otherwise choose the deepest containing bucket.
 fn zoom_target(boxes: &[DisplayBox], x: i32, y: i32) -> Option<NodeId> {
     if let Some(index) = layout::hit_test(boxes, x, y)
@@ -42,8 +39,6 @@ fn zoom_target(boxes: &[DisplayBox], x: i32, y: i32) -> Option<NodeId> {
     }
     boxes.iter().rev().find(|b| b.folder && b.contains(x, y)).and_then(DisplayBox::node)
 }
-
-const INFO_BG: Color32 = theme::SURFACE;
 
 /// What the map asks the application to do.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -124,7 +119,7 @@ pub struct MapView {
     boxes: Vec<DisplayBox>,
     key: Option<LayoutKey>,
     selected: Option<usize>,
-    /// Box (and pointer position) the last context menu was opened for.
+    /// Time of the last mouse or keyboard input; tips wait for it to settle.
     last_input: f64,
     staging: Option<(LayoutKey, LayoutResult)>,
     label_cache: LabelCache,
@@ -164,32 +159,33 @@ impl Default for MapView {
 }
 
 impl MapView {
+    fn selected_box(&self) -> Option<&DisplayBox> {
+        self.selected.and_then(|i| self.boxes.get(i))
+    }
+
     pub fn selected_node(&self) -> Option<NodeId> {
-        self.selected.and_then(|i| self.boxes.get(i)).and_then(DisplayBox::node)
+        self.selected_box().and_then(DisplayBox::node)
     }
 
     pub fn selected_is_folder(&self) -> bool {
-        self.selected.and_then(|i| self.boxes.get(i)).is_some_and(|b| b.folder)
+        self.selected_box().is_some_and(|b| b.folder)
     }
 
     /// Forget the layout (new document, or none).
     pub fn reset(&mut self) {
         self.layout_started = None;
-        if let Some(pending) = self.layout_rx.take() {
-            retire(pending);
-        }
-        if let Some(prepared) = self.prepared.take() {
-            retire(prepared);
-        }
-        if let Some(tree) = self.display_tree.take() {
-            retire(tree);
-        }
+        retire(self.layout_rx.take());
+        retire(self.prepared.take());
+        retire(self.display_tree.take());
+        retire(self.staging.take());
         self.boxes.clear();
         self.key = None;
+        self.clear_transient();
+    }
+
+    /// Drop the selection and tips, which refer to the boxes being replaced.
+    fn clear_transient(&mut self) {
         self.selected = None;
-        if let Some(staging) = self.staging.take() {
-            retire(staging);
-        }
         self.info = None;
         self.info_rx = None;
     }
@@ -199,9 +195,7 @@ impl MapView {
     }
 
     pub fn zoom_in(&mut self) {
-        if let Some(node) =
-            self.selected.and_then(|i| self.boxes.get(i)).filter(|b| b.folder).and_then(DisplayBox::node)
-        {
+        if let Some(node) = self.selected_box().filter(|b| b.folder).and_then(DisplayBox::node) {
             self.queued.push(Command::ZoomTo(node));
         }
     }
@@ -213,20 +207,21 @@ impl MapView {
     }
 
     fn box_rect(&self, b: &DisplayBox) -> Rect {
-        Rect::from_min_size(
-            self.display_origin() + vec2(b.x as f32, b.y as f32),
-            vec2((b.w + 1) as f32, (b.h + 1) as f32),
-        )
+        maprender::screen_rect(b, self.display_origin())
     }
 
     fn display_origin(&self) -> Pos2 {
         self.key.map_or(self.rect.min, |key| pos2(f32::from_bits(key.origin[0]), f32::from_bits(key.origin[1])))
     }
 
+    /// Screen position to the displayed layout's pixel grid.
+    fn to_layout(&self, p: Pos2) -> (i32, i32) {
+        let p = p - self.display_origin();
+        (p.x.floor() as i32, p.y.floor() as i32)
+    }
+
     fn hit(&self, pos: Option<Pos2>) -> Option<usize> {
-        let p = pos?;
-        let origin = self.display_origin();
-        let (x, y) = ((p.x - origin.x).floor() as i32, (p.y - origin.y).floor() as i32);
+        let (x, y) = self.to_layout(pos?);
         // A folder's interior belongs to its children; the collapsed Recycle Bin has none.
         layout::hit_test(&self.boxes, x, y).or_else(|| {
             let bin = self.recycle_bin?;
@@ -259,8 +254,49 @@ impl MapView {
         }
         self.focused = Some(focused);
 
-        // Rebuild the layout when anything that affects it changes. Like
-        // SpaceMonger, this also drops the selection.
+        let key = self.sync_layout(&ctx, &painter, rect, input);
+
+        // Keep painting the previous complete snapshot until its replacement
+        // is ready. Tree and boxes must always refer to the same node ids.
+        let displayed = self.display_tree.clone();
+        let input = &MapInput { tree: displayed.as_ref().unwrap_or(input.tree), ..*input };
+        let interactive = !input.scanning && self.key == Some(key);
+
+        self.note_activity(&ctx, now);
+
+        let pointer = response.hover_pos();
+        if response.double_clicked()
+            && let Some(pos) = response.interact_pointer_pos()
+        {
+            let (x, y) = self.to_layout(pos);
+            // Use the displayed snapshot, whose IDs may differ from a new scan preview.
+            if let Some(node) = zoom_target(&self.boxes, x, y) {
+                out.push(Command::ZoomPath(input.tree.path(node)));
+            }
+        }
+        if interactive {
+            self.handle_mouse(&ctx, &response, pointer, input, &mut out);
+        }
+
+        self.paint(&painter, input, pointer);
+
+        if interactive && pointer.is_some() && !ctx.any_popup_open() {
+            self.paint_tips(&ctx, input, pointer, now);
+        }
+        out.append(&mut self.queued);
+        out
+    }
+
+    /// Rebuild the layout off-thread when anything that affects it changes,
+    /// and swap in a finished one once its labels are ready. Like SpaceMonger,
+    /// a swap drops the selection. Returns the key the map should now show.
+    fn sync_layout(
+        &mut self,
+        ctx: &egui::Context,
+        painter: &egui::Painter,
+        rect: Rect,
+        input: &MapInput<'_>,
+    ) -> LayoutKey {
         let key = LayoutKey {
             view: input.view,
             w: rect.width().floor() as i32,
@@ -292,7 +328,7 @@ impl MapView {
             retire(self.staging.take());
         }
         if let Some((_, (_, _, prepared))) = &mut self.staging {
-            prepared.prepare(&painter, &mut self.label_cache);
+            prepared.prepare(painter, &mut self.label_cache);
         }
         if self.staging.as_ref().is_some_and(|(_, (_, _, prepared))| prepared.is_ready()) {
             crate::perf::instant("map.ready");
@@ -300,17 +336,11 @@ impl MapView {
                 crate::perf::counter("map.request_to_ready_ms", started.elapsed().as_secs_f64() * 1000.0);
             }
             let (ready_key, (tree, boxes, prepared)) = self.staging.take().expect("ready map");
-            if let Some(old) = self.display_tree.replace(tree) {
-                retire(old);
-            }
-            if let Some(old) = self.prepared.replace(prepared) {
-                retire(old);
-            }
+            retire(self.display_tree.replace(tree));
+            retire(self.prepared.replace(prepared));
             self.boxes = boxes;
             self.key = Some(ready_key);
-            self.selected = None;
-            self.info = None;
-            self.info_rx = None;
+            self.clear_transient();
         }
         if self.key != Some(key) && self.layout_rx.is_none() && self.staging.is_none() {
             self.layout_started = crate::perf::enabled().then(std::time::Instant::now);
@@ -331,14 +361,11 @@ impl MapView {
             });
             self.layout_rx = Some((key, rx));
         }
+        key
+    }
 
-        // Keep painting the previous complete snapshot until its replacement
-        // is ready. Tree and boxes must always refer to the same node ids.
-        let displayed = self.display_tree.clone();
-        let input = &MapInput { tree: displayed.as_ref().unwrap_or(input.tree), ..*input };
-        let interactive = !input.scanning && self.key == Some(key);
-
-        // Any mouse or keyboard activity hides tips and restarts their timers.
+    /// Any mouse or keyboard activity hides tips and restarts their timers.
+    fn note_activity(&mut self, ctx: &egui::Context, now: f64) {
         let active = ctx.input(|i| {
             i.events.iter().any(|e| {
                 matches!(
@@ -353,29 +380,6 @@ impl MapView {
         if active {
             self.last_input = now;
         }
-
-        let pointer = response.hover_pos();
-        if response.double_clicked() {
-            let origin = self.display_origin();
-            if let Some(pos) = response.interact_pointer_pos() {
-                let (x, y) = ((pos.x - origin.x).floor() as i32, (pos.y - origin.y).floor() as i32);
-                // Use the displayed snapshot, whose IDs may differ from a new scan preview.
-                if let Some(node) = zoom_target(&self.boxes, x, y) {
-                    out.push(Command::ZoomPath(input.tree.path(node)));
-                }
-            }
-        }
-        if interactive {
-            self.handle_mouse(&ctx, &response, pointer, input, &mut out);
-        }
-
-        self.paint(&painter, input, pointer);
-
-        if interactive && pointer.is_some() && !ctx.any_popup_open() {
-            self.paint_tips(&ctx, input, pointer, now);
-        }
-        out.append(&mut self.queued);
-        out
     }
 
     fn handle_mouse(
@@ -386,14 +390,15 @@ impl MapView {
         input: &MapInput<'_>,
         out: &mut Vec<Command>,
     ) {
+        let hit = self.hit(pointer);
         let press = ctx.input(|i| i.pointer.primary_pressed() || i.pointer.secondary_pressed());
         if press && response.hovered() {
-            self.selected = self.hit(pointer);
+            self.selected = hit;
         }
         if response.clicked()
             && !input.settings.disable_delete
             && input.recycle_bin.is_some()
-            && self.hit(pointer).and_then(|i| self.boxes[i].node()) == input.recycle_bin
+            && hit.and_then(|i| self.boxes[i].node()) == input.recycle_bin
         {
             out.push(Command::EmptyRecycleBin);
         }
@@ -405,7 +410,7 @@ impl MapView {
 
     /// The right-click menu (`CFolderView::OnRButtonUp`).
     fn context_menu(&mut self, ui: &mut Ui, input: &MapInput<'_>, out: &mut Vec<Command>) {
-        let cur = self.selected.map(|i| self.boxes[i]);
+        let cur = self.selected_box().copied();
         let node = cur.and_then(|b| b.node());
         let folder = cur.is_some_and(|b| b.folder);
         let s = input.settings;
@@ -496,7 +501,7 @@ impl MapView {
         let Some(cell) = self.boxes.iter().find(|b| b.node() == Some(bin)).copied() else { return };
         // Leave the folder's name label visible above the icon.
         let rect = self.box_rect(&cell);
-        let body = Rect::from_min_max(rect.min + vec2(0.0, LINE), rect.max).shrink(4.0);
+        let body = Rect::from_min_max(rect.min + vec2(0.0, maprender::LINE), rect.max).shrink(4.0);
         let side = body.width().min(body.height()).min(128.0);
         if side < 16.0 {
             return;
@@ -552,7 +557,9 @@ impl MapView {
                     Err(mpsc::TryRecvError::Empty) => {}
                 }
             }
-            if idle >= info_delay && self.info_rx.is_none() && self.info.as_ref().is_none_or(|t| t.node != node) {
+            if idle < info_delay {
+                wake = wake.min(info_delay - idle);
+            } else if self.info_rx.is_none() && self.info.as_ref().is_none_or(|t| t.node != node) {
                 let tree = input.tree.clone();
                 let settings = s.clone();
                 let repaint = ctx.clone();
@@ -567,13 +574,8 @@ impl MapView {
                     let _ = tx.send(tip);
                     repaint.request_repaint();
                 });
-            }
-            if idle >= info_delay {
-                if let (Some(tip), Some(p)) = (self.info.as_ref().filter(|tip| tip.node == node), pointer) {
-                    paint_info_tip(&tips, screen, tip, p, s.tip_icon);
-                }
-            } else {
-                wake = wake.min(info_delay - idle);
+            } else if let (Some(tip), Some(p)) = (self.info.as_ref().filter(|tip| tip.node == node), pointer) {
+                paint_info_tip(&tips, screen, tip, p, s.tip_icon);
             }
         }
         if wake.is_finite() {
@@ -591,39 +593,23 @@ impl MapView {
         input: &MapInput<'_>,
     ) {
         let Some(node) = tile.node() else { return };
-        let origin = self.rect.min;
-        let (x, y, w, h) = (tile.x as f32, tile.y as f32, (tile.w + 1) as f32, (tile.h + 1) as f32);
-        let selected = self.selected == Some(index);
-        let text_color = if selected { theme::ACCENT } else { theme::TEXT };
+        let text_color = if self.selected == Some(index) { theme::ACCENT } else { theme::TEXT };
         let galley = tips.layout_no_wrap(
             input.tree.node(node).name_lossy().into_owned(),
-            FontId::proportional(if tile.folder { LABEL_FONT } else { 12.0 }),
+            maprender::label_font(tile.folder),
             text_color,
         );
-        let size = galley.size();
-        let mut fits = 0;
-        let tx = if size.x > w - 2.0 {
-            x + 2.0
-        } else {
-            fits += 1;
-            if tile.folder { x + 2.0 } else { x + (w - size.x) / 2.0 }
+        // Cover the map's own label exactly, or stand in where an unlabelled box would put it.
+        let pos = match self.prepared.as_ref().and_then(|prepared| prepared.name_label(index)) {
+            Some(label) if label.complete => return,
+            Some(label) => label.pos,
+            None => {
+                let lines = if maprender::shows_details(tile) { 3 } else { 1 };
+                maprender::line_pos(self.box_rect(tile), tile.folder, lines, 0, galley.size().x)
+            }
         };
-        let mut ty = if size.y > h - 2.0 {
-            y + 1.0
-        } else {
-            fits += 1;
-            if tile.folder { y + 1.0 } else { y + (h - size.y) / 2.0 }
-        };
-        if fits == 2 {
-            return; // the label is fully visible already
-        }
-        if !tile.folder && h >= 56.0 && w >= 88.0 {
-            ty -= LINE;
-        }
-        let bg = theme::SURFACE;
-        let bounds = Rect::from_min_size(origin + vec2(tx - 2.0, ty - 1.0), size + vec2(4.0, 2.0));
-        let bounds = push_on_screen(bounds, screen);
-        tips.rect_filled(bounds, 0.0, bg);
+        let bounds = push_on_screen(Rect::from_min_size(pos, galley.size()).expand2(vec2(2.0, 1.0)), screen);
+        tips.rect_filled(bounds, 0.0, theme::SURFACE);
         tips.rect_stroke(bounds, 0.0, Stroke::new(1.0, theme::BORDER), StrokeKind::Inside);
         tips.galley(bounds.min + vec2(2.0, 1.0), galley, text_color);
     }
@@ -645,32 +631,13 @@ fn info_tip(tree: &Tree, node: NodeId, s: &Settings) -> InfoTip {
     let path = tree.path(node);
     let mut lines = Vec::new();
 
-    let mut first = String::new();
-    if s.tip_path
-        && let Some(parent) = path.parent()
-    {
-        first.push_str(&parent.display().to_string());
-        if !first.ends_with(std::path::MAIN_SEPARATOR) {
-            first.push(std::path::MAIN_SEPARATOR);
-        }
-    }
-    // The name always leads; the path option only prefixes its folder.
-    first.push_str(&n.name_lossy());
-    lines.push(first);
-
-    let mut second = String::new();
-    if s.tip_size {
-        second.push_str(&format::size(n.display_len()));
-    }
-    if s.tip_attrib {
-        let attrs = crate::platform::attributes(&path);
-        if s.tip_size && !attrs.is_empty() {
-            second.push_str("  /  ");
-        }
-        second.push_str(&attrs.join(" "));
-    }
+    // The name always leads; the path option prefixes its folder.
+    lines.push(if s.tip_path { path.display().to_string() } else { n.name_lossy().into_owned() });
     if s.tip_size || s.tip_attrib {
-        lines.push(second);
+        let size = s.tip_size.then(|| format::size(n.display_len()));
+        let attrs = s.tip_attrib.then(|| crate::platform::attributes(&path).join(" "));
+        let parts: Vec<_> = [size, attrs].into_iter().flatten().filter(|part| !part.is_empty()).collect();
+        lines.push(parts.join("  /  "));
     }
     if s.tip_date {
         lines.push(format::date(n.mtime));
@@ -694,11 +661,8 @@ fn paint_info_tip(tips: &egui::Painter, screen: Rect, tip: &InfoTip, pointer: Po
     let text_w = galleys.iter().map(|g| g.size().x).fold(0.0, f32::max);
     let text_h: f32 = galleys.iter().map(|g| g.size().y).sum();
     let size = vec2(icon_w + text_w + 2.0 * pad, text_h.max(if icon { 32.0 } else { 0.0 }) + 2.0 * pad);
-    let mut pos = pointer;
-    pos.x = pos.x.min(screen.max.x - size.x - TIP_OFFSET);
-    pos.y = pos.y.min(screen.max.y - size.y - TIP_OFFSET);
-    let r = Rect::from_min_size(pos + Vec2::splat(TIP_OFFSET), size);
-    tips.rect_filled(r, 8.0, INFO_BG);
+    let r = push_on_screen(Rect::from_min_size(pointer + Vec2::splat(TIP_OFFSET), size), screen);
+    tips.rect_filled(r, 8.0, theme::SURFACE);
     tips.rect_stroke(r, 8.0, Stroke::new(1.0, theme::BORDER), StrokeKind::Inside);
     if icon {
         paint_icon(tips, Rect::from_min_size(r.min + Vec2::splat(pad), Vec2::splat(32.0)), tip.folder);
@@ -712,14 +676,12 @@ fn paint_info_tip(tips: &egui::Painter, screen: Rect, tip: &InfoTip, pointer: Po
     }
 }
 
-/// A small folder or document glyph for the info tip.
 /// Hide everything inside the Recycle Bin's cell; its contents are not useful to browse.
 fn collapse_recycle_bin(boxes: &mut Vec<DisplayBox>, bin: Option<NodeId>) {
     let Some(cell) = bin.and_then(|bin| boxes.iter().find(|b| b.node() == Some(bin)).copied()) else { return };
-    boxes.retain(|b| {
-        b.node() == bin
-            || !(b.x >= cell.x && b.y >= cell.y && b.x + b.w <= cell.x + cell.w && b.y + b.h <= cell.y + cell.h)
-    });
+    let inside =
+        |b: &DisplayBox| b.x >= cell.x && b.y >= cell.y && b.x + b.w <= cell.x + cell.w && b.y + b.h <= cell.y + cell.h;
+    boxes.retain(|b| b.node() == bin || !inside(b));
 }
 
 /// Dim and hatch an item that is leaving for the Recycle Bin, so it reads as going away.
@@ -735,6 +697,7 @@ fn paint_pending_delete(painter: &egui::Painter, rect: Rect, active: bool) {
     painter.rect_stroke(rect, 2.0, Stroke::new(1.3, theme::DANGER.gamma_multiply(0.85)), StrokeKind::Inside);
 }
 
+/// A small folder or document glyph for the info tip.
 fn paint_icon(p: &egui::Painter, r: Rect, folder: bool) {
     let outline = Stroke::new(1.0, Color32::from_gray(60));
     if folder {
@@ -759,20 +722,10 @@ fn paint_icon(p: &egui::Painter, r: Rect, folder: bool) {
     }
 }
 
-fn push_on_screen(mut r: Rect, screen: Rect) -> Rect {
-    if r.max.x > screen.max.x {
-        r = r.translate(vec2(screen.max.x - r.max.x, 0.0));
-    }
-    if r.max.y > screen.max.y {
-        r = r.translate(vec2(0.0, screen.max.y - r.max.y));
-    }
-    if r.min.x < screen.min.x {
-        r = r.translate(vec2(screen.min.x - r.min.x, 0.0));
-    }
-    if r.min.y < screen.min.y {
-        r = r.translate(vec2(0.0, screen.min.y - r.min.y));
-    }
-    r
+/// Slide `r` onto the screen, keeping its top-left visible if it cannot fit.
+fn push_on_screen(r: Rect, screen: Rect) -> Rect {
+    let r = r.translate((screen.max - r.max).min(Vec2::ZERO));
+    r.translate((screen.min - r.min).max(Vec2::ZERO))
 }
 
 #[cfg(test)]

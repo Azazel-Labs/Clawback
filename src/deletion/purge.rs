@@ -2,6 +2,7 @@
 //!
 //! Links (symlinks, junctions) are removed themselves and never followed.
 use super::Progress;
+use clawback_core::scan::lock;
 use std::{
     io,
     path::{Path, PathBuf},
@@ -34,8 +35,15 @@ enum Task {
     Files(Vec<(PathBuf, bool)>),
 }
 
+#[derive(Default)]
+struct Queue {
+    tasks: Vec<Task>,
+    /// Workers currently running a task.
+    busy: usize,
+}
+
 struct Work<'a> {
-    queue: Mutex<(Vec<Task>, usize)>, // tasks, workers busy
+    queue: Mutex<Queue>,
     ready: Condvar,
     dirs: Mutex<Vec<(usize, PathBuf)>>,
     failed: AtomicU64,
@@ -47,7 +55,7 @@ struct Work<'a> {
 pub fn run(target: &Target<'_>, threads: usize, progress: &Progress) -> Report {
     let root = target.root;
     let work = Work {
-        queue: Mutex::new((Vec::new(), 0)),
+        queue: Mutex::default(),
         ready: Condvar::new(),
         dirs: Mutex::new(Vec::new()),
         failed: AtomicU64::new(0),
@@ -68,7 +76,7 @@ pub fn run(target: &Target<'_>, threads: usize, progress: &Progress) -> Report {
             if !target.contents_only {
                 lock(&work.dirs).push((0, root.to_owned()));
             }
-            lock(&work.queue).0.push(Task::Dir(root.to_owned(), 0));
+            lock(&work.queue).tasks.push(Task::Dir(root.to_owned(), 0));
             std::thread::scope(|scope| {
                 for _ in 0..threads.max(1) {
                     scope.spawn(|| work.drain());
@@ -92,13 +100,13 @@ impl Work<'_> {
                 let mut queue = lock(&self.queue);
                 loop {
                     if self.progress.cancelled() {
-                        queue.0.clear();
+                        queue.tasks.clear();
                     }
-                    if let Some(task) = queue.0.pop() {
-                        queue.1 += 1;
+                    if let Some(task) = queue.tasks.pop() {
+                        queue.busy += 1;
                         break task;
                     }
-                    if queue.1 == 0 {
+                    if queue.busy == 0 {
                         self.ready.notify_all();
                         return;
                     }
@@ -117,7 +125,7 @@ impl Work<'_> {
                 }
             }
             let mut queue = lock(&self.queue);
-            queue.1 -= 1;
+            queue.busy -= 1;
             self.ready.notify_all();
         }
     }
@@ -136,7 +144,13 @@ impl Work<'_> {
                     continue;
                 }
             };
-            let Ok(kind) = entry.file_type() else { continue };
+            let kind = match entry.file_type() {
+                Ok(kind) => kind,
+                Err(error) => {
+                    self.fail(&entry.path(), &error);
+                    continue;
+                }
+            };
             if depth == 0 && self.target.contents_only && self.target.keep.iter().any(|k| entry.file_name() == *k) {
                 continue;
             }
@@ -151,11 +165,11 @@ impl Work<'_> {
             found.extend(subdirs.iter().map(|d| (depth + 1, d.clone())));
         }
         let mut queue = lock(&self.queue);
-        queue.0.extend(subdirs.into_iter().map(|d| Task::Dir(d, depth + 1)));
+        queue.tasks.extend(subdirs.into_iter().map(|d| Task::Dir(d, depth + 1)));
         // Hand most of a huge folder to other workers, keeping the last batch here.
         while files.len() > BATCH {
             let rest = files.split_off(BATCH);
-            queue.0.push(Task::Files(std::mem::replace(&mut files, rest)));
+            queue.tasks.push(Task::Files(std::mem::replace(&mut files, rest)));
         }
         self.ready.notify_all();
         drop(queue);
@@ -216,10 +230,6 @@ impl Work<'_> {
     }
 }
 
-fn lock<T>(mutex: &Mutex<T>) -> std::sync::MutexGuard<'_, T> {
-    mutex.lock().unwrap_or_else(std::sync::PoisonError::into_inner)
-}
-
 #[cfg(windows)]
 fn link_kind_is_dir(kind: std::fs::FileType) -> bool {
     use std::os::windows::fs::FileTypeExt;
@@ -237,34 +247,22 @@ fn link_is_dir(md: &std::fs::Metadata) -> bool {
 /// semantics unlink the name immediately while other handles stay valid.
 #[cfg(windows)]
 fn remove(path: &Path, dir: bool) -> io::Result<()> {
-    use std::os::windows::{ffi::OsStrExt, io::FromRawHandle};
+    use std::os::windows::{fs::OpenOptionsExt, io::AsRawHandle};
     use windows_sys::Win32::{
-        Foundation::INVALID_HANDLE_VALUE,
+        Foundation::{ERROR_INVALID_FUNCTION, ERROR_INVALID_PARAMETER, ERROR_NOT_SUPPORTED},
         Storage::FileSystem::{
-            CreateFileW, DELETE, FILE_DISPOSITION_FLAG_DELETE, FILE_DISPOSITION_FLAG_IGNORE_READONLY_ATTRIBUTE,
+            DELETE, FILE_DISPOSITION_FLAG_DELETE, FILE_DISPOSITION_FLAG_IGNORE_READONLY_ATTRIBUTE,
             FILE_DISPOSITION_FLAG_POSIX_SEMANTICS, FILE_DISPOSITION_INFO_EX, FILE_FLAG_BACKUP_SEMANTICS,
             FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE, FileDispositionInfoEx,
-            OPEN_EXISTING, SetFileInformationByHandle,
+            SetFileInformationByHandle,
         },
     };
-    let wide: Vec<u16> = verbatim(path).as_os_str().encode_wide().chain(Some(0)).collect();
-    // SAFETY: terminated path; no security attributes or template. The link itself is opened.
-    let handle = unsafe {
-        CreateFileW(
-            wide.as_ptr(),
-            DELETE,
-            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-            std::ptr::null(),
-            OPEN_EXISTING,
-            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
-            std::ptr::null_mut(),
-        )
-    };
-    if handle == INVALID_HANDLE_VALUE {
-        return Err(io::Error::last_os_error());
-    }
-    // SAFETY: a fresh handle owned here and closed on drop.
-    let file = unsafe { std::fs::File::from_raw_handle(handle) };
+    // std adds the long-path prefix itself without a lossy round trip. The link itself is opened.
+    let file = std::fs::OpenOptions::new()
+        .access_mode(DELETE)
+        .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE)
+        .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT)
+        .open(path)?;
     let info = FILE_DISPOSITION_INFO_EX {
         Flags: FILE_DISPOSITION_FLAG_DELETE
             | FILE_DISPOSITION_FLAG_POSIX_SEMANTICS
@@ -273,7 +271,7 @@ fn remove(path: &Path, dir: bool) -> io::Result<()> {
     // SAFETY: live handle opened with DELETE access; the structure matches the class.
     let ok = unsafe {
         SetFileInformationByHandle(
-            handle,
+            file.as_raw_handle(),
             FileDispositionInfoEx,
             (&raw const info).cast(),
             size_of::<FILE_DISPOSITION_INFO_EX>() as u32,
@@ -285,7 +283,8 @@ fn remove(path: &Path, dir: bool) -> io::Result<()> {
     let error = io::Error::last_os_error();
     drop(file);
     // FAT/exFAT and older systems lack the extended disposition: clear read-only and retry plainly.
-    if matches!(error.raw_os_error(), Some(1 | 50 | 87)) {
+    let unsupported = [ERROR_INVALID_FUNCTION, ERROR_NOT_SUPPORTED, ERROR_INVALID_PARAMETER];
+    if error.raw_os_error().is_some_and(|code| unsupported.contains(&(code as u32))) {
         if let Ok(md) = std::fs::symlink_metadata(path) {
             let mut permissions = md.permissions();
             if permissions.readonly() {
@@ -302,20 +301,6 @@ fn remove(path: &Path, dir: bool) -> io::Result<()> {
 #[cfg(not(windows))]
 fn remove(path: &Path, dir: bool) -> io::Result<()> {
     if dir { std::fs::remove_dir(path) } else { std::fs::remove_file(path) }
-}
-
-/// Long paths need the `\\?\` form for direct Win32 calls.
-#[cfg(windows)]
-fn verbatim(path: &Path) -> PathBuf {
-    let absolute = std::path::absolute(path).unwrap_or_else(|_| path.to_owned());
-    let text = absolute.as_os_str().to_string_lossy();
-    if text.starts_with(r"\\?\") {
-        absolute
-    } else if let Some(unc) = text.strip_prefix(r"\\") {
-        PathBuf::from(format!(r"\\?\UNC\{unc}"))
-    } else {
-        PathBuf::from(format!(r"\\?\{text}"))
-    }
 }
 
 #[cfg(test)]
@@ -378,6 +363,19 @@ mod tests {
         assert!(!root.exists());
         assert!(outside.join("keep.txt").exists(), "a link's target must survive");
         std::fs::remove_dir_all(&outside).unwrap();
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn names_that_are_not_unicode_are_deleted() {
+        use std::os::windows::ffi::OsStringExt;
+        let root = fixture("surrogate");
+        // An unpaired surrogate: valid on NTFS, but not representable as a `str`.
+        let name = std::ffi::OsString::from_wide(&[u16::from(b'x'), 0xD800]);
+        std::fs::write(root.join("a/b").join(&name), b"x").unwrap();
+        let report = run(&Target { root: &root, contents_only: false, keep: &[] }, 2, &Progress::default());
+        assert_eq!(report.failed, 0, "{:?}", report.first_error);
+        assert!(!root.exists());
     }
 
     /// Junctions need no privilege, unlike symlinks without Developer Mode.

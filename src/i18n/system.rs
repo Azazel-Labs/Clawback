@@ -37,7 +37,7 @@ fn environment_languages(get: impl Fn(&str) -> Option<String>) -> Vec<String> {
     let locale = ["LC_ALL", "LC_MESSAGES", "LANG"].into_iter().find_map(|key| get(key).filter(|s| !s.is_empty()));
     let locale = locale.unwrap_or_else(|| "C".into());
     // gettext ignores LANGUAGE in the untranslated C/POSIX locale.
-    if locale == "C" || locale == "POSIX" {
+    if super::is_c_locale(&locale) {
         return vec!["en".into()];
     }
     let mut result: Vec<_> =
@@ -60,6 +60,14 @@ mod tests {
         assert_eq!(
             environment_languages(|key| match key {
                 "LC_ALL" => Some("C".into()),
+                "LANGUAGE" => Some("de".into()),
+                _ => None,
+            }),
+            ["en"]
+        );
+        assert_eq!(
+            environment_languages(|key| match key {
+                "LANG" => Some("C.UTF-8".into()),
                 "LANGUAGE" => Some("de".into()),
                 _ => None,
             }),

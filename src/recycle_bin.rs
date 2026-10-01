@@ -1,10 +1,16 @@
 //! The drive's Recycle Bin, shown on the map as one cell that empties it.
+use crate::platform::wide;
 use clawback_core::{NodeId, ROOT, Tree};
 use eframe::egui::ColorImage;
-use std::{ffi::OsStr, os::windows::ffi::OsStrExt, path::Path, ptr, sync::OnceLock};
+use std::{
+    ffi::OsStr,
+    os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle},
+    path::Path,
+    ptr,
+    sync::OnceLock,
+};
 use windows_sys::Win32::{
-    Foundation::{CloseHandle, LocalFree},
-    Globalization::lstrlenW,
+    Foundation::LocalFree,
     Security::{Authorization::ConvertSidToStringSidW, GetTokenInformation, TOKEN_QUERY, TOKEN_USER, TokenUser},
     System::Threading::{GetCurrentProcess, OpenProcessToken},
     UI::Shell::{SHCNE_UPDATEDIR, SHCNF_PATHW, SHChangeNotify, SIID_RECYCLER, SIID_RECYCLERFULL},
@@ -39,24 +45,24 @@ pub(crate) fn user_sid() -> Option<&'static str> {
         let mut token = ptr::null_mut();
         // SAFETY: no arguments; the pseudo-handle needs no closing.
         let process = unsafe { GetCurrentProcess() };
-        // SAFETY: writable handle storage; the token is closed below.
+        // SAFETY: writable handle storage.
         if unsafe { OpenProcessToken(process, TOKEN_QUERY, &raw mut token) } == 0 {
             return None;
         }
+        // SAFETY: OpenProcessToken succeeded and transferred ownership of the token.
+        let token = unsafe { OwnedHandle::from_raw_handle(token) };
         let mut buffer = vec![0u64; 64];
         let mut length = 0;
         // SAFETY: an aligned, writable buffer of the declared size for TOKEN_USER.
         let ok = unsafe {
             GetTokenInformation(
-                token,
+                token.as_raw_handle(),
                 TokenUser,
                 buffer.as_mut_ptr().cast(),
-                (buffer.len() * 8) as u32,
+                size_of_val(buffer.as_slice()) as u32,
                 &raw mut length,
             )
         };
-        // SAFETY: closes the token opened above.
-        unsafe { CloseHandle(token) };
         if ok == 0 {
             return None;
         }
@@ -68,9 +74,7 @@ pub(crate) fn user_sid() -> Option<&'static str> {
             return None;
         }
         // SAFETY: a terminated UTF-16 string returned by ConvertSidToStringSidW.
-        let length = unsafe { lstrlenW(text) } as usize;
-        // SAFETY: `length` UTF-16 units precede the terminator of that same string.
-        let value = String::from_utf16(unsafe { std::slice::from_raw_parts(text, length) }).ok();
+        let value = unsafe { windows_core::PCWSTR(text).to_string() }.ok();
         // SAFETY: frees exactly the allocation returned above.
         unsafe { LocalFree(text.cast()) };
         value
@@ -83,10 +87,6 @@ pub fn notify_changed(folder: &Path) {
     let path = wide(folder.as_os_str());
     // SAFETY: a terminated path, read during this synchronous call only.
     unsafe { SHChangeNotify(SHCNE_UPDATEDIR as i32, SHCNF_PATHW, path.as_ptr().cast(), ptr::null()) };
-}
-
-fn wide(value: &OsStr) -> Vec<u16> {
-    value.encode_wide().chain(Some(0)).collect()
 }
 
 #[cfg(test)]

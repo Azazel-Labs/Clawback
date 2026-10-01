@@ -1,24 +1,53 @@
 //! Settings editor: consistent rows, a bounded scrolling body, and a fixed footer.
 use crate::{i18n::tr, theme};
-use clawback_core::{
-    Settings,
-    palette::{MAP_PRESETS, display_color},
-};
+use clawback_core::{Settings, palette::MAP_PRESETS};
 use eframe::egui::{self, Align, Color32, CornerRadius, Id, Layout, RichText, Stroke, Ui, vec2};
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Page {
+    Appearance,
+    Tooltips,
+    Behavior,
+    Scanning,
+}
+
+impl Page {
+    const ALL: [Self; 4] = [Self::Appearance, Self::Tooltips, Self::Behavior, Self::Scanning];
+
+    fn label(self) -> String {
+        match self {
+            Self::Appearance => tr!("settings-appearance"),
+            Self::Tooltips => tr!("tooltips"),
+            Self::Behavior => tr!("settings-behavior"),
+            Self::Scanning => tr!("scanning"),
+        }
+    }
+
+    fn ui(self, ui: &mut Ui, settings: &mut Settings) {
+        match self {
+            Self::Appearance => appearance(ui, settings),
+            Self::Tooltips => tooltips(ui, settings),
+            Self::Behavior => behavior(ui, settings),
+            Self::Scanning => scanning(ui, settings),
+        }
+    }
+}
 
 pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
     let mut done = None;
     let compact = ctx.content_rect().height() < 520.0;
     let margin = if compact { 16 } else { 24 };
     let width = (ctx.content_rect().width() - 48.0).clamp(300.0, 680.0);
+    // Stored as an index; demo captures preselect a page the same way.
     let page_id = Id::new("settings-page");
-    let mut page = ctx.data_mut(|data| data.get_temp::<usize>(page_id).unwrap_or(0));
+    let stored = ctx.data_mut(|data| data.get_temp::<usize>(page_id));
+    let mut page = stored.and_then(|index| Page::ALL.get(index).copied()).unwrap_or(Page::Appearance);
     let response = egui::Modal::new(Id::new("clawback-settings"))
         .backdrop_color(Color32::from_black_alpha(170))
         .frame(
             egui::Frame::new()
                 .fill(theme::SURFACE)
-                .stroke(Stroke::new(1.0, Color32::from_rgb(57, 63, 70)))
+                .stroke(Stroke::new(1.0, theme::DIALOG_EDGE))
                 .corner_radius(CornerRadius::same(14))
                 .inner_margin(margin)
                 .shadow(egui::epaint::Shadow {
@@ -61,31 +90,32 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
             if !compact {
                 ui.add_space(4.0);
             }
-            let labels = [tr!("settings-appearance"), tr!("tooltips"), tr!("settings-behavior"), tr!("scanning")];
             if ui.available_width() < 450.0 || compact {
+                let mut index = page as usize;
                 egui::ComboBox::from_id_salt("settings-category").width(ui.available_width()).show_index(
                     ui,
-                    &mut page,
-                    labels.len(),
-                    |index| labels[index].clone(),
+                    &mut index,
+                    Page::ALL.len(),
+                    |index| Page::ALL[index].label(),
                 );
+                page = Page::ALL[index];
             } else {
-                ui.columns(4, |columns| {
-                    for (index, column) in columns.iter_mut().enumerate() {
-                        let active = index == page;
+                ui.columns(Page::ALL.len(), |columns| {
+                    for (&tab, column) in Page::ALL.iter().zip(columns) {
+                        let active = tab == page;
                         let response = column.add_sized(
                             [column.available_width(), 36.0],
-                            egui::Button::new(RichText::new(&labels[index]).color(if active {
+                            egui::Button::new(RichText::new(tab.label()).color(if active {
                                 theme::ACCENT
                             } else {
                                 theme::MUTED
                             }))
-                            .fill(if active { Color32::from_rgb(35, 47, 58) } else { Color32::TRANSPARENT })
+                            .fill(if active { theme::SELECTED_FILL } else { Color32::TRANSPARENT })
                             .stroke(Stroke::NONE)
                             .corner_radius(7),
                         );
                         if response.clicked() {
-                            page = index;
+                            page = tab;
                         }
                     }
                 });
@@ -93,18 +123,13 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
             ui.separator();
             let body_height = (ctx.content_rect().height() - if compact { 200.0 } else { 260.0 }).clamp(24.0, 388.0);
             egui::ScrollArea::vertical()
-                .id_salt(("settings-body", page))
+                .id_salt(("settings-body", page as usize))
                 .max_height(body_height)
                 .min_scrolled_height(body_height)
                 .auto_shrink([false, false])
                 .show(ui, |ui| {
                     ui.set_min_height(body_height);
-                    match page {
-                        1 => tooltips(ui, settings),
-                        2 => behavior(ui, settings),
-                        3 => scanning(ui, settings),
-                        _ => appearance(ui, settings),
-                    }
+                    page.ui(ui, settings);
                 });
             ui.separator();
             ui.horizontal(|ui| {
@@ -128,7 +153,7 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
                 });
             });
         });
-    ctx.data_mut(|data| data.insert_temp(page_id, page));
+    ctx.data_mut(|data| data.insert_temp(page_id, page as usize));
     if response.should_close() {
         done = Some(false);
     }
@@ -170,7 +195,7 @@ fn toggle(ui: &mut Ui, value: &mut bool, label: &str) {
         }
         response.widget_info(|| egui::WidgetInfo::selected(egui::WidgetType::Checkbox, ui.is_enabled(), *value, label));
         let t = ui.ctx().animate_bool(response.id, *value);
-        let fill = if *value { theme::ACCENT } else { Color32::from_rgb(57, 62, 68) };
+        let fill = if *value { theme::ACCENT } else { theme::TOGGLE_OFF };
         ui.painter().rect_filled(rect.shrink(1.0), 10, if ui.is_enabled() { fill } else { fill.gamma_multiply(0.4) });
         if response.has_focus() || response.hovered() {
             ui.painter().rect_stroke(rect, 11, Stroke::new(1.0, theme::ACCENT), egui::StrokeKind::Outside);
@@ -216,7 +241,7 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
                             egui::pos2(response.rect.right() - SWATCHES_WIDTH - 6.0, response.rect.center().y - 7.0),
                             vec2(SWATCHES_WIDTH, 14.0),
                         );
-                        paint_swatches(ui.painter(), strip, scheme, muted);
+                        theme::paint_swatches(ui.painter(), strip, scheme, muted, SWATCH_GAP, 2.0);
                         if response.clicked() {
                             *value = scheme;
                         }
@@ -226,13 +251,8 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
     }
     toggle(ui, &mut d.mute_palette, &tr!("mute-colors"));
     let (rect, _) = ui.allocate_exact_size(vec2(ui.available_width(), 28.0), egui::Sense::hover());
-    for index in 0..8 {
-        let [r, g, b] = display_color(d.file_color, index, d.mute_palette);
-        let left = rect.left() + index as f32 * rect.width() / 8.0;
-        let tile =
-            egui::Rect::from_min_size(egui::pos2(left, rect.top()), vec2(rect.width() / 8.0 - 4.0, rect.height()));
-        ui.painter().rect_filled(tile, 4, Color32::from_rgb(r, g, b));
-    }
+    // The preview row leaves its trailing gap empty.
+    theme::paint_swatches(ui.painter(), rect.with_max_x(rect.right() - 4.0), d.file_color, d.mute_palette, 4.0, 4.0);
     section(ui, tr!("file-layout"));
     row(ui, &tr!("density"), |ui| {
         let mut index = (d.density + 3).clamp(0, 5) as usize;
@@ -276,18 +296,7 @@ const SWATCHES_WIDTH: f32 = 8.0 * (SWATCH + SWATCH_GAP) - SWATCH_GAP;
 /// A palette's eight depth colours as a compact strip.
 fn swatches(ui: &mut Ui, scheme: usize, muted: bool) {
     let (rect, _) = ui.allocate_exact_size(vec2(SWATCHES_WIDTH, 14.0), egui::Sense::hover());
-    paint_swatches(ui.painter(), rect, scheme, muted);
-}
-
-fn paint_swatches(painter: &egui::Painter, rect: egui::Rect, scheme: usize, muted: bool) {
-    for depth in 0..8 {
-        let [r, g, b] = display_color(scheme, depth, muted);
-        let tile = egui::Rect::from_min_size(
-            egui::pos2(rect.left() + depth as f32 * (SWATCH + SWATCH_GAP), rect.top()),
-            vec2(SWATCH, rect.height()),
-        );
-        painter.rect_filled(tile, 2, Color32::from_rgb(r, g, b));
-    }
+    theme::paint_swatches(ui.painter(), rect, scheme, muted, SWATCH_GAP, 2.0);
 }
 
 fn delay(ui: &mut Ui, ms: &mut u32) {
@@ -339,7 +348,7 @@ fn scanning(ui: &mut Ui, d: &mut Settings) {
         toggle(ui, &mut d.dedupe_hardlinks, &tr!("count-hard-linked-files-once"));
     }
     ui.add_space(12.0);
-    egui::Frame::new().fill(Color32::from_rgb(29, 38, 46)).corner_radius(7).inner_margin(12).show(ui, |ui| {
+    egui::Frame::new().fill(theme::NOTE_BG).corner_radius(7).inner_margin(12).show(ui, |ui| {
         ui.set_width(ui.available_width());
         ui.label(RichText::new(tr!("scanning-options-apply-to-the-next-scan")).color(theme::ACCENT));
     });
