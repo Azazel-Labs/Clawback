@@ -454,23 +454,14 @@ pub fn capture_demo(path: &std::path::Path) -> io::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use clawback_core::{Kind, tree::NewEntry};
+    use clawback_core::tree::NewEntry;
     use ratatui::{Terminal, backend::TestBackend};
 
     fn fixture() -> App {
         let root = PathBuf::from("demo");
         let mut tree = Tree::new(&root);
-        let entry = |name: &str, kind, size| NewEntry {
-            name: name.into(),
-            kind,
-            size,
-            len: size,
-            mtime: 0,
-            flags: 0,
-            file_id: None,
-        };
-        tree.add_children(ROOT, vec![entry("Photos", Kind::Dir, 0), entry("archive.zip", Kind::File, 4096)]);
-        tree.add_children(1, vec![entry("Vacation.jpg", Kind::File, 8192), entry("家族.png", Kind::File, 2048)]);
+        tree.add_children(ROOT, vec![NewEntry::dir("Photos"), NewEntry::file("archive.zip", 4096)]);
+        tree.add_children(1, vec![NewEntry::file("Vacation.jpg", 8192), NewEntry::file("家族.png", 2048)]);
         App::with_tree(root, tree, Settings::default(), "Scan complete")
     }
 

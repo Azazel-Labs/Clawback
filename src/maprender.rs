@@ -14,7 +14,7 @@ use std::{
 
 /// Pick the higher-contrast ink once on the layout worker, not each frame.
 fn label_color(rgb: palette::Rgb) -> Color32 {
-    if palette::dark_ink(rgb) { Color32::BLACK } else { Color32::WHITE }
+    theme::rgb(palette::ink(rgb))
 }
 
 /// Vertical distance between label lines.
@@ -272,29 +272,13 @@ impl PreparedMap {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use clawback_core::{
-        ROOT,
-        tree::{Kind, NewEntry},
-    };
+    use clawback_core::{ROOT, tree::NewEntry};
     use std::path::Path;
 
     #[test]
     fn dense_labels_are_bounded_and_cached_across_repaints() {
         let mut tree = Tree::new(Path::new("/labels"));
-        let ids = tree.add_children(
-            ROOT,
-            (0..1000)
-                .map(|i| NewEntry {
-                    name: format!("file-{i}.bin").into(),
-                    kind: Kind::File,
-                    size: 10,
-                    len: 10,
-                    mtime: 0,
-                    flags: 0,
-                    file_id: None,
-                })
-                .collect(),
-        );
+        let ids = tree.add_children(ROOT, (0..1000).map(|i| NewEntry::file(format!("file-{i}.bin"), 10)).collect());
         let boxes: Vec<_> = ids
             .map(|id| DisplayBox {
                 x: (id % 20) as i32 * 90,

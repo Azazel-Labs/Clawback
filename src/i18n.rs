@@ -23,6 +23,13 @@ pub fn languages() -> impl Iterator<Item = &'static str> {
     LANGUAGES.iter().copied()
 }
 
+/// The embedded Fluent source for `code`.
+#[cfg(test)]
+pub(crate) fn catalog(code: &str) -> String {
+    let file = Localizations::get(&format!("{code}/clawback.ftl")).expect("embedded catalog");
+    String::from_utf8(file.data.into_owned()).expect("UTF-8 catalog")
+}
+
 pub fn set_language(code: &str) -> &'static str {
     let preferences = if code == "auto" { system::languages() } else { vec![code.to_owned()] };
     let code = preferred_catalog(&preferences, LANGUAGES).unwrap_or("en");

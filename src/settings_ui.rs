@@ -1,7 +1,11 @@
 //! Settings editor: consistent rows, a bounded scrolling body, and a fixed footer.
 use crate::{i18n::tr, theme};
-use clawback_core::{Settings, palette::MAP_PRESETS};
-use eframe::egui::{self, Align, Color32, CornerRadius, Id, Layout, RichText, Stroke, Ui, vec2};
+use clawback_core::{
+    Settings,
+    palette::MAP_PRESETS,
+    settings::{BIAS, DENSITY, TIP_DELAY_MAX_MS},
+};
+use eframe::egui::{self, Align, Color32, Id, Layout, RichText, Stroke, Ui, vec2};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Page {
@@ -42,21 +46,8 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
     let page_id = Id::new("settings-page");
     let stored = ctx.data_mut(|data| data.get_temp::<usize>(page_id));
     let mut page = stored.and_then(|index| Page::ALL.get(index).copied()).unwrap_or(Page::Appearance);
-    let response = egui::Modal::new(Id::new("clawback-settings"))
-        .backdrop_color(Color32::from_black_alpha(170))
-        .frame(
-            egui::Frame::new()
-                .fill(theme::SURFACE)
-                .stroke(Stroke::new(1.0, theme::DIALOG_EDGE))
-                .corner_radius(CornerRadius::same(14))
-                .inner_margin(margin)
-                .shadow(egui::epaint::Shadow {
-                    offset: [0, 12],
-                    blur: 40,
-                    spread: 0,
-                    color: Color32::from_black_alpha(120),
-                }),
-        )
+    let response = theme::modal("clawback-settings")
+        .frame(theme::modal_frame().stroke(Stroke::new(1.0, theme::DIALOG_EDGE)).inner_margin(margin))
         .show(ctx, |ui| {
             ui.set_width(width - 2.0 * f32::from(margin));
             ui.spacing_mut().item_spacing = vec2(12.0, if compact { 8.0 } else { 12.0 });
@@ -137,8 +128,7 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
                     if ui
                         .add_sized(
                             [112.0, 36.0],
-                            egui::Button::new(RichText::new(tr!("settings-save")).strong().color(theme::BG))
-                                .fill(theme::ACCENT)
+                            theme::primary_button(tr!("settings-save"), theme::ACCENT)
                                 .stroke(Stroke::NONE)
                                 .corner_radius(7),
                         )
@@ -146,7 +136,9 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
                     {
                         done = Some(true);
                     }
-                    if ui.add_sized([88.0, 36.0], egui::Button::new(tr!("cancel")).frame_when_inactive(false)).clicked()
+                    if ui
+                        .add_sized([88.0, 36.0], theme::secondary_button(tr!("cancel")).frame_when_inactive(false))
+                        .clicked()
                     {
                         done = Some(false);
                     }
@@ -255,7 +247,7 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
     theme::paint_swatches(ui.painter(), rect.with_max_x(rect.right() - 4.0), d.file_color, d.mute_palette, 4.0, 4.0);
     section(ui, tr!("file-layout"));
     row(ui, &tr!("density"), |ui| {
-        let mut index = (d.density + 3).clamp(0, 5) as usize;
+        let mut index = (d.density - DENSITY.0).clamp(0, 5) as usize;
         if egui::ComboBox::from_id_salt("density")
             .width(ui.available_width())
             .show_index(ui, &mut index, 6, |i| match i {
@@ -268,7 +260,7 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
             })
             .changed()
         {
-            d.density = index as i32 - 3;
+            d.density = index as i32 + DENSITY.0;
         }
     });
     row(ui, &tr!("bias"), |ui| {
@@ -276,7 +268,8 @@ fn appearance(ui: &mut Ui, d: &mut Settings) {
             let width = ui.available_width();
             ui.spacing_mut().slider_width = width;
             ui.spacing_mut().item_spacing.y = 2.0;
-            ui.add(egui::Slider::new(&mut d.bias, -20..=20).show_value(false)).on_hover_text(tr!("settings-bias-help"));
+            ui.add(egui::Slider::new(&mut d.bias, BIAS.0..=BIAS.1).show_value(false))
+                .on_hover_text(tr!("settings-bias-help"));
             let (rect, _) = ui.allocate_exact_size(vec2(width, 14.0), egui::Sense::hover());
             for (position, anchor, label) in [
                 (rect.left_center(), egui::Align2::LEFT_CENTER, tr!("horz")),
@@ -301,7 +294,7 @@ fn swatches(ui: &mut Ui, scheme: usize, muted: bool) {
 
 fn delay(ui: &mut Ui, ms: &mut u32) {
     row(ui, &tr!("delay"), |ui| {
-        ui.add(egui::DragValue::new(ms).range(0..=99_999).speed(5).suffix(format!(" {}", tr!("msec"))));
+        ui.add(egui::DragValue::new(ms).range(0..=TIP_DELAY_MAX_MS).speed(5).suffix(format!(" {}", tr!("msec"))));
     });
 }
 

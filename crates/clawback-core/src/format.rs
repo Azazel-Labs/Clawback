@@ -1,6 +1,7 @@
 //! Text formatting in SpaceMonger's style, plus local-time conversion
 //! without any date/time crate.
 
+use std::path::{MAIN_SEPARATOR, Path};
 use std::time::Duration;
 
 const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -157,9 +158,40 @@ fn local_offset(_secs: i64) -> Option<i64> {
     None
 }
 
+/// `part` as a share of `whole`, capped at 1; nothing of nothing is 0.
+pub fn fraction(part: u64, whole: u64) -> f32 {
+    if whole == 0 { 0.0 } else { (part as f64 / whole as f64).min(1.0) as f32 }
+}
+
+/// The last path component, or the whole path for a drive root.
+pub fn display_name(p: &Path) -> String {
+    p.file_name().map_or_else(|| p.display().to_string(), |n| n.to_string_lossy().into_owned())
+}
+
+/// A folder path with a trailing separator, as SpaceMonger titled folders.
+pub fn dir_display(p: &Path) -> String {
+    let mut s = p.display().to_string();
+    if !s.ends_with(MAIN_SEPARATOR) {
+        s.push(MAIN_SEPARATOR);
+    }
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn directory_display_has_trailing_separator() {
+        assert!(dir_display(Path::new("/a/b")).ends_with(MAIN_SEPARATOR));
+    }
+
+    #[test]
+    fn fractions_are_capped_and_empty_wholes_are_zero() {
+        assert_eq!(fraction(1, 4).to_bits(), 0.25_f32.to_bits());
+        assert_eq!(fraction(5, 4).to_bits(), 1.0_f32.to_bits());
+        assert_eq!(fraction(5, 0).to_bits(), 0.0_f32.to_bits());
+    }
 
     #[test]
     fn readable_sizes_keep_binary_values() {

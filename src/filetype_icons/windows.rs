@@ -1,3 +1,4 @@
+use crate::platform::Apartment;
 use eframe::egui::ColorImage;
 use std::{mem::size_of, ptr};
 use windows_sys::Win32::{
@@ -6,7 +7,6 @@ use windows_sys::Win32::{
         DeleteObject, GdiFlush, SelectObject,
     },
     Storage::FileSystem::FILE_ATTRIBUTE_NORMAL,
-    System::Com::{COINIT_APARTMENTTHREADED, CoInitializeEx, CoUninitialize},
     UI::{
         Shell::{
             SHDefExtractIconW, SHFILEINFOW, SHGFI_ICON, SHGFI_LARGEICON, SHGFI_USEFILEATTRIBUTES, SHGSI_ICONLOCATION,
@@ -16,20 +16,9 @@ use windows_sys::Win32::{
     },
 };
 
-/// COM for the calling thread, initialized on first use and released when the thread exits.
-struct Com;
-impl Drop for Com {
-    fn drop(&mut self) {
-        // SAFETY: Balances this thread's successful CoInitializeEx.
-        unsafe { CoUninitialize() };
-    }
-}
 thread_local! {
-    static COM: Option<Com> = {
-        // SAFETY: Initializes COM for this thread only; Com releases it on thread exit.
-        let result = unsafe { CoInitializeEx(ptr::null(), COINIT_APARTMENTTHREADED as u32) };
-        (result >= 0).then_some(Com)
-    };
+    /// COM for the calling thread, initialized on first use and released when the thread exits.
+    static COM: Option<Apartment> = Apartment::enter().ok();
 }
 
 #[allow(clippy::multiple_unsafe_ops_per_block)]

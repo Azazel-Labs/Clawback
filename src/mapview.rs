@@ -14,7 +14,7 @@
 use crate::i18n::tr;
 
 use crate::{
-    background::retire,
+    background::{Job, retire},
     maprender::{self, LabelCache, PreparedMap},
     theme,
 };
@@ -24,7 +24,7 @@ use eframe::egui::{
     self, Color32, FontId, Id, LayerId, Order, Pos2, Rect, Response, RichText, Sense, Stroke, StrokeKind, Ui, Vec2,
     pos2, vec2,
 };
-use std::sync::{Arc, mpsc};
+use std::sync::Arc;
 use std::time::Duration;
 
 /// Info tips appear this far below-right of the cursor.
@@ -113,7 +113,7 @@ type LayoutResult = (Arc<Tree>, Vec<DisplayBox>, PreparedMap);
 
 pub struct MapView {
     layout_started: Option<std::time::Instant>,
-    layout_rx: Option<(LayoutKey, mpsc::Receiver<LayoutResult>)>,
+    layout_rx: Option<Job<LayoutKey, LayoutResult>>,
     display_tree: Option<Arc<Tree>>,
     prepared: Option<PreparedMap>,
     boxes: Vec<DisplayBox>,
@@ -131,7 +131,7 @@ pub struct MapView {
     focused: Option<bool>,
     rect: Rect,
     info: Option<InfoTip>,
-    info_rx: Option<mpsc::Receiver<InfoTip>>,
+    info_rx: Option<Job<(), InfoTip>>,
 }
 
 impl Default for MapView {
@@ -174,7 +174,7 @@ impl MapView {
     /// Forget the layout (new document, or none).
     pub fn reset(&mut self) {
         self.layout_started = None;
-        retire(self.layout_rx.take());
+        self.layout_rx = None;
         retire(self.prepared.take());
         retire(self.display_tree.take());
         retire(self.staging.take());
@@ -310,18 +310,11 @@ impl MapView {
             muted: input.settings.mute_palette,
             recycle_bin: input.recycle_bin,
         };
-        if let Some((pending_key, rx)) = &self.layout_rx {
-            match rx.try_recv() {
-                Ok(result) => {
-                    if same_view(*pending_key, key) {
-                        self.staging = Some((*pending_key, result));
-                    } else {
-                        retire(result);
-                    }
-                    self.layout_rx = None;
-                }
-                Err(mpsc::TryRecvError::Disconnected) => self.layout_rx = None,
-                Err(mpsc::TryRecvError::Empty) => {}
+        if let Some((pending_key, result)) = Job::poll(&mut self.layout_rx) {
+            if same_view(pending_key, key) {
+                self.staging = Some((pending_key, result));
+            } else {
+                retire(result);
             }
         }
         if self.staging.as_ref().is_some_and(|(staged_key, _)| !same_view(*staged_key, key)) {
@@ -346,20 +339,16 @@ impl MapView {
             self.layout_started = crate::perf::enabled().then(std::time::Instant::now);
             crate::perf::instant("map.requested");
             let tree = Arc::clone(input.tree);
-            let repaint = ctx.clone();
-            let (tx, rx) = mpsc::channel();
             let origin = rect.min;
             let free = [input.disk_free, input.disk_total];
-            std::thread::spawn(move || {
+            self.layout_rx = Some(Job::spawn(key, ctx, move || {
                 let _span = crate::perf::span("worker.map_layout");
                 let mut boxes = layout::build(&tree, key.view, key.w, key.h, &key.layout, key.free);
                 collapse_recycle_bin(&mut boxes, key.recycle_bin);
                 crate::perf::counter("map.boxes", boxes.len() as f64);
                 let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, key.muted, free);
-                let _ = tx.send((tree, boxes, prepared));
-                repaint.request_repaint();
-            });
-            self.layout_rx = Some((key, rx));
+                (tree, boxes, prepared)
+            }));
         }
         key
     }
@@ -547,33 +536,22 @@ impl MapView {
             }
         }
         if s.show_info_tips {
-            if let Some(rx) = &self.info_rx {
-                match rx.try_recv() {
-                    Ok(tip) => {
-                        self.info = Some(tip);
-                        self.info_rx = None;
-                    }
-                    Err(mpsc::TryRecvError::Disconnected) => self.info_rx = None,
-                    Err(mpsc::TryRecvError::Empty) => {}
-                }
+            if let Some(((), tip)) = Job::poll(&mut self.info_rx) {
+                self.info = Some(tip);
             }
             if idle < info_delay {
                 wake = wake.min(info_delay - idle);
             } else if self.info_rx.is_none() && self.info.as_ref().is_none_or(|t| t.node != node) {
                 let tree = input.tree.clone();
                 let settings = s.clone();
-                let repaint = ctx.clone();
-                let (tx, rx) = mpsc::channel();
-                self.info_rx = Some(rx);
                 let bin = input.recycle_bin == Some(node);
-                std::thread::spawn(move || {
+                self.info_rx = Some(Job::spawn((), ctx, move || {
                     let mut tip = info_tip(&tree, node, &settings);
                     if bin && !settings.disable_delete {
                         tip.lines.push(tr!("click-to-empty-recycle-bin"));
                     }
-                    let _ = tx.send(tip);
-                    repaint.request_repaint();
-                });
+                    tip
+                }));
             } else if let (Some(tip), Some(p)) = (self.info.as_ref().filter(|tip| tip.node == node), pointer) {
                 paint_info_tip(&tips, screen, tip, p, s.tip_icon);
             }
@@ -731,27 +709,13 @@ fn push_on_screen(r: Rect, screen: Rect) -> Rect {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use clawback_core::{
-        ROOT,
-        tree::{Kind, NewEntry},
-    };
+    use clawback_core::{ROOT, tree::NewEntry};
     use std::{path::Path, time::Instant};
 
     #[test]
     fn pending_layout_keeps_rendering_matching_snapshot_without_waiting() {
         let mut tree = Tree::new(Path::new("/preview"));
-        tree.add_children(
-            ROOT,
-            vec![NewEntry {
-                name: "visible.bin".into(),
-                kind: Kind::File,
-                size: 100,
-                len: 100,
-                mtime: 0,
-                flags: 0,
-                file_id: None,
-            }],
-        );
+        tree.add_children(ROOT, vec![NewEntry::file("visible.bin", 100)]);
         let tree = Arc::new(tree);
         let settings = Settings::default();
         let input = MapInput {
@@ -790,8 +754,8 @@ mod tests {
         let old_key = map.key.unwrap();
         // Hold the next layout pending indefinitely. The replacement tree has
         // no child #1: painting old boxes against it would panic.
-        let (_tx, rx) = mpsc::channel();
-        map.layout_rx = Some((LayoutKey { generation: 1, ..old_key }, rx));
+        let (_tx, job) = Job::manual(LayoutKey { generation: 1, ..old_key });
+        map.layout_rx = Some(job);
         let replacement = Arc::new(Tree::new(Path::new("/replacement")));
         frame(&mut map, &MapInput { tree: &replacement, generation: 1, ..input });
         assert_eq!(map.boxes, old_boxes);
@@ -802,20 +766,7 @@ mod tests {
     fn replacement_keeps_old_labels_until_atomic_swap() {
         let make_tree = |prefix: &str, count| {
             let mut tree = Tree::new(Path::new("/redraw"));
-            tree.add_children(
-                ROOT,
-                (0..count)
-                    .map(|i| NewEntry {
-                        name: format!("{prefix}-{i}.txt").into(),
-                        kind: Kind::File,
-                        size: 100,
-                        len: 100,
-                        mtime: 0,
-                        flags: 0,
-                        file_id: None,
-                    })
-                    .collect(),
-            );
+            tree.add_children(ROOT, (0..count).map(|i| NewEntry::file(format!("{prefix}-{i}.txt"), 100)).collect());
             Arc::new(tree)
         };
         let old = make_tree("old", 1);
@@ -916,29 +867,16 @@ mod tests {
     fn measure_scene(groups: u64, files: u64) {
         let mut tree = Tree::new(Path::new("/benchmark"));
         for group in 0..groups {
-            let dir = tree.add_children(
-                ROOT,
-                vec![NewEntry {
-                    name: format!("folder-{group}").into(),
-                    kind: Kind::Dir,
-                    size: 0,
-                    len: 0,
-                    mtime: 0,
-                    flags: 0,
-                    file_id: None,
-                }],
-            );
+            let dir = tree.add_children(ROOT, vec![NewEntry::dir(format!("folder-{group}"))]);
             tree.add_children(
                 dir.start,
                 (0..files)
                     .map(|file| NewEntry {
-                        name: format!("document-{group}-{file}-with-a-descriptive-name.bin").into(),
-                        kind: Kind::File,
-                        size: 128 + file * 32,
-                        len: 128 + file * 32,
                         mtime: 1_700_000_000,
-                        flags: 0,
-                        file_id: None,
+                        ..NewEntry::file(
+                            format!("document-{group}-{file}-with-a-descriptive-name.bin"),
+                            128 + file * 32,
+                        )
                     })
                     .collect(),
             );

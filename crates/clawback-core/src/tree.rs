@@ -167,6 +167,18 @@ pub struct NewEntry {
     pub file_id: Option<FileId>,
 }
 
+impl NewEntry {
+    /// A plain file whose allocated and logical sizes are both `size`.
+    pub fn file(name: impl Into<OsString>, size: u64) -> Self {
+        NewEntry { name: name.into(), kind: Kind::File, size, len: size, mtime: 0, flags: 0, file_id: None }
+    }
+
+    /// A plain directory; its size is the total of what is later added below it.
+    pub fn dir(name: impl Into<OsString>) -> Self {
+        NewEntry { name: name.into(), kind: Kind::Dir, size: 0, len: 0, mtime: 0, flags: 0, file_id: None }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct Tree {
     nodes: Nodes,
