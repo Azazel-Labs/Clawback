@@ -41,6 +41,7 @@ impl Doc {
     fn free_space(&self) -> u64 {
         self.disk.as_ref().map_or(0, |d| d.free)
     }
+    #[cfg_attr(not(windows), allow(clippy::unused_self))] // Only Windows has a drive-level Recycle Bin.
     fn recycle_bin(&self) -> Option<NodeId> {
         #[cfg(windows)]
         return crate::recycle_bin::find(&self.tree, self.is_mount);
