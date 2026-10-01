@@ -1,4 +1,4 @@
-# Interface do Clawback em português de Portugal. Não altere os IDs nem os nomes das variáveis.
+# Clawback GUI messages. Keep message IDs and variable names unchanged.
 
 ok = { "   OK   " }
 of-scan = % DA VERIFICAÇÃO
@@ -34,6 +34,11 @@ date-time = Data / hora
 delay = Atraso:
 delete = Eliminar
 deleting = { "A eliminar…\u000A" }{ $path }
+delete-preparing = Preparing to recycle…
+delete-recycling = Moving to Recycle Bin…
+delete-updating = Updating disk map…
+delete-details = { $size } · { $seconds }s elapsed
+delete-worker-stopped = The recycling worker stopped unexpectedly. Check the selected item before trying again.
 density = Densidade:
 design-document = Documento de design
 directories = Pastas
@@ -59,7 +64,6 @@ file-size = Tamanho do ficheiro
 file-types = Tipos de ficheiro
 filename = Nome do ficheiro
 files-2 = Ficheiros:
-# Em português de Portugal, só 1 usa o singular; 0 usa o plural.
 contents-count =
     { $files ->
         [one] { $files } ficheiro
@@ -81,13 +85,13 @@ hidden = Oculto
 horz = Horiz.
 icon = Ícone
 image = Imagem
+language = Língua
+korean = Coreano
 japanese = Japonês
 italian = Italiano
-korean = Coreano
-language = Língua
 polish = Polaco
-portuguese-brazil = Português do Brasil
 russian = Russo
+portuguese-brazil = Português do Brasil
 licensed-under-mit-0-mit-no-attribution-no = Licenciado sob a MIT-0 (MIT No Attribution). Sem qualquer tipo de garantia.
 location = Local:
 lots-of-files = Muitos ficheiros
@@ -200,3 +204,20 @@ thai = Tailandês
 swedish = Sueco
 romanian = Romeno
 hungarian = Húngaro
+turbo-read-progress = Turbo: reading MFT { $percent }% · { $records } records
+turbo-resolving = Turbo: resolving file names…
+turbo-assembling = Turbo: assembling folders · { $files } files
+turbo-sorting = Turbo: sorting results…
+turbo-transferring = Turbo: loading results…
+turbo-main-progress = Showing Turbo progress · validating results…
+turbo-progress-help = Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues.
+settings-appearance = Appearance
+settings-behavior = Behavior
+settings-save = Save changes
+settings-bias-help = Left favors horizontal shapes; center balances them; right favors vertical shapes.
+settings-name-tips = File names
+settings-info-tips = File details
+settings-window = Window & interaction
+settings-deletion = Deleting files
+settings-scan-scope = Scan boundaries
+settings-file-sizes = Size accounting
