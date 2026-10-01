@@ -210,3 +210,6 @@ settings-window = Window & interaction
 settings-deletion = Deleting files
 settings-scan-scope = Scan boundaries
 settings-file-sizes = Size accounting
+afrikaans = 아프리칸스어
+catalan = 카탈로니아어
+serbian-cyrillic = 세르비아어, 키릴 문자

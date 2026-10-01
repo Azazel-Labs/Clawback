@@ -41,6 +41,12 @@ fn preferred_catalog(preferences: &[String], available: &[&str]) -> Option<usize
         if code == "C" || code == "POSIX" {
             code = "en".into();
         }
+        // CLDR likely subtags: Serbian is Cyrillic except in Montenegro or when
+        // Latin is requested by script tag or glibc's @latin modifier.
+        let lower = preference.to_ascii_lowercase();
+        let serbian_latin = lower.contains("latn")
+            || lower.contains("@latin")
+            || lower.split(['-', '_', '.', '@']).nth(1) == Some("me");
         loop {
             if let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case(&code)) {
                 return Some(index);
@@ -107,6 +113,12 @@ fn preferred_catalog(preferences: &[String], available: &[&str]) -> Option<usize
             {
                 return Some(index);
             }
+            if !serbian_latin
+                && matches!(code.to_ascii_lowercase().as_str(), "sr" | "sr-rs" | "sr-ba" | "sr-xk")
+                && let Some(index) = available.iter().position(|c| c.eq_ignore_ascii_case("sr-Cyrl"))
+            {
+                return Some(index);
+            }
             let Some(end) = code.rfind('-') else { break };
             code.truncate(end);
         }
@@ -149,6 +161,9 @@ pub fn language_name(code: &str) -> String {
         "sv" => ("Svenska", tr!("swedish")),
         "ro" => ("Română", tr!("romanian")),
         "hu" => ("Magyar", tr!("hungarian")),
+        "af" => ("Afrikaans", tr!("afrikaans")),
+        "ca" => ("Català", tr!("catalan")),
+        "sr-Cyrl" => ("Српски, ћирилица", tr!("serbian-cyrillic")),
         _ => return code.to_owned(),
     };
     format!("{native} ({translated})")
@@ -485,6 +500,11 @@ mod tests {
             ("sv-FI", "sv", "Avbryt"),
             ("ro-MD", "ro", "Anulează"),
             ("hu-HU", "hu", "Mégse"),
+            ("af-ZA", "af", "Kanselleer"),
+            ("ca-ES", "ca", "Cancel·la"),
+            ("ca_AD.UTF-8", "ca", "Cancel·la"),
+            ("sr-Cyrl-RS", "sr-Cyrl", "Откажи"),
+            ("sr_RS.UTF-8", "sr-Cyrl", "Откажи"),
         ] {
             let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("embedded locale");
             assert_eq!(LANGUAGES[index], code);
@@ -510,6 +530,9 @@ mod tests {
                 "swedish",
                 "romanian",
                 "hungarian",
+                "afrikaans",
+                "catalan",
+                "serbian-cyrillic",
             ] {
                 assert_ne!(language.get(id), id, "{code}: untranslated language name");
             }
@@ -541,6 +564,19 @@ mod tests {
     }
 
     #[test]
+    fn serbian_defaults_to_cyrillic_but_never_for_latin_preferences() {
+        for locale in ["sr", "sr-RS", "sr_RS.UTF-8", "sr-BA", "sr-XK", "sr-Cyrl", "sr-Cyrl-ME"] {
+            let index = preferred_catalog(&[locale.into()], LANGUAGES).expect("Serbian Cyrillic");
+            assert_eq!(LANGUAGES[index], "sr-Cyrl", "{locale}");
+        }
+        for locale in ["sr-Latn", "sr-Latn-RS", "sr_RS@latin", "sr_RS.UTF-8@latin", "sr-ME", "sr_ME.UTF-8"] {
+            assert_eq!(preferred_catalog(&[locale.into()], LANGUAGES), None, "{locale}");
+        }
+        let index = preferred_catalog(&["sr-Latn-RS".into(), "en-US".into()], LANGUAGES).expect("English fallback");
+        assert_eq!(LANGUAGES[index], "en");
+    }
+
+    #[test]
     fn new_catalog_integer_plural_rules() {
         for (code, counts, files, folders, workers) in [
             ("uk", &[1, 21, 101][..], "файл", "тека", "паралельне завдання"),
@@ -555,6 +591,13 @@ mod tests {
             ("sv", &[0, 2][..], "filer", "mappar", "samtidiga uppgifter"),
             ("tr", &[0, 1, 2, 21][..], "dosya", "klasör", "eşzamanlı görev"),
             ("hu", &[0, 1, 2, 21][..], "fájl", "mappa", "párhuzamos feladat"),
+            ("af", &[1][..], "lêer", "vouer", "gelyktydige taak"),
+            ("af", &[0, 2][..], "lêers", "vouers", "gelyktydige take"),
+            ("ca", &[1][..], "fitxer", "carpeta", "tasca simultània"),
+            ("ca", &[0, 2][..], "fitxers", "carpetes", "tasques simultànies"),
+            ("sr-Cyrl", &[1, 21, 101][..], "датотека", "фасцикла", "истовремени задатак"),
+            ("sr-Cyrl", &[2, 4, 22][..], "датотеке", "фасцикле", "истовремена задатка"),
+            ("sr-Cyrl", &[0, 5, 11, 12, 111][..], "датотека", "фасцикли", "истовремених задатака"),
             ("id", &[0, 1, 2][..], "berkas", "folder", "tugas bersamaan"),
             ("vi", &[0, 1, 2][..], "tệp", "thư mục", "tác vụ đồng thời"),
             ("th", &[0, 1, 2][..], "ไฟล์", "โฟลเดอร์", "งานพร้อมกัน"),

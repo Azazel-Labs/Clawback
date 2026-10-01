@@ -188,3 +188,6 @@ thai = ไทย
 swedish = สวีเดน
 romanian = โรมาเนีย
 hungarian = ฮังการี
+afrikaans = แอฟริกานส์
+catalan = คาตาลัน
+serbian-cyrillic = เซอร์เบีย ซีริลลิก

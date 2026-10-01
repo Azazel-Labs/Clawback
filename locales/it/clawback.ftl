@@ -218,3 +218,6 @@ settings-window = Finestra & interazione
 settings-deletion = Eliminazione file
 settings-scan-scope = Scansione dei confini
 settings-file-sizes = Contabilità delle dimensioni
+afrikaans = Afrikaans
+catalan = Catalano
+serbian-cyrillic = Serbo, cirillico
