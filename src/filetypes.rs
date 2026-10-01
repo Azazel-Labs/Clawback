@@ -1,7 +1,7 @@
 //! Selection-scoped extension totals, prepared on one worker and virtualized in the UI.
 mod cache;
 use crate::i18n::tr;
-use crate::{background::retire, theme};
+use crate::{background::retire, filetype_icons::Icons, theme};
 use clawback_core::{NodeId, Tree, format, tree::flags};
 use eframe::egui::{self, Align2, FontId, Sense, Ui, vec2};
 use std::{
@@ -15,11 +15,30 @@ use std::{
     time::{Duration, Instant},
 };
 
+/// Shown, untranslated, in place of an extension for files without one.
+pub(crate) const NO_EXTENSION: &str = "(none)";
+
+const ROW_HEIGHT: f32 = 22.0;
+/// Narrower lists drop the description column, which starts `KIND_X` from the left.
+const KIND_MIN_WIDTH: f32 = 420.0;
+const KIND_X: f32 = 98.0;
+/// Right edges of the share, size and file-count columns, measured from the right.
+const SHARE_RIGHT: f32 = 166.0;
+const SIZE_RIGHT: f32 = 65.0;
+const FILES_RIGHT: f32 = 4.0;
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 struct Key {
     document: u64,
     generation: u64,
     scope: NodeId,
+}
+
+impl Key {
+    /// The same folder of the same document, possibly from another snapshot.
+    fn same_scope(self, other: Self) -> bool {
+        self.document == other.document && self.scope == other.scope
+    }
 }
 
 struct Row {
@@ -43,7 +62,7 @@ struct Pending {
 #[derive(Default)]
 pub struct FileTypes {
     cache: cache::Cache,
-    icons: crate::filetype_icons::Icons,
+    icons: Icons,
     displayed: Option<Key>,
     summary: Option<Summary>,
     pending: Option<Pending>,
@@ -80,14 +99,32 @@ impl FileTypes {
         let _span = crate::perf::span("ui.file_types");
         self.icons.begin_frame(ui.ctx());
         let key = Key { document, generation, scope };
+        self.sync(ui.ctx(), tree, key);
+        let updating = self.stale_since.is_some_and(|since| since.elapsed() >= Duration::from_millis(600));
+        let width = self.paint_header(ui, updating);
+        let Some(summary) = &self.summary else { return };
+        // Keep the previous folder's or snapshot's rows, dimmed, until the new summary is ready.
+        if !self.displayed.is_some_and(|shown| shown.same_scope(key)) {
+            ui.multiply_opacity(0.55);
+        }
+        if summary.rows.is_empty() {
+            ui.weak(tr!("no-files-in-this-folder"));
+            return;
+        }
+        paint_rows(ui, &mut self.icons, summary, width);
+    }
+
+    /// Collect finished work, reuse cached totals, and start a worker when `key` needs one.
+    fn sync(&mut self, ctx: &egui::Context, tree: &Arc<Tree>, key: Key) {
         self.cache.prepare(key);
         if let Some(pending) = &self.pending {
-            if pending.key.document != document || pending.key.scope != scope {
+            let current = pending.key.same_scope(key);
+            if !current {
                 pending.cancel.store(true, Ordering::Relaxed);
             }
             match pending.rx.try_recv() {
                 Ok(summary) => {
-                    if pending.key.document == document && pending.key.scope == scope {
+                    if current {
                         let completed = pending.key;
                         self.show_summary(completed, summary);
                     } else {
@@ -108,16 +145,16 @@ impl FileTypes {
             self.show_summary(key, summary);
             crate::perf::instant("file_types.cache_hit");
         }
-        let same_scope = self.displayed.is_some_and(|old| old.document == document && old.scope == scope);
+        let same_scope = self.displayed.is_some_and(|shown| shown.same_scope(key));
         let ready = self.last_started.is_none_or(|at| at.elapsed() >= Duration::from_millis(750));
         if self.pending.is_none() && self.displayed != Some(key) && (!same_scope || ready) {
             let tree = tree.clone();
-            let repaint = ui.ctx().clone();
+            let repaint = ctx.clone();
             let (tx, rx) = mpsc::channel();
             let cancel = Arc::new(AtomicBool::new(false));
             let worker_cancel = cancel.clone();
             std::thread::spawn(move || {
-                if let Some(summary) = summarize(&tree, scope, &worker_cancel) {
+                if let Some(summary) = summarize(&tree, key.scope, &worker_cancel) {
                     let _ = tx.send(summary);
                 }
                 repaint.request_repaint();
@@ -129,8 +166,12 @@ impl FileTypes {
             self.stale_since = None;
         } else {
             self.stale_since.get_or_insert_with(Instant::now);
+            ctx.request_repaint_after(Duration::from_millis(200));
         }
-        let updating = self.stale_since.is_some_and(|since| since.elapsed() >= Duration::from_millis(600));
+    }
+
+    /// The title row and column labels; returns the list width.
+    fn paint_header(&self, ui: &mut Ui, updating: bool) -> f32 {
         ui.spacing_mut().item_spacing.y = 4.0;
         ui.horizontal(|ui| {
             ui.strong(tr!("file-types"));
@@ -141,16 +182,13 @@ impl FileTypes {
                 ui.weak(tr!("updating"));
             }
         });
-        if self.displayed != Some(key) {
-            ui.ctx().request_repaint_after(Duration::from_millis(200));
-        }
         let (header, _) = ui.allocate_exact_size(vec2(ui.available_width(), 20.0), Sense::hover());
         ui.painter().rect_filled(header, 3.0, theme::BG);
         let width = header.width();
         let font = FontId::proportional(11.0);
-        if width > 420.0 {
+        if width > KIND_MIN_WIDTH {
             ui.painter().text(
-                header.left_center() + vec2(98.0, 0.0),
+                header.left_center() + vec2(KIND_X, 0.0),
                 Align2::LEFT_CENTER,
                 tr!("file-type"),
                 font.clone(),
@@ -159,78 +197,74 @@ impl FileTypes {
         }
         for (x, align, label) in [
             (6.0, Align2::LEFT_CENTER, tr!("type")),
-            (width - 166.0, Align2::RIGHT_CENTER, "%".to_owned()),
-            (width - 65.0, Align2::RIGHT_CENTER, tr!("size")),
-            (width - 4.0, Align2::RIGHT_CENTER, tr!("files")),
+            (width - SHARE_RIGHT, Align2::RIGHT_CENTER, "%".to_owned()),
+            (width - SIZE_RIGHT, Align2::RIGHT_CENTER, tr!("size")),
+            (width - FILES_RIGHT, Align2::RIGHT_CENTER, tr!("files")),
         ] {
             ui.painter().text(header.left_center() + vec2(x, 0.0), align, label, font.clone(), theme::MUTED);
         }
-        let Some(summary) = &self.summary else { return };
-        // Keep the previous folder's or snapshot's rows, dimmed, until the new summary is ready.
-        if !same_scope {
-            ui.multiply_opacity(0.55);
-        }
-        if summary.rows.is_empty() {
-            ui.weak(tr!("no-files-in-this-folder"));
-            return;
-        }
-        ui.scope(|ui| {
-            ui.spacing_mut().item_spacing.y = 0.0;
-            egui::ScrollArea::vertical().id_salt("file-type-rows").auto_shrink([false, false]).show_rows(
-                ui,
-                22.0,
-                summary.rows.len(),
-                |ui, range| {
-                    for index in range {
-                        let row = &summary.rows[index];
-                        let (rect, response) = ui.allocate_exact_size(vec2(ui.available_width(), 22.0), Sense::hover());
-                        ui.painter().rect_filled(
-                            rect,
-                            0.0,
-                            if index % 2 == 0 { theme::NAVIGATOR } else { theme::ROW_ALT },
-                        );
-                        let mut bar = rect.shrink2(vec2(0.0, 3.0));
-                        bar.max.x = bar.min.x + bar.width() * row.fraction;
-                        ui.painter().rect_filled(bar, 2.0, theme::ACCENT.gamma_multiply(0.10));
-                        let icon_rect =
-                            egui::Rect::from_center_size(rect.left_center() + vec2(12.0, 0.0), vec2(16.0, 16.0));
-                        self.icons.paint(ui, icon_rect, &row.extension);
-                        let mut name_rect = rect;
-                        name_rect.max.x = (rect.right() - 210.0).max(rect.left());
-                        if width > 420.0 {
-                            let mut description_rect = name_rect;
-                            description_rect.min.x += 98.0;
-                            ui.painter().with_clip_rect(description_rect).text(
-                                description_rect.left_center(),
-                                Align2::LEFT_CENTER,
-                                &row.kind,
-                                FontId::proportional(12.0),
-                                theme::MUTED,
-                            );
-                            name_rect.max.x = name_rect.max.x.min(rect.left() + 92.0);
-                        }
-                        ui.painter().with_clip_rect(name_rect).text(
-                            rect.left_center() + vec2(26.0, 0.0),
+        width
+    }
+}
+
+/// Virtualized rows below a header of the same `width`.
+fn paint_rows(ui: &mut Ui, icons: &mut Icons, summary: &Summary, width: f32) {
+    let font = FontId::proportional(12.0);
+    ui.scope(|ui| {
+        ui.spacing_mut().item_spacing.y = 0.0;
+        egui::ScrollArea::vertical().id_salt("file-type-rows").auto_shrink([false, false]).show_rows(
+            ui,
+            ROW_HEIGHT,
+            summary.rows.len(),
+            |ui, range| {
+                for index in range {
+                    let row = &summary.rows[index];
+                    let (rect, response) =
+                        ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::hover());
+                    ui.painter().rect_filled(rect, 0.0, if index % 2 == 0 { theme::NAVIGATOR } else { theme::ROW_ALT });
+                    let mut bar = rect.shrink2(vec2(0.0, 3.0));
+                    bar.max.x = bar.min.x + bar.width() * row.fraction;
+                    ui.painter().rect_filled(bar, 2.0, theme::ACCENT.gamma_multiply(0.10));
+                    let icon_rect =
+                        egui::Rect::from_center_size(rect.left_center() + vec2(12.0, 0.0), vec2(16.0, 16.0));
+                    icons.paint(ui, icon_rect, &row.extension);
+                    let mut name_rect = rect;
+                    name_rect.max.x = (rect.right() - 210.0).max(rect.left());
+                    if width > KIND_MIN_WIDTH {
+                        let mut description_rect = name_rect;
+                        description_rect.min.x += KIND_X;
+                        ui.painter().with_clip_rect(description_rect).text(
+                            description_rect.left_center(),
                             Align2::LEFT_CENTER,
-                            &row.extension,
-                            FontId::proportional(12.0),
+                            &row.kind,
+                            font.clone(),
+                            theme::MUTED,
+                        );
+                        name_rect.max.x = name_rect.max.x.min(rect.left() + KIND_X - 6.0);
+                    }
+                    ui.painter().with_clip_rect(name_rect).text(
+                        rect.left_center() + vec2(26.0, 0.0),
+                        Align2::LEFT_CENTER,
+                        &row.extension,
+                        font.clone(),
+                        theme::TEXT,
+                    );
+                    for (offset, text) in
+                        [(SHARE_RIGHT, &row.share), (SIZE_RIGHT, &row.size), (FILES_RIGHT, &row.files)]
+                    {
+                        ui.painter().text(
+                            rect.right_center() - vec2(offset, 0.0),
+                            Align2::RIGHT_CENTER,
+                            text,
+                            font.clone(),
                             theme::TEXT,
                         );
-                        for (offset, text) in [(166.0, &row.share), (65.0, &row.size), (4.0, &row.files)] {
-                            ui.painter().text(
-                                rect.right_center() - vec2(offset, 0.0),
-                                Align2::RIGHT_CENTER,
-                                text,
-                                FontId::proportional(12.0),
-                                theme::TEXT,
-                            );
-                        }
-                        response.on_hover_text(format!("{} — {}", row.extension, row.kind));
                     }
-                },
-            );
-        });
-    }
+                    response.on_hover_text(format!("{} — {}", row.extension, row.kind));
+                }
+            },
+        );
+    });
 }
 
 fn type_name(extension: &str) -> String {
@@ -248,7 +282,7 @@ fn type_name(extension: &str) -> String {
         ".pak" => tr!("game-archive"),
         ".bin" => tr!("binary-data"),
         ".fig" => tr!("design-document"),
-        "(none)" => tr!("no-extension"),
+        NO_EXTENSION => tr!("no-extension"),
         _ => tr!("file"),
     }
 }
@@ -258,6 +292,8 @@ fn summarize(tree: &Tree, scope: NodeId, cancel: &AtomicBool) -> Option<Summary>
     let mut counts = HashMap::<String, (u64, u64)>::new();
     let mut stack = vec![scope];
     let mut total = 0_u64;
+    // Reused for every file; only a new extension allocates its map key.
+    let mut extension = String::new();
     while let Some(id) = stack.pop() {
         if cancel.load(Ordering::Relaxed) {
             return None;
@@ -270,13 +306,25 @@ fn summarize(tree: &Tree, scope: NodeId, cancel: &AtomicBool) -> Option<Summary>
             stack.extend(node.children.iter().copied());
             continue;
         }
-        let extension = Path::new(&node.name)
-            .extension()
-            .filter(|ext| !ext.is_empty())
-            .map_or_else(|| "(none)".to_owned(), |ext| format!(".{}", ext.to_string_lossy().to_lowercase()));
-        let entry = counts.entry(extension).or_default();
-        entry.0 = entry.0.saturating_add(node.size);
-        entry.1 += 1;
+        extension.clear();
+        match Path::new(&node.name).extension().filter(|ext| !ext.is_empty()) {
+            Some(ext) => {
+                extension.push('.');
+                extension.push_str(&ext.to_string_lossy());
+                if extension.is_ascii() {
+                    extension.make_ascii_lowercase();
+                } else {
+                    extension = extension.to_lowercase();
+                }
+            }
+            None => extension.push_str(NO_EXTENSION),
+        }
+        if let Some((bytes, files)) = counts.get_mut(extension.as_str()) {
+            *bytes = bytes.saturating_add(node.size);
+            *files += 1;
+        } else {
+            counts.insert(extension.clone(), (node.size, 1));
+        }
         total = total.saturating_add(node.size);
     }
     let mut entries: Vec<_> = counts.into_iter().collect();
@@ -330,7 +378,7 @@ mod tests {
         assert_eq!(summary.rows[0].files, "2");
         assert_eq!(summary.rows[0].size, format::size(100));
         assert_eq!(summary.rows[0].share, format::percent(100, 110));
-        assert_eq!(summary.rows[1].extension, "(none)");
+        assert_eq!(summary.rows[1].extension, NO_EXTENSION);
         assert!(summarize(&tree, ROOT, &AtomicBool::new(true)).is_none());
     }
 }

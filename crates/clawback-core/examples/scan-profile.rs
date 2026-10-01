@@ -12,6 +12,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if cfg!(debug_assertions) {
         eprintln!("WARNING: unoptimized build; use --release for comparisons");
     }
+    let mode: profiling::Mode = args[2].parse()?;
     let options = ScanOptions {
         storage: match args.get(7).map_or("unknown", String::as_str) {
             "unknown" => clawback_core::adaptive::StorageKind::Unknown,
@@ -29,7 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     println!("{}", profiling::header());
     for _ in 0..args[4].parse::<usize>()? {
-        println!("{}", profiling::run(Path::new(&args[1]), &args[2], &options, Duration::from_secs(args[6].parse()?))?);
+        println!("{}", profiling::run(Path::new(&args[1]), mode, &options, Duration::from_secs(args[6].parse()?))?);
     }
     Ok(())
 }

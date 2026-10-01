@@ -3,13 +3,25 @@
 use crate::i18n::tr;
 use crate::{background::retire, theme};
 use clawback_core::{NodeId, ROOT, Tree, format, tree::flags};
-use eframe::egui::{self, Align2, FontId, Pos2, Rect, Sense, Ui, vec2};
+use eframe::egui::{self, Align2, Color32, FontId, Pos2, Rect, Sense, Ui, vec2};
 use std::{
     collections::HashSet,
     sync::{Arc, mpsc},
 };
 
 const ROW_HEIGHT: f32 = 22.0;
+/// Right edges of the size and share columns, measured from the row's right.
+const SIZE_RIGHT: f32 = 80.0;
+const SHARE_RIGHT: f32 = 8.0;
+/// Room kept clear of the name for the two right-aligned columns.
+const COLUMNS_WIDTH: f32 = 168.0;
+
+/// Paint the right-aligned size and share columns of a header or row.
+fn paint_columns(p: &egui::Painter, rect: Rect, size: &str, share: &str, font: &FontId, size_color: Color32) {
+    for (right, text, color) in [(SIZE_RIGHT, size, size_color), (SHARE_RIGHT, share, theme::MUTED)] {
+        p.text(rect.right_center() - vec2(right, 0.0), Align2::RIGHT_CENTER, text, font.clone(), color);
+    }
+}
 
 struct Row {
     node: NodeId,
@@ -68,9 +80,7 @@ impl DirectoryView {
             self.revision += 1;
             self.displayed = None;
             retire(std::mem::take(&mut self.rows));
-            if let Some(pending) = self.pending.take() {
-                retire(pending);
-            }
+            retire(self.pending.take());
         }
         self.scanning = scanning;
         if self.focused != Some(view) {
@@ -130,20 +140,8 @@ impl DirectoryView {
             font.clone(),
             theme::MUTED,
         );
-        ui.painter().text(
-            header.right_center() - vec2(80.0, 0.0),
-            Align2::RIGHT_CENTER,
-            tr!("size"),
-            font.clone(),
-            theme::MUTED,
-        );
-        ui.painter().text(
-            header.right_center() - vec2(8.0, 0.0),
-            Align2::RIGHT_CENTER,
-            tr!("of-scan"),
-            font,
-            theme::MUTED,
-        );
+        paint_columns(ui.painter(), header, &tr!("size"), &tr!("of-scan"), &font, theme::MUTED);
+        let font = FontId::proportional(12.0);
         let enabled = !scanning && self.displayed == Some(key);
         let mut selected = None;
         let mut toggle = None;
@@ -169,7 +167,7 @@ impl DirectoryView {
                     let p = ui.painter();
                     p.rect_filled(rect, 0.0, if index % 2 == 0 { theme::NAVIGATOR } else { theme::ROW_ALT });
                     if row.node == view {
-                        p.rect_filled(rect, 3.0, egui::Color32::from_rgb(43, 61, 78));
+                        p.rect_filled(rect, 3.0, theme::CURRENT_ROW);
                         p.rect_filled(Rect::from_min_size(rect.min, vec2(3.0, rect.height())), 1.0, theme::ACCENT);
                     } else if response.hovered() {
                         p.rect_filled(rect, 3.0, theme::PANEL_EDGE);
@@ -187,29 +185,16 @@ impl DirectoryView {
                     }
                     let text = Rect::from_min_max(
                         Pos2::new(arrow.max.x, rect.min.y),
-                        Pos2::new((rect.max.x - 168.0).max(arrow.max.x), rect.max.y),
+                        Pos2::new((rect.max.x - COLUMNS_WIDTH).max(arrow.max.x), rect.max.y),
                     );
                     p.with_clip_rect(text.intersect(ui.clip_rect())).text(
                         text.left_center(),
                         Align2::LEFT_CENTER,
                         &row.name,
-                        FontId::proportional(12.0),
+                        font.clone(),
                         theme::TEXT,
                     );
-                    p.text(
-                        rect.right_center() - vec2(80.0, 0.0),
-                        Align2::RIGHT_CENTER,
-                        &row.size,
-                        FontId::proportional(12.0),
-                        theme::TEXT,
-                    );
-                    p.text(
-                        rect.right_center() - vec2(8.0, 0.0),
-                        Align2::RIGHT_CENTER,
-                        &row.share,
-                        FontId::proportional(12.0),
-                        theme::MUTED,
-                    );
+                    paint_columns(p, rect, &row.size, &row.share, &font, theme::TEXT);
                     if enabled && response.clicked() {
                         if row.expandable && response.interact_pointer_pos().is_some_and(|pos| arrow.contains(pos)) {
                             toggle = Some(row.node);
@@ -233,17 +218,18 @@ impl DirectoryView {
 }
 
 fn flatten(tree: &Tree, expanded: &HashSet<NodeId>) -> Vec<Row> {
+    let visible = |id: NodeId| {
+        let node = tree.node(id);
+        node.is_dir() && !node.has(flags::REMOVED)
+    };
     let mut rows = Vec::new();
     let mut stack = vec![(ROOT, 0)];
     while let Some((id, depth)) = stack.pop() {
-        let node = tree.node(id);
-        if !node.is_dir() || node.has(flags::REMOVED) {
+        if !visible(id) {
             continue;
         }
-        let expandable = node.children.iter().any(|&child| {
-            let n = tree.node(child);
-            n.is_dir() && !n.has(flags::REMOVED)
-        });
+        let node = tree.node(id);
+        let expandable = node.children.iter().any(|&child| visible(child));
         rows.push(Row {
             node: id,
             depth,
@@ -253,9 +239,7 @@ fn flatten(tree: &Tree, expanded: &HashSet<NodeId>) -> Vec<Row> {
             share: format::percent(node.size, tree.root().size),
         });
         if expanded.contains(&id) {
-            stack.extend(
-                node.children.iter().rev().filter(|&&child| tree.node(child).is_dir()).map(|&child| (child, depth + 1)),
-            );
+            stack.extend(node.children.iter().rev().filter(|&&child| visible(child)).map(|&child| (child, depth + 1)));
         }
     }
     rows

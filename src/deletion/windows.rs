@@ -4,15 +4,16 @@
 // The windows::implement macro emits pointer casts and always-inline COM glue.
 #![allow(clippy::ref_as_ptr, clippy::inline_always)]
 use super::{Phase, Progress, Recycled};
+use crate::platform::{Apartment, strip_verbatim, wide};
 use clawback_core::scan::lock;
-use std::{os::windows::ffi::OsStrExt, path::Path, sync::Arc, time::Instant};
+use std::{
+    path::Path,
+    sync::{Arc, Mutex},
+};
 use windows::{
     Win32::{
         Foundation::{E_ABORT, ERROR_CANCELLED},
-        System::Com::{
-            CLSCTX_INPROC_SERVER, COINIT_APARTMENTTHREADED, CoCreateInstance, CoInitializeEx, CoTaskMemFree,
-            CoUninitialize,
-        },
+        System::Com::{CLSCTX_INPROC_SERVER, CoCreateInstance, CoTaskMemFree},
         UI::Shell::{
             COPYENGINE_E_USER_CANCELLED, FOF_ALLOWUNDO, FOF_NO_UI, FOFX_EARLYFAILURE, FOFX_RECYCLEONDELETE,
             FileOperation, IFileOperation, IFileOperationProgressSink, IFileOperationProgressSink_Impl, IShellItem,
@@ -21,10 +22,41 @@ use windows::{
     },
     core::{Error, PCWSTR, implement},
 };
+use windows_core::ComObject;
+
+/// How the shell's callbacks ended the operation, when not simply done.
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum Outcome {
+    /// The user answered no to a shell prompt.
+    Declined,
+    /// Stopped before the shell would delete permanently.
+    TooLarge,
+    Failed(String),
+}
 
 #[implement(IFileOperationProgressSink)]
 struct Sink {
     progress: Arc<Progress>,
+    /// The first outcome wins: a specific item failure over the batch summary.
+    outcome: Mutex<Option<Outcome>>,
+}
+impl Sink {
+    fn new(progress: Arc<Progress>) -> ComObject<Self> {
+        ComObject::new(Self { progress, outcome: Mutex::new(None) })
+    }
+    fn settle(&self, outcome: Outcome) {
+        lock(&self.outcome).get_or_insert(outcome);
+    }
+    fn record(&self, hr: windows_core::HRESULT) {
+        if declined(hr) {
+            self.settle(Outcome::Declined);
+        } else if hr.is_err() {
+            self.settle(Outcome::Failed(Error::from(hr).to_string()));
+        }
+    }
+    fn take_outcome(&self) -> Option<Outcome> {
+        lock(&self.outcome).take()
+    }
 }
 #[allow(non_snake_case)]
 impl IFileOperationProgressSink_Impl for Sink_Impl {
@@ -33,13 +65,7 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         Ok(())
     }
     fn FinishOperations(&self, hrresult: windows_core::HRESULT) -> windows_core::Result<()> {
-        let mut state = lock(&self.progress.state);
-        if declined(hrresult) {
-            state.declined = true;
-        } else if hrresult.is_err() && !state.too_large {
-            // Keep the first, most specific failure over the batch summary.
-            state.error.get_or_insert_with(|| Error::from(hrresult).to_string());
-        }
+        self.record(hrresult);
         Ok(())
     }
     fn PreRenameItem(
@@ -104,22 +130,19 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         if dwflags & TSF_DELETE_RECYCLE_IF_POSSIBLE.0 as u32 == 0 {
             // Too large for the Recycle Bin, or the drive has none: the shell would delete it
             // permanently. Stop first; Clawback asks the user and purges it itself.
-            lock(&self.progress.state).too_large = true;
+            self.settle(Outcome::TooLarge);
             return Err(Error::from(E_ABORT));
         }
-        let mut last = lock(&self.progress.last_item);
-        if last.is_none_or(|time| time.elapsed().as_millis() >= 100) {
-            *last = Some(Instant::now());
-            if let Some(item) = psiitem.as_ref() {
-                // SAFETY: COM supplies a live item for this callback; returned text is task-allocated.
-                if let Ok(text) = unsafe { item.GetDisplayName(SIGDN_FILESYSPATH) } {
-                    // SAFETY: GetDisplayName returned a terminated UTF-16 allocation.
-                    let name = unsafe { text.to_string() }.unwrap_or_default();
-                    // SAFETY: release exactly the allocation returned by GetDisplayName.
-                    unsafe { CoTaskMemFree(Some(text.0.cast())) };
-                    lock(&self.progress.state).current = name;
-                }
-            }
+        if self.progress.due()
+            && let Some(item) = psiitem.as_ref()
+            // SAFETY: COM supplies a live item for this callback; returned text is task-allocated.
+            && let Ok(text) = unsafe { item.GetDisplayName(SIGDN_FILESYSPATH) }
+        {
+            // SAFETY: GetDisplayName returned a terminated UTF-16 allocation.
+            let name = unsafe { text.to_string() }.unwrap_or_default();
+            // SAFETY: release exactly the allocation returned by GetDisplayName.
+            unsafe { CoTaskMemFree(Some(text.0.cast())) };
+            lock(&self.progress.state).current = name;
         }
         Ok(())
     }
@@ -130,12 +153,7 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         hrdelete: windows_core::HRESULT,
         _psinewlycreated: windows_core::Ref<'_, IShellItem>,
     ) -> windows_core::Result<()> {
-        let mut state = lock(&self.progress.state);
-        if declined(hrdelete) {
-            state.declined = true;
-        } else if hrdelete.is_err() && !state.too_large {
-            state.error.get_or_insert_with(|| Error::from(hrdelete).to_string());
-        }
+        self.record(hrdelete);
         Ok(())
     }
     fn PreNewItem(
@@ -174,13 +192,6 @@ impl IFileOperationProgressSink_Impl for Sink_Impl {
         Ok(())
     }
 }
-struct Apartment;
-impl Drop for Apartment {
-    fn drop(&mut self) {
-        // SAFETY: balanced successful initialization on this same worker thread.
-        unsafe { CoUninitialize() };
-    }
-}
 /// Answering no to a shell prompt, such as the permanent-delete warning.
 fn declined(hr: windows_core::HRESULT) -> bool {
     hr == COPYENGINE_E_USER_CANCELLED || hr == ERROR_CANCELLED.to_hresult()
@@ -188,38 +199,27 @@ fn declined(hr: windows_core::HRESULT) -> bool {
 
 /// Errors are display text that already carries its code.
 pub fn recycle(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String> {
-    let result = perform(path, progress);
-    let snapshot = progress.snapshot();
-    if snapshot.too_large {
-        return Ok(Recycled::TooLarge);
-    }
-    if let Some(error) = snapshot.error {
-        return Err(error);
-    }
-    match result {
-        Err(error) if declined(error.code()) => Ok(Recycled::Declined),
-        Err(error) => Err(error.to_string()),
-        Ok(()) if snapshot.declined => Ok(Recycled::Declined),
-        Ok(()) => Ok(Recycled::Done),
+    let sink = Sink::new(progress.clone());
+    let result = perform(path, &sink);
+    match (sink.take_outcome(), result) {
+        // Stopped on purpose; the shell's resulting failure is expected.
+        (Some(Outcome::TooLarge), _) => Ok(Recycled::TooLarge),
+        (Some(Outcome::Failed(error)), _) => Err(error),
+        (_, Err(error)) if declined(error.code()) => Ok(Recycled::Declined),
+        (_, Err(error)) => Err(error.to_string()),
+        (Some(Outcome::Declined), Ok(_)) => Ok(Recycled::Declined),
+        (None, Ok(true)) => Err(Error::new(E_ABORT, "Recycling was cancelled or could not complete").to_string()),
+        (None, Ok(false)) => Ok(Recycled::Done),
     }
 }
 
-fn perform(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<()> {
-    // SAFETY: the caller uses a dedicated background thread; no existing COM apartment.
-    unsafe { CoInitializeEx(None, COINIT_APARTMENTTHREADED) }.ok()?;
-    let _apartment = Apartment;
+/// Runs the shell operation; true when any of it was aborted.
+fn perform(path: &Path, sink: &ComObject<Sink>) -> windows::core::Result<bool> {
+    // The caller uses a dedicated background thread with no existing COM apartment.
+    let _apartment = Apartment::enter()?;
     let absolute = std::path::absolute(path).map_err(|error| Error::new(E_ABORT, error.to_string()))?;
-    let mut wide: Vec<u16> = absolute.as_os_str().encode_wide().collect();
-    let prefix: Vec<u16> = r"\\?\".encode_utf16().collect();
-    let unc: Vec<u16> = r"\\?\UNC\".encode_utf16().collect();
-    if wide.starts_with(&unc) {
-        wide.drain(..6);
-        wide[0] = u16::from(b'\\');
-    } else if wide.starts_with(&prefix) && wide.get(5) == Some(&u16::from(b':')) {
-        wide.drain(..4);
-    }
-    wide.push(0);
-    let sink: IFileOperationProgressSink = Sink { progress: progress.clone() }.into();
+    let wide = wide(strip_verbatim(&absolute).as_os_str());
+    let sink: IFileOperationProgressSink = sink.to_interface();
     // SAFETY: COM is initialized on this thread.
     let operation: IFileOperation = unsafe { CoCreateInstance(&FileOperation, None, CLSCTX_INPROC_SERVER) }?;
     // SAFETY: the operation is live and all supplied flags are documented shell flags.
@@ -238,26 +238,21 @@ fn perform(path: &Path, progress: &Arc<Progress>) -> windows::core::Result<()> {
     let aborted = unsafe { operation.GetAnyOperationsAborted() };
     // SAFETY: cookie belongs to this operation and was successfully registered above.
     let _ = unsafe { operation.Unadvise(cookie) };
-    let snapshot = progress.snapshot();
-    if snapshot.too_large {
-        return Ok(()); // Stopped on purpose; the shell's resulting failure is expected.
-    }
     result?;
-    if aborted?.as_bool() && !snapshot.declined {
-        return Err(Error::new(E_ABORT, "Recycling was cancelled or could not complete"));
-    }
-    Ok(())
+    Ok(aborted?.as_bool())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::Instant;
     use windows::Win32::Foundation::E_ACCESSDENIED;
 
     #[test]
     fn progress_and_permanent_delete_guard() {
         let progress = Arc::new(Progress::default());
-        let sink: IFileOperationProgressSink = Sink { progress: progress.clone() }.into();
+        let object = Sink::new(progress.clone());
+        let sink: IFileOperationProgressSink = object.to_interface();
         // SAFETY: this locally owned sink has no filesystem operation attached.
         unsafe { sink.UpdateProgress(100, 37) }.unwrap();
         assert_eq!(progress.snapshot().done, 37);
@@ -269,31 +264,29 @@ mod tests {
         unsafe { sink.PostDeleteItem(0, None, E_ACCESSDENIED, None) }.unwrap();
         // SAFETY: same locally owned sink.
         unsafe { sink.FinishOperations(E_ABORT) }.unwrap();
-        assert!(progress.snapshot().error.is_some_and(|e| e.contains(&format!("{E_ACCESSDENIED}"))));
+        assert!(matches!(object.take_outcome(), Some(Outcome::Failed(e)) if e.contains(&format!("{E_ACCESSDENIED}"))));
 
         // A permanent delete is stopped before it happens and reported as too large, not failed.
-        let progress = Arc::new(Progress::default());
-        let sink: IFileOperationProgressSink = Sink { progress: progress.clone() }.into();
+        let object = Sink::new(progress);
+        let sink: IFileOperationProgressSink = object.to_interface();
         // SAFETY: absent item is permitted; the guard rejects before reading it.
         assert!(unsafe { sink.PreDeleteItem(0, None) }.is_err());
         // SAFETY: same locally owned sink.
         unsafe { sink.PostDeleteItem(0, None, E_ABORT, None) }.unwrap();
         // SAFETY: same locally owned sink.
         unsafe { sink.FinishOperations(E_ABORT) }.unwrap();
-        let snapshot = progress.snapshot();
-        assert!(snapshot.too_large && snapshot.error.is_none());
+        assert_eq!(object.take_outcome(), Some(Outcome::TooLarge));
     }
 
     #[test]
     fn answering_no_is_not_an_error() {
-        let progress = Arc::new(Progress::default());
-        let sink: IFileOperationProgressSink = Sink { progress: progress.clone() }.into();
+        let object = Sink::new(Arc::new(Progress::default()));
+        let sink: IFileOperationProgressSink = object.to_interface();
         // SAFETY: locally owned sink with no filesystem operation; absent items are permitted.
         unsafe { sink.PostDeleteItem(0, None, COPYENGINE_E_USER_CANCELLED, None) }.unwrap();
         // SAFETY: same locally owned sink.
         unsafe { sink.FinishOperations(ERROR_CANCELLED.to_hresult()) }.unwrap();
-        let snapshot = progress.snapshot();
-        assert!(snapshot.declined && snapshot.error.is_none());
+        assert_eq!(object.take_outcome(), Some(Outcome::Declined));
     }
 
     #[test]

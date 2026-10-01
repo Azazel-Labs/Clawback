@@ -86,6 +86,21 @@ pub enum Kind {
     Other,
 }
 
+impl From<std::fs::FileType> for Kind {
+    /// Symlinks first: they are never followed.
+    fn from(ft: std::fs::FileType) -> Self {
+        if ft.is_symlink() {
+            Kind::Symlink
+        } else if ft.is_dir() {
+            Kind::Dir
+        } else if ft.is_file() {
+            Kind::File
+        } else {
+            Kind::Other
+        }
+    }
+}
+
 /// Bit flags stored on each node.
 pub mod flags {
     /// The directory could not be listed (usually permission denied).
@@ -141,7 +156,7 @@ impl Node {
 }
 
 /// A new entry handed to [`Tree::add_children`].
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct NewEntry {
     pub name: OsString,
     pub kind: Kind,
@@ -303,72 +318,49 @@ impl Tree {
 
     /// Path of `id` relative to `base` (which must be an ancestor), for display.
     pub fn relative_path(&self, base: NodeId, id: NodeId) -> PathBuf {
-        let chain = self.chain(id);
-        let mut p = PathBuf::new();
-        let mut on = false;
-        for &c in &chain {
-            if on {
-                p.push(&*self.nodes[c as usize].name);
-            }
-            if c == base {
-                on = true;
-            }
-        }
-        p
+        self.chain(id).into_iter().skip_while(|&c| c != base).skip(1).map(|c| &*self.nodes[c as usize].name).collect()
+    }
+
+    /// `id`, then its parent, and so on up to the root.
+    pub fn ancestors(&self, id: NodeId) -> impl Iterator<Item = NodeId> + '_ {
+        std::iter::successors(Some(id), |&c| self.parent(c))
+    }
+
+    /// `id` and every node below it, depth first.
+    pub fn descendants(&self, id: NodeId) -> impl Iterator<Item = NodeId> + '_ {
+        let mut stack = vec![id];
+        std::iter::from_fn(move || {
+            let id = stack.pop()?;
+            stack.extend_from_slice(&self.nodes[id as usize].children);
+            Some(id)
+        })
     }
 
     /// Node ids from the root down to (and including) `id`.
     pub fn chain(&self, id: NodeId) -> Vec<NodeId> {
-        let mut v = Vec::new();
-        let mut cur = id;
-        while cur != NO_NODE {
-            v.push(cur);
-            cur = self.nodes[cur as usize].parent;
-        }
+        let mut v: Vec<_> = self.ancestors(id).collect();
         v.reverse();
         v
     }
 
     pub fn depth(&self, id: NodeId) -> usize {
-        let mut d = 0;
-        let mut cur = self.nodes[id as usize].parent;
-        while cur != NO_NODE {
-            d += 1;
-            cur = self.nodes[cur as usize].parent;
-        }
-        d
-    }
-
-    /// True if `ancestor` is `id` or one of its ancestors.
-    pub fn is_ancestor_or_self(&self, ancestor: NodeId, id: NodeId) -> bool {
-        let mut cur = id;
-        while cur != NO_NODE {
-            if cur == ancestor {
-                return true;
-            }
-            cur = self.nodes[cur as usize].parent;
-        }
-        false
+        self.ancestors(id).count() - 1
     }
 
     /// True if the node is still attached to the tree (not deleted or replaced).
     pub fn is_live(&self, id: NodeId) -> bool {
-        let Some(mut n) = self.get(id) else { return false };
-        let mut cur = id;
-        loop {
-            if n.has(flags::REMOVED) {
+        if self.get(id).is_none() {
+            return false;
+        }
+        for cur in self.ancestors(id) {
+            if self.nodes[cur as usize].has(flags::REMOVED) {
                 return false;
             }
             if cur == ROOT {
                 return true;
             }
-            let p = n.parent;
-            if p == NO_NODE {
-                return false;
-            }
-            cur = p;
-            n = &self.nodes[p as usize];
         }
+        false
     }
 
     /// Append `entries` as the children of `parent` and add their sizes to
@@ -443,15 +435,11 @@ impl Tree {
 
     /// After `id`'s size changed, restore size ordering in every list that
     /// contains `id` or one of its ancestors.
-    fn resort_upwards(&mut self, mut id: NodeId) {
+    pub(crate) fn resort_upwards(&mut self, mut id: NodeId) {
         while let Some(p) = self.parent(id) {
             self.sort_children_of(p);
             id = p;
         }
-    }
-
-    pub(crate) fn resort_from(&mut self, id: NodeId) {
-        self.resort_upwards(id);
     }
 
     /// Remove a node (after it was deleted on disk). Returns false if it was
@@ -465,8 +453,7 @@ impl Tree {
             n.flags |= flags::REMOVED;
             (n.size, n.files, n.parent)
         };
-        let kept: Vec<NodeId> = self.nodes[parent as usize].children.iter().copied().filter(|&c| c != id).collect();
-        self.nodes[parent as usize].children = kept;
+        self.nodes[parent as usize].children.retain(|&c| c != id);
         self.sub_up(parent, size, files);
         self.resort_upwards(parent);
         true
@@ -517,8 +504,7 @@ impl Tree {
         let mut stack = vec![under];
         while let Some(id) = stack.pop() {
             let node = &self.nodes[id as usize];
-            let floor = if heap.len() == n { heap.peek().map_or(0, |r| r.0.0) } else { 0 };
-            if node.size <= floor && heap.len() == n {
+            if heap.len() == n && heap.peek().is_some_and(|r| node.size <= r.0.0) {
                 continue; // nothing in here can beat the current top-n
             }
             if node.is_dir() {
@@ -530,23 +516,12 @@ impl Tree {
                 }
             }
         }
-        let mut v: Vec<(u64, NodeId)> = heap.into_iter().map(|Reverse(x)| x).collect();
-        v.sort_unstable_by(|a, b| b.cmp(a));
-        v.into_iter().map(|(_, id)| id).collect()
+        heap.into_sorted_vec().into_iter().map(|Reverse((_, id))| id).collect()
     }
 
     /// Number of directories at or below `under`.
     pub fn dir_count(&self, under: NodeId) -> u64 {
-        let mut count = 0;
-        let mut stack = vec![under];
-        while let Some(id) = stack.pop() {
-            let node = &self.nodes[id as usize];
-            if node.is_dir() {
-                count += 1;
-                stack.extend(node.children.iter().copied());
-            }
-        }
-        count
+        self.descendants(under).filter(|&id| self.nodes[id as usize].is_dir()).count() as u64
     }
 
     /// Find the direct child of `parent` with the given name.
@@ -670,8 +645,12 @@ mod tests {
         let a = t.find_path(Path::new("/r/a")).unwrap();
         assert_eq!(t.relative_path(a, y), PathBuf::from("y"));
         assert_eq!(t.depth(y), 2);
-        assert!(t.is_ancestor_or_self(a, y));
-        assert!(!t.is_ancestor_or_self(y, a));
+        assert_eq!(t.depth(ROOT), 0);
+        assert_eq!(t.chain(y), [ROOT, a, y]);
+        assert_eq!(t.ancestors(y).collect::<Vec<_>>(), [y, a, ROOT]);
+        assert_eq!(t.descendants(a).count(), 3);
+        assert_eq!(t.relative_path(ROOT, y), PathBuf::from("a/y"));
+        assert!(t.relative_path(y, a).as_os_str().is_empty());
     }
 
     #[test]

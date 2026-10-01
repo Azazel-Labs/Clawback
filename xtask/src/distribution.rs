@@ -1,13 +1,14 @@
 //! Generate package-manager metadata from an already-published stable release.
-use crate::{Result, parse_version};
+use crate::{Result, package::exe_name, release::parse_version};
 use std::{collections::BTreeMap, fmt::Write as _, fs, path::Path};
 
+pub const USAGE: &str = "cargo xtask distribution <version> <SHA256SUMS.txt> <output-directory>";
 const REPOSITORY: &str = "https://github.com/Azazel-Labs/Clawback";
+/// Schema version of the generated winget manifests.
+const MANIFEST_VERSION: &str = "1.9.0";
 
 pub fn run(args: &[String]) -> Result<()> {
-    let [tag, checksums, output] = args else {
-        return Err("Usage: cargo xtask distribution <version> <SHA256SUMS.txt> <output-directory>".into());
-    };
+    let [tag, checksums, output] = args else { return Err(crate::usage(USAGE)) };
     let files = generate(tag, &fs::read_to_string(checksums)?)?;
     for (name, content) in files {
         let path = Path::new(output).join(name);
@@ -25,11 +26,15 @@ fn generate(tag: &str, checksums: &str) -> Result<BTreeMap<String, String>> {
     }
     let mut hashes = BTreeMap::new();
     for line in checksums.lines().filter(|line| !line.trim().is_empty()) {
-        let fields: Vec<_> = line.split_whitespace().collect();
-        if fields.len() != 2 || fields[0].len() != 64 || !fields[0].bytes().all(|b| b.is_ascii_hexdigit()) {
-            return Err("Invalid SHA256SUMS.txt entry".into());
-        }
-        if hashes.insert(fields[1].trim_start_matches('*'), fields[0].to_ascii_lowercase()).is_some() {
+        let (hash, name) = line
+            .trim()
+            .split_once(char::is_whitespace)
+            .map(|(hash, name)| (hash, name.trim_start()))
+            .filter(|(hash, name)| {
+                hash.len() == 64 && hash.bytes().all(|b| b.is_ascii_hexdigit()) && !name.contains(char::is_whitespace)
+            })
+            .ok_or("Invalid SHA256SUMS.txt entry")?;
+        if hashes.insert(name.trim_start_matches('*'), hash.to_ascii_lowercase()).is_some() {
             return Err("Duplicate checksum filename".into());
         }
     }
@@ -44,16 +49,18 @@ fn generate(tag: &str, checksums: &str) -> Result<BTreeMap<String, String>> {
         format!("{header}InstallerType: zip\nNestedInstallerType: portable\nCommands:\n- clawback\nInstallers:\n");
     for (architecture, target) in [("x64", "x86_64-pc-windows-msvc"), ("arm64", "aarch64-pc-windows-msvc")] {
         let (stem, url, hash) = asset(target, "zip")?;
+        let exe = exe_name(target);
         writeln!(
             installer,
-            "- Architecture: {architecture}\n  InstallerUrl: {url}\n  InstallerSha256: {hash}\n  NestedInstallerFiles:\n  - RelativeFilePath: {stem}/clawback.exe\n    PortableCommandAlias: clawback"
+            "- Architecture: {architecture}\n  InstallerUrl: {url}\n  InstallerSha256: {hash}\n  NestedInstallerFiles:\n  - RelativeFilePath: {stem}/{exe}\n    PortableCommandAlias: clawback"
         )?;
     }
-    installer.push_str("ManifestType: installer\nManifestVersion: 1.9.0\n");
+    writeln!(installer, "ManifestType: installer\nManifestVersion: {MANIFEST_VERSION}")?;
     let locale = format!(
-        "{header}PackageLocale: en-US\nPublisher: Azazel Labs\nPackageName: Clawback\nLicense: MIT-0\nLicenseUrl: {REPOSITORY}/blob/v{version}/LICENSE\nShortDescription: Disk space visualizer with desktop and terminal interfaces\nPackageUrl: {REPOSITORY}\nManifestType: defaultLocale\nManifestVersion: 1.9.0\n"
+        "{header}PackageLocale: en-US\nPublisher: Azazel Labs\nPackageName: Clawback\nLicense: MIT-0\nLicenseUrl: {REPOSITORY}/blob/v{version}/LICENSE\nShortDescription: Disk space visualizer with desktop and terminal interfaces\nPackageUrl: {REPOSITORY}\nManifestType: defaultLocale\nManifestVersion: {MANIFEST_VERSION}\n"
     );
-    let manifest = format!("{header}DefaultLocale: en-US\nManifestType: version\nManifestVersion: 1.9.0\n");
+    let manifest =
+        format!("{header}DefaultLocale: en-US\nManifestType: version\nManifestVersion: {MANIFEST_VERSION}\n");
     let mut formula = format!(
         "class Clawback < Formula\n  desc \"Disk space visualizer with desktop and terminal interfaces\"\n  homepage \"{REPOSITORY}\"\n  version \"{version}\"\n  license \"MIT-0\"\n  depends_on :macos\n\n  on_macos do\n"
     );
@@ -63,7 +70,9 @@ fn generate(tag: &str, checksums: &str) -> Result<BTreeMap<String, String>> {
     }
     formula.push_str("  end\n\n  def install\n    bin.install \"clawback\"\n    if OS.mac?\n      prefix.install \"Clawback.app\"\n    else\n      share.install Dir[\"share/*\"]\n    end\n  end\n\n  test do\n    assert_match version.to_s, shell_output(\"#{bin}/clawback --version\")\n  end\nend\n");
     let schema = |kind: &str, content: String| {
-        format!("# yaml-language-server: $schema=https://aka.ms/winget-manifest.{kind}.1.9.0.schema.json\n\n{content}")
+        format!(
+            "# yaml-language-server: $schema=https://aka.ms/winget-manifest.{kind}.{MANIFEST_VERSION}.schema.json\n\n{content}"
+        )
     };
     Ok(BTreeMap::from([
         ("winget/AzazelLabs.Clawback.yaml".into(), schema("version", manifest)),

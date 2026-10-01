@@ -5,7 +5,7 @@ use clawback_core::{
     layout::{DisplayBox, Item},
     palette,
 };
-use eframe::egui::{self, Color32, FontId, Mesh, Pos2, Rect, Shape, Vec2, vec2};
+use eframe::egui::{self, Color32, FontId, Mesh, Pos2, Rect, Shape, vec2};
 use std::{
     collections::{HashMap, VecDeque},
     sync::Arc,
@@ -13,8 +13,37 @@ use std::{
 };
 
 /// Pick the higher-contrast ink once on the layout worker, not each frame.
-fn label_color(rgb: [u8; 3]) -> Color32 {
+fn label_color(rgb: palette::Rgb) -> Color32 {
     if palette::dark_ink(rgb) { Color32::BLACK } else { Color32::WHITE }
+}
+
+/// Vertical distance between label lines.
+pub const LINE: f32 = 14.0;
+
+/// Folder titles use a smaller face; SpaceMonger used the 9px "Small Fonts".
+pub fn label_font(folder: bool) -> FontId {
+    FontId::proportional(if folder { 10.0 } else { 12.0 })
+}
+
+/// A box's on-screen rectangle; boxes share their right and bottom edges with neighbours.
+pub fn screen_rect(b: &DisplayBox, origin: Pos2) -> Rect {
+    Rect::from_min_size(origin + vec2(b.x as f32, b.y as f32), vec2((b.w + 1) as f32, (b.h + 1) as f32))
+}
+
+/// Large file cells add size and date lines below the name.
+pub fn shows_details(b: &DisplayBox) -> bool {
+    !b.folder && b.h >= 56 && b.w >= 88
+}
+
+/// Where line `line` of `lines` sits in a box: folder titles hang from the
+/// top-left; file labels are centred, but never start left of the frame.
+pub fn line_pos(rect: Rect, folder: bool, lines: usize, line: usize, width: f32) -> Pos2 {
+    let (x, top) = if folder {
+        (rect.min.x + 3.0, rect.min.y + 1.0)
+    } else {
+        ((rect.center().x - width * 0.5).max(rect.min.x + 2.0), rect.center().y - lines as f32 * LINE * 0.5)
+    };
+    Pos2::new(x, top + line as f32 * LINE).floor()
 }
 
 const MAX_LABELS: usize = 384;
@@ -37,15 +66,28 @@ pub struct LabelCache {
 }
 
 struct LabelSpec {
-    color: Color32,
+    key: LabelKey,
     rect: Rect,
-    folder: bool,
-    lines: Vec<String>,
+    /// Index of the labelled box.
+    index: usize,
+    /// The name was cut short before shaping.
+    truncated: bool,
 }
 
 struct Label {
+    index: usize,
     clip: Rect,
     lines: Vec<(Pos2, Arc<egui::Galley>)>,
+    /// The first line shows uncut and unclipped.
+    complete: bool,
+}
+
+/// Where a box's name was drawn, for the name tip.
+#[derive(Clone, Copy)]
+pub struct NameLabel {
+    pub pos: Pos2,
+    /// All of the name is visible already.
+    pub complete: bool,
 }
 
 pub struct PreparedMap {
@@ -72,16 +114,14 @@ impl PreparedMap {
         let mut mesh = Mesh::default();
         mesh.reserve_vertices(boxes.len() * 8);
         mesh.reserve_triangles(boxes.len() * 4);
-        let rect_of = |b: &DisplayBox| {
-            Rect::from_min_size(origin + vec2(b.x as f32, b.y as f32), vec2((b.w + 1) as f32, (b.h + 1) as f32))
-        };
         for b in boxes {
-            let rect = rect_of(b).shrink(1.0);
+            let rect = screen_rect(b, origin).shrink(1.0);
             if !rect.is_positive() {
                 continue;
             }
             let scheme = schemes[usize::from(b.folder)];
-            let base = if b.item == Item::Free { [29, 30, 30] } else { palette::display_color(scheme, b.depth, muted) };
+            let base =
+                if b.item == Item::Free { theme::FREE_SPACE } else { palette::display_color(scheme, b.depth, muted) };
             mesh.add_colored_rect(rect, theme::BORDER);
             let rect = rect.shrink(0.6);
             if !rect.is_positive() {
@@ -100,24 +140,21 @@ impl PreparedMap {
                 (rect.right_bottom(), bottom),
                 (rect.left_bottom(), middle),
             ] {
-                mesh.vertices.push(egui::epaint::Vertex {
-                    pos,
-                    uv: egui::epaint::WHITE_UV,
-                    color: Color32::from_rgb(color[0], color[1], color[2]),
-                });
+                mesh.vertices.push(egui::epaint::Vertex { pos, uv: egui::epaint::WHITE_UV, color: theme::rgb(color) });
             }
             mesh.indices.extend_from_slice(&[start, start + 1, start + 2, start, start + 2, start + 3]);
         }
         // At high density most cells cannot carry legible labels. Keep every
         // cell interactive but prioritize the largest readable labels.
         let mut candidates: Vec<_> =
-            boxes.iter().filter(|b| b.item != Item::Filler && b.w >= 48 && b.h >= 14).collect();
-        candidates.sort_by_key(|b| std::cmp::Reverse(i64::from(b.w) * i64::from(b.h)));
+            boxes.iter().enumerate().filter(|(_, b)| b.item != Item::Filler && b.w >= 48 && b.h >= 14).collect();
+        candidates.sort_by_key(|(_, b)| std::cmp::Reverse(i64::from(b.w) * i64::from(b.h)));
         candidates.truncate(MAX_LABELS);
         let pending = candidates
             .into_iter()
-            .map(|b| {
+            .map(|(index, b)| {
                 let mut lines = Vec::new();
+                let mut truncated = false;
                 if b.item == Item::Free {
                     lines.push(format!("Free space · {}", format::percent(free[0], free[1])));
                     if b.h >= 42 {
@@ -132,26 +169,35 @@ impl PreparedMap {
                     let mut short: String = chars.by_ref().take(max_chars).collect();
                     if chars.next().is_some() {
                         short.push('…');
+                        truncated = true;
                     }
                     lines.push(short);
-                    if !b.folder && b.h >= 56 && b.w >= 88 {
+                    if shows_details(b) {
                         lines.push(format::size(node.len));
                         lines.push(format::date(node.mtime));
                     }
                 }
+                let color = if b.item == Item::Free {
+                    theme::TEXT
+                } else {
+                    label_color(palette::display_color(schemes[usize::from(b.folder)], b.depth, muted))
+                };
                 LabelSpec {
-                    rect: rect_of(b),
-                    folder: b.folder,
-                    lines,
-                    color: if b.item == Item::Free {
-                        theme::TEXT
-                    } else {
-                        label_color(palette::display_color(schemes[usize::from(b.folder)], b.depth, muted))
-                    },
+                    key: LabelKey { color, folder: b.folder, lines },
+                    rect: screen_rect(b, origin),
+                    index,
+                    truncated,
                 }
             })
             .collect();
         Self { mesh: Arc::new(mesh), pending, labels: Vec::new() }
+    }
+
+    /// The name label drawn for box `index`, if it has one.
+    pub fn name_label(&self, index: usize) -> Option<NameLabel> {
+        let label = self.labels.iter().find(|label| label.index == index)?;
+        let &(pos, _) = label.lines.first()?;
+        Some(NameLabel { pos, complete: label.complete })
     }
 
     pub fn is_ready(&self) -> bool {
@@ -170,44 +216,41 @@ impl PreparedMap {
         }
         let started = Instant::now();
         let mut shaped = 0;
-        while started.elapsed() < LABEL_BUDGET {
-            let Some(spec) = self.pending.front() else {
-                break;
-            };
-            let key = LabelKey { color: spec.color, folder: spec.folder, lines: spec.lines.clone() };
-            let galleys = if let Some(galleys) = cache.shaped.get(&key) {
+        while started.elapsed() < LABEL_BUDGET
+            && let Some(spec) = self.pending.pop_front()
+        {
+            let key = &spec.key;
+            let galleys = if let Some(galleys) = cache.shaped.get(key) {
                 galleys.clone()
-            } else {
-                if shaped >= LABELS_PER_FRAME {
-                    break;
-                }
-                let font = FontId::proportional(if spec.folder { 10.0 } else { 12.0 });
-                let galleys: Vec<_> = spec
+            } else if shaped < LABELS_PER_FRAME {
+                let font = label_font(key.folder);
+                let galleys: Vec<_> = key
                     .lines
                     .iter()
-                    .map(|text| painter.layout_no_wrap(text.clone(), font.clone(), spec.color))
+                    .map(|text| painter.layout_no_wrap(text.clone(), font.clone(), key.color))
                     .collect();
                 if cache.shaped.len() >= 1024 {
                     cache.shaped.clear();
                 }
-                cache.shaped.insert(key, galleys.clone());
+                cache.shaped.insert(key.clone(), galleys.clone());
                 shaped += 1;
                 galleys
+            } else {
+                self.pending.push_front(spec);
+                break;
             };
-            let spec = self.pending.pop_front().expect("pending label");
-            let mut lines = Vec::new();
-            let mut y =
-                if spec.folder { spec.rect.min.y + 1.0 } else { spec.rect.center().y - galleys.len() as f32 * 7.0 };
-            for galley in galleys {
-                let x = if spec.folder {
-                    spec.rect.min.x + 3.0
-                } else {
-                    (spec.rect.center().x - galley.size().x * 0.5).max(spec.rect.min.x + 2.0)
-                };
-                lines.push((egui::pos2(x.floor(), y.floor()), galley));
-                y += 14.0;
-            }
-            self.labels.push(Label { clip: spec.rect.shrink2(Vec2::splat(1.0)), lines });
+            let clip = spec.rect.shrink(1.0);
+            let count = galleys.len();
+            let lines: Vec<_> = galleys
+                .into_iter()
+                .enumerate()
+                .map(|(line, galley)| (line_pos(spec.rect, key.folder, count, line, galley.size().x), galley))
+                .collect();
+            let complete = !spec.truncated
+                && lines
+                    .first()
+                    .is_none_or(|(pos, galley)| clip.contains_rect(Rect::from_min_size(*pos, galley.size())));
+            self.labels.push(Label { index: spec.index, clip, lines, complete });
         }
         if !self.is_ready() {
             painter.ctx().request_repaint();

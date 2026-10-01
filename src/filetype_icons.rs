@@ -8,7 +8,8 @@ mod macos;
 #[cfg(windows)]
 pub(crate) mod windows;
 
-#[derive(Clone, Hash, PartialEq, Eq)]
+const CAPACITY: usize = 512;
+
 struct Key {
     extension: String,
     size: u32,
@@ -32,7 +33,10 @@ struct Worker {
 }
 #[derive(Default)]
 pub struct Icons {
-    entries: HashMap<Key, Entry>,
+    /// By pixel size, then extension, so per-row lookups borrow the extension.
+    entries: HashMap<u32, HashMap<String, Entry>>,
+    len: usize,
+    pending: usize,
     worker: Option<Worker>,
     tick: u64,
 }
@@ -44,14 +48,17 @@ impl Icons {
             // Limit texture uploads per frame, even after many results arrive together.
             for _ in 0..4 {
                 let Ok(reply) = worker.rx.try_recv() else { break };
-                if let Some(entry) = self.entries.get_mut(&reply.key) {
+                let entry = self.entries.get_mut(&reply.key.size).and_then(|sized| sized.get_mut(&reply.key.extension));
+                if let Some(entry) = entry {
                     entry.texture =
                         reply.image.map(|image| ctx.load_texture("file-association", image, TextureOptions::LINEAR));
-                    entry.pending = false;
+                    if std::mem::take(&mut entry.pending) {
+                        self.pending -= 1;
+                    }
                 }
             }
         }
-        if self.entries.values().any(|entry| entry.pending) {
+        if self.pending > 0 {
             ctx.request_repaint_after(Duration::from_millis(50));
         }
     }
@@ -60,8 +67,7 @@ impl Icons {
             return;
         }
         let size = (rect.width() * ui.ctx().pixels_per_point()).ceil().clamp(16.0, 64.0) as u32;
-        let key = Key { extension: extension.to_owned(), size };
-        if let Some(entry) = self.entries.get_mut(&key) {
+        if let Some(entry) = self.entries.get_mut(&size).and_then(|sized| sized.get_mut(extension)) {
             entry.used = self.tick;
             if let Some(texture) = &entry.texture {
                 ui.painter().image(
@@ -73,24 +79,42 @@ impl Icons {
             }
             return;
         }
-        if self.entries.len() >= 512 {
-            let victim = self
-                .entries
-                .iter()
-                .filter(|(_, entry)| !entry.pending)
-                .min_by_key(|(_, entry)| entry.used)
-                .map(|(key, _)| key.clone());
-            if let Some(victim) = victim {
-                self.entries.remove(&victim);
-            } else {
-                return;
-            }
+        if self.len >= CAPACITY && !self.evict() {
+            return;
         }
         let worker = self.worker.get_or_insert_with(start_worker);
-        if worker.tx.try_send(Request { key: key.clone(), ctx: ui.ctx().clone() }).is_ok() {
-            self.entries.insert(key, Entry { texture: None, pending: true, used: self.tick });
+        let key = || Key { extension: extension.to_owned(), size };
+        if worker.tx.try_send(Request { key: key(), ctx: ui.ctx().clone() }).is_ok() {
+            self.insert(key(), Entry { texture: None, pending: true, used: self.tick });
             ui.ctx().request_repaint_after(Duration::from_millis(50));
         }
+    }
+    fn insert(&mut self, key: Key, entry: Entry) {
+        self.pending += usize::from(entry.pending);
+        if let Some(old) = self.entries.entry(key.size).or_default().insert(key.extension, entry) {
+            self.pending -= usize::from(old.pending);
+        } else {
+            self.len += 1;
+        }
+    }
+    /// Drop the least recently used finished icon; false when every icon is still loading.
+    fn evict(&mut self) -> bool {
+        let victim = self
+            .entries
+            .iter()
+            .flat_map(|(&size, sized)| sized.iter().map(move |(extension, entry)| (size, extension, entry)))
+            .filter(|(_, _, entry)| !entry.pending)
+            .min_by_key(|(_, _, entry)| entry.used)
+            .map(|(size, extension, _)| (size, extension.clone()));
+        let Some((size, extension)) = victim else { return false };
+        if let Some(sized) = self.entries.get_mut(&size) {
+            sized.remove(&extension);
+            if sized.is_empty() {
+                self.entries.remove(&size);
+            }
+        }
+        self.len -= 1;
+        true
     }
 }
 fn start_worker() -> Worker {
@@ -117,6 +141,8 @@ fn start_worker() -> Worker {
     Worker { tx, rx }
 }
 fn load(extension: &str, size: u32) -> Option<ColorImage> {
+    // Platform loaders see None, never the displayed placeholder.
+    let extension = (extension != crate::filetypes::NO_EXTENSION).then_some(extension);
     #[cfg(windows)]
     {
         windows::load(extension, size)
@@ -153,12 +179,31 @@ mod tests {
         let (replies, reply_rx) = mpsc::sync_channel(32);
         let mut icons = Icons { worker: Some(Worker { tx: request_tx, rx: reply_rx }), ..Icons::default() };
         for index in 0..10 {
-            let key = Key { extension: format!(".{index}"), size: 32 };
-            icons.entries.insert(key.clone(), Entry { texture: None, pending: true, used: 0 });
-            replies.send(Reply { key, image: None }).expect("reply");
+            let key = || Key { extension: format!(".{index}"), size: 32 };
+            icons.insert(key(), Entry { texture: None, pending: true, used: 0 });
+            replies.send(Reply { key: key(), image: None }).expect("reply");
         }
         icons.begin_frame(&Context::default());
-        assert_eq!(icons.entries.values().filter(|entry| entry.pending).count(), 6);
-        assert_eq!(icons.entries.len(), 10); // failed lookups are retained, not retried each frame
+        let entries = || icons.entries.values().flat_map(HashMap::values);
+        assert_eq!(entries().filter(|entry| entry.pending).count(), 6);
+        assert_eq!(icons.pending, 6);
+        assert_eq!(icons.len, 10); // failed lookups are retained, not retried each frame
+        assert_eq!(entries().count(), 10);
+    }
+
+    #[test]
+    fn eviction_drops_the_least_recently_used_finished_icon() {
+        let mut icons = Icons::default();
+        for (index, (pending, used)) in [(true, 0), (false, 2), (false, 1)].into_iter().enumerate() {
+            icons.insert(
+                Key { extension: format!(".{index}"), size: 16 + index as u32 },
+                Entry { texture: None, pending, used },
+            );
+        }
+        assert!(icons.evict());
+        assert!(!icons.entries.contains_key(&18));
+        assert!(icons.evict());
+        assert!(!icons.evict()); // only the loading icon remains
+        assert_eq!((icons.len, icons.pending), (1, 1));
     }
 }

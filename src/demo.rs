@@ -2,8 +2,16 @@
 use clawback_core::{Kind, NodeId, ROOT, Tree, tree::NewEntry};
 use std::path::Path;
 
+/// The fictional drive's name and mount point.
+const DRIVE: &str = "Demo Drive";
+
+/// A capture run: fictional data, no saved state, and a screenshot written on exit.
+pub fn capturing() -> bool {
+    std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some()
+}
+
 pub fn tree() -> Tree {
-    let mut tree = Tree::new(Path::new("Demo Drive"));
+    let mut tree = Tree::new(Path::new(DRIVE));
     // Deep, realistic paths: the map colours boxes by nesting depth, so files reach seven
     // folders down and every step of a palette (Blackbody Radiation's included) appears.
     let groups: &[(&str, &[(&str, u64)])] = &[
@@ -55,8 +63,7 @@ pub fn tree() -> Tree {
     ];
     for (folder, files) in groups {
         for (name, megabytes) in *files {
-            let path = format!("{folder}/{name}");
-            let parts: Vec<_> = path.split('/').collect();
+            let parts: Vec<_> = folder.split('/').chain(name.split('/')).collect();
             let mut parent = ROOT;
             for (index, name) in parts.iter().enumerate() {
                 if let Some(existing) = tree.child_named(parent, std::ffi::OsStr::new(name)) {
@@ -96,7 +103,7 @@ pub fn view(tree: &Tree) -> NodeId {
 /// Ignore the real pointer and keyboard so a capture never depends on where
 /// its window opens relative to the cursor.
 pub fn isolate_input(input: &mut eframe::egui::RawInput) {
-    if std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some() {
+    if capturing() {
         input.events.retain(|event| matches!(event, eframe::egui::Event::Screenshot { .. }));
     }
 }
@@ -135,8 +142,8 @@ pub fn capture(ctx: &eframe::egui::Context) {
 /// The fictional drive: 384 GB with 64 GB free, so captures show a modest free-space box.
 pub fn disk() -> crate::platform::DiskInfo {
     crate::platform::DiskInfo {
-        name: "Demo Drive".into(),
-        mount: "Demo Drive".into(),
+        name: DRIVE.into(),
+        mount: DRIVE.into(),
         fs: "NTFS".into(),
         total: 384 << 30,
         free: 64 << 30,

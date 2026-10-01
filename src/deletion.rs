@@ -6,7 +6,7 @@ use std::{
         Arc, Mutex,
         atomic::{AtomicBool, AtomicU64, Ordering},
     },
-    time::Instant,
+    time::{Duration, Instant},
 };
 mod purge;
 #[cfg(windows)]
@@ -41,12 +41,6 @@ pub struct Snapshot {
     pub total: u64,
     pub done: u64,
     pub current: String,
-    #[cfg(windows)]
-    pub error: Option<String>,
-    #[cfg(windows)]
-    pub declined: bool,
-    #[cfg(windows)]
-    pub too_large: bool,
 }
 
 #[derive(Default)]
@@ -79,11 +73,17 @@ impl Progress {
     fn file_done(&self) {
         self.files_done.fetch_add(1, Ordering::Relaxed);
     }
-    /// Show the item being worked on, at most ten times a second.
-    fn note(&self, path: &Path) {
+    /// Whether to show the next item being worked on: at most ten times a second.
+    fn due(&self) -> bool {
         let mut last = lock(&self.last_item);
-        if last.is_none_or(|time| time.elapsed().as_millis() >= 100) {
+        let due = last.is_none_or(|time| time.elapsed() >= Duration::from_millis(100));
+        if due {
             *last = Some(Instant::now());
+        }
+        due
+    }
+    fn note(&self, path: &Path) {
+        if self.due() {
             lock(&self.state).current = path.display().to_string();
         }
     }

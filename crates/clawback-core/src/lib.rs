@@ -16,9 +16,14 @@ mod ntfs;
 pub mod palette;
 #[cfg(feature = "profiling")]
 pub mod profiling;
+#[cfg(not(feature = "profiling"))]
+mod profiling;
 pub mod report;
 pub mod scan;
 pub mod settings;
+pub mod sync;
+#[cfg(test)]
+mod testing;
 pub mod tree;
 #[cfg(windows)]
 mod windows;

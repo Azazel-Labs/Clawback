@@ -1,6 +1,6 @@
 use crate::Result;
 use std::{
-    collections::{BTreeMap, BTreeSet},
+    collections::{BTreeMap, BTreeSet, btree_map::Entry},
     fs,
     path::Path,
 };
@@ -26,7 +26,7 @@ impl<'ast> Visit<'ast> for Extractor {
 impl Extractor {
     fn message(&mut self, tokens: proc_macro2::TokenStream) {
         let parser = |input: syn::parse::ParseStream<'_>| {
-            let source: syn::LitStr = input.parse()?;
+            let id: syn::LitStr = input.parse()?;
             let mut arguments = BTreeSet::new();
             while !input.is_empty() {
                 input.parse::<syn::Token![,]>()?;
@@ -40,16 +40,28 @@ impl Extractor {
                     return Err(syn::Error::new(name.span(), "duplicate argument"));
                 }
             }
-            Ok((source.value(), arguments))
+            Ok((id, arguments))
         };
         match parser.parse2(tokens) {
-            Ok((id, arguments)) => {
-                if self.messages.insert(id, arguments.clone()).is_some_and(|previous| previous != arguments) {
-                    self.error =
-                        Some(syn::Error::new(proc_macro2::Span::call_site(), "inconsistent arguments for message ID"));
+            Ok((id, arguments)) => match self.messages.entry(id.value()) {
+                Entry::Vacant(entry) => {
+                    entry.insert(arguments);
                 }
-            }
-            Err(error) => self.error = Some(error),
+                Entry::Occupied(entry) if *entry.get() != arguments => {
+                    let message = format!("inconsistent arguments for message ID {:?}", entry.key());
+                    self.fail(syn::Error::new(id.span(), message));
+                }
+                Entry::Occupied(_) => {}
+            },
+            Err(error) => self.fail(error),
+        }
+    }
+
+    /// Keep every error, not just the last.
+    fn fail(&mut self, error: syn::Error) {
+        match &mut self.error {
+            Some(errors) => errors.combine(error),
+            None => self.error = Some(error),
         }
     }
 
@@ -87,19 +99,21 @@ fn extract(directory: &Path, extractor: &mut Extractor) -> Result<()> {
     Ok(())
 }
 
+pub const USAGE: &str = "cargo xtask translations <check|fmt [--check]>";
+
 pub fn run(root: &Path, args: &[String]) -> Result<()> {
-    if args.first().is_some_and(|arg| arg == "fmt") && (args.len() == 1 || (args.len() == 2 && args[1] == "--check")) {
-        return format_catalogs(&root.join("locales"), args.len() == 1);
-    }
-    if args.len() != 1 || args[0] != "check" {
-        return Err("Usage: cargo xtask translations <check|fmt [--check]>".into());
+    let directory = root.join("locales");
+    match args {
+        [command] if command == "check" => {}
+        [command] if command == "fmt" => return format_catalogs(&directory, true),
+        [command, flag] if command == "fmt" && flag == "--check" => return format_catalogs(&directory, false),
+        _ => return Err(crate::usage(USAGE)),
     }
     let mut extractor = Extractor::default();
     extract(&root.join("src"), &mut extractor)?;
-    if let Some(error) = extractor.error {
-        return Err(error.into());
+    if let Some(errors) = extractor.error {
+        return Err(errors.into_iter().map(|error| error.to_string()).collect::<Vec<_>>().join("\n").into());
     }
-    let directory = root.join("locales");
     let catalogs = catalog::load(&directory)?;
     let source = catalogs.get("en").ok_or("missing English catalog")?;
     for (id, arguments) in &extractor.messages {
@@ -126,18 +140,13 @@ fn formatted(source: &str) -> Result<String> {
 
 fn format_catalogs(directory: &Path, write: bool) -> Result<()> {
     let mut changes = Vec::new();
-    for entry in fs::read_dir(directory)? {
-        let path = entry?.path().join("clawback.ftl");
-        if !path.is_file() {
-            continue;
-        }
+    for (_, path) in catalog::files(directory)? {
         let source = fs::read_to_string(&path)?;
         let output = formatted(&source).map_err(|error| format!("{}: {error}", path.display()))?;
         if source.replace("\r\n", "\n") != output {
             changes.push((path, output));
         }
     }
-    changes.sort_by(|a, b| a.0.cmp(&b.0));
     if !write && !changes.is_empty() {
         let paths = changes.iter().map(|(path, _)| path.display().to_string()).collect::<Vec<_>>().join("\n");
         return Err(format!("Fluent formatting differs:\n{paths}\nRun cargo xtask translations fmt").into());
@@ -174,6 +183,9 @@ mod tests {
         assert!(extractor.error.is_none());
         assert_eq!(extractor.messages.len(), 2);
         extractor.visit_file(&syn::parse_file(r#"fn f() { tr!("workers", other = 2); }"#).expect("valid Rust fixture"));
-        assert!(extractor.error.is_some());
+        extractor.visit_file(&syn::parse_file(r#"fn f() { tr!("name", other = 2); }"#).expect("valid Rust fixture"));
+        let errors: Vec<_> = extractor.error.expect("errors").into_iter().map(|error| error.to_string()).collect();
+        assert_eq!(errors.len(), 2);
+        assert!(errors[0].contains("\"workers\""), "{}", errors[0]);
     }
 }

@@ -1,7 +1,7 @@
 //! Deterministic, opt-in developer workload. Never deletes or modifies scanned files.
 use clawback_core::{Kind, ROOT, Tree, tree::NewEntry};
 use eframe::egui::{self, Context};
-use std::{path::Path, sync::mpsc, time::Instant};
+use std::{path::Path, thread::JoinHandle, time::Instant};
 
 pub enum Action {
     Load(Tree),
@@ -10,30 +10,41 @@ pub enum Action {
     Resize(bool),
     Close,
 }
+/// `CLAWBACK_PERF_SCENARIO`.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Scenario {
+    /// No simulated input.
+    Empty,
+    /// The generated 200k-entry fixture, then simulated input.
+    Large,
+    /// Simulated input over whatever the app opened.
+    Scan,
+}
 pub struct Probe {
     started: Instant,
     step: u64,
-    tree: Option<mpsc::Receiver<Tree>>,
+    tree: Option<JoinHandle<Tree>>,
     last_frame: Option<Instant>,
     interactive: bool,
 }
 impl Probe {
     pub fn new() -> Option<Self> {
-        let scenario = std::env::var("CLAWBACK_PERF_SCENARIO").ok()?;
-        if !["empty", "large", "scan"].contains(&scenario.as_str()) {
-            return None;
-        }
-        crate::perf::instant(&format!("scenario.{scenario}"));
-        let tree = if scenario == "large" {
-            let (tx, rx) = mpsc::channel();
-            std::thread::spawn(move || {
-                let _ = tx.send(fixture());
-            });
-            Some(rx)
-        } else {
-            None
+        let name = std::env::var("CLAWBACK_PERF_SCENARIO").ok()?;
+        let scenario = match name.as_str() {
+            "empty" => Scenario::Empty,
+            "large" => Scenario::Large,
+            "scan" => Scenario::Scan,
+            _ => return None,
         };
-        Some(Self { started: Instant::now(), step: 0, tree, last_frame: None, interactive: scenario != "empty" })
+        crate::perf::instant(&format!("scenario.{name}"));
+        let tree = (scenario == Scenario::Large).then(|| std::thread::spawn(fixture));
+        Some(Self {
+            started: Instant::now(),
+            step: 0,
+            tree,
+            last_frame: None,
+            interactive: scenario != Scenario::Empty,
+        })
     }
     pub fn pointer(&self, input: &mut egui::RawInput) {
         if !self.interactive {
@@ -52,10 +63,9 @@ impl Probe {
             crate::perf::counter("probe.frame_interval_ms", now.duration_since(last).as_secs_f64() * 1000.0);
         }
         ctx.request_repaint();
-        if let Some(rx) = &self.tree
-            && let Ok(tree) = rx.try_recv()
+        if self.tree.as_ref().is_some_and(JoinHandle::is_finished)
+            && let Some(Ok(tree)) = self.tree.take().map(JoinHandle::join)
         {
-            self.tree = None;
             crate::perf::instant("probe.tree_loaded");
             return Some(Action::Load(tree));
         }

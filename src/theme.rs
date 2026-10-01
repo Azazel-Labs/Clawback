@@ -1,5 +1,6 @@
 //! Shared visual language for the shell, dialogs and disk map.
-use eframe::egui::{self, Color32, CornerRadius, FontId, Stroke, TextStyle, vec2};
+use clawback_core::palette::{self, Rgb};
+use eframe::egui::{self, Color32, CornerRadius, FontId, Rect, Stroke, TextStyle, vec2};
 
 pub const BG: Color32 = Color32::from_rgb(17, 18, 18);
 pub const SURFACE: Color32 = Color32::from_rgb(24, 25, 25);
@@ -12,44 +13,48 @@ pub const MUTED: Color32 = Color32::from_rgb(153, 153, 153);
 pub const ACCENT: Color32 = Color32::from_rgb(117, 169, 214);
 pub const DANGER: Color32 = Color32::from_rgb(226, 104, 92);
 pub const FOLDER: Color32 = Color32::from_rgb(232, 191, 92);
+/// A highlighted tab or picker card.
+pub const SELECTED_FILL: Color32 = Color32::from_rgb(35, 47, 58);
+/// The navigator row for the folder shown on the map.
+pub const CURRENT_ROW: Color32 = Color32::from_rgb(43, 61, 78);
+/// Modal dialog outline.
+pub const DIALOG_EDGE: Color32 = Color32::from_rgb(57, 63, 70);
+/// A switched-off toggle's track.
+pub const TOGGLE_OFF: Color32 = Color32::from_rgb(57, 62, 68);
+/// Background of an informational note.
+pub const NOTE_BG: Color32 = Color32::from_rgb(29, 38, 46);
+/// Free-space cells on the map, shaded like palette colours.
+pub const FREE_SPACE: Rgb = [29, 30, 30];
+
+/// Bundled fonts, so CJK and Thai labels and filenames render without installed OS fonts.
+const FONTS: [(&str, &[u8]); 5] = [
+    ("Noto Sans SC", include_bytes!("../assets/fonts/NotoSansSC-Regular.otf")),
+    ("Noto Sans KR", include_bytes!("../assets/fonts/NotoSansKR-Regular.otf")),
+    ("Noto Sans JP", include_bytes!("../assets/fonts/NotoSansJP-Regular.otf")),
+    ("Noto Sans TC", include_bytes!("../assets/fonts/NotoSansTC-Regular.otf")),
+    ("Noto Sans Thai", include_bytes!("../assets/fonts/NotoSansThai-Regular.ttf")),
+];
+
+/// Shared Han characters have different regional glyph forms; the UI language's come first.
+fn primary_font(language: &str) -> &'static str {
+    match language {
+        "ja" => "Noto Sans JP",
+        "ko" => "Noto Sans KR",
+        "zh-Hant" => "Noto Sans TC",
+        _ => "Noto Sans SC",
+    }
+}
 
 pub fn set_fonts(ctx: &egui::Context, language: &str) {
-    // Keep CJK and Thai labels and filenames readable without installed OS fonts.
     // Install for every language so the native name in Settings also renders.
     let mut fonts = egui::FontDefinitions::default();
-    fonts.font_data.insert(
-        "Noto Sans SC".into(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/NotoSansSC-Regular.otf")).into(),
-    );
-    fonts.font_data.insert(
-        "Noto Sans KR".into(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/NotoSansKR-Regular.otf")).into(),
-    );
-    fonts.font_data.insert(
-        "Noto Sans JP".into(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/NotoSansJP-Regular.otf")).into(),
-    );
-    fonts.font_data.insert(
-        "Noto Sans TC".into(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/NotoSansTC-Regular.otf")).into(),
-    );
-    fonts.font_data.insert(
-        "Noto Sans Thai".into(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/NotoSansThai-Regular.ttf")).into(),
-    );
-    // Shared Han characters have different regional glyph forms.
-    let order = match language {
-        "ja" => ["Noto Sans JP", "Noto Sans SC", "Noto Sans KR", "Noto Sans TC"],
-        "ko" => ["Noto Sans KR", "Noto Sans SC", "Noto Sans JP", "Noto Sans TC"],
-        "zh-Hant" => ["Noto Sans TC", "Noto Sans SC", "Noto Sans KR", "Noto Sans JP"],
-        _ => ["Noto Sans SC", "Noto Sans KR", "Noto Sans JP", "Noto Sans TC"],
-    };
+    for (name, bytes) in FONTS {
+        fonts.font_data.insert(name.into(), egui::FontData::from_static(bytes).into());
+    }
+    let primary = primary_font(language);
+    let order = std::iter::once(primary).chain(FONTS.iter().map(|(name, _)| *name).filter(|&name| name != primary));
     for family in [egui::FontFamily::Proportional, egui::FontFamily::Monospace] {
-        fonts
-            .families
-            .entry(family)
-            .or_default()
-            .extend(order.into_iter().chain(["Noto Sans Thai"]).map(str::to_owned));
+        fonts.families.entry(family).or_default().extend(order.clone().map(str::to_owned));
     }
     // Phosphor icons (MIT; license shipped beside the binary) live in the Private Use Area.
     // Last in the chain, so they can only supply icons and never shadow text glyphs.
@@ -58,6 +63,20 @@ pub fn set_fonts(ctx: &egui::Context, language: &str) {
         .insert("Phosphor".into(), egui::FontData::from_static(egui_phosphor::Variant::Regular.font_bytes()).into());
     fonts.families.entry(egui::FontFamily::Proportional).or_default().push("Phosphor".into());
     ctx.set_fonts(fonts);
+}
+
+/// A palette entry as an egui colour.
+pub const fn rgb([r, g, b]: Rgb) -> Color32 {
+    Color32::from_rgb(r, g, b)
+}
+
+/// A palette's eight depth colours as tiles spanning `rect`, `gap` apart.
+pub fn paint_swatches(painter: &egui::Painter, rect: Rect, scheme: usize, muted: bool, gap: f32, radius: f32) {
+    let step = (rect.width() + gap) / 8.0;
+    for depth in 0..8 {
+        let tile = Rect::from_min_size(rect.min + vec2(depth as f32 * step, 0.0), vec2(step - gap, rect.height()));
+        painter.rect_filled(tile, radius, rgb(palette::display_color(scheme, depth, muted)));
+    }
 }
 
 pub fn apply(ctx: &egui::Context, language: &str) {
@@ -90,7 +109,7 @@ pub fn apply(ctx: &egui::Context, language: &str) {
     }
     v.widgets.inactive.weak_bg_fill = Color32::from_rgb(36, 37, 37);
     v.widgets.inactive.bg_fill = Color32::from_rgb(36, 37, 37);
-    v.widgets.open.weak_bg_fill = Color32::from_rgb(43, 44, 44);
+    v.widgets.open.weak_bg_fill = BORDER;
     // Hover must read clearly on dark dialog surfaces, not just a shade off the resting fill.
     v.widgets.hovered.weak_bg_fill = Color32::from_rgb(52, 59, 68);
     v.widgets.hovered.bg_fill = Color32::from_rgb(52, 59, 68);
@@ -143,12 +162,7 @@ mod tests {
         set_fonts(ctx, language);
         let mut output = ctx.run_ui(egui::RawInput::default(), |ui| {
             let definitions = ui.fonts_mut(|fonts| fonts.definitions().clone());
-            let expected = match language {
-                "ja" => "Noto Sans JP",
-                "ko" => "Noto Sans KR",
-                "zh-Hant" => "Noto Sans TC",
-                _ => "Noto Sans SC",
-            };
+            let expected = primary_font(language);
             for family in [egui::FontFamily::Proportional, egui::FontFamily::Monospace] {
                 let first_cjk = definitions.families[&family].iter().find(|name| name.starts_with("Noto Sans"));
                 assert_eq!(first_cjk.map(String::as_str), Some(expected));

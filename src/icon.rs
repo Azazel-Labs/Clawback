@@ -12,6 +12,6 @@ pub fn paint(painter: &egui::Painter, rect: Rect) {
             pos2(rect.min.x + x as f32 * scale, rect.min.y + y as f32 * scale),
             vec2(w as f32 * scale, h as f32 * scale),
         );
-        painter.rect_filled(r, 0.0, egui::Color32::from_rgb(c[0], c[1], c[2]));
+        painter.rect_filled(r, 0.0, crate::theme::rgb(c));
     }
 }

@@ -3,9 +3,9 @@ use objc2::AnyThread;
 use objc2_app_kit::{NSBitmapImageFileType, NSBitmapImageRep, NSWorkspace};
 use objc2_foundation::{NSDictionary, NSString};
 
-pub fn load(extension: &str, size: u32) -> Option<ColorImage> {
+pub fn load(extension: Option<&str>, size: u32) -> Option<ColorImage> {
     objc2::rc::autoreleasepool(|_| {
-        let extension = if extension == "(none)" { "" } else { extension.trim_start_matches('.') };
+        let extension = extension.map_or("", |extension| extension.trim_start_matches('.'));
         // This API also handles unknown extensions using Finder's generic file icon.
         #[allow(deprecated)]
         let icon = NSWorkspace::sharedWorkspace().iconForFileType(&NSString::from_str(extension));

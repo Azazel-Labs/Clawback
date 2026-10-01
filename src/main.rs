@@ -19,7 +19,9 @@ mod mapview;
 mod perf;
 #[cfg(feature = "perf-probe")]
 mod perf_probe;
+mod picker;
 mod platform;
+mod properties;
 #[cfg(windows)]
 mod recycle_bin;
 mod scanning;

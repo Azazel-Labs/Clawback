@@ -1,4 +1,5 @@
 //! Opt-in startup timings, written only when `CLAWBACK_STARTUP_TRACE` is set.
+//! Every mark is also a perf-trace instant.
 use std::{
     fs::File,
     io::Write,
@@ -12,8 +13,6 @@ use std::{
 struct Trace {
     started: Instant,
     file: Mutex<File>,
-    first_frame: AtomicU64,
-    next_frame: AtomicBool,
     ui_finished: AtomicBool,
 }
 
@@ -21,14 +20,12 @@ static TRACE: LazyLock<Option<Trace>> = LazyLock::new(|| {
     let started = Instant::now();
     let path = std::env::var_os("CLAWBACK_STARTUP_TRACE")?;
     let file = File::create(path).ok()?;
-    Some(Trace {
-        started,
-        file: Mutex::new(file),
-        first_frame: AtomicU64::new(u64::MAX),
-        next_frame: AtomicBool::new(false),
-        ui_finished: AtomicBool::new(false),
-    })
+    Some(Trace { started, file: Mutex::new(file), ui_finished: AtomicBool::new(false) })
 });
+
+/// The first UI frame's number, and whether a later frame has started.
+static FIRST_FRAME: AtomicU64 = AtomicU64::new(u64::MAX);
+static NEXT_FRAME: AtomicBool = AtomicBool::new(false);
 
 pub fn mark(stage: &str) {
     crate::perf::instant(stage);
@@ -39,25 +36,16 @@ pub fn mark(stage: &str) {
 }
 
 pub fn frame_started(ctx: &eframe::egui::Context) {
-    // Full perf traces also need these markers, independently of the legacy TSV.
-    if crate::perf::enabled() {
-        match ctx.cumulative_frame_nr() {
-            0 => {
-                crate::perf::instant("first_ui_started");
-                ctx.request_repaint();
-            }
-            1 => crate::perf::instant("second_frame_started"),
-            _ => {}
-        }
+    if !crate::perf::enabled() && TRACE.is_none() {
+        return;
     }
-    let Some(trace) = &*TRACE else { return };
     let frame = ctx.cumulative_frame_nr();
-    let first = trace.first_frame.load(Ordering::Relaxed);
+    let first = FIRST_FRAME.load(Ordering::Relaxed);
     if first == u64::MAX {
-        trace.first_frame.store(frame, Ordering::Relaxed);
+        FIRST_FRAME.store(frame, Ordering::Relaxed);
         mark("first_ui_started");
         ctx.request_repaint();
-    } else if frame > first && !trace.next_frame.swap(true, Ordering::Relaxed) {
+    } else if frame > first && !NEXT_FRAME.swap(true, Ordering::Relaxed) {
         // The first frame has returned through the renderer before this point.
         mark("second_frame_started");
     }

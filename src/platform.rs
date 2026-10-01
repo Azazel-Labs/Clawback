@@ -87,9 +87,8 @@ pub fn all_disks() -> Vec<DiskInfo> {
 pub fn refresh_disk_space(disk: &mut DiskInfo) {
     #[cfg(windows)]
     {
-        use std::os::windows::ffi::OsStrExt;
         use windows_sys::Win32::Storage::FileSystem::GetDiskFreeSpaceExW;
-        let path: Vec<u16> = disk.mount.as_os_str().encode_wide().chain(Some(0)).collect();
+        let path = wide(disk.mount.as_os_str());
         let (mut free, mut total) = (0u64, 0u64);
         // SAFETY: NUL-terminated path and valid output pointers; total-free is optional.
         if unsafe { GetDiskFreeSpaceExW(path.as_ptr(), &raw mut free, &raw mut total, std::ptr::null_mut()) } != 0 {
@@ -123,25 +122,47 @@ pub fn same_path(a: &Path, b: &Path) -> bool {
 
 /// The volume containing `path` (longest matching mount point).
 pub fn disk_for(path: &Path, disks: &[DiskInfo]) -> Option<DiskInfo> {
-    let path = std::fs::canonicalize(path).map_or_else(|_| path.to_path_buf(), strip_verbatim);
-    let p = normalize(&path);
+    let path = std::fs::canonicalize(path).map_or_else(|_| path.to_path_buf(), |p| strip_verbatim(&p));
+    // Windows paths are case-insensitive; either way, compare whole components.
+    let fold = |p: &Path| PathBuf::from(p.to_string_lossy().to_lowercase());
+    let folded = cfg!(windows).then(|| fold(&path));
     disks
         .iter()
-        .filter(|d| {
-            let m = normalize(&d.mount);
-            path.starts_with(&d.mount) || (cfg!(windows) && p.starts_with(&m))
-        })
+        .filter(|d| path.starts_with(&d.mount) || folded.as_ref().is_some_and(|f| f.starts_with(fold(&d.mount))))
         .max_by_key(|d| d.mount.as_os_str().len())
         .cloned()
 }
 
-/// `canonicalize` on Windows returns `\\?\C:\...`; drop the prefix again.
-fn strip_verbatim(p: PathBuf) -> PathBuf {
-    match p.to_str().and_then(|s| s.strip_prefix(r"\\?\")) {
-        Some(rest) if !rest.starts_with("UNC\\") => PathBuf::from(rest),
-        _ => p,
+/// `\\?\C:\x` becomes `C:\x` and `\\?\UNC\server\share\x` becomes `\\server\share\x`:
+/// the forms mount points and the shell use. Other paths are returned unchanged.
+pub fn strip_verbatim(path: &Path) -> PathBuf {
+    use std::path::{Component, Prefix};
+    let mut components = path.components();
+    let Some(Component::Prefix(prefix)) = components.next() else { return path.to_path_buf() };
+    let mut plain = std::ffi::OsString::new();
+    match prefix.kind() {
+        Prefix::VerbatimDisk(drive) => plain.push(format!("{}:", char::from(drive))),
+        Prefix::VerbatimUNC(server, share) => {
+            plain.push(r"\\");
+            plain.push(server);
+            plain.push(r"\");
+            plain.push(share);
+        }
+        _ => return path.to_path_buf(),
     }
+    plain.push(components.as_path());
+    plain.into()
 }
+
+/// A NUL-terminated UTF-16 copy of `value` for Win32 calls.
+#[cfg(windows)]
+pub(crate) fn wide(value: &std::ffi::OsStr) -> Vec<u16> {
+    use std::os::windows::ffi::OsStrExt;
+    value.encode_wide().chain(Some(0)).collect()
+}
+
+#[cfg(windows)]
+pub(crate) use self::windows::Apartment;
 
 /// Open a file with its default application, or a folder in the file manager
 /// (SpaceMonger's "Run / Open").
@@ -244,18 +265,23 @@ pub fn attributes(path: &Path) -> Vec<String> {
     #[cfg(windows)]
     {
         use std::os::windows::fs::MetadataExt;
+        use windows_sys::Win32::Storage::FileSystem::{
+            FILE_ATTRIBUTE_ARCHIVE, FILE_ATTRIBUTE_COMPRESSED, FILE_ATTRIBUTE_DIRECTORY, FILE_ATTRIBUTE_ENCRYPTED,
+            FILE_ATTRIBUTE_HIDDEN, FILE_ATTRIBUTE_OFFLINE, FILE_ATTRIBUTE_READONLY, FILE_ATTRIBUTE_REPARSE_POINT,
+            FILE_ATTRIBUTE_SPARSE_FILE, FILE_ATTRIBUTE_SYSTEM, FILE_ATTRIBUTE_TEMPORARY,
+        };
         let names = [
-            (0x20, tr!("arch")),
-            (0x800, tr!("compress")),
-            (0x10, tr!("folder-2")),
-            (0x4000, tr!("encrypt")),
-            (0x2, tr!("hidden")),
-            (0x1000, tr!("offline")),
-            (0x1, tr!("read-only")),
-            (0x400, tr!("reparse-pt")),
-            (0x200, tr!("sparse")),
-            (0x4, tr!("system")),
-            (0x100, tr!("temp")),
+            (FILE_ATTRIBUTE_ARCHIVE, tr!("arch")),
+            (FILE_ATTRIBUTE_COMPRESSED, tr!("compress")),
+            (FILE_ATTRIBUTE_DIRECTORY, tr!("folder-2")),
+            (FILE_ATTRIBUTE_ENCRYPTED, tr!("encrypt")),
+            (FILE_ATTRIBUTE_HIDDEN, tr!("hidden")),
+            (FILE_ATTRIBUTE_OFFLINE, tr!("offline")),
+            (FILE_ATTRIBUTE_READONLY, tr!("read-only")),
+            (FILE_ATTRIBUTE_REPARSE_POINT, tr!("reparse-pt")),
+            (FILE_ATTRIBUTE_SPARSE_FILE, tr!("sparse")),
+            (FILE_ATTRIBUTE_SYSTEM, tr!("system")),
+            (FILE_ATTRIBUTE_TEMPORARY, tr!("temp")),
         ];
         let a = md.file_attributes();
         names.into_iter().filter(|(bit, _)| a & bit != 0).map(|(_, n)| n).collect()
@@ -319,35 +345,34 @@ pub fn permission_hint() -> String {
 
 #[cfg(windows)]
 mod windows {
-    use std::ffi::c_void;
-    use std::os::windows::ffi::OsStrExt;
-    use std::path::Path;
+    use super::wide;
+    use ::windows::Win32::System::Com::{COINIT_APARTMENTTHREADED, CoInitializeEx, CoUninitialize};
+    use std::{marker::PhantomData, path::Path};
+    use windows_sys::Win32::{
+        System::Console::{ATTACH_PARENT_PROCESS, AttachConsole},
+        UI::{Shell::ShellExecuteW, WindowsAndMessaging::SW_SHOWDEFAULT},
+    };
 
-    #[link(name = "shell32")]
-    unsafe extern "system" {
-        fn ShellExecuteW(
-            hwnd: *mut c_void,
-            op: *const u16,
-            file: *const u16,
-            params: *const u16,
-            dir: *const u16,
-            show: i32,
-        ) -> *mut c_void;
+    /// Single-threaded COM on the current thread until dropped. Not `Send`:
+    /// it must be released on the thread that entered it.
+    pub struct Apartment(PhantomData<*const ()>);
+    impl Apartment {
+        pub fn enter() -> ::windows::core::Result<Self> {
+            // SAFETY: plain initialization; any success (including S_FALSE) is balanced on drop.
+            unsafe { CoInitializeEx(None, COINIT_APARTMENTTHREADED) }.ok()?;
+            Ok(Self(PhantomData))
+        }
     }
-
-    #[link(name = "kernel32")]
-    unsafe extern "system" {
-        fn AttachConsole(pid: u32) -> i32;
-    }
-
-    fn wide(p: &Path) -> Vec<u16> {
-        p.as_os_str().encode_wide().chain(Some(0)).collect()
+    impl Drop for Apartment {
+        fn drop(&mut self) {
+            // SAFETY: balances the successful initialization on this same thread.
+            unsafe { CoUninitialize() };
+        }
     }
 
     pub(super) fn shell_execute(path: &Path) -> Result<(), String> {
-        const SW_SHOWDEFAULT: i32 = 10;
-        let file = wide(path);
-        let dir = path.parent().map(wide);
+        let file = wide(path.as_os_str());
+        let dir = path.parent().map(|p| wide(p.as_os_str()));
         let dir_ptr = dir.as_ref().map_or(std::ptr::null(), Vec::as_ptr);
         // SAFETY: all strings are NUL-terminated UTF-16 that outlive the call.
         let r = unsafe {
@@ -365,7 +390,6 @@ mod windows {
     }
 
     pub(super) fn attach_console() {
-        const ATTACH_PARENT_PROCESS: u32 = u32::MAX;
         // SAFETY: plain Win32 call with no pointers.
         unsafe {
             AttachConsole(ATTACH_PARENT_PROCESS);
@@ -398,5 +422,34 @@ mod tests {
         let found = disk_for(Path::new("/home/azazel-labs/media/x/y-that-does-not-exist"), &disks).unwrap();
         assert_eq!(found.mount, PathBuf::from("/home/azazel-labs/media"));
         assert!(same_path(Path::new("/home"), Path::new("/home")));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn disk_lookup_matches_whole_components_ignoring_case() {
+        let d = |m: &str| DiskInfo {
+            name: String::new(),
+            mount: m.into(),
+            fs: String::new(),
+            total: 1,
+            free: 1,
+            removable: false,
+            kind: clawback_core::adaptive::StorageKind::Unknown,
+        };
+        let disks = [d(r"Q:\"), d(r"Q:\Mnt\X")];
+        let found = |p: &str| disk_for(Path::new(p), &disks).unwrap().mount;
+        assert_eq!(found(r"q:\mnt\x\file"), PathBuf::from(r"Q:\Mnt\X"));
+        assert_eq!(found(r"q:\mnt\xyz\file"), PathBuf::from(r"Q:\"));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn verbatim_prefixes_are_stripped() {
+        let strip = |p: &str| strip_verbatim(Path::new(p));
+        assert_eq!(strip(r"\\?\C:\Users\x"), PathBuf::from(r"C:\Users\x"));
+        assert_eq!(strip(r"\\?\C:\"), PathBuf::from(r"C:\"));
+        assert_eq!(strip(r"\\?\UNC\server\share\dir"), PathBuf::from(r"\\server\share\dir"));
+        assert_eq!(strip(r"\\?\Volume{1}\x"), PathBuf::from(r"\\?\Volume{1}\x"));
+        assert_eq!(strip(r"C:\plain"), PathBuf::from(r"C:\plain"));
     }
 }

@@ -1,4 +1,5 @@
 use super::{COMMON, FILE, Metadata, Record, parse_batch};
+use crate::Kind;
 use std::collections::{HashSet, VecDeque};
 use std::ffi::{OsString, c_void};
 use std::fs;
@@ -80,10 +81,15 @@ impl Bulk {
     }
 }
 
+enum Source {
+    Bulk(Bulk),
+    Standard(fs::ReadDir),
+    Done,
+}
+
 pub(crate) struct ReadDir<'a> {
     path: PathBuf,
-    bulk: Option<Bulk>,
-    standard: Option<fs::ReadDir>,
+    source: Source,
     // Needed only for a mid-stream fallback. A fresh read_dir has its own fd
     // and skips names already delivered, avoiding duplicate tree accounting.
     seen: HashSet<OsString>,
@@ -91,9 +97,11 @@ pub(crate) struct ReadDir<'a> {
 }
 
 pub(crate) fn read_dir<'a>(path: &Path, cancel: &'a AtomicBool) -> io::Result<ReadDir<'a>> {
-    let bulk = Bulk::open(path).ok();
-    let standard = if bulk.is_none() { Some(fs::read_dir(path)?) } else { None };
-    Ok(ReadDir { path: path.into(), bulk, standard, seen: HashSet::new(), cancel })
+    let source = match Bulk::open(path) {
+        Ok(bulk) => Source::Bulk(bulk),
+        Err(_) => Source::Standard(fs::read_dir(path)?),
+    };
+    Ok(ReadDir { path: path.into(), source, seen: HashSet::new(), cancel })
 }
 
 impl Iterator for ReadDir<'_> {
@@ -103,33 +111,35 @@ impl Iterator for ReadDir<'_> {
         if self.cancel.load(Ordering::Relaxed) {
             return None;
         }
-        if let Some(bulk) = &mut self.bulk {
+        if let Source::Bulk(bulk) = &mut self.source {
             match bulk.next() {
                 Ok(Some(record)) => {
                     let name = OsString::from_vec(record.name);
-                    self.seen.insert(name.clone());
                     let path = self.path.join(&name);
+                    self.seen.insert(name);
                     return Some(match record.metadata {
-                        Some(metadata) => Ok(Entry::Bulk { path, name, metadata }),
-                        None => fs::symlink_metadata(&path).map(|metadata| Entry::Stat { path, name, metadata }),
+                        Some(metadata) => Ok(Entry::Bulk { path, metadata }),
+                        None => fs::symlink_metadata(&path).map(|metadata| Entry::Stat { path, metadata }),
                     });
                 }
                 Ok(None) => {
-                    self.bulk = None;
+                    self.source = Source::Done;
                     return None;
                 }
                 Err(_) => {
                     // Unsupported filesystems, entry errors without a usable
                     // name, and malformed batches all retry through read_dir.
-                    self.bulk = None;
                     match fs::read_dir(&self.path) {
-                        Ok(rd) => self.standard = Some(rd),
-                        Err(error) => return Some(Err(error)),
+                        Ok(rd) => self.source = Source::Standard(rd),
+                        Err(error) => {
+                            self.source = Source::Done;
+                            return Some(Err(error));
+                        }
                     }
                 }
             }
         }
-        let rd = self.standard.as_mut()?;
+        let Source::Standard(rd) = &mut self.source else { return None };
         loop {
             if self.cancel.load(Ordering::Relaxed) {
                 return None;
@@ -144,8 +154,8 @@ impl Iterator for ReadDir<'_> {
 
 pub(crate) enum Entry {
     Standard(Box<fs::DirEntry>),
-    Bulk { path: PathBuf, name: OsString, metadata: Metadata },
-    Stat { path: PathBuf, name: OsString, metadata: fs::Metadata },
+    Bulk { path: PathBuf, metadata: Metadata },
+    Stat { path: PathBuf, metadata: fs::Metadata },
 }
 
 pub(crate) enum FileType {
@@ -157,11 +167,18 @@ impl FileType {
     pub(crate) fn is_dir(&self) -> bool {
         matches!(self, Self::Standard(t) if t.is_dir())
     }
-    pub(crate) fn is_symlink(&self) -> bool {
+    #[cfg(test)]
+    fn is_symlink(&self) -> bool {
         matches!(self, Self::Standard(t) if t.is_symlink())
     }
-    pub(crate) fn is_file(&self) -> bool {
-        matches!(self, Self::Regular) || matches!(self, Self::Standard(t) if t.is_file())
+}
+
+impl From<FileType> for Kind {
+    fn from(ft: FileType) -> Self {
+        match ft {
+            FileType::Regular => Kind::File,
+            FileType::Standard(t) => Kind::from(t),
+        }
     }
 }
 
@@ -169,7 +186,7 @@ impl Entry {
     pub(crate) fn file_name(&self) -> OsString {
         match self {
             Self::Standard(e) => e.file_name(),
-            Self::Bulk { name, .. } | Self::Stat { name, .. } => name.clone(),
+            Self::Bulk { path, .. } | Self::Stat { path, .. } => path.file_name().unwrap_or_default().to_owned(),
         }
     }
     pub(crate) fn path(&self) -> PathBuf {
@@ -187,15 +204,15 @@ impl Entry {
     }
     pub(crate) fn metadata(&self) -> io::Result<Metadata> {
         match self {
-            Self::Standard(e) => e.metadata().map(Metadata::from),
+            Self::Standard(e) => e.metadata().map(|md| Metadata::from(&md)),
             Self::Bulk { metadata, .. } => Ok(*metadata),
-            Self::Stat { metadata, .. } => Ok(Metadata::from(metadata.clone())),
+            Self::Stat { metadata, .. } => Ok(Metadata::from(metadata)),
         }
     }
 }
 
-impl From<fs::Metadata> for Metadata {
-    fn from(md: fs::Metadata) -> Self {
+impl From<&fs::Metadata> for Metadata {
+    fn from(md: &fs::Metadata) -> Self {
         Self {
             device: md.dev(),
             inode: md.ino(),
@@ -231,30 +248,24 @@ impl Metadata {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::AtomicUsize;
+    use crate::testing::TempDir;
 
-    struct TempDir(PathBuf);
-    impl TempDir {
-        fn new() -> Self {
-            static NEXT: AtomicUsize = AtomicUsize::new(0);
-            let path = std::env::temp_dir().join(format!(
-                "clawback-bulk-{}-{}",
-                std::process::id(),
-                NEXT.fetch_add(1, Ordering::Relaxed)
-            ));
-            fs::create_dir(&path).unwrap();
-            Self(path)
-        }
+    fn temp() -> TempDir {
+        TempDir::new("bulk")
     }
-    impl Drop for TempDir {
-        fn drop(&mut self) {
-            let _ = fs::remove_dir_all(&self.0);
-        }
+
+    fn bulk<'a>(rd: &'a mut ReadDir<'_>) -> &'a mut Bulk {
+        let Source::Bulk(bulk) = &mut rd.source else { panic!("native bulk reader") };
+        bulk
+    }
+
+    fn uses_fallback(rd: &ReadDir<'_>) -> bool {
+        matches!(rd.source, Source::Standard(_))
     }
 
     #[test]
     fn native_bulk_matches_stat_including_sparse_files_and_hardlinks() {
-        let dir = TempDir::new();
+        let dir = temp();
         fs::write(dir.0.join("regular"), vec![7; 12345]).unwrap();
         fs::write(dir.0.join("regular/..namedfork/rsrc"), b"resource fork allocation").unwrap();
         fs::File::create(dir.0.join("sparse")).unwrap().set_len(8 * 1024 * 1024).unwrap();
@@ -274,7 +285,7 @@ mod tests {
             let path = dir.0.join(OsString::from_vec(record.name));
             let md = fs::symlink_metadata(path).unwrap();
             if md.is_file() {
-                assert_eq!(record.metadata, Some(Metadata::from(md)));
+                assert_eq!(record.metadata, Some(Metadata::from(&md)));
             } else {
                 assert!(record.metadata.is_none());
             }
@@ -287,27 +298,27 @@ mod tests {
             let md = fs::symlink_metadata(entry.path()).unwrap();
             assert_eq!(entry.file_type().unwrap().is_symlink(), md.is_symlink());
             assert_eq!(entry.file_type().unwrap().is_dir(), md.is_dir());
-            assert_eq!(entry.metadata().unwrap(), Metadata::from(md));
+            assert_eq!(entry.metadata().unwrap(), Metadata::from(&md));
         }
     }
 
     #[test]
     fn unsupported_bulk_call_falls_back_before_first_entry() {
-        let dir = TempDir::new();
+        let dir = temp();
         fs::write(dir.0.join("file"), b"hello").unwrap();
         let cancel = AtomicBool::new(false);
         let mut rd = read_dir(&dir.0, &cancel).unwrap();
-        rd.bulk.as_mut().unwrap().fail_next_batch = true;
+        bulk(&mut rd).fail_next_batch = true;
         let entry = rd.next().unwrap().unwrap();
         assert_eq!(entry.file_name(), "file");
         assert_eq!(entry.metadata().unwrap().len(), 5);
-        assert!(rd.standard.is_some());
+        assert!(uses_fallback(&rd));
         assert!(rd.next().is_none());
     }
 
     #[test]
     fn fallback_after_a_published_batch_does_not_duplicate_entries() {
-        let dir = TempDir::new();
+        let dir = temp();
         // More than one 64 KiB batch.
         for i in 0..1500 {
             fs::write(dir.0.join(format!("file-{i:04}")), b"x").unwrap();
@@ -315,23 +326,23 @@ mod tests {
         let cancel = AtomicBool::new(false);
         let mut rd = read_dir(&dir.0, &cancel).unwrap();
         let first = rd.next().unwrap().unwrap();
-        let bulk = rd.bulk.as_mut().expect("native bulk reader");
+        let bulk = bulk(&mut rd);
         bulk.fail_next_batch = true;
         let mut names = HashSet::from([first.file_name()]);
         for entry in rd.by_ref() {
             assert!(names.insert(entry.unwrap().file_name()));
         }
-        assert!(rd.standard.is_some(), "must exercise fallback");
+        assert!(uses_fallback(&rd), "must exercise fallback");
         assert_eq!(names.len(), 1500);
     }
 
     #[test]
     fn cancellation_stops_before_another_batch_or_fallback() {
-        let dir = TempDir::new();
+        let dir = temp();
         fs::write(dir.0.join("file"), b"x").unwrap();
         let cancel = AtomicBool::new(true);
         let mut rd = read_dir(&dir.0, &cancel).unwrap();
         assert!(rd.next().is_none());
-        assert!(rd.standard.is_none());
+        assert!(!uses_fallback(&rd));
     }
 }

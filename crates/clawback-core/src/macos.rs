@@ -50,9 +50,8 @@ struct Cursor<'a> {
 
 impl Cursor<'_> {
     fn take<const N: usize>(&mut self) -> io::Result<[u8; N]> {
-        let end = self.pos.checked_add(N).ok_or_else(invalid)?;
-        let value = self.data.get(self.pos..end).ok_or_else(invalid)?.try_into().map_err(|_| invalid())?;
-        self.pos = end;
+        let value = *self.data.get(self.pos..).and_then(<[u8]>::first_chunk).ok_or_else(invalid)?;
+        self.pos += N;
         Ok(value)
     }
 
@@ -90,7 +89,7 @@ fn parse_record(data: &[u8]) -> io::Result<Record> {
     // ERROR is a documented exception to attribute bitmap order.
     let error = c.optional_u32(common, ERROR)?.unwrap_or(0);
     let reference = c.pos;
-    let offset = c.u32()? as i32;
+    let offset = i32::from_ne_bytes(c.take()?);
     let length = c.u32()? as usize;
     let name_start = reference.checked_add_signed(offset as isize).ok_or_else(invalid)?;
     let name_end = name_start.checked_add(length).ok_or_else(invalid)?;
@@ -143,7 +142,7 @@ fn parse_batch(mut data: &[u8], count: usize) -> io::Result<Vec<Record>> {
     }
     let mut records = Vec::with_capacity(count);
     for _ in 0..count {
-        let length = Cursor { data, pos: 0 }.u32()? as usize;
+        let length = u32::from_ne_bytes(*data.first_chunk().ok_or_else(invalid)?) as usize;
         if length < 24 || !length.is_multiple_of(8) {
             return Err(invalid());
         }

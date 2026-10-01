@@ -18,10 +18,12 @@
 //! original, a box `(x, y, w, h)` is drawn covering `w + 1` by `h + 1` pixels
 //! so neighbours share their 1px black outlines.
 
+use crate::settings::DENSITY;
 use crate::tree::{NodeId, Tree, flags};
 
-/// Minimum box sizes (width, height) for density -3 ..= 3.
-pub const MIN_SIZES: [(i32, i32); 7] = [(96, 64), (64, 48), (48, 32), (32, 24), (24, 16), (16, 12), (8, 6)];
+/// Minimum box sizes (width, height) for each density, lowest first.
+const MIN_SIZES: [(i32, i32); 7] = [(96, 64), (64, 48), (48, 32), (32, 24), (24, 16), (16, 12), (8, 6)];
+const _: () = assert!(MIN_SIZES.len() as i32 == DENSITY.1 - DENSITY.0 + 1);
 
 /// Folder frame: left/right/bottom border width and top title band height.
 pub const FRAME: i32 = 3;
@@ -37,7 +39,7 @@ pub struct LayoutSettings {
 
 impl LayoutSettings {
     pub fn min_size(&self) -> (i32, i32) {
-        MIN_SIZES[(self.density + 3).clamp(0, 6) as usize]
+        MIN_SIZES[(self.density.clamp(DENSITY.0, DENSITY.1) - DENSITY.0) as usize]
     }
 }
 
@@ -224,12 +226,6 @@ pub fn hit_test(boxes: &[DisplayBox], px: i32, py: i32) -> Option<usize> {
     matches!(boxes[i].item, Item::Node(_)).then_some(i)
 }
 
-/// Every named box containing the point: the folder path and the entry under
-/// the cursor. Used for rollover highlighting.
-pub fn rollover(boxes: &[DisplayBox], px: i32, py: i32) -> impl Iterator<Item = usize> + '_ {
-    boxes.iter().enumerate().filter(move |(_, b)| matches!(b.item, Item::Node(_)) && b.contains(px, py)).map(|(i, _)| i)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -307,8 +303,6 @@ mod tests {
         assert_eq!(b[hit_test(&b, 100, 100).unwrap()].item, Item::Node(a));
         // Exact edges are outside (strict comparison).
         assert!(hit_test(&b, 0, 0).is_none());
-        // Rollover over a child lights up the folder and the child.
-        assert_eq!(rollover(&b, 100, 100).count(), 2);
     }
 
     #[test]
