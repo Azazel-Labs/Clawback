@@ -61,7 +61,7 @@ fn generate(tag: &str, checksums: &str) -> Result<BTreeMap<String, String>> {
         let (_, url, hash) = asset(target, "tar.gz")?;
         writeln!(formula, "    on_{architecture} do\n      url \"{url}\"\n      sha256 \"{hash}\"\n    end")?;
     }
-    formula.push_str("  end\n\n  def install\n    bin.install \"clawback\"\n  end\n\n  test do\n    assert_match version.to_s, shell_output(\"#{bin}/clawback --version\")\n  end\nend\n");
+    formula.push_str("  end\n\n  def install\n    bin.install \"clawback\"\n    if OS.mac?\n      prefix.install \"Clawback.app\"\n    else\n      share.install Dir[\"share/*\"]\n    end\n  end\n\n  test do\n    assert_match version.to_s, shell_output(\"#{bin}/clawback --version\")\n  end\nend\n");
     let schema = |kind: &str, content: String| {
         format!("# yaml-language-server: $schema=https://aka.ms/winget-manifest.{kind}.1.9.0.schema.json\n\n{content}")
     };

@@ -1,8 +1,12 @@
 use std::{env, error::Error, fs, path::Path, process::Command};
 use toml_edit::{DocumentMut, value};
 mod distribution;
+mod icons;
+mod package;
+mod profiling;
 mod screenshots;
 mod translations;
+mod turbo;
 
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -17,8 +21,20 @@ fn run() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().ok_or("Cannot locate workspace")?;
     env::set_current_dir(root)?;
+    if args.first().is_some_and(|arg| arg == "test-turbo") {
+        return turbo::run(root, &args[1..]);
+    }
     if args.first().is_some_and(|arg| arg == "translations") {
         return translations::run(root, &args[1..]);
+    }
+    if args.first().is_some_and(|arg| arg == "profile-scans") {
+        return profiling::run(root, &args[1..]);
+    }
+    if args == ["icons"] {
+        return icons::run(root);
+    }
+    if args.first().is_some_and(|arg| arg == "package") {
+        return package::run(root, &args[1..]);
     }
     if args.first().is_some_and(|arg| arg == "distribution") {
         return distribution::run(&args[1..]);
@@ -27,7 +43,7 @@ fn run() -> Result<()> {
         return screenshots::run(root, &args[1..]);
     }
     if args.len() != 3 || args[0] != "release" {
-        return Err("Usage: cargo xtask translations <check|fmt [--check]>\n       cargo xtask screenshots [--render-only]\n       cargo xtask release <prepare|validate|publish> <version>\n       cargo xtask distribution <version> <SHA256SUMS.txt> <output-directory>".into());
+        return Err("Usage: cargo xtask test-turbo <smoke|fixture|elevated|decline> <root> [--release]\n       cargo xtask translations <check|fmt [--check]>\n       cargo xtask icons\n       cargo xtask package <target> <tag>\n       cargo xtask screenshots [--render-only]\n       cargo xtask profile-scans --help\n       cargo xtask release <prepare|validate|publish> <version>\n       cargo xtask distribution <version> <SHA256SUMS.txt> <output-directory>".into());
     }
     let version = parse_version(&args[2])?;
     match args[1].as_str() {

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Clawback
+Comment=See where your disk space went
+Exec=clawback --gui
+Icon=clawback
+Terminal=false
+Categories=Utility;System;Filesystem;
+StartupWMClass=clawback

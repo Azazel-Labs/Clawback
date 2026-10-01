@@ -8,7 +8,7 @@ edition = "2024"
 rust-version = "1.98"
 license = "MIT-0"
 repository = "https://github.com/Azazel-Labs/Clawback"
-authors = ["Nick Darnell"]
+authors = ["Azazel Labs"]
 
 [workspace.dependencies]
 clawback-core = { path = "crates/clawback-core", version = "0.1.0" }
@@ -76,6 +76,9 @@ categories = ["filesystem", "visualization", "command-line-utilities"]
 
 [features]
 screenshots = []
+turbo-probe = []
+startup-probe = []
+perf-probe = []
 
 [dependencies]
 i18n-embed = { version = "0.16", features = ["fluent-system"] }
@@ -92,12 +95,25 @@ sysinfo = { version = "0.39", default-features = false, features = ["disk"] }
 # Recycle Bin / Trash.
 trash = "5.2"
 ratatui = "0.30"
+image = { version = "0.25", default-features = false, features = ["png"] }
 
 [target.'cfg(not(windows))'.dependencies]
 notify = "8.2"
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "0.61", features = ["Win32_Globalization", "Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading", "Win32_System_StationsAndDesktops", "Win32_Security"] }
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_System_Com", "Win32_UI_Shell"] }
+windows-core = "0.62"
+windows-sys = { version = "0.61", features = ["Win32_Globalization", "Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading", "Win32_System_StationsAndDesktops", "Win32_Security", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging", "Win32_Graphics_Gdi", "Win32_System_Com", "Win32_System_Pipes", "Win32_System_Registry", "Win32_System_WindowsProgramming"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", default-features = false, features = ["NSWorkspace", "NSImage", "NSBitmapImageRep", "NSImageRep"] }
+objc2-foundation = { version = "0.3", default-features = false, features = ["NSString", "NSData", "NSDictionary", "NSLocale", "NSArray"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+freedesktop-icons = "0.4.0"
+libloading = "0.8"
+resvg = { version = "0.48.1", default-features = false }
 
 [lints]
 workspace = true
@@ -112,9 +128,7 @@ strip = true
 [profile.dev.package."*"]
 opt-level = 2
 
-[target.'cfg(target_os = "macos")'.dependencies]
-objc2-foundation = { version = "0.3", default-features = false, features = ["NSString", "NSLocale", "NSArray"] }
-
 [build-dependencies]
+winresource = "0.1.31"
 fluent-syntax = "0.12"
 unic-langid = "0.9"

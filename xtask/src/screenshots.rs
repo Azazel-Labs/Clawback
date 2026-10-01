@@ -40,6 +40,7 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
     }
     let out = root.join("docs/images");
     fs::create_dir_all(&out)?;
+    write_palettes(&out.join("palettes.svg"))?;
     for name in ["desktop", "explore"] {
         let data = fs::read(target.join(format!("demo-{name}.ppm")))?;
         let (width, height, rgb) = ppm(&data)?;
@@ -50,6 +51,34 @@ pub fn run(root: &Path, args: &[String]) -> Result<()> {
     fs::write(out.join("terminal.svg"), svg)?;
     write_png(&out.join("terminal.png"), width, height, &pixels)?;
     println!("Wrote desktop.png, explore.png, terminal.png and terminal.svg in docs/images.");
+    Ok(())
+}
+
+fn write_palettes(path: &Path) -> Result<()> {
+    use clawback_core::palette::{DEFAULT_MAP_SCHEME, MAP_PRESETS, map_color};
+    let height = MAP_PRESETS.len() * 54 + 24;
+    let mut svg = format!(
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"900\" height=\"{height}\" viewBox=\"0 0 900 {height}\"><title>Clawback map palettes, Electric default</title><rect width=\"900\" height=\"{height}\" fill=\"#181818\"/>\n"
+    );
+    for (row, (scheme, name)) in MAP_PRESETS.iter().enumerate() {
+        let y = row * 54 + 12;
+        let suffix = if *scheme == DEFAULT_MAP_SCHEME { " · default" } else { "" };
+        writeln!(
+            svg,
+            "<text x=\"18\" y=\"{}\" fill=\"#eeeeee\" font-family=\"sans-serif\" font-size=\"16\">{name}{suffix}</text>",
+            y + 27
+        )?;
+        for depth in 0..8 {
+            let [r, g, b] = map_color(*scheme, depth);
+            writeln!(
+                svg,
+                "<rect x=\"{}\" y=\"{y}\" width=\"79\" height=\"40\" rx=\"3\" fill=\"#{r:02x}{g:02x}{b:02x}\"/>",
+                214 + depth * 84
+            )?;
+        }
+    }
+    svg.push_str("</svg>\n");
+    fs::write(path, svg)?;
     Ok(())
 }
 
