@@ -22,8 +22,6 @@ mod perf_probe;
 mod picker;
 mod platform;
 mod properties;
-#[cfg(windows)]
-mod recycle_bin;
 mod scanning;
 mod session;
 mod settings_ui;
@@ -106,6 +104,13 @@ fn launch_mode(mode: Mode, graphical: bool, terminal: bool, dumb: bool) -> Optio
 }
 
 fn main() -> ExitCode {
+    #[cfg(windows)]
+    if let Some(result) = app::special::worker_entry() {
+        return match result {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => std::process::exit(error.raw_os_error().unwrap_or(1)),
+        };
+    }
     #[cfg(all(windows, feature = "turbo-probe"))]
     if let Some(result) = turbo::probe_entry() {
         return if result.is_ok() { ExitCode::SUCCESS } else { ExitCode::FAILURE };

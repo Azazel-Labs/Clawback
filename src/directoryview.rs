@@ -241,6 +241,41 @@ mod tests {
     use std::path::Path;
 
     #[test]
+    fn selected_folder_expands_its_ancestors_and_is_revealed() {
+        let mut tree = Tree::new(Path::new("/selection"));
+        let top = tree.add_children(ROOT, (0..40).map(|i| NewEntry::dir(format!("folder-{i}"))).collect());
+        let parent = top.end - 1;
+        let selected = tree.add_children(parent, vec![NewEntry::dir("selected")]).start;
+        let tree = Arc::new(tree);
+        let mut directories = DirectoryView::default();
+        let ctx = egui::Context::default();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        loop {
+            assert!(std::time::Instant::now() < deadline);
+            let mut output = ctx.run_ui(
+                egui::RawInput {
+                    screen_rect: Some(Rect::from_min_size(Pos2::ZERO, vec2(640.0, 200.0))),
+                    ..Default::default()
+                },
+                |ui| {
+                    directories.ui(ui, &tree, 1, 0, selected, false);
+                },
+            );
+            output.textures_delta.clear();
+            if directories.pending.is_none() {
+                break;
+            }
+            std::thread::yield_now();
+        }
+        assert_eq!(directories.focused, Some(selected));
+        assert!(directories.expanded.contains(&ROOT) && directories.expanded.contains(&parent));
+        assert!(directories.rows.iter().any(|row| row.node == selected));
+        assert!(!directories.reveal);
+        // Revealing a row near the bottom should scroll the virtualized list there.
+        assert!(directories.drawn_rows < 15);
+    }
+
+    #[test]
     fn large_directory_lists_only_render_visible_rows() {
         let mut tree = Tree::new(Path::new("/large"));
         tree.add_children(ROOT, (0..10_000).map(|i| NewEntry::dir(format!("folder-{i}"))).collect());
