@@ -816,6 +816,7 @@ dependencies = [
  "clawback-core",
  "eframe",
  "egui-phosphor",
+ "fluent-bundle",
  "fluent-syntax",
  "freedesktop-icons",
  "i18n-embed",
@@ -823,6 +824,7 @@ dependencies = [
  "image",
  "libloading 0.9.0",
  "notify",
+ "num-format",
  "objc2 0.6.4",
  "objc2-app-kit 0.3.2",
  "objc2-foundation 0.3.2",
@@ -2893,6 +2895,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.119",
+]
+
+[[package]]
+name = "num-format"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a652d9771a63711fd3c3deb670acfbe5c30a4072e664d7a3bf5a9e1056ac72c3"
+dependencies = [
+ "arrayvec",
+ "itoa",
 ]
 
 [[package]]

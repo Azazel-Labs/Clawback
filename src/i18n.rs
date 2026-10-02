@@ -17,7 +17,7 @@ pub static LOADER: LazyLock<FluentLanguageLoader> = LazyLock::new(|| {
     let loader = fluent_language_loader!();
     loader.load_languages(&Localizations, &[loader.fallback_language().clone()]).expect("embedded English catalog");
     // Every catalog is left-to-right; bidi isolation marks would only show up as stray glyphs.
-    loader.set_use_isolating(false);
+    configure_numbers(&loader);
     loader
 });
 
@@ -38,7 +38,53 @@ pub fn set_language(code: &str) -> &'static str {
     LOADER
         .load_languages(&Localizations, &[code.parse().expect("validated catalog language")])
         .expect("validated embedded Fluent catalogs");
+    configure_numbers(&LOADER);
     code
+}
+
+/// Keep values numeric for plural selection, grouping integers only when displayed.
+fn configure_numbers(loader: &FluentLanguageLoader) {
+    loader.set_use_isolating(false);
+    let language = loader.current_language().to_string();
+    macro_rules! formatter {
+        ($($code:literal),*) => {
+            loader.with_bundles_mut(|bundle| {
+                bundle.set_formatter(Some(match language.as_str() {
+                    $($code => |value, _| format_number(value, $code),)*
+                    _ => |value, _| format_number(value, "en"),
+                }));
+            });
+        };
+    }
+    formatter!(
+        "af", "ca", "cs", "da", "de", "el", "en", "es-419", "es-ES", "fi", "fr", "hu", "id", "it", "ja", "ko", "nb",
+        "nl", "pl", "pt-BR", "pt-PT", "ro", "ru", "sr-Cyrl", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant"
+    );
+}
+
+fn format_number(value: &fluent_bundle::FluentValue<'_>, language: &str) -> Option<String> {
+    if let fluent_bundle::FluentValue::Number(number) = value
+        && number.value >= 0.0
+        && number.value <= 9_007_199_254_740_991.0
+        && number.value.fract() == 0.0
+    {
+        Some(count_for_language(number.value as u64, language))
+    } else {
+        None
+    }
+}
+
+pub fn count(n: u64) -> String {
+    count_for_language(n, &LOADER.current_language().to_string())
+}
+
+fn count_for_language(n: u64, language: &str) -> String {
+    use num_format::{Locale, ToFormattedString};
+    let normalized = language.replace('-', "_");
+    let locale = Locale::from_name(&normalized)
+        .or_else(|_| Locale::from_name(language.split('-').next().unwrap_or("en")))
+        .unwrap_or(Locale::en);
+    n.to_formatted_string(&locale)
 }
 
 /// The untranslated C/POSIX locale, with or without a codeset or modifier.
@@ -166,7 +212,7 @@ mod tests {
     fn loader(language: &str) -> FluentLanguageLoader {
         let loader = fluent_language_loader!();
         loader.load_languages(&Localizations, &[language.parse().expect("test locale")]).expect("embedded catalog");
-        loader.set_use_isolating(false);
+        configure_numbers(&loader);
         loader
     }
 
@@ -665,9 +711,9 @@ mod tests {
         let en = loader("en");
         let fr = loader("fr");
         for (count, english, french) in [
-            (0, "0 files, 0 folders", "0 fichier, 0 dossier"),
-            (1, "1 file, 1 folder", "1 fichier, 1 dossier"),
-            (2, "2 files, 2 folders", "2 fichiers, 2 dossiers"),
+            (0, "0 files | 0 folders", "0 fichier, 0 dossier"),
+            (1, "1 file | 1 folder", "1 fichier, 1 dossier"),
+            (2, "2 files | 2 folders", "2 fichiers, 2 dossiers"),
         ] {
             assert_eq!(i18n_embed_fl::fl!(en, "contents-count", files = count, folders = count), english);
             assert_eq!(i18n_embed_fl::fl!(fr, "contents-count", files = count, folders = count), french);
@@ -682,6 +728,28 @@ mod tests {
         assert_eq!(i18n_embed_fl::fl!(en, "workers", count = 2), "2 workers");
         assert!(
             i18n_embed_fl::fl!(fr, "contents-count", files = 1_000_000, folders = 2).ends_with("fichiers, 2 dossiers")
+        );
+    }
+
+    #[test]
+    fn summaries_group_numeric_counts_without_changing_plural_selection() {
+        let en = loader("en");
+        let fr = loader("fr");
+        let files = count_for_language(2_225_814, "en");
+        let folders = count_for_language(372_349, "en");
+        assert_eq!(
+            i18n_embed_fl::fl!(en, "scan-summary", size = "906.1 GB", files = 2_225_814, folders = 372_349),
+            format!("906.1 GB | {files} files | {folders} folders")
+        );
+        assert_eq!(
+            i18n_embed_fl::fl!(fr, "contents-count", files = 2_225_814, folders = 1),
+            format!("{} fichiers, 1 dossier", count_for_language(2_225_814, "fr"))
+        );
+        assert_eq!(count_for_language(2_225_814, "en"), "2,225,814");
+        assert_eq!(count_for_language(2_225_814, "fr"), "2\u{202f}225\u{202f}814");
+        assert_eq!(count_for_language(2_225_814, "de"), "2.225.814");
+        assert!(
+            i18n_embed_fl::fl!(loader("de"), "contents-count", files = 2_225_814, folders = 1).contains("2.225.814")
         );
     }
 
@@ -702,8 +770,13 @@ mod tests {
         }
         let loader = fluent_language_loader!();
         loader.load_languages(&Partial, &["fr".parse().expect("French")]).expect("partial translation");
+        configure_numbers(&loader);
         assert_eq!(i18n_embed_fl::fl!(loader, "cancel"), "Annuler");
         assert_eq!(i18n_embed_fl::fl!(loader, "system-default"), "System default");
+        assert_eq!(
+            i18n_embed_fl::fl!(loader, "scan-summary", size = "906.1 GB", files = 2_225_814, folders = 1),
+            "906.1 GB | 2\u{202f}225\u{202f}814 files | 1 folder"
+        );
     }
 
     #[test]

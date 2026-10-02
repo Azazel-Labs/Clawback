@@ -93,7 +93,7 @@ contents-count =
     { $files ->
         [one] { $files } file
        *[other] { $files } files
-    }, { $folders ->
+    } | { $folders ->
         [one] { $folders } folder
        *[other] { $folders } folders
     }

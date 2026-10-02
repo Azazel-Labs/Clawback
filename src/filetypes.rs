@@ -312,7 +312,7 @@ fn summarize(tree: &Tree, scope: NodeId, cancel: &AtomicBool) -> Option<Summary>
             kind: type_name(&extension),
             extension,
             size: format::size(bytes),
-            files: format::count(count),
+            files: crate::i18n::count(count),
             share: format::percent(bytes, total),
             fraction: if total == 0 { 0.0 } else { bytes as f32 / total as f32 },
         })
