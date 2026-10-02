@@ -92,6 +92,26 @@ Every night at 06:17 UTC, if `main` has new commits since the last nightly, GitH
 
 ## Project layout
 
+Special locations live under `src/app/special/`. Its `Provider` interface separates
+fast cell/path recognition from the removal lookup that runs on a worker. The
+registry is selected at compile time: `special/windows.rs` registers Recycle Bin,
+user Temp, WSL disks, and installed software/Steam. Other targets currently use an
+empty registry and retain ordinary file behavior. No runtime plugin loading is
+involved.
+
+`Inventory` belongs to the current tree snapshot and is included in the map's
+layout cache key. The treemap consumes this inventory for collapsed cells and
+forwards a generic `Command::Special` action. Icons, menu entries and hints belong
+to `special/visuals.rs`; feature dialogs live in `special/dialogs/`. Cleanup
+policies supply exclusions, deletion behavior, confirmation text, progress text,
+and reconciliation requirements through `special/cleanup.rs`. Native discovery
+and actions stay inside the platform submodule.
+
+To add a special location, implement its platform provider, register its discovery
+and activation callbacks, and add its presentation/policy inside `app::special`.
+Keep expensive lookups in the worker hook. The main app and map should not gain
+new per-location fields or platform-specific branches.
+
 ```
 crates/clawback-core/     the engine, pure std with no dependencies
   scan.rs             parallel scanner (thread pool over a shared work queue, live progress, cancel)
