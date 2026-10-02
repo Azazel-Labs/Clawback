@@ -43,6 +43,7 @@ struct Queue {
 }
 
 struct Work<'a> {
+    gentle: bool,
     queue: Mutex<Queue>,
     ready: Condvar,
     dirs: Mutex<Vec<(usize, PathBuf)>>,
@@ -53,8 +54,17 @@ struct Work<'a> {
 }
 
 pub fn run(target: &Target<'_>, threads: usize, progress: &Progress) -> Report {
+    run_inner(target, threads, progress, false)
+}
+
+pub fn run_temp(target: &Target<'_>, threads: usize, progress: &Progress) -> Report {
+    run_inner(target, threads, progress, true)
+}
+
+fn run_inner(target: &Target<'_>, threads: usize, progress: &Progress, gentle: bool) -> Report {
     let root = target.root;
     let work = Work {
+        gentle,
         queue: Mutex::default(),
         ready: Condvar::new(),
         dirs: Mutex::new(Vec::new()),
@@ -207,7 +217,7 @@ impl Work<'_> {
 
     fn remove(&self, path: &Path, link_dir: bool) {
         self.progress.note(path);
-        match remove(path, link_dir) {
+        match self.remove_item(path, link_dir) {
             Ok(()) => self.progress.file_done(),
             Err(error) if error.kind() == io::ErrorKind::NotFound => self.progress.file_done(),
             Err(error) => self.fail(path, &error),
@@ -215,13 +225,17 @@ impl Work<'_> {
     }
 
     fn remove_dir(&self, dir: &Path) {
-        match remove(dir, true) {
+        match self.remove_item(dir, true) {
             Ok(()) => {}
             Err(error) if error.kind() == io::ErrorKind::NotFound => {}
             // Something inside could not be deleted; that failure is already counted.
             Err(_) if std::fs::read_dir(dir).is_ok_and(|mut d| d.next().is_some()) => {}
             Err(error) => self.fail(dir, &error),
         }
+    }
+
+    fn remove_item(&self, path: &Path, dir: bool) -> io::Result<()> {
+        if self.gentle { remove_temp_item(path, dir) } else { remove(path, dir) }
     }
 
     fn fail(&self, path: &Path, error: &io::Error) {
@@ -241,6 +255,32 @@ fn link_kind_is_dir(_: std::fs::FileType) -> bool {
 }
 fn link_is_dir(md: &std::fs::Metadata) -> bool {
     md.is_dir() || link_kind_is_dir(md.file_type())
+}
+
+/// Ordinary Windows deletion: never clear read-only or request POSIX unlink semantics.
+#[cfg(windows)]
+fn remove_temp_item(path: &Path, dir: bool) -> io::Result<()> {
+    use std::os::windows::ffi::OsStrExt;
+    use windows_sys::Win32::Storage::FileSystem::{DeleteFileW, RemoveDirectoryW};
+    let absolute = std::path::absolute(path)?;
+    let units: Vec<u16> = absolute.as_os_str().encode_wide().collect();
+    let prefix: Vec<u16> = r"\\?\".encode_utf16().collect();
+    let mut wide = if units.starts_with(&prefix) {
+        units
+    } else if units.starts_with(&[92, 92]) {
+        r"\\?\UNC\".encode_utf16().chain(units.into_iter().skip(2)).collect()
+    } else {
+        prefix.into_iter().chain(units).collect()
+    };
+    wide.push(0);
+    // SAFETY: absolute NUL-terminated path; these calls remove the named item, not a link's target.
+    let success = if dir { unsafe { RemoveDirectoryW(wide.as_ptr()) } } else { unsafe { DeleteFileW(wide.as_ptr()) } };
+    if success != 0 { Ok(()) } else { Err(io::Error::last_os_error()) }
+}
+
+#[cfg(not(windows))]
+fn remove_temp_item(path: &Path, dir: bool) -> io::Result<()> {
+    if dir { std::fs::remove_dir(path) } else { std::fs::remove_file(path) }
 }
 
 /// Delete one file, link or (empty) folder. Read-only and in-use files go too: POSIX
@@ -344,6 +384,24 @@ mod tests {
         let left: Vec<_> = std::fs::read_dir(&root).unwrap().map(|e| e.unwrap().file_name()).collect();
         assert_eq!(left, ["desktop.ini"]);
         std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn temp_cleanup_keeps_read_only_and_locked_files_without_forcing_them() {
+        use std::os::windows::fs::OpenOptionsExt;
+        let root = fixture("temp-safe");
+        let locked = root.join("a/b/c/deep.txt");
+        let held = std::fs::OpenOptions::new().read(true).share_mode(0).open(&locked).unwrap();
+        let report = run_temp(&Target { root: &root, contents_only: true, keep: &[] }, 4, &Progress::default());
+        assert_eq!(report.failed, 2, "{:?}", report.first_error);
+        assert!(root.is_dir());
+        assert!(locked.exists());
+        assert!(root.join("a/b/readonly.txt").exists());
+        assert!(!root.join("desktop.ini").exists());
+        drop(held);
+        let cleanup = run(&Target { root: &root, contents_only: false, keep: &[] }, 2, &Progress::default());
+        assert_eq!(cleanup.failed, 0);
     }
 
     #[test]
