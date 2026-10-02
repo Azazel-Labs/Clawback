@@ -30,35 +30,80 @@ pub const BACKDROP: Color32 = Color32::from_black_alpha(170);
 /// Height of dialog action buttons.
 pub const BUTTON_HEIGHT: f32 = 34.0;
 
-/// Bundled fonts, so CJK and Thai labels and filenames render without installed OS fonts.
-const FONTS: [(&str, &[u8]); 5] = [
-    ("Noto Sans SC", include_bytes!("../assets/fonts/NotoSansSC-Regular.otf")),
-    ("Noto Sans KR", include_bytes!("../assets/fonts/NotoSansKR-Regular.otf")),
-    ("Noto Sans JP", include_bytes!("../assets/fonts/NotoSansJP-Regular.otf")),
-    ("Noto Sans TC", include_bytes!("../assets/fonts/NotoSansTC-Regular.otf")),
-    ("Noto Sans Thai", include_bytes!("../assets/fonts/NotoSansThai-Regular.ttf")),
-];
+mod system_fonts;
+
+/// Thai is small enough to bundle in every build.
+const THAI: &[u8] = include_bytes!("../assets/fonts/NotoSansThai-Regular.ttf");
+
+/// Han characters have regional glyph forms, so each region has its own face.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Region {
+    Sc,
+    Kr,
+    Jp,
+    Tc,
+}
+
+impl Region {
+    /// In discriminant order, which is also the fallback order after the UI language's.
+    const ALL: [Region; 4] = [Region::Sc, Region::Kr, Region::Jp, Region::Tc];
+
+    fn key(self) -> &'static str {
+        match self {
+            Region::Sc => "CJK SC",
+            Region::Kr => "CJK KR",
+            Region::Jp => "CJK JP",
+            Region::Tc => "CJK TC",
+        }
+    }
+}
+
+/// Builds from the repository bundle Noto Sans CJK, so CJK labels and filenames
+/// render without installed fonts.
+#[cfg(bundled_cjk_fonts)]
+#[allow(clippy::unnecessary_wraps)] // Matches the system version, which can find nothing.
+fn cjk_font(region: Region) -> Option<egui::FontData> {
+    let bytes: &'static [u8] = match region {
+        Region::Sc => include_bytes!("../assets/fonts/NotoSansSC-Regular.otf"),
+        Region::Kr => include_bytes!("../assets/fonts/NotoSansKR-Regular.otf"),
+        Region::Jp => include_bytes!("../assets/fonts/NotoSansJP-Regular.otf"),
+        Region::Tc => include_bytes!("../assets/fonts/NotoSansTC-Regular.otf"),
+    };
+    Some(egui::FontData::from_static(bytes))
+}
+
+/// Builds from crates.io, whose package leaves the fonts out, use the system's.
+#[cfg(not(bundled_cjk_fonts))]
+fn cjk_font(region: Region) -> Option<egui::FontData> {
+    let face = system_fonts::cjk(region)?;
+    Some(egui::FontData { index: face.index, ..egui::FontData::from_static(face.bytes) })
+}
 
 /// Shared Han characters have different regional glyph forms; the UI language's come first.
-fn primary_font(language: &str) -> &'static str {
+fn primary_font(language: &str) -> Region {
     match language {
-        "ja" => "Noto Sans JP",
-        "ko" => "Noto Sans KR",
-        "zh-Hant" => "Noto Sans TC",
-        _ => "Noto Sans SC",
+        "ja" => Region::Jp,
+        "ko" => Region::Kr,
+        "zh-Hant" => Region::Tc,
+        _ => Region::Sc,
     }
 }
 
 pub fn set_fonts(ctx: &egui::Context, language: &str) {
     // Install for every language so the native name in Settings also renders.
     let mut fonts = egui::FontDefinitions::default();
-    for (name, bytes) in FONTS {
-        fonts.font_data.insert(name.into(), egui::FontData::from_static(bytes).into());
-    }
     let primary = primary_font(language);
-    let order = std::iter::once(primary).chain(FONTS.iter().map(|(name, _)| *name).filter(|&name| name != primary));
+    let mut order = Vec::new();
+    for region in std::iter::once(primary).chain(Region::ALL.into_iter().filter(|&r| r != primary)) {
+        if let Some(data) = cjk_font(region) {
+            fonts.font_data.insert(region.key().into(), data.into());
+            order.push(region.key());
+        }
+    }
+    fonts.font_data.insert("Noto Sans Thai".into(), egui::FontData::from_static(THAI).into());
+    order.push("Noto Sans Thai");
     for family in [egui::FontFamily::Proportional, egui::FontFamily::Monospace] {
-        fonts.families.entry(family).or_default().extend(order.clone().map(str::to_owned));
+        fonts.families.entry(family).or_default().extend(order.iter().map(|&name| name.to_owned()));
     }
     // Phosphor icons (MIT; license shipped beside the binary) live in the Private Use Area.
     // Last in the chain, so they can only supply icons and never shadow text glyphs.
@@ -191,10 +236,14 @@ mod tests {
         set_fonts(ctx, language);
         let mut output = ctx.run_ui(egui::RawInput::default(), |ui| {
             let definitions = ui.fonts_mut(|fonts| fonts.definitions().clone());
-            let expected = primary_font(language);
+            let primary = primary_font(language);
+            let expected = std::iter::once(primary)
+                .chain(Region::ALL.into_iter().filter(|&region| region != primary))
+                .find(|&region| cjk_font(region).is_some())
+                .map(Region::key);
             for family in [egui::FontFamily::Proportional, egui::FontFamily::Monospace] {
-                let first_cjk = definitions.families[&family].iter().find(|name| name.starts_with("Noto Sans"));
-                assert_eq!(first_cjk.map(String::as_str), Some(expected));
+                let first_cjk = definitions.families[&family].iter().find(|name| name.starts_with("CJK "));
+                assert_eq!(first_cjk.map(String::as_str), expected);
             }
             let mut coverage = egui::epaint::text::Fonts::new(egui::epaint::text::TextOptions::default(), definitions);
             for font in [FontId::proportional(13.0), FontId::monospace(13.0)] {
@@ -202,12 +251,15 @@ mod tests {
                 // false for valid characters in the replacement glyph's face.
                 let mut family = coverage.fonts.font(&font.family);
                 let characters = family.characters();
-                // Every bundled catalog, so new locales are covered automatically.
+                // Bundled builds guarantee coverage. System builds must also run
+                // on machines without optional CJK language fonts installed.
+                #[cfg(bundled_cjk_fonts)]
                 for catalog in crate::i18n::languages().map(crate::i18n::catalog) {
                     for ch in catalog.chars().filter(|c| !c.is_whitespace()) {
                         assert!(characters.contains_key(&ch), "Missing glyph: {ch}");
                     }
                 }
+                assert!(characters.contains_key(&'ก'), "Thai remains bundled in system-font builds");
                 ui.fonts_mut(|fonts| {
                     for sample in
                         ["简体中文：正在扫描文件夹…", "한국어: 폴더 스캔 중…", "日本語：フォルダーをスキャン中…"]

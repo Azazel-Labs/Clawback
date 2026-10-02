@@ -3,7 +3,7 @@ members = ["crates/clawback-core", "xtask"]
 default-members = [".", "crates/clawback-core"]
 
 [workspace.package]
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 rust-version = "1.98"
 license = "MIT-0"
@@ -11,7 +11,7 @@ repository = "https://github.com/Azazel-Labs/Clawback"
 authors = ["Azazel Labs"]
 
 [workspace.dependencies]
-clawback-core = { path = "crates/clawback-core", version = "0.2.0" }
+clawback-core = { path = "crates/clawback-core", version = "0.2.1" }
 
 # ---------------------------------------------------------------------------
 # Lints: pedantic clippy with a short, deliberate allow list. CI runs
@@ -73,6 +73,21 @@ authors.workspace = true
 default-run = "clawback"
 keywords = ["disk", "treemap", "disk-space", "disk-usage", "gui"]
 categories = ["filesystem", "visualization", "command-line-utilities"]
+# Only what the build needs, to stay under crates.io's size limit. That leaves out
+# the CJK fonts too: build.rs notices, and those builds use the system's fonts.
+include = [
+    "/src/**",
+    "/build.rs",
+    "/i18n.toml",
+    "/locales/**",
+    "/localization/**",
+    "/assets/fonts/NotoSansThai-Regular.ttf",
+    "/assets/fonts/*.txt",
+    "/assets/fonts/README.md",
+    "/assets/icons/clawback.ico",
+    "/README.md",
+    "/LICENSE",
+]
 
 [features]
 screenshots = []
@@ -98,6 +113,7 @@ trash = "5.2"
 ratatui = "0.30"
 image = { version = "0.25", default-features = false, features = ["png"] }
 egui-phosphor = "0.14"
+ttf-parser = "0.25" # Validate system fonts and select regional faces in collections.
 
 [target.'cfg(not(windows))'.dependencies]
 notify = "8.2"
@@ -114,7 +130,7 @@ objc2-foundation = { version = "0.3", default-features = false, features = ["NSS
 
 [target.'cfg(target_os = "linux")'.dependencies]
 freedesktop-icons = "0.4.0"
-libloading = "0.8"
+libloading = "0.9"
 resvg = { version = "0.48.1", default-features = false }
 
 [lints]

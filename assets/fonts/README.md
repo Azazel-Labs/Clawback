@@ -20,6 +20,13 @@ executable. They need no runtime download or installed system font. Release
 archives include the shared license as NotoSans-OFL.txt; macOS app bundles
 also carry the license in Contents/Resources.
 
+The crates.io package leaves these four fonts out to stay under its size limit, so
+`cargo install` builds use the operating system's CJK fonts instead: Microsoft
+YaHei, JhengHei, Yu Gothic, and Malgun Gothic on Windows; PingFang, Hiragino, and
+Apple SD Gothic Neo on macOS; and whatever fontconfig picks for each language on
+Linux (usually Noto Sans CJK). Linux systems without CJK fonts show boxes for those
+characters. `build.rs` bundles the fonts whenever all four files are present.
+
 Traditional Chinese, Japanese, and Korean UI languages prioritize their respective fonts for shared
 Han characters. Other languages keep SC first. Switching languages updates
 the fallback order; all four fonts remain available for mixed-script text.

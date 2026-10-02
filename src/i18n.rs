@@ -26,7 +26,7 @@ pub fn languages() -> impl Iterator<Item = &'static str> {
 }
 
 /// The embedded Fluent source for `code`.
-#[cfg(test)]
+#[cfg(all(test, bundled_cjk_fonts))]
 pub(crate) fn catalog(code: &str) -> String {
     let file = Localizations::get(&format!("{code}/clawback.ftl")).expect("embedded catalog");
     String::from_utf8(file.data.into_owned()).expect("UTF-8 catalog")
