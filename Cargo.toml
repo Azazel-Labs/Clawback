@@ -99,6 +99,8 @@ perf-probe = []
 clap = { version = "4.6", features = ["derive"] }
 i18n-embed = { version = "0.16", features = ["fluent-system"] }
 i18n-embed-fl = "0.10"
+fluent-bundle = "0.16"
+num-format = "0.4"
 rust-embed = { version = "8", features = ["debug-embed"] }
 clawback-core.workspace = true
 # GUI (wgpu renderer; winit loads X11/Wayland/GL libraries at runtime, so
