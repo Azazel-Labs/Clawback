@@ -9,6 +9,14 @@ fn main() {
     let generated = format!("static LANGUAGES: &[&str] = &{:?};\n", catalogs.keys().collect::<Vec<_>>());
     let output = std::path::PathBuf::from(std::env::var_os("OUT_DIR").expect("Cargo output directory"));
     std::fs::write(output.join("translations.rs"), generated).expect("Write embedded translations");
+    // crates.io limits package size, so its package leaves out the CJK fonts; those
+    // builds use the operating system's instead (see src/theme/system_fonts.rs).
+    println!("cargo:rerun-if-changed=assets/fonts");
+    println!("cargo:rustc-check-cfg=cfg(bundled_cjk_fonts)");
+    let cjk = ["SC", "TC", "JP", "KR"].map(|region| format!("assets/fonts/NotoSans{region}-Regular.otf"));
+    if cjk.iter().all(|path| std::path::Path::new(path).is_file()) {
+        println!("cargo:rustc-cfg=bundled_cjk_fonts");
+    }
     println!("cargo:rerun-if-changed=assets/icons/clawback.ico");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
         winresource::WindowsResource::new()

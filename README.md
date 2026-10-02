@@ -4,6 +4,14 @@ Clawback shows where your disk space went. It scans a drive or folder and draws 
 
 [Releases](https://github.com/Azazel-Labs/Clawback/releases) · [User guide](docs/usage.md) · [Building](docs/development.md) · [License (MIT-0)](LICENSE)
 
+**Get it:** download the [latest release](https://github.com/Azazel-Labs/Clawback/releases/latest) for Windows, macOS, or Linux, or install it from [crates.io](https://crates.io/crates/clawback) with Rust 1.98 or newer:
+
+```sh
+cargo install clawback
+```
+
+The crates.io build uses your system's Chinese, Japanese, and Korean fonts, while the release downloads include their own.
+
 ![Clawback desktop window showing a directory tree, a file-type breakdown, and a treemap of a demo drive](docs/images/desktop.png)
 
 *Screenshots use a built-in demo drive; the file names and sizes are made up.*

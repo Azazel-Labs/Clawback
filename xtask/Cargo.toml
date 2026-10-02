@@ -12,7 +12,7 @@ clap = { version = "4.6", features = ["derive"] }
 fluent-syntax = "0.12"
 unic-langid = "0.9"
 proc-macro2 = "1"
-syn = { version = "2", features = ["full", "visit"] }
+syn = { version = "3", features = ["full", "visit"] }
 clawback-core.workspace = true
 toml_edit = "0.25.15"
 png = "0.18.1"
