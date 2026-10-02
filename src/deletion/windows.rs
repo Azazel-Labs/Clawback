@@ -51,7 +51,7 @@ impl Sink {
         if declined(hr) {
             self.settle(Outcome::Declined);
         } else if hr.is_err() {
-            self.settle(Outcome::Failed(Error::from(hr).to_string()));
+            self.settle(Outcome::Failed(error_text(&Error::from(hr))));
         }
     }
     fn take_outcome(&self) -> Option<Outcome> {
@@ -197,6 +197,30 @@ fn declined(hr: windows_core::HRESULT) -> bool {
     hr == COPYENGINE_E_USER_CANCELLED || hr == ERROR_CANCELLED.to_hresult()
 }
 
+/// Shell copy-engine HRESULTs are not in the system message table. Resolve their
+/// underlying Win32 condition to Windows' localized message, retaining the original code.
+fn error_text(error: &Error) -> String {
+    use windows::Win32::{
+        Foundation::{
+            ERROR_ACCESS_DENIED, ERROR_DISK_FULL, ERROR_PATH_NOT_FOUND, ERROR_SHARING_VIOLATION, ERROR_WRITE_PROTECT,
+        },
+        UI::Shell::{
+            COPYENGINE_E_ACCESS_DENIED_DEST, COPYENGINE_E_ACCESS_DENIED_SRC, COPYENGINE_E_ACCESSDENIED_READONLY,
+            COPYENGINE_E_DISK_FULL, COPYENGINE_E_DISK_FULL_CLEAN, COPYENGINE_E_PATH_NOT_FOUND_DEST,
+            COPYENGINE_E_PATH_NOT_FOUND_SRC, COPYENGINE_E_SHARING_VIOLATION_DEST, COPYENGINE_E_SHARING_VIOLATION_SRC,
+        },
+    };
+    let code = match error.code() {
+        COPYENGINE_E_SHARING_VIOLATION_SRC | COPYENGINE_E_SHARING_VIOLATION_DEST => ERROR_SHARING_VIOLATION,
+        COPYENGINE_E_ACCESS_DENIED_SRC | COPYENGINE_E_ACCESS_DENIED_DEST => ERROR_ACCESS_DENIED,
+        COPYENGINE_E_ACCESSDENIED_READONLY => ERROR_WRITE_PROTECT,
+        COPYENGINE_E_PATH_NOT_FOUND_SRC | COPYENGINE_E_PATH_NOT_FOUND_DEST => ERROR_PATH_NOT_FOUND,
+        COPYENGINE_E_DISK_FULL | COPYENGINE_E_DISK_FULL_CLEAN => ERROR_DISK_FULL,
+        _ => return error.to_string(),
+    };
+    format!("{}\n\nWindows error: 0x{:08X}", Error::from(code.to_hresult()).message().trim(), error.code().0 as u32)
+}
+
 /// Errors are display text that already carries its code.
 pub fn recycle(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String> {
     let sink = Sink::new(progress.clone());
@@ -206,7 +230,7 @@ pub fn recycle(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String
         (Some(Outcome::TooLarge), _) => Ok(Recycled::TooLarge),
         (Some(Outcome::Failed(error)), _) => Err(error),
         (_, Err(error)) if declined(error.code()) => Ok(Recycled::Declined),
-        (_, Err(error)) => Err(error.to_string()),
+        (_, Err(error)) => Err(error_text(&error)),
         (Some(Outcome::Declined), Ok(_)) => Ok(Recycled::Declined),
         (None, Ok(true)) => Err(Error::new(E_ABORT, "Recycling was cancelled or could not complete").to_string()),
         (None, Ok(false)) => Ok(Recycled::Done),
@@ -247,6 +271,16 @@ mod tests {
     use super::*;
     use std::time::Instant;
     use windows::Win32::Foundation::E_ACCESSDENIED;
+
+    #[test]
+    fn shell_sharing_error_includes_windows_message_and_original_code() {
+        use windows::Win32::{Foundation::ERROR_SHARING_VIOLATION, UI::Shell::COPYENGINE_E_SHARING_VIOLATION_SRC};
+        let message = Error::from(ERROR_SHARING_VIOLATION.to_hresult()).message();
+        let result = error_text(&Error::from(COPYENGINE_E_SHARING_VIOLATION_SRC));
+        assert!(!message.trim().is_empty());
+        assert!(result.contains(message.trim()));
+        assert!(result.contains("0x80270027"));
+    }
 
     #[test]
     fn progress_and_permanent_delete_guard() {

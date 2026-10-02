@@ -108,3 +108,9 @@ pub fn purge(target: &Target<'_>, threads: usize, progress: &Progress) -> Report
     progress.phase(Phase::Deleting);
     purge::run(target, threads, progress)
 }
+
+/// Temp cleanup uses ordinary deletion, without forcing read-only or open files away.
+pub fn purge_temp(target: &Target<'_>, threads: usize, progress: &Progress) -> Report {
+    progress.phase(Phase::Deleting);
+    purge::run_temp(target, threads, progress)
+}
