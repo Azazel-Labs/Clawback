@@ -164,8 +164,7 @@ pub(crate) fn wide(value: &std::ffi::OsStr) -> Vec<u16> {
 #[cfg(windows)]
 pub(crate) use self::windows::Apartment;
 
-/// Open a file with its default application, or a folder in the file manager
-/// (SpaceMonger's "Run / Open").
+/// Open a file with its default application, or a folder in the file manager.
 pub fn open(path: &Path) -> Result<(), String> {
     #[cfg(windows)]
     {
@@ -178,6 +177,16 @@ pub fn open(path: &Path) -> Result<(), String> {
     #[cfg(all(unix, not(target_os = "macos")))]
     {
         spawn("xdg-open", &[path.as_os_str()])
+    }
+}
+
+pub fn file_manager_label() -> String {
+    if cfg!(windows) {
+        tr!("open-in-explorer")
+    } else if cfg!(target_os = "macos") {
+        tr!("open-in-finder")
+    } else {
+        tr!("open-in-file-manager")
     }
 }
 
@@ -259,7 +268,7 @@ pub fn pick_folder(start: Option<&Path>) -> Option<PathBuf> {
     d.pick_folder()
 }
 
-/// SpaceMonger-style attribute names for the info tip and properties.
+/// Human-readable attribute names for the info tip and properties.
 pub fn attributes(path: &Path) -> Vec<String> {
     let Ok(md) = std::fs::symlink_metadata(path) else { return Vec::new() };
     #[cfg(windows)]
@@ -271,17 +280,17 @@ pub fn attributes(path: &Path) -> Vec<String> {
             FILE_ATTRIBUTE_SPARSE_FILE, FILE_ATTRIBUTE_SYSTEM, FILE_ATTRIBUTE_TEMPORARY,
         };
         let names = [
-            (FILE_ATTRIBUTE_ARCHIVE, tr!("arch")),
-            (FILE_ATTRIBUTE_COMPRESSED, tr!("compress")),
+            (FILE_ATTRIBUTE_ARCHIVE, tr!("attribute-backup-flag")),
+            (FILE_ATTRIBUTE_COMPRESSED, tr!("attribute-compressed")),
             (FILE_ATTRIBUTE_DIRECTORY, tr!("folder-2")),
-            (FILE_ATTRIBUTE_ENCRYPTED, tr!("encrypt")),
+            (FILE_ATTRIBUTE_ENCRYPTED, tr!("attribute-encrypted")),
             (FILE_ATTRIBUTE_HIDDEN, tr!("hidden")),
             (FILE_ATTRIBUTE_OFFLINE, tr!("offline")),
             (FILE_ATTRIBUTE_READONLY, tr!("read-only")),
-            (FILE_ATTRIBUTE_REPARSE_POINT, tr!("reparse-pt")),
+            (FILE_ATTRIBUTE_REPARSE_POINT, tr!("attribute-reparse-point")),
             (FILE_ATTRIBUTE_SPARSE_FILE, tr!("sparse")),
             (FILE_ATTRIBUTE_SYSTEM, tr!("system")),
-            (FILE_ATTRIBUTE_TEMPORARY, tr!("temp")),
+            (FILE_ATTRIBUTE_TEMPORARY, tr!("attribute-temporary")),
         ];
         let a = md.file_attributes();
         names.into_iter().filter(|(bit, _)| a & bit != 0).map(|(_, n)| n).collect()

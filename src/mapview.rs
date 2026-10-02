@@ -11,6 +11,7 @@
 //! * Zooming, resizing, changing settings, or switching away from the app
 //!   clears the selection.
 //! * Folder navigation is immediate; completed redraws swap atomically.
+use crate::app::special;
 use crate::i18n::tr;
 
 use crate::{
@@ -48,9 +49,9 @@ pub enum Command {
     Back,
     ZoomOut,
     ZoomFull,
-    RunOpen(NodeId),
+    Reveal(NodeId),
     Delete(NodeId),
-    EmptyRecycleBin,
+    Special(special::Kind, NodeId),
     OpenDrive,
     Rescan,
     ToggleFree,
@@ -71,8 +72,7 @@ pub struct MapInput<'a> {
     pub disk_total: u64,
     /// Items queued for the Recycle Bin; `true` marks the one in progress.
     pub deleting: &'a [(NodeId, bool)],
-    /// The drive's Recycle Bin, drawn as a single cell that empties it.
-    pub recycle_bin: Option<NodeId>,
+    pub special: special::Inventory,
 }
 
 impl MapInput<'_> {
@@ -93,7 +93,7 @@ struct LayoutKey {
     pixels_per_point: u32,
     schemes: [usize; 2],
     muted: bool,
-    recycle_bin: Option<NodeId>,
+    special: special::Inventory,
 }
 
 // Generations may advance while labels prepare. A complete older snapshot is
@@ -124,10 +124,8 @@ pub struct MapView {
     staging: Option<(LayoutKey, LayoutResult)>,
     label_cache: LabelCache,
     queued: Vec<Command>,
-    /// The collapsed Recycle Bin cell, clickable across its whole area.
-    recycle_bin: Option<NodeId>,
-    /// Shell Recycle Bin icons, empty and full, loaded on first use.
-    recycle_bin_icons: [Option<egui::TextureHandle>; 2],
+    special: special::Inventory,
+    special_visuals: special::Visuals,
     focused: Option<bool>,
     rect: Rect,
     info: Option<InfoTip>,
@@ -148,8 +146,8 @@ impl Default for MapView {
             staging: None,
             label_cache: LabelCache::default(),
             queued: Vec::new(),
-            recycle_bin: None,
-            recycle_bin_icons: [None, None],
+            special: special::Inventory::default(),
+            special_visuals: special::Visuals::default(),
             focused: None,
             rect: Rect::ZERO,
             info: None,
@@ -224,8 +222,9 @@ impl MapView {
         let (x, y) = self.to_layout(pos?);
         // A folder's interior belongs to its children; the collapsed Recycle Bin has none.
         layout::hit_test(&self.boxes, x, y).or_else(|| {
-            let bin = self.recycle_bin?;
-            self.boxes.iter().position(|b| b.node() == Some(bin) && b.contains(x, y))
+            self.special
+                .collapsed()
+                .find_map(|node| self.boxes.iter().position(|b| b.node() == Some(node) && b.contains(x, y)))
         })
     }
 
@@ -245,7 +244,7 @@ impl MapView {
             return out;
         };
 
-        self.recycle_bin = input.recycle_bin;
+        self.special = input.special;
 
         // Switching away from (or back to) the app clears the selection.
         let focused = ctx.input(|i| i.focused);
@@ -265,6 +264,13 @@ impl MapView {
         self.note_activity(&ctx, now);
 
         let pointer = response.hover_pos();
+        if interactive
+            && let Some(node) = self.hit(pointer).and_then(|index| self.boxes[index].node())
+            && let Some(kind) = input.special.classify(input.tree, node)
+            && kind.action_enabled(input.settings.disable_delete)
+        {
+            ctx.set_cursor_icon(egui::CursorIcon::PointingHand);
+        }
         if response.double_clicked()
             && let Some(pos) = response.interact_pointer_pos()
         {
@@ -308,7 +314,7 @@ impl MapView {
             pixels_per_point: ctx.pixels_per_point().to_bits(),
             schemes: [input.settings.file_color, input.settings.folder_color],
             muted: input.settings.mute_palette,
-            recycle_bin: input.recycle_bin,
+            special: input.special,
         };
         if let Some((pending_key, result)) = Job::poll(&mut self.layout_rx) {
             if same_view(pending_key, key) {
@@ -344,7 +350,7 @@ impl MapView {
             self.layout_rx = Some(Job::spawn(key, ctx, move || {
                 let _span = crate::perf::span("worker.map_layout");
                 let mut boxes = layout::build(&tree, key.view, key.w, key.h, &key.layout, key.free);
-                collapse_recycle_bin(&mut boxes, key.recycle_bin);
+                key.special.collapse_layout(&mut boxes);
                 crate::perf::counter("map.boxes", boxes.len() as f64);
                 let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, key.muted, free);
                 (tree, boxes, prepared)
@@ -383,13 +389,14 @@ impl MapView {
         let press = ctx.input(|i| i.pointer.primary_pressed() || i.pointer.secondary_pressed());
         if press && response.hovered() {
             self.selected = hit;
+            ctx.request_repaint(); // The directory navigator is drawn before the map.
         }
         if response.clicked()
-            && !input.settings.disable_delete
-            && input.recycle_bin.is_some()
-            && hit.and_then(|i| self.boxes[i].node()) == input.recycle_bin
+            && let Some(node) = hit.and_then(|i| self.boxes[i].node())
+            && let Some(kind) = input.special.classify(input.tree, node)
+            && kind.action_enabled(input.settings.disable_delete)
         {
-            out.push(Command::EmptyRecycleBin);
+            out.push(Command::Special(kind, node));
         }
         if response.secondary_clicked() {
             self.selected = self.hit(response.interact_pointer_pos());
@@ -402,48 +409,68 @@ impl MapView {
         let cur = self.selected_box().copied();
         let node = cur.and_then(|b| b.node());
         let folder = cur.is_some_and(|b| b.folder);
+        let special = node.and_then(|n| input.special.classify(input.tree, n));
+        // Ownership lookup is asynchronous; refresh the open menu when it completes.
+        ui.ctx().request_repaint_after(Duration::from_millis(200));
         let s = input.settings;
-        ui.set_min_width(150.0);
+        ui.set_min_width(184.0);
+        ui.spacing_mut().button_padding = vec2(8.0, 3.0);
+        ui.spacing_mut().item_spacing = vec2(4.0, 2.0);
+        ui.spacing_mut().interact_size.y = 24.0;
+        ui.style_mut().override_font_id = Some(FontId::proportional(13.0));
 
         use egui_phosphor::regular as icon;
-        if item(ui, icon::MAGNIFYING_GLASS_PLUS, tr!("zoom-in"), folder, folder) {
+        if let Some(n) = node {
+            if let Some(kind) = special {
+                let (glyph, label) = kind.menu_entry();
+                if item(ui, glyph, label, kind.action_enabled(s.disable_delete), true) {
+                    out.push(Command::Special(kind, n));
+                }
+            }
+            if item(ui, icon::FOLDER_OPEN, crate::platform::file_manager_label(), true, false) {
+                out.push(Command::Reveal(n));
+            }
+            if item(ui, icon::INFO, tr!("properties-2"), true, false) {
+                out.push(Command::Properties(n));
+            }
+            if special.is_none()
+                && !s.disable_delete
+                && !special::protects_from_raw_delete(&input.tree.path(n))
+                && item(ui, icon::TRASH, tr!("delete"), true, false)
+            {
+                out.push(Command::Delete(n));
+            }
+            ui.separator();
+        }
+        if folder
+            && input.special.allows_zoom(node.expect("folder has a node"))
+            && item(ui, icon::MAGNIFYING_GLASS_PLUS, tr!("zoom-in"), true, false)
+        {
             self.zoom_in();
         }
-        if item(ui, icon::MAGNIFYING_GLASS_MINUS, tr!("zoom-out"), cur.is_some() && input.zoomed(), false) {
-            self.zoom_out();
+        if input.zoomed() {
+            if item(ui, icon::MAGNIFYING_GLASS_MINUS, tr!("zoom-out"), true, false) {
+                self.zoom_out();
+            }
+            if item(ui, icon::CORNERS_OUT, tr!("zoom-full"), true, false) {
+                self.zoom_full();
+            }
         }
-        if item(ui, icon::CORNERS_OUT, tr!("zoom-full"), cur.is_some() && input.zoomed(), false) {
-            self.zoom_full();
-        }
-        ui.separator();
-        if item(ui, icon::ARROW_SQUARE_OUT, tr!("run-open"), node.is_some(), cur.is_some() && !folder)
-            && let Some(n) = node
-        {
-            out.push(Command::RunOpen(n));
-        }
-        if item(ui, icon::TRASH, tr!("delete"), node.is_some() && !s.disable_delete, false)
-            && let Some(n) = node
-        {
-            out.push(Command::Delete(n));
-        }
-        ui.separator();
-        if item(ui, icon::HARD_DRIVES, tr!("open-drive"), true, false) {
-            out.push(Command::OpenDrive);
-        }
-        if item(ui, icon::ARROWS_CLOCKWISE, tr!("rescan-drive"), true, false) {
-            out.push(Command::Rescan);
-        }
-        let mut free = s.show_free;
-        if ui.checkbox(&mut free, tr!("show-free-space")).clicked() {
-            out.push(Command::ToggleFree);
-            ui.close();
-        }
-        ui.separator();
-        if item(ui, icon::INFO, tr!("properties-2"), node.is_some(), false)
-            && let Some(n) = node
-        {
-            out.push(Command::Properties(n));
-        }
+        // Keep scan-wide controls available without crowding the item's actions.
+        ui.menu_button(format!("{}  {}", icon::HARD_DRIVES, tr!("view")), |ui| {
+            if item(ui, icon::ARROWS_CLOCKWISE, tr!("rescan"), true, false) {
+                out.push(Command::Rescan);
+            }
+            if item(ui, icon::HARD_DRIVES, tr!("open-drive"), true, false) {
+                out.push(Command::OpenDrive);
+            }
+            ui.separator();
+            let mut free = s.show_free;
+            if ui.checkbox(&mut free, tr!("show-free-space")).clicked() {
+                out.push(Command::ToggleFree);
+                ui.close();
+            }
+        });
     }
 
     fn paint(&mut self, painter: &egui::Painter, input: &MapInput<'_>, pointer: Option<Pos2>) {
@@ -451,7 +478,9 @@ impl MapView {
         if let Some(prepared) = &mut self.prepared {
             prepared.paint(painter);
         }
-        self.paint_recycle_bin(painter, input);
+        let origin = self.display_origin();
+        self.special_visuals.paint(painter, input.tree, input.special, &self.boxes, origin);
+
         for b in &self.boxes {
             if let layout::Item::Node(node) = b.item
                 && let Some(&(_, active)) = input.deleting.iter().find(|(n, _)| *n == node)
@@ -483,33 +512,6 @@ impl MapView {
                 StrokeKind::Inside,
             );
         }
-    }
-
-    fn paint_recycle_bin(&mut self, painter: &egui::Painter, input: &MapInput<'_>) {
-        let Some(bin) = input.recycle_bin else { return };
-        let Some(cell) = self.boxes.iter().find(|b| b.node() == Some(bin)).copied() else { return };
-        // Leave the folder's name label visible above the icon.
-        let rect = self.box_rect(&cell);
-        let body = Rect::from_min_max(rect.min + vec2(0.0, maprender::LINE), rect.max).shrink(4.0);
-        let side = body.width().min(body.height()).min(128.0);
-        if side < 16.0 {
-            return;
-        }
-        let full = input.tree.get(bin).is_some_and(|n| n.size > 0);
-        let slot = &mut self.recycle_bin_icons[usize::from(full)];
-        #[cfg(windows)]
-        if slot.is_none()
-            && let Some(image) = crate::recycle_bin::icon(full, 128)
-        {
-            *slot = Some(painter.ctx().load_texture("recycle-bin", image, egui::TextureOptions::LINEAR));
-        }
-        let Some(texture) = slot else { return };
-        painter.image(
-            texture.id(),
-            Rect::from_center_size(body.center(), vec2(side, side)),
-            Rect::from_min_max(Pos2::ZERO, pos2(1.0, 1.0)),
-            Color32::WHITE,
-        );
     }
 
     fn paint_tips(&mut self, ctx: &egui::Context, input: &MapInput<'_>, pointer: Option<Pos2>, now: f64) {
@@ -544,11 +546,13 @@ impl MapView {
             } else if self.info_rx.is_none() && self.info.as_ref().is_none_or(|t| t.node != node) {
                 let tree = input.tree.clone();
                 let settings = s.clone();
-                let bin = input.recycle_bin == Some(node);
+                let special = input.special.classify(&tree, node);
                 self.info_rx = Some(Job::spawn((), ctx, move || {
                     let mut tip = info_tip(&tree, node, &settings);
-                    if bin && !settings.disable_delete {
-                        tip.lines.push(tr!("click-to-empty-recycle-bin"));
+                    if let Some(kind) = special
+                        && let Some(hint) = kind.hint(settings.disable_delete)
+                    {
+                        tip.lines.push(hint);
                     }
                     tip
                 }));
@@ -593,11 +597,12 @@ impl MapView {
     }
 }
 
-/// A menu entry with a leading icon; the default action is drawn bold, like `MFS_DEFAULT`.
+/// Compact, left-aligned menu rows; special actions carry the accent color.
 fn item(ui: &mut Ui, icon: &str, label: impl Into<String>, enabled: bool, bold: bool) -> bool {
     let label = format!("{icon}  {}", label.into());
-    let text = if bold { RichText::new(label).strong() } else { RichText::new(label) };
-    let clicked = ui.add_enabled(enabled, egui::Button::new(text)).clicked();
+    let text = if bold { RichText::new(label).strong().color(theme::ACCENT) } else { RichText::new(label) };
+    // A popup's available width can span the viewport; let its labels determine its width.
+    let clicked = ui.add_enabled(enabled, egui::Button::new(text).min_size(vec2(0.0, 24.0))).clicked();
     if clicked {
         ui.close();
     }
@@ -654,14 +659,6 @@ fn paint_info_tip(tips: &egui::Painter, screen: Rect, tip: &InfoTip, pointer: Po
     }
 }
 
-/// Hide everything inside the Recycle Bin's cell; its contents are not useful to browse.
-fn collapse_recycle_bin(boxes: &mut Vec<DisplayBox>, bin: Option<NodeId>) {
-    let Some(cell) = bin.and_then(|bin| boxes.iter().find(|b| b.node() == Some(bin)).copied()) else { return };
-    let inside =
-        |b: &DisplayBox| b.x >= cell.x && b.y >= cell.y && b.x + b.w <= cell.x + cell.w && b.y + b.h <= cell.y + cell.h;
-    boxes.retain(|b| b.node() == bin || !inside(b));
-}
-
 /// Dim and hatch an item that is leaving for the Recycle Bin, so it reads as going away.
 fn paint_pending_delete(painter: &egui::Painter, rect: Rect, active: bool) {
     painter.rect_filled(rect, 1.0, theme::BG.gamma_multiply(if active { 0.7 } else { 0.5 }));
@@ -712,6 +709,25 @@ mod tests {
     use clawback_core::{ROOT, tree::NewEntry};
     use std::{path::Path, time::Instant};
 
+    #[cfg(windows)]
+    #[test]
+    fn temp_cleanup_cell_hides_children_and_hits_its_whole_interior() {
+        let mut map = MapView {
+            special: special::Inventory::fixture(special::Kind::TempFolder, 1),
+            boxes: vec![
+                DisplayBox { x: 0, y: 0, w: 200, h: 200, item: layout::Item::Node(1), depth: 0, folder: true },
+                DisplayBox { x: 10, y: 30, w: 100, h: 100, item: layout::Item::Node(2), depth: 1, folder: false },
+                DisplayBox { x: 220, y: 0, w: 100, h: 100, item: layout::Item::Node(3), depth: 0, folder: false },
+            ],
+            ..Default::default()
+        };
+        map.special.collapse_layout(&mut map.boxes);
+        assert_eq!(map.boxes.len(), 2);
+        assert_eq!(map.hit(Some(pos2(80.0, 80.0))), Some(0));
+        assert_eq!(map.hit(Some(pos2(240.0, 40.0))), Some(1));
+        assert_eq!(map.hit(Some(pos2(400.0, 40.0))), None);
+    }
+
     #[test]
     fn pending_layout_keeps_rendering_matching_snapshot_without_waiting() {
         let mut tree = Tree::new(Path::new("/preview"));
@@ -728,7 +744,7 @@ mod tests {
             disk_free: 0,
             disk_total: 100,
             deleting: &[],
-            recycle_bin: None,
+            special: special::Inventory::default(),
         };
         let ctx = egui::Context::default();
         let mut map = MapView::default();
@@ -793,7 +809,7 @@ mod tests {
                             disk_free: 0,
                             disk_total: tree.root().size,
                             deleting: &[],
-                            recycle_bin: None,
+                            special: special::Inventory::default(),
                         }),
                     );
                 },
@@ -893,7 +909,7 @@ mod tests {
             disk_free: 0,
             disk_total: tree.root().size,
             deleting: &[],
-            recycle_bin: None,
+            special: special::Inventory::default(),
         };
         let ctx = egui::Context::default();
         theme::apply(&ctx, "en");

@@ -111,6 +111,7 @@ impl PreparedMap {
         free: [u64; 2],
     ) -> Self {
         let _span = crate::perf::span("worker.map_geometry");
+        let special = crate::app::special::Inventory::discover(tree, false);
         let mut mesh = Mesh::default();
         mesh.reserve_vertices(boxes.len() * 8);
         mesh.reserve_triangles(boxes.len() * 4);
@@ -164,7 +165,7 @@ impl PreparedMap {
                     let node = tree.node(id);
                     // Bound cold text shaping even for unusually long file names.
                     let max_chars = ((b.w / 5) as usize).clamp(8, 180);
-                    let name = node.name_lossy();
+                    let name = special.label(tree, id, b);
                     let mut chars = name.chars();
                     let mut short: String = chars.by_ref().take(max_chars).collect();
                     if chars.next().is_some() {

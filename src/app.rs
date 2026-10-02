@@ -1,5 +1,7 @@
 //! The application window: SpaceMonger's toolbar, commands and dialogs
 //! around the folder map.
+pub(crate) mod special;
+
 use crate::i18n::tr;
 
 use crate::directoryview::DirectoryView;
@@ -18,6 +20,12 @@ use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::sync::{Arc, mpsc};
 use std::time::{Duration, Instant};
+
+#[derive(Debug)]
+struct DeleteError {
+    path: PathBuf,
+    message: String,
+}
 
 /// A completed scan being viewed (SpaceMonger's `CFolderTree` document).
 struct Doc {
@@ -64,15 +72,25 @@ impl Doc {
             _ => self.tree.root().size,
         }
     }
+    /// Folder represented in the navigator for a map selection; files select their parent.
+    fn selected_folder(&self, selection: Option<NodeId>) -> NodeId {
+        let selected = selection
+            .filter(|&id| {
+                self.tree.get(id).is_some()
+                    && self
+                        .tree
+                        .chain(id)
+                        .into_iter()
+                        .all(|ancestor| !self.tree.node(ancestor).has(clawback_core::tree::flags::REMOVED))
+            })
+            .unwrap_or(self.view);
+        if self.tree.node(selected).is_dir() { selected } else { self.tree.node(selected).parent }
+    }
     fn free_space(&self) -> u64 {
         self.disk.as_ref().map_or(0, |d| d.free)
     }
-    #[cfg_attr(not(windows), allow(clippy::unused_self))] // Only Windows has a drive-level Recycle Bin.
-    fn recycle_bin(&self) -> Option<NodeId> {
-        #[cfg(windows)]
-        return crate::recycle_bin::find(&self.tree, self.is_mount);
-        #[cfg(not(windows))]
-        None
+    fn special(&self) -> special::Inventory {
+        special::Inventory::discover(&self.tree, self.is_mount)
     }
     fn unreadable(&self) -> usize {
         self.skipped.iter().filter(|s| s.reason != SkipReason::OtherFilesystem).count()
@@ -85,8 +103,18 @@ enum DeleteKind {
     Recycle,
     /// Confirmed permanent delete, done by Clawback's fast purge.
     Permanent,
-    /// Confirmed emptying of the user's Recycle Bin folder on the scanned drive.
-    EmptyBin,
+    /// Confirmed contents-only cleanup, with policy supplied by the special-location handler.
+    #[cfg_attr(not(windows), allow(dead_code))] // Current cleanup providers are Windows-only.
+    Cleanup(special::Cleanup),
+}
+
+impl DeleteKind {
+    fn cleanup(self) -> Option<special::Cleanup> {
+        match self {
+            Self::Cleanup(cleanup) => Some(cleanup),
+            _ => None,
+        }
+    }
 }
 
 enum DeleteDone {
@@ -123,9 +151,6 @@ struct QueuedDelete {
     kind: DeleteKind,
 }
 
-/// Kept when emptying a Recycle Bin folder: Explorer's view settings for it.
-const BIN_KEEP: &str = "desktop.ini";
-
 /// How long a recycled path is hidden from live snapshots that predate its removal.
 const RECYCLED_GRACE: Duration = Duration::from_secs(60);
 
@@ -138,7 +163,7 @@ enum Tool {
     ZoomOut,
     Back,
     Free,
-    Run,
+    Reveal,
     Delete,
     Setup,
     About,
@@ -167,12 +192,13 @@ pub struct ClawbackApp {
     show_unreadable: bool,
     deleting: Option<Deleting>,
     delete_queue: VecDeque<QueuedDelete>,
-    delete_errors: Vec<String>,
+    delete_errors: Vec<DeleteError>,
     /// Recycled paths the live watcher may not have caught up with yet.
     recycled: Vec<(PathBuf, Instant)>,
     /// Permanent deletes waiting for the user's confirmation, asked one at a time.
     confirm: VecDeque<QueuedDelete>,
     error: Option<String>,
+    special: special::State,
     title: String,
     /// The directory panel splitter is being dragged; its new share is saved on release.
     split_dragging: bool,
@@ -342,6 +368,7 @@ impl ClawbackApp {
         crate::properties::poll(&mut self.props);
         self.poll_scan(ctx);
         self.poll_delete(ctx);
+        self.poll_special(ctx);
         if self.deleting.is_none() {
             self.poll_live();
         }
@@ -418,9 +445,15 @@ impl ClawbackApp {
         match result {
             Ok(DeleteDone::Removed(disk)) => {
                 self.forget_removed(&del.targets, disk);
+                if del.job.kind.cleanup().is_some()
+                    && let Some(live) = &self.live
+                {
+                    live.invalidate(path.clone());
+                }
                 if self.delete_queue.is_empty()
                     && self.live.is_none()
-                    && self.settings.auto_rescan
+                    && (self.settings.auto_rescan
+                        || del.job.kind.cleanup().is_some_and(special::Cleanup::rescan_after_partial))
                     && let Some(root) = self.doc.as_ref().map(Doc::root)
                 {
                     self.start_scan(root, ctx);
@@ -440,8 +473,12 @@ impl ClawbackApp {
             Ok(DeleteDone::Partial { error, disk }) => {
                 // Some of it is gone: the watcher (or a rescan) reconciles what remains.
                 if let Some(live) = &self.live {
-                    for target in &del.targets {
-                        live.invalidate(target.clone());
+                    if del.job.kind.cleanup().is_some() {
+                        live.invalidate(path.clone());
+                    } else {
+                        for target in &del.targets {
+                            live.invalidate(target.clone());
+                        }
                     }
                 }
                 if let Some(doc) = &mut self.doc {
@@ -449,11 +486,13 @@ impl ClawbackApp {
                     doc.generation += 1;
                 }
                 if let Some(error) = error {
-                    self.delete_errors.push(tr!(
-                        "delete-error",
-                        path = path.display().to_string(),
-                        error = error.as_str()
-                    ));
+                    self.delete_errors.push(DeleteError { path: path.clone(), message: error });
+                }
+                if del.job.kind.cleanup().is_some_and(special::Cleanup::rescan_after_partial)
+                    && self.live.is_none()
+                    && let Some(root) = self.doc.as_ref().map(Doc::root)
+                {
+                    self.start_scan(root, ctx);
                 }
             }
             Err(e) => {
@@ -462,7 +501,7 @@ impl ClawbackApp {
                 {
                     live.invalidate(path.clone());
                 }
-                self.delete_errors.push(tr!("delete-error", path = path.display().to_string(), error = e.as_str()));
+                self.delete_errors.push(DeleteError { path: path.clone(), message: e });
             }
         }
     }
@@ -529,7 +568,7 @@ impl ClawbackApp {
             }
             Command::ZoomTo(n) => {
                 if let Some(d) = &mut self.doc
-                    && d.recycle_bin() != Some(n)
+                    && d.special().allows_zoom(n)
                     && d.tree.is_live(n)
                     && d.tree.node(n).is_dir()
                     && d.view != n
@@ -555,18 +594,15 @@ impl ClawbackApp {
                 }
             }
             Command::ZoomFull => self.apply(Command::ZoomTo(ROOT), ctx),
-            Command::RunOpen(n) => {
+            Command::Reveal(n) => {
                 if let Some(d) = &self.doc
-                    && let Err(e) = platform::open(&d.tree.path(n))
+                    && let Err(e) = platform::reveal(&d.tree.path(n))
                 {
                     self.error = Some(e);
                 }
             }
             Command::Delete(n) => self.delete(n, ctx),
-            Command::EmptyRecycleBin => {
-                #[cfg(windows)]
-                self.request_empty_recycle_bin();
-            }
+            Command::Special(kind, node) => self.request_special(kind, node, ctx),
             Command::OpenDrive => self.open = Some(OpenDialog::start(ctx)),
             Command::Rescan => {
                 if let Some(root) = self.doc.as_ref().map(Doc::root) {
@@ -588,56 +624,51 @@ impl ClawbackApp {
     /// Move to the trash with no confirmation, as SpaceMonger did (it is undoable).
     /// Deletes queue behind the one in progress so the map stays usable.
     fn delete(&mut self, node: NodeId, ctx: &egui::Context) {
-        if self.settings.disable_delete || node == ROOT {
+        if self.settings.disable_delete {
             return;
         }
         let Some(doc) = &self.doc else { return };
+        if node == ROOT && doc.special().classify(&doc.tree, node) != Some(special::Kind::InstalledSoftware) {
+            return;
+        }
+        if let Some(kind) = doc.special().classify(&doc.tree, node)
+            && kind != special::Kind::InstalledSoftware
+        {
+            self.request_special(kind, node, ctx);
+            return;
+        }
         let path = doc.tree.path(node);
         // Already covered by a pending delete of itself or an ancestor.
         if self.pending_paths().any(|pending| path.starts_with(pending)) {
             return;
         }
-        // A queued descendant would fail once this folder is gone.
-        self.delete_queue.retain(|q| !q.path.starts_with(&path));
         let n = doc.tree.node(node);
         let (size, files) = (n.size, n.files);
-        self.delete_queue.push_back(QueuedDelete { doc: doc.id, node, path, size, files, kind: DeleteKind::Recycle });
+        let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: DeleteKind::Recycle };
+        if let Some(request) = self.special.check_removal(request, ctx) {
+            self.queue_delete(request, ctx);
+        }
+    }
+
+    fn queue_delete(&mut self, request: QueuedDelete, ctx: &egui::Context) {
+        if self.settings.disable_delete {
+            return;
+        }
+        // A queued descendant would fail once this folder is gone.
+        self.delete_queue.retain(|q| !q.path.starts_with(&request.path));
+        self.delete_queue.push_back(request);
         self.start_next_delete(ctx);
     }
 
     /// Everything being deleted, queued, or awaiting confirmation.
     fn pending_paths(&self) -> impl Iterator<Item = &PathBuf> {
-        self.deleting
+        let paths = self
+            .deleting
             .iter()
             .map(|d| &d.job.path)
             .chain(self.delete_queue.iter().map(|q| &q.path))
-            .chain(self.confirm.iter().map(|q| &q.path))
-    }
-
-    /// Ask to empty the user's Recycle Bin folder on the scanned drive.
-    #[cfg(windows)]
-    fn request_empty_recycle_bin(&mut self) {
-        if self.settings.disable_delete {
-            return;
-        }
-        let Some(doc) = &self.doc else { return };
-        let Some(folder) = doc.recycle_bin().and_then(|bin| crate::recycle_bin::user_folder(&doc.tree, bin)) else {
-            return;
-        };
-        let path = doc.tree.path(folder);
-        let n = doc.tree.node(folder);
-        if n.children.is_empty() || self.pending_paths().any(|pending| *pending == path) {
-            return;
-        }
-        let (size, files) = (n.size, n.files);
-        self.confirm.push_back(QueuedDelete {
-            doc: doc.id,
-            node: folder,
-            path,
-            size,
-            files,
-            kind: DeleteKind::EmptyBin,
-        });
+            .chain(self.confirm.iter().map(|q| &q.path));
+        paths.chain(self.special.pending_paths())
     }
 
     /// Drop deleted paths from the map now. The live watcher can take a while to reconcile a
@@ -671,15 +702,17 @@ impl ClawbackApp {
         };
         let (path, kind) = (&job.path, job.kind);
         // Earlier deletes or a rescan may have replaced the tree since this was queued.
-        let node = doc.tree.find_path(path).filter(|&n| n != ROOT);
-        // Emptying the bin keeps the user's folder and its desktop.ini; only the contents go.
+        let node = doc.tree.find_path(path).filter(|&n| n != ROOT || kind.cleanup().is_some());
+        // Contents-only cleanup preserves its root and any provider-defined exclusions.
         let targets = match (kind, node) {
-            (DeleteKind::EmptyBin, Some(folder)) => doc
+            (DeleteKind::Cleanup(cleanup), Some(folder)) => doc
                 .tree
                 .node(folder)
                 .children
                 .iter()
-                .filter(|&&c| !doc.tree.node(c).name_lossy().eq_ignore_ascii_case(BIN_KEEP))
+                .filter(|&&c| {
+                    !cleanup.keep().iter().any(|name| doc.tree.node(c).name_lossy().eq_ignore_ascii_case(name))
+                })
                 .map(|&c| doc.tree.path(c))
                 .collect(),
             _ => vec![path.clone()],
@@ -712,22 +745,27 @@ impl ClawbackApp {
                     Recycled::Declined => DeleteDone::Declined,
                     Recycled::TooLarge => DeleteDone::TooLarge,
                 }),
-                DeleteKind::Permanent | DeleteKind::EmptyBin => {
+                DeleteKind::Permanent | DeleteKind::Cleanup(_) => {
                     let target = crate::deletion::Target {
                         root: &p,
-                        contents_only: kind == DeleteKind::EmptyBin,
-                        keep: &[BIN_KEEP],
+                        contents_only: kind.cleanup().is_some(),
+                        keep: kind.cleanup().map_or(&[][..], special::Cleanup::keep),
                     };
-                    let report = crate::deletion::purge(&target, threads, &worker_progress);
-                    #[cfg(windows)]
-                    if kind == DeleteKind::EmptyBin {
-                        crate::recycle_bin::notify_changed(&p);
-                    }
+                    let report = if let Some(cleanup) = kind.cleanup() {
+                        cleanup.run(&target, threads, &worker_progress)
+                    } else {
+                        crate::deletion::purge(&target, threads, &worker_progress)
+                    };
                     if report.failed == 0 && !report.cancelled {
                         Ok(DeleteDone::Removed(refresh()))
                     } else {
-                        let error =
-                            report.first_error.map(|first| tr!("purge-failed", count = report.failed, error = first));
+                        let error = report.first_error.and_then(|first| {
+                            if let Some(cleanup) = kind.cleanup() {
+                                cleanup.failure_message(report.failed, first)
+                            } else {
+                                Some(tr!("purge-failed", count = report.failed, error = first))
+                            }
+                        });
                         Ok(DeleteDone::Partial { error, disk: refresh() })
                     }
                 }
@@ -743,6 +781,7 @@ impl ClawbackApp {
         self.open.is_some()
             || self.setup.is_some()
             || self.error.is_some()
+            || self.special.is_open()
             || !self.confirm.is_empty()
             || self.about
             || self.props.is_some()
@@ -774,7 +813,7 @@ impl ClawbackApp {
         } else if pressed(Modifiers::NONE, Key::Home) {
             Some(Tool::ZoomFull)
         } else if pressed(Modifiers::NONE, Key::Enter) {
-            Some(if self.map.selected_is_folder() { Tool::ZoomIn } else { Tool::Run })
+            Some(if self.map.selected_is_folder() { Tool::ZoomIn } else { Tool::Reveal })
         } else if pressed(Modifiers::NONE, Key::Delete) {
             Some(Tool::Delete)
         } else {
@@ -796,9 +835,9 @@ impl ClawbackApp {
             Tool::ZoomOut if zoomed => self.map.zoom_out(),
             Tool::ZoomIn => self.map.zoom_in(),
             Tool::Free => self.apply(Command::ToggleFree, ctx),
-            Tool::Run => {
+            Tool::Reveal => {
                 if let Some(n) = sel {
-                    self.apply(Command::RunOpen(n), ctx);
+                    self.apply(Command::Reveal(n), ctx);
                 }
             }
             Tool::Delete => {
@@ -835,8 +874,8 @@ impl ClawbackApp {
                     action = Some(Tool::Rescan);
                 }
                 ui.separator();
-                if menu_item(ui, tr!("open-selected-item"), ready && selected, "") {
-                    action = Some(Tool::Run);
+                if menu_item(ui, platform::file_manager_label(), ready && selected, "") {
+                    action = Some(Tool::Reveal);
                 }
                 if menu_item(
                     ui,
@@ -1029,13 +1068,28 @@ impl ClawbackApp {
                 let mut dismissed = None;
                 for (i, error) in self.delete_errors.iter().enumerate() {
                     card(ui, &mut |ui| {
-                        ui.horizontal_top(|ui| {
-                            ui.with_layout(Layout::right_to_left(Align::Min), |ui| {
-                                if ui.small_button("×").on_hover_text(tr!("ok")).clicked() {
-                                    dismissed = Some(i);
-                                }
-                                ui.add(egui::Label::new(RichText::new(error).color(theme::TEXT)).wrap());
+                        ui.with_layout(Layout::top_down(Align::Min), |ui| {
+                            ui.horizontal(|ui| {
+                                ui.label(RichText::new(egui_phosphor::regular::WARNING_CIRCLE).color(theme::DANGER));
+                                ui.strong(tr!("delete-failed-title"));
+                                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                                    if ui.small_button("×").on_hover_text(tr!("close-dialog")).clicked() {
+                                        dismissed = Some(i);
+                                    }
+                                });
                             });
+                            ui.add(
+                                egui::Label::new(
+                                    RichText::new(error.path.display().to_string()).small().color(theme::MUTED),
+                                )
+                                .wrap()
+                                .selectable(true),
+                            );
+                            ui.separator();
+                            ui.add(egui::Label::new(&error.message).wrap().selectable(true));
+                            if ui.small_button(tr!("copy-error-details")).clicked() {
+                                ui.ctx().copy_text(format!("{}\n\n{}", error.path.display(), error.message));
+                            }
                         });
                     });
                 }
@@ -1054,9 +1108,15 @@ impl ClawbackApp {
     /// Clawback's own confirmation before anything is deleted permanently.
     fn confirm_dialog(&mut self, ctx: &egui::Context) {
         let Some(job) = self.confirm.front() else { return };
-        let empty_bin = job.kind == DeleteKind::EmptyBin;
-        let name = display_name(&job.path);
         let drive = self.doc.as_ref().map(|d| d.tree.root_path().display().to_string()).unwrap_or_default();
+        let special::Confirmation { title, body, button } = job.kind.cleanup().map_or_else(
+            || special::Confirmation {
+                title: tr!("delete-permanently-title"),
+                body: tr!("delete-too-big-for-recycle-bin", name = display_name(&job.path)),
+                button: tr!("delete-permanently-button"),
+            },
+            |cleanup| cleanup.confirmation(&job.path, &drive),
+        );
         let details = tr!("delete-size-files", size = format::size(job.size), files = job.files);
         let mut answer = None;
         let flat = theme::modal_frame().shadow(egui::Shadow::NONE);
@@ -1065,32 +1125,14 @@ impl ClawbackApp {
             ui.spacing_mut().item_spacing.y = 8.0;
             ui.horizontal(|ui| {
                 ui.label(RichText::new(egui_phosphor::regular::WARNING).size(26.0).color(theme::DANGER));
-                ui.label(
-                    RichText::new(if empty_bin {
-                        tr!("empty-recycle-bin-title")
-                    } else {
-                        tr!("delete-permanently-title")
-                    })
-                    .size(20.0)
-                    .strong()
-                    .color(theme::TEXT),
-                );
+                ui.label(RichText::new(title).size(20.0).strong().color(theme::TEXT));
             });
-            ui.add(
-                egui::Label::new(if empty_bin {
-                    tr!("empty-recycle-bin-body", drive = drive)
-                } else {
-                    tr!("delete-too-big-for-recycle-bin", name = name)
-                })
-                .wrap(),
-            )
-            .on_hover_text(job.path.display().to_string());
+            ui.add(egui::Label::new(body).wrap()).on_hover_text(job.path.display().to_string());
             ui.label(RichText::new(details).color(theme::MUTED));
             ui.label(RichText::new(tr!("delete-cannot-be-undone")).strong().color(theme::DANGER));
             ui.add_space(8.0);
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                let label = if empty_bin { tr!("empty-recycle-bin-button") } else { tr!("delete-permanently-button") };
-                if ui.add(theme::primary_button(label, theme::DANGER)).clicked() {
+                if ui.add(theme::primary_button(button, theme::DANGER)).clicked() {
                     answer = Some(true);
                 }
                 if ui.add(theme::secondary_button(tr!("cancel"))).clicked() {
@@ -1126,8 +1168,9 @@ impl ClawbackApp {
             ui.strong(match progress.phase {
                 crate::deletion::Phase::Preparing => tr!("delete-preparing"),
                 crate::deletion::Phase::Recycling => tr!("delete-recycling"),
-                crate::deletion::Phase::Deleting if d.job.kind == DeleteKind::EmptyBin => tr!("emptying-recycle-bin"),
-                crate::deletion::Phase::Deleting => tr!("delete-permanently"),
+                crate::deletion::Phase::Deleting => {
+                    d.job.kind.cleanup().map_or_else(|| tr!("delete-permanently"), special::Cleanup::progress_label)
+                }
                 crate::deletion::Phase::Updating => tr!("delete-updating"),
             });
             if purging && progress.phase == crate::deletion::Phase::Deleting {
@@ -1156,8 +1199,8 @@ impl ClawbackApp {
             ui.label(
                 RichText::new(tr!(
                     "delete-progress-files",
-                    done = format::count(progress.done.min(progress.total)),
-                    total = format::count(progress.total)
+                    done = crate::i18n::count(progress.done.min(progress.total)),
+                    total = crate::i18n::count(progress.total)
                 ))
                 .size(11.0)
                 .color(theme::MUTED),
@@ -1239,10 +1282,10 @@ impl ClawbackApp {
                                 MftPhase::Reading => tr!(
                                     "turbo-read-progress",
                                     percent = p.read.saturating_mul(100).checked_div(p.total).unwrap_or(0),
-                                    records = format::count(p.records)
+                                    records = crate::i18n::count(p.records)
                                 ),
                                 MftPhase::Resolving => tr!("turbo-resolving"),
-                                MftPhase::Assembling => tr!("turbo-assembling", files = format::count(p.files)),
+                                MftPhase::Assembling => tr!("turbo-assembling", files = crate::i18n::count(p.files)),
                                 MftPhase::Sorting => tr!("turbo-sorting"),
                                 MftPhase::Transferring => tr!("turbo-transferring"),
                             };
@@ -1377,12 +1420,7 @@ impl ClawbackApp {
             )
             .show(ui, |ui| {
                 let doc = self.doc.as_ref()?;
-                let selected = self
-                    .map
-                    .selected_node()
-                    .filter(|&id| doc.tree.get(id).is_some_and(|n| !n.has(clawback_core::tree::flags::REMOVED)))
-                    .unwrap_or(doc.view);
-                let scope = if doc.tree.node(selected).is_dir() { selected } else { doc.tree.node(selected).parent };
+                let scope = doc.selected_folder(self.map.selected_node());
                 if ui.available_width() >= 760.0 {
                     egui::Panel::right("file-types-panel-v2")
                         .resizable(true)
@@ -1400,7 +1438,7 @@ impl ClawbackApp {
                         return None;
                     }
                 }
-                self.directories.ui(ui, &doc.tree, doc.id, doc.generation, doc.view, self.scan.is_some())
+                self.directories.ui(ui, &doc.tree, doc.id, doc.generation, scope, self.scan.is_some())
             });
         if dragging && below_toolbar > 0.0 {
             let split = to_permille(folder.response.rect.height(), below_toolbar);
@@ -1518,7 +1556,7 @@ impl eframe::App for ClawbackApp {
                     disk_free: d.free_space(),
                     disk_total: d.total_space(),
                     deleting: &pending_delete,
-                    recycle_bin: d.recycle_bin(),
+                    special: d.special(),
                 });
                 let mut out = self.map.ui(ui, input.as_ref());
                 if self.doc.is_none() && self.scan.is_none() {
@@ -1566,6 +1604,7 @@ impl eframe::App for ClawbackApp {
         crate::properties::show(&ctx, &mut self.props);
         self.unreadable_window(&ctx);
         self.error_dialog(&ctx);
+        self.special_dialogs(&ctx);
 
         let title = self.compute_title();
         if title != self.title {
@@ -1768,7 +1807,7 @@ mod tests {
 
         fn finish(&mut self) {
             let deadline = Instant::now() + Duration::from_secs(20);
-            while self.app.deleting.is_some() || !self.app.delete_queue.is_empty() {
+            while self.app.deleting.is_some() || !self.app.delete_queue.is_empty() || self.app.scan.is_some() {
                 assert!(Instant::now() < deadline, "delete did not finish");
                 self.app.poll(&self.ctx);
                 std::thread::sleep(Duration::from_millis(5));
@@ -1783,6 +1822,257 @@ mod tests {
     }
 
     const BIG: &[(&str, bool)] = &[("big", true), ("big/a.bin", false), ("big/b.bin", false), ("keep.txt", false)];
+
+    #[test]
+    fn map_files_focus_their_parent_and_folders_focus_themselves() {
+        use clawback_core::tree::NewEntry;
+        let mut tree = Tree::new(Path::new("/selection"));
+        let folder = tree.add_children(ROOT, vec![NewEntry::dir("folder")]).start;
+        let file = tree.add_children(folder, vec![NewEntry::file("file.txt", 8)]).start;
+        let mut doc = Doc::counted(1, tree);
+        assert_eq!(doc.selected_folder(Some(folder)), folder);
+        assert_eq!(doc.selected_folder(Some(file)), folder);
+        assert_eq!(doc.view, ROOT, "selection must not zoom the map");
+        assert_eq!(doc.selected_folder(None), ROOT);
+        Arc::make_mut(&mut doc.tree).remove(folder);
+        assert_eq!(doc.selected_folder(Some(file)), ROOT);
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn cleaning_temp_asks_first_and_respects_disabled_deletion() {
+        use clawback_core::tree::NewEntry;
+        let path = special::windows::temp_folder::path().expect("current user's AppData");
+        // In-memory tree only: this test never deletes the real user's Temp data.
+        let mut tree = Tree::new(&path);
+        tree.add_children(ROOT, vec![NewEntry::file("fixture.txt", 8)]);
+        let mut app = ClawbackApp::with_settings(Settings::default());
+        app.doc = Some(Doc::counted(1, tree));
+        let ctx = egui::Context::default();
+        app.apply(Command::Special(special::Kind::TempFolder, ROOT), &ctx);
+        assert_eq!(app.confirm.len(), 1);
+        assert!(app.confirm[0].kind == DeleteKind::Cleanup(special::Cleanup::TempFolder));
+        assert_eq!(app.confirm[0].path, path);
+        assert!(app.deleting.is_none() && app.delete_queue.is_empty());
+        app.answer_confirm(false, &ctx);
+        assert!(app.confirm.is_empty() && app.deleting.is_none());
+        app.settings.disable_delete = true;
+        app.apply(Command::Special(special::Kind::TempFolder, ROOT), &ctx);
+        assert!(app.confirm.is_empty());
+    }
+
+    #[test]
+    fn confirmed_temp_cleanup_preserves_the_folder_and_updates_its_contents() {
+        let mut f = DeleteFixture::new(
+            "temp-cleanup",
+            &[
+                ("Temp", true),
+                ("Temp/a.bin", false),
+                ("Temp/nested", true),
+                ("Temp/nested/b.bin", false),
+                ("keep.txt", false),
+            ],
+            false,
+        );
+        let node = f.node("Temp");
+        let entry = f.app.doc.as_ref().unwrap().tree.node(node);
+        f.app.confirm.push_back(QueuedDelete {
+            doc: 1,
+            node,
+            path: f.root.join("Temp"),
+            size: entry.size,
+            files: entry.files,
+            kind: DeleteKind::Cleanup(special::Cleanup::TempFolder),
+        });
+        f.app.answer_confirm(true, &f.ctx.clone());
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        assert!(f.root.join("Temp").is_dir() && f.in_tree("Temp"));
+        assert!(!f.root.join("Temp/a.bin").exists() && !f.in_tree("Temp/a.bin"));
+        assert!(!f.root.join("Temp/nested").exists());
+        assert!(f.root.join("keep.txt").exists() && f.in_tree("keep.txt"));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn steam_game_menu_routes_to_manifest_uninstall_without_deleting() {
+        use special::windows::programs::Action;
+        let mut f = DeleteFixture::new(
+            "steam-menu",
+            &[
+                ("steamapps", true),
+                ("steamapps/common", true),
+                ("steamapps/common/Voyage", true),
+                ("steamapps/common/Voyage/game.exe", false),
+                ("steamapps/common/Voyage/assets", true),
+                ("steamapps/common/Voyage/assets/large.pak", false),
+                ("steamapps/appmanifest_123.acf", false),
+            ],
+            false,
+        );
+        std::fs::write(
+            f.root.join("steamapps/appmanifest_123.acf"),
+            r#""AppState" { "appid" "123" "name" "Voyage" "installdir" "Voyage" }"#,
+        )
+        .unwrap();
+        for selected in
+            ["steamapps/common/Voyage", "steamapps/common/Voyage/assets", "steamapps/common/Voyage/assets/large.pak"]
+        {
+            let node = f.node(selected);
+            let doc = f.app.doc.as_ref().unwrap();
+            let deadline = Instant::now() + Duration::from_secs(20);
+            while doc.special().classify(&doc.tree, node) != Some(special::Kind::InstalledSoftware) {
+                assert!(Instant::now() < deadline, "verified ownership lookup did not finish");
+                std::thread::sleep(Duration::from_millis(5));
+            }
+            f.app.apply(Command::Special(special::Kind::InstalledSoftware, node), &f.ctx.clone());
+            let deadline = Instant::now() + Duration::from_secs(20);
+            while !f.app.special.removal_checks.is_empty() {
+                assert!(Instant::now() < deadline);
+                f.app.poll(&f.ctx);
+                std::thread::sleep(Duration::from_millis(5));
+            }
+            let removal = f.app.special.removals.front().expect("uninstall chooser");
+            assert!(removal.steam);
+            assert_eq!(removal.applications.len(), 1);
+            assert_eq!(removal.applications[0].action, Some(Action::Steam(123)));
+            assert!(f.app.deleting.is_none() && f.app.delete_queue.is_empty());
+            assert!(f.root.join("steamapps/common/Voyage/game.exe").exists());
+            f.app.special.removals.clear();
+        }
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn temp_cleanup_silently_skips_locked_files_and_rescans_without_auto_rescan() {
+        use std::os::windows::fs::OpenOptionsExt;
+        let mut f = DeleteFixture::new("temp-locked", BIG, false);
+        let _held = std::fs::OpenOptions::new().read(true).share_mode(0).open(f.root.join("big/a.bin")).unwrap();
+        let node = f.node("big");
+        f.app.queue_delete(
+            QueuedDelete {
+                doc: 1,
+                node,
+                path: f.root.join("big"),
+                size: 16,
+                files: 2,
+                kind: DeleteKind::Cleanup(special::Cleanup::TempFolder),
+            },
+            &f.ctx.clone(),
+        );
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        assert!(f.root.join("big/a.bin").exists() && f.in_tree("big/a.bin"));
+        assert!(!f.root.join("big/b.bin").exists() && !f.in_tree("big/b.bin"));
+        assert!(f.in_tree("big") && f.in_tree("keep.txt"));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn compaction_updates_only_its_file_without_restarting_the_scan() {
+        use special::{
+            Compacted,
+            windows::wsl_disks::{DiskKind, Info},
+        };
+        let mut f = DeleteFixture::new("compact-refresh", BIG, false);
+        let view = f.node("big");
+        f.app.doc.as_mut().unwrap().view = view;
+        let update = || Compacted {
+            path: f.root.join("big/a.bin"),
+            info: Info {
+                kind: DiskKind::Linux,
+                distribution: None,
+                package: None,
+                file_size: Some(4),
+                size_on_disk: Some(2),
+                modified: Some(123),
+            },
+            disk: None,
+        };
+        f.app.finish_compaction(999, update());
+        assert_eq!(f.app.doc.as_ref().unwrap().tree.root().size, 24);
+        f.app.finish_compaction(1, update());
+        assert!(f.app.scan.is_none());
+        let doc = f.app.doc.as_ref().unwrap();
+        assert_eq!((doc.id, doc.view), (1, view));
+        assert_eq!(doc.tree.root().size, 18);
+        assert_eq!(doc.tree.node(view).size, 10);
+        assert_eq!(doc.tree.node(doc.tree.find_path(&f.root.join("big/a.bin")).unwrap()).len, 4);
+        assert!(f.in_tree("big/b.bin") && f.in_tree("keep.txt"));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn wsl_disk_delete_opens_reclaim_dialog_without_queuing_deletion() {
+        let mut f = DeleteFixture::new(
+            "wsl-disk",
+            &[
+                ("Docker", true),
+                ("Docker/wsl", true),
+                ("Docker/wsl/disk", true),
+                ("Docker/wsl/disk/docker_data.vhdx", false),
+            ],
+            false,
+        );
+        let relative = "Docker/wsl/disk/docker_data.vhdx";
+        let node = f.node(relative);
+        f.app.apply(Command::Delete(node), &f.ctx);
+        assert_eq!(f.app.special.wsl_disk.as_deref(), Some(f.root.join(relative).as_path()));
+        assert!(f.app.deleting.is_none() && f.app.delete_queue.is_empty() && f.app.confirm.is_empty());
+        assert!(f.root.join(relative).exists());
+        f.app.special.wsl_disk = None;
+        f.app.apply(Command::Special(special::Kind::WslDisk, node), &f.ctx);
+        assert!(f.app.special.wsl_disk.is_some());
+        // Ordinary files must not acquire the WSL action.
+        f.app.special.wsl_disk = None;
+        f.app.apply(Command::Special(special::Kind::WslDisk, ROOT), &f.ctx);
+        assert!(f.app.special.wsl_disk.is_none());
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn unidentified_applications_do_not_offer_an_empty_chooser_or_delete_files() {
+        let mut f = DeleteFixture::new("managed-program", BIG, false);
+        let node = f.node("big");
+        let path = f.root.join("big");
+        let (sender, job) = crate::background::Job::manual(());
+        sender
+            .send(Some(special::windows::programs::Removal {
+                path: path.clone(),
+                steam: false,
+                applications: Vec::new(),
+            }))
+            .unwrap();
+        f.app
+            .special
+            .removal_checks
+            .push((QueuedDelete { doc: 1, node, path, size: 16, files: 2, kind: DeleteKind::Recycle }, job));
+        f.app.poll(&f.ctx);
+        assert!(f.app.special.removals.is_empty());
+        assert!(f.app.delete_queue.is_empty() && f.app.deleting.is_none());
+        assert!(f.root.join("big/a.bin").exists());
+        // Cancelling this chooser does not schedule a fallback raw deletion.
+        f.app.special.removals.clear();
+        f.app.poll(&f.ctx);
+        assert!(f.app.delete_queue.is_empty() && f.app.deleting.is_none());
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn delayed_removal_checks_cannot_delete_from_a_replaced_document() {
+        let mut f = DeleteFixture::new("stale-program-check", BIG, false);
+        let node = f.node("big");
+        let (sender, job) = crate::background::Job::manual(());
+        f.app.special.removal_checks.push((
+            QueuedDelete { doc: 1, node, path: f.root.join("big"), size: 16, files: 2, kind: DeleteKind::Recycle },
+            job,
+        ));
+        f.app.doc.as_mut().unwrap().id = 2;
+        sender.send(None).unwrap();
+        f.app.poll(&f.ctx);
+        assert!(f.app.delete_queue.is_empty() && f.app.deleting.is_none() && f.app.special.removals.is_empty());
+        assert!(f.root.join("big/a.bin").exists());
+    }
 
     #[test]
     fn oversized_items_wait_for_confirmation_and_nothing_is_deleted() {
@@ -1875,7 +2165,7 @@ mod tests {
             std::fs::set_permissions(f.root.join("big"), std::fs::Permissions::from_mode(0o700)).unwrap();
         }
         assert_eq!(f.app.delete_errors.len(), 1, "{:?}", f.app.delete_errors);
-        let error = &f.app.delete_errors[0];
+        let error = &f.app.delete_errors[0].message;
         // Windows blocks only the held file. A read-only Unix folder blocks both, and
         // which one is reported first follows the filesystem's (hashed) listing order.
         #[cfg(windows)]
@@ -1889,7 +2179,7 @@ mod tests {
     #[cfg(windows)]
     #[test]
     fn emptying_the_recycle_bin_asks_then_clears_only_the_users_folder() {
-        let sid = crate::recycle_bin::user_sid().expect("current user's SID");
+        let sid = special::windows::recycle_bin::user_sid().expect("current user's SID");
         let user = format!("$Recycle.Bin/{sid}");
         let layout = [
             ("$Recycle.Bin", true),
@@ -1904,9 +2194,15 @@ mod tests {
         ];
         let mut f = DeleteFixture::new("bin", &layout, true);
         let ctx = f.ctx.clone();
-        f.app.apply(Command::EmptyRecycleBin, &ctx);
+        f.app.apply(
+            Command::Special(
+                special::Kind::RecycleBin,
+                f.app.doc.as_ref().unwrap().special().node(special::Kind::RecycleBin).unwrap(),
+            ),
+            &ctx,
+        );
         assert_eq!(f.app.confirm.len(), 1, "emptying always asks first");
-        assert!(f.app.confirm[0].kind == DeleteKind::EmptyBin);
+        assert!(f.app.confirm[0].kind == DeleteKind::Cleanup(special::Cleanup::RecycleBin));
         assert!(f.root.join(&user).join("$RABC123.txt").exists());
 
         f.app.answer_confirm(true, &ctx);
