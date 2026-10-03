@@ -50,6 +50,7 @@ pub enum Command {
     ZoomOut,
     ZoomFull,
     Reveal(NodeId),
+    Open(NodeId),
     Delete(NodeId),
     Special(special::Kind, NodeId),
     OpenDrive,
