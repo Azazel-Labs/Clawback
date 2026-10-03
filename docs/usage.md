@@ -152,3 +152,8 @@ than running it. The compact context menu groups scan-wide controls under **View
 Properties shows one main size, with a separate on-disk-size box only when its
 formatted value differs. Attribute names use plain language; **Marked for backup**
 is Windows' archive attribute, not an indication that the file is compressed.
+
+**File → Open selected item** opens a file with its default application or opens a
+folder in the file manager. It uses the Windows shell, macOS `open`, or Linux
+`xdg-open`. The separate **Open in Explorer / Finder / File Manager** action
+reveals the item without launching it and remains the action in the context menu.

@@ -164,7 +164,7 @@ pub(crate) fn wide(value: &std::ffi::OsStr) -> Vec<u16> {
 #[cfg(windows)]
 pub(crate) use self::windows::Apartment;
 
-/// Open a file with its default application, or a folder in the file manager.
+/// Open an item with its default application, or a folder in the file manager.
 pub fn open(path: &Path) -> Result<(), String> {
     #[cfg(windows)]
     {

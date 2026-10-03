@@ -164,6 +164,7 @@ enum Tool {
     Back,
     Free,
     Reveal,
+    OpenItem,
     Delete,
     Setup,
     About,
@@ -601,6 +602,14 @@ impl ClawbackApp {
                     self.error = Some(e);
                 }
             }
+            Command::Open(n) => {
+                if let Some(doc) = &self.doc
+                    && doc.tree.get(n).is_some()
+                    && let Err(error) = platform::open(&doc.tree.path(n))
+                {
+                    self.error = Some(error);
+                }
+            }
             Command::Delete(n) => self.delete(n, ctx),
             Command::Special(kind, node) => self.request_special(kind, node, ctx),
             Command::OpenDrive => self.open = Some(OpenDialog::start(ctx)),
@@ -840,6 +849,11 @@ impl ClawbackApp {
                     self.apply(Command::Reveal(n), ctx);
                 }
             }
+            Tool::OpenItem => {
+                if let Some(node) = sel {
+                    self.apply(Command::Open(node), ctx);
+                }
+            }
             Tool::Delete => {
                 if let Some(n) = sel {
                     self.apply(Command::Delete(n), ctx);
@@ -874,6 +888,9 @@ impl ClawbackApp {
                     action = Some(Tool::Rescan);
                 }
                 ui.separator();
+                if menu_item(ui, tr!("open-selected-item"), ready && selected, "") {
+                    action = Some(Tool::OpenItem);
+                }
                 if menu_item(ui, platform::file_manager_label(), ready && selected, "") {
                     action = Some(Tool::Reveal);
                 }
