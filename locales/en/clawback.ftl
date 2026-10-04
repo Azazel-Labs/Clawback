@@ -315,22 +315,17 @@ uninstall-open-steam = Open Steam library
 uninstall-refresh-help = The map follows live changes. Use Rescan after uninstalling if live updates are unavailable.
 uninstaller-missing = The registered uninstaller could not be found. Open Windows Installed Apps to manage this application.
 uninstaller-launch-error = Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application.
-
 wsl-disk-details = File details
-
 open-in-explorer = Open in Explorer
 open-in-finder = Open in Finder
 open-in-file-manager = Open in File Manager
-
 wsl-compact-summary = Recover unused disk space.
 wsl-compact-tooltip = Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction.
 wsl-compact-ready = Ready to compact?
 wsl-compact-stop-short = Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes.
 wsl-compact-admin = Windows will ask for administrator permission.
 wsl-copy-command = Copy command
-
 wsl-stop-and-compact = Stop WSL and compact
-
 close-dialog = Close
 uninstall-dialog-title = Uninstall
 uninstall-scope-short = Removes the whole application, including files outside your selection.
@@ -338,10 +333,8 @@ uninstall-via-steam = Managed by Steam
 uninstall-via-windows = Registered Windows application
 uninstall-details = Installation details
 uninstall-selected-path = Selected item
-
 delete-failed-title = Couldn’t delete item
 copy-error-details = Copy error details
-
 attribute-backup-flag = Marked for backup
 attribute-compressed = Compressed
 attribute-encrypted = Encrypted
