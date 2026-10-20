@@ -31,7 +31,7 @@ jobs:
       - name: Validate source catalog
         run: cargo xtask translations check
       - name: Synchronize Crowdin and open a translation PR
-        uses: crowdin/github-action@9c23991700c0ec5256fd41089b9d9d7d540e424e # v3
+        uses: crowdin/github-action@72955432d4aa4f6dd64cf17eeb88dd34d6ba064c # v3
         with:
           upload_sources: true
           upload_translations: false
