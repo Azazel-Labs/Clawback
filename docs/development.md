@@ -75,7 +75,13 @@ For a deliberate fallback check, build with **startup-probe**, set
 injection is absent from ordinary builds. Clear these environment variables
 after testing.
 
-You need Rust 1.98 or newer; `rust-toolchain.toml` pins the exact version, and `rustup` will fetch it automatically.
+You need Rust 1.95 or newer. `rust-toolchain.toml` pins the newer development
+toolchain for consistent formatting and linting; `rustup` fetches it automatically.
+Use `cargo +1.95.0 build --locked` to build with the minimum supported version.
+CI checks every workspace target and feature on Rust 1.95 across Windows, macOS
+and Linux. The locked egui/eframe 0.36.2 family and sysinfo 0.39.6 require 1.95;
+lowering it further would require dependency changes. Rust's minimum version is
+a compiler requirement, not a guarantee of support for older operating systems.
 
 ```
 cargo run --release -- --gui
