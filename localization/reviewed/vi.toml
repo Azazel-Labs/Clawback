@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "cd224ba415c1c562aa70c1f86bcc329e63fb2978d2c618af17510e6e230f4813"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Bản đồ dung lượng đĩa nhanh, đa nền tảng."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Giới thiệu Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Tiếng Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Tất cả tệp"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Ứng dụng / thư viện"
+
+[messages.arch]
+source = "Arch"
+translation = "Lưu trữ"
+
+[messages.archive]
+source = "Archive"
+translation = "Tệp lưu trữ"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "Tài nguyên 3D"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Đánh dấu để sao lưu"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Đã nén"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Đã mã hóa"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Liên kết hoặc chuyển hướng hệ thống tập tin"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Tạm thời"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Thuộc tính"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Thuộc tính:"
+
+[messages.audio]
+source = "Audio"
+translation = "Âm thanh"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Tự động quét lại sau khi xóa"
+
+[messages.back]
+source = "Back"
+translation = "Quay lại"
+
+[messages.bias]
+source = "Bias:"
+translation = "Độ thiên lệch:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Dữ liệu nhị phân"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Hủy"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Tiếng Catalan"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Tiếng Trung giản thể"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Tiếng Trung phồn thể"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Lấy lại dung lượng đĩa của bạn."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Cài đặt Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Dọn dẹp thư mục Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Nhấp để xóa các tệp tạm thời của bạn"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Nhấp để dọn sạch Thùng rác của ổ đĩa này"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · Đĩa ảo WSL. Nhấp để biết chi tiết về ổ đĩa, duyệt tệp hoặc lấy lại dung lượng."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Tệp ứng dụng hoặc trò chơi đã cài đặt. Nhấp để xác định và gỡ cài đặt toàn bộ ứng dụng."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Tệp trò chơi Steam. Nhấp để xác định trò chơi và gỡ cài đặt thông qua Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Đóng"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Thu gọn đĩa…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Không thể nén đĩa. Đảm bảo Docker Desktop và WSL đã dừng, sau đó thử lại. Windows đã báo cáo: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Đang dừng WSL và nén đĩa…"
+
+[messages.compress]
+source = "Compress"
+translation = "Nén"
+
+[messages.contains]
+source = "Contains:"
+translation = "Chứa:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "{ $files } tệp, { $folders } thư mục"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Sao chép chi tiết lỗi"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Bản quyền © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Chỉ đếm một lần các tệp có liên kết cứng"
+
+[messages.czech]
+source = "Czech"
+translation = "Tiếng Séc"
+
+[messages.danish]
+source = "Danish"
+translation = "Tiếng Đan Mạch"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Dữ liệu / cấu hình"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Ngày / Giờ"
+
+[messages.delay]
+source = "Delay:"
+translation = "Độ trễ:"
+
+[messages.delete]
+source = "Delete"
+translation = "Xóa"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Việc này không thể hoàn tác được."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · Đã qua { $seconds } giây"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Không thể xóa { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Không thể xóa mục"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Đang xóa vĩnh viễn…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Xóa vĩnh viễn"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Xóa vĩnh viễn?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Đang chuẩn bị chuyển vào Thùng rác…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } trong số { $total } tệp"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Các mục bổ sung được xếp hàng đợi: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Đang chuyển vào Thùng rác…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Tệp: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "“{ $name }” quá lớn đối với Thùng rác."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Đang cập nhật bản đồ đĩa…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Tiến trình chuyển vào Thùng rác đã dừng đột ngột. Kiểm tra mục đã chọn trước khi thử lại."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Đang xóa...\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Mật độ:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Tài liệu thiết kế"
+
+[messages.directories]
+source = "Directories"
+translation = "Thư mục"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = 'Tắt lệnh "Xóa"'
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Đang tìm thư mục…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Ảnh đĩa"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Màu hiển thị"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Không thể tìm thấy Docker Desktop ở các vị trí cài đặt tiêu chuẩn của nó. Mở nó từ menu Bắt đầu của Windows."
+
+[messages.document]
+source = "Document"
+translation = "Tài liệu"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Không đi vào ổ đĩa khác hoặc điểm gắn kết mạng bên trong thư mục đang quét"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Nhấp đúp để khám phá / Nhấp chuột phải để thao tác"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "Còn trống { $free } trên tổng { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } trống trên { $total }  ·  { $used } đã dùng  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Tiếng Hà Lan"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Mọi thứ trong Thùng rác của bạn trên { $drive } sẽ bị xóa vĩnh viễn."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Dọn sạch Thùng rác"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Làm trống thùng rác?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Xóa vĩnh viễn nội dung của { $path }? Thư mục Temp sẽ được giữ lại. Các mục Windows từ chối xóa sẽ được giữ nguyên. Đóng ứng dụng trước để giải phóng nhiều tập tin tạm thời hơn."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Làm sạch thư mục Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Làm sạch thư mục Temp của bạn?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Đang dọn sạch thùng rác…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Mã hóa"
+
+[messages.english]
+source = "English"
+translation = "Tiếng Anh"
+
+[messages.equal]
+source = "Equal"
+translation = "Bằng nhau"
+
+[messages.exit]
+source = "Exit"
+translation = "Thoát"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Mở rộng để duyệt · Nhấp vào thư mục để xem"
+
+[messages.file]
+source = "File"
+translation = "Tệp"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Bố cục tệp"
+
+[messages.file-size]
+source = "File Size"
+translation = "Kích thước tệp"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "LOẠI TỆP"
+
+[messages.file-types]
+source = "File types"
+translation = "Loại tệp"
+
+[messages.filename]
+source = "Filename"
+translation = "Tên tệp"
+
+[messages.files]
+source = "FILES"
+translation = "TỆP"
+
+[messages.files-2]
+source = "Files:"
+translation = "Tệp:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Đang tìm ổ đĩa..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Tiếng Phần Lan"
+
+[messages.folder]
+source = "FOLDER"
+translation = "THƯ MỤC"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Thư mục"
+
+[messages.folders]
+source = "Folders:"
+translation = "Thư mục:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Thư mục chưa được quét"
+
+[messages.french]
+source = "French"
+translation = "Tiếng Pháp"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Đường dẫn đầy đủ"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Tệp lưu trữ trò chơi"
+
+[messages.german]
+source = "German"
+translation = "Tiếng Đức"
+
+[messages.greek]
+source = "Greek"
+translation = "Tiếng Hy Lạp"
+
+[messages.help]
+source = "Help"
+translation = "Trợ giúp"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Ẩn"
+
+[messages.horz]
+source = "Horz"
+translation = "Ngang"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Tiếng Hungary"
+
+[messages.icon]
+source = "Icon"
+translation = "Biểu tượng"
+
+[messages.image]
+source = "Image"
+translation = "Hình ảnh"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Tiếng Indonesia"
+
+[messages.italian]
+source = "Italian"
+translation = "Tiếng Ý"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Tiếng Nhật"
+
+[messages.korean]
+source = "Korean"
+translation = "Tiếng Hàn"
+
+[messages.language]
+source = "Language"
+translation = "Ngôn ngữ"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Được cấp phép theo MIT-0 (MIT không yêu cầu ghi công). Không có bất kỳ bảo hành nào."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Trực tiếp · Đang xử lý các thay đổi còn chờ"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Dữ liệu demo - tệp và kích thước hư cấu"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Cập nhật trực tiếp đã dừng · Quét lại để kết nối lại"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Trực tiếp · Điều chỉnh các thay đổi trong nền"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Không thể cập nhật trực tiếp: Đã hủy quét · Quét lại để cập nhật"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Cập nhật trực tiếp đã dừng: { $error } · Quét lại để kết nối lại"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Không thể cập nhật trực tiếp: { $error } · Quét lại để cập nhật"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Trực tiếp · Theo dõi các thay đổi"
+
+[messages.location]
+source = "Location:"
+translation = "Vị trí:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Nhiều tệp"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Dành chỗ cho những điều quan trọng."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Số byte đã lập bản đồ so với dung lượng ổ đĩa đã dùng; đây là ước tính, không phải phần trăm số tệp."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Tùy chọn khác"
+
+[messages.modified]
+source = "Modified:"
+translation = "Đã sửa đổi:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Chuyển mục đã chọn vào thùng rác"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Giảm độ rực của màu"
+
+[messages.name]
+source = "Name:"
+translation = "Tên:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = 'Không tìm thấy ổ đĩa. Dùng "Thư mục khác..." để chọn thư mục.'
+
+[messages.no-extension]
+source = "No extension"
+translation = "Không có phần mở rộng"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Không có tệp trong thư mục này."
+
+[messages.normal]
+source = "Normal"
+translation = "Bình thường"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Tiếng Na Uy Bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% QUÉT"
+
+[messages.offline]
+source = "Offline"
+translation = "Ngoại tuyến"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Mở ổ đĩa hoặc thư mục để xem dung lượng được sử dụng ở đâu."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Mở thư mục hoặc ổ đĩa để duyệt cây thư mục."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Mở một thư mục để bắt đầu"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Mở ổ đĩa..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Mở thư mục…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Mở trong Explorer"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Mở trong Trình quản lý tệp"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Mở trong Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Mở mục đã chọn"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Thư mục khác..."
+
+[messages.palette]
+source = "Palette"
+translation = "Bảng màu"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Tạm dừng quét"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = 'macOS bảo vệ một số thư mục (Mail, Messages, người dùng khác, …). Cấp "Quyền truy cập toàn bộ ổ đĩa" cho Clawback trong Cài đặt hệ thống › Quyền riêng tư & Bảo mật để quét cả các thư mục đó.'
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Một số thư mục chỉ người dùng khác hoặc root mới đọc được. Chạy Clawback với quyền cao hơn (ví dụ `sudo -E clawback /`) để quét cả các thư mục đó."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Một số thư mục hệ thống chỉ quản trị viên mới đọc được. Chạy Clawback với tư cách quản trị viên để quét cả các thư mục đó."
+
+[messages.polish]
+source = "Polish"
+translation = "Tiếng Ba Lan"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Tiếng Bồ Đào Nha (Brasil)"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Tiếng Bồ Đào Nha (Bồ Đào Nha)"
+
+[messages.properties]
+source = "Properties"
+translation = "Thuộc tính"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Thuộc tính..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Việc sử dụng đĩa khác với kích thước tệp, chẳng hạn như do nén, dữ liệu thưa thớt hoặc chi phí phân bổ."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Thuộc tính của { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Các mục không thể xóa được: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Chỉ đọc"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Đang đọc chi tiết tệp…"
+
+[messages.ready]
+source = "Ready"
+translation = "Sẵn sàng"
+
+[messages.recent]
+source = "Recent"
+translation = "Gần đây"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Thu gọn giữ nguyên nội dung đĩa và giảm kích thước tệp đĩa trong Windows bằng cách thu hồi các khối chứa toàn số không. Thao tác này có thể thu hồi ít hoặc không thu hồi được dung lượng nào. Trước tiên hãy dọn dữ liệu không cần thiết bên trong Docker hoặc Linux."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Lấy lại dung lượng ổ đĩa WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Trước khi nén, hãy lưu công việc của bạn, thoát khỏi Docker Desktop và đóng các phiên WSL. Chạy lệnh này trong PowerShell để dừng tất cả các bản phân phối WSL. Giữ Docker và WSL dừng lại cho đến khi quá trình nén kết thúc. Windows sẽ yêu cầu quyền quản trị viên."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Ghi nhớ vị trí cửa sổ"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Điểm phân tích lại"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Quét lại"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Quét lại ổ đĩa"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Tiếp tục quét"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Tiếng Romania"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Chạy / Mở"
+
+[messages.russian]
+source = "Russian"
+translation = "Tiếng Nga"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback không thể quét thư mục.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback không thể quét { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Đã tạm dừng quét"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files } tệp, { $folders } thư mục"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Đang quét"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Tùy chọn quét sẽ áp dụng cho lần quét tiếp theo."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Chọn thư mục để xem"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Chọn ổ đĩa để xem"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Tiếng Serbia, Kirin"
+
+[messages.settings]
+source = "Settings…"
+translation = "Cài đặt…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Giao diện"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Hành vi"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Bên trái ưu tiên hình ngang; ở giữa cân bằng; bên phải ưu tiên hình dọc."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Xóa tệp"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Cách tính kích thước"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Chi tiết tệp"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Tên tệp"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Lưu thay đổi"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Phạm vi quét"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Cửa sổ và tương tác"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Hiển thị chú thích thông tin tệp"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Hiển thị chú thích tên tệp"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Hiển thị dung lượng trống"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Hiển thị dung lượng trống"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Hiển thị trong trình quản lý tệp"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Hiển thị hộp khi di chuột qua"
+
+[messages.size]
+source = "SIZE"
+translation = "KÍCH THƯỚC"
+
+[messages.size-2]
+source = "Size:"
+translation = "Kích thước:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Kích thước trên đĩa:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Mã nguồn"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Tiếng Tây Ban Nha (Mỹ Latinh)"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Tiếng Tây Ban Nha (Tây Ban Nha)"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Thưa"
+
+[messages.special-file]
+source = "Special file"
+translation = "Tệp đặc biệt"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Chỉ quét trong một hệ thống tệp"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Tiếng Thụy Điển"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Liên kết tượng trưng"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Liên kết tượng trưng"
+
+[messages.system]
+source = "System"
+translation = "Hệ thống"
+
+[messages.system-default]
+source = "System default"
+translation = "Mặc định hệ thống"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Có hiệu lực vào lần khởi động Clawback tiếp theo"
+
+[messages.temp]
+source = "Temp"
+translation = "Tạm thời"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Sau khi dọn dẹp, còn lại { $count } mục không thể xóa. Lý do đầu tiên: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Tiếng Thái"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Tác vụ quét đã dừng đột ngột."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Quá ít tệp"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Quá nhiều tệp"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Chú thích"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Thử quét NTFS nhanh hơn với quyền quản trị viên. Lần quét hiện tại vẫn tiếp tục."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: đang tạo cấu trúc thư mục · { $files } tệp"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Đã hủy Turbo — tiếp tục quét bình thường"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Đang hiển thị tiến độ Turbo · đang kiểm tra kết quả…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Bộ đếm chuyển sang Turbo khi Turbo đã tập hợp được nhiều mục hơn. Bản đồ vẫn hiển thị bản xem trước của quá trình quét thường cho đến khi toàn bộ cây Turbo được kiểm tra. Nếu Turbo thất bại, quá trình quét thường sẽ tiếp tục."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: đang đọc MFT { $percent }% · { $records } bản ghi"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: đang đọc MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: đang xác định tên tệp…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: đang sắp xếp kết quả…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: đang tải kết quả…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo không khả dụng — tiếp tục quét bình thường"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Tiếng Thổ Nhĩ Kỳ"
+
+[messages.type]
+source = "TYPE"
+translation = "LOẠI"
+
+[messages.type-2]
+source = "Type:"
+translation = "Loại:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Tiếng Ukraina"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Chi tiết cài đặt"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Gỡ cài đặt"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Quá trình tra cứu ứng dụng chưa hoàn tất. Không có gì bị xóa. Hãy thử lại."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Xác định các ứng dụng đã cài đặt…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Khởi chạy trình gỡ cài đặt…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Không thể xác định được ứng dụng nào cho thư mục này. Mở Ứng dụng đã cài đặt hoặc Steam để quản lý nội dung của nó."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Mở ứng dụng đã cài đặt"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Mở thư viện Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Nhà xuất bản: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Bản đồ cập nhật theo các thay đổi trong thời gian thực. Dùng Quét lại sau khi gỡ cài đặt nếu không thể cập nhật trực tiếp."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Xóa toàn bộ ứng dụng, bao gồm các tệp nằm ngoài lựa chọn của bạn."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Mục đã chọn"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Gỡ cài đặt…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Gỡ cài đặt qua Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "ID ứng dụng Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Gỡ cài đặt ứng dụng hoặc trò chơi"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Phiên bản: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Được quản lý bởi Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Ứng dụng Windows đã đăng ký"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Vị trí này thuộc về phần mềm đã cài đặt. Chọn một ứng dụng bên dưới để gỡ cài đặt toàn bộ ứng dụng, bao gồm cả các file nằm ngoài thư mục đã chọn. Windows hoặc Steam sẽ xử lý việc gỡ bỏ."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows không thể khởi động trình gỡ cài đặt (lỗi { $code }). Mở Ứng dụng đã cài đặt để quản lý ứng dụng này."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Không thể tìm thấy trình gỡ cài đặt đã đăng ký. Mở Ứng dụng đã cài đặt Windows để quản lý ứng dụng này."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Thư mục không đọc được"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Lên một cấp"
+
+[messages.updating]
+source = "Updating…"
+translation = "Đang cập nhật…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Dùng độ dài tệp thay cho kích thước trên đĩa"
+
+[messages.vert]
+source = "Vert"
+translation = "Dọc"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Rất ít tệp"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Rất nhiều tệp"
+
+[messages.video]
+source = "Video"
+translation = "Video"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Tiếng Việt"
+
+[messages.view]
+source = "View"
+translation = "Xem"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Đang chờ Windows cấp quyền…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  Tổng { $total }  -  Trống { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "{ $count } tác vụ đồng thời"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Giới hạn tác vụ đồng thời hiện tại; tự động điều chỉnh theo thông lượng và độ trễ đo được."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Duyệt các tệp Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Mở bản phân phối này trong Explorer. Thao tác này có thể khởi động bản phân phối."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Bạn muốn làm gì?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Hiển thị hướng dẫn dọn dẹp"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows sẽ yêu cầu quyền quản trị viên."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Thu hồi các khối chứa toàn số không trong khi vẫn giữ nguyên nội dung đĩa. Yêu cầu dừng Docker và WSL."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Sẵn sàng thu gọn?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Lưu công việc Linux của bạn và thoát khỏi Docker Desktop. Clawback sẽ dừng tất cả các phiên WSL, sau đó nén đĩa này. Giữ Docker và WSL đóng cho đến khi hoàn tất."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Thu hồi dung lượng đĩa chưa sử dụng."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Thu hồi các khối chứa toàn số không mà không xóa tệp của bạn. Trước tiên hãy dọn dữ liệu không cần thiết bên trong Linux hoặc Docker; dung lượng thu hồi được có thể khác nhau. Docker và WSL phải được giữ ở trạng thái dừng trong suốt quá trình thu gọn."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Sao chép lệnh"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Chi tiết tệp"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Tệp đĩa"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Đĩa ảo WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Bản phân phối WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "Trong Docker Desktop, kiểm tra image, container đã dừng và volume. Cũng có thể dọn bộ nhớ đệm biên dịch bằng “docker builder prune”. Volume có thể chứa cơ sở dữ liệu hoặc các tệp khác mà bạn cần; hãy kiểm tra trước khi xóa. Dọn dẹp và thu gọn đĩa là hai bước riêng biệt."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Lưu trữ image Docker, container, volume và bộ nhớ đệm biên dịch."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Lưu trữ môi trường Linux của Docker Desktop. Dữ liệu ứng dụng Docker có thể được lưu trữ trong một đĩa riêng."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "Duyệt qua các tệp của bản phân phối và xóa dữ liệu bạn không cần nữa. Sử dụng trình quản lý gói Linux của nó để dọn dẹp bộ đệm gói. Sau khi dọn dẹp, “sudo fstrim -av” bên trong bản phân phối có thể giúp giải phóng các khối không sử dụng trước khi tắt WSL và nén."
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Lưu trữ hệ thống tệp của bản phân phối Linux này, bao gồm các chương trình và tệp phía Linux."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Mở Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Kiểm tra container, image và volume trước khi xóa dữ liệu không cần thiết."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop - đĩa dữ liệu"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop - đĩa hệ thống"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Bản phân phối Linux không xác định"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Đường dẫn này trông giống như cài đặt WSL nhưng không tìm thấy đăng ký phù hợp nào cho người dùng Windows hiện tại. Đường dẫn gói và tệp có thể giúp xác định nó."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Gói Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Thu gọn đĩa…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Dừng WSL và thu gọn"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Xem toàn bộ"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Phóng to"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Phóng to"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Thu nhỏ"

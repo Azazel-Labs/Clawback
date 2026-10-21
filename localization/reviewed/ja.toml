@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "693b87e704401ad964664d30e4c28e0a1b23d5f6e5bf6f2a4f38738fc87db981"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "高速なクロスプラットフォームのディスク使用状況マップ。"
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Clawback について"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "アフリカーンス語"
+
+[messages.all-files]
+source = "All files"
+translation = "すべてのファイル"
+
+[messages.application-library]
+source = "Application / library"
+translation = "アプリケーション / ライブラリ"
+
+[messages.arch]
+source = "Arch"
+translation = "アーカイブ属性"
+
+[messages.archive]
+source = "Archive"
+translation = "圧縮ファイル"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D アセット"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "バックアップ用にマークされました"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "圧縮"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "暗号化されています"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "ファイルシステムのリンクまたはリダイレクト"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "一時的"
+
+[messages.attributes]
+source = "Attributes"
+translation = "属性"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "属性:"
+
+[messages.audio]
+source = "Audio"
+translation = "音声"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "削除後に自動で再スキャン"
+
+[messages.back]
+source = "Back"
+translation = "戻る"
+
+[messages.bias]
+source = "Bias:"
+translation = "配置の傾向:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "バイナリデータ"
+
+[messages.cancel]
+source = "Cancel"
+translation = "キャンセル"
+
+[messages.catalan]
+source = "Catalan"
+translation = "カタロニア語"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "中国語（簡体字）"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "中国語（繁体字）"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "ディスクの空き容量を取り戻しましょう。"
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Clawback の設定"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Temp フォルダーをクリーニング中…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "クリックして一時ファイルをクリーンアップします"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "クリックしてこのドライブのごみ箱を空にします"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · WSL 仮想ディスク。クリックしてディスクの詳細を表示したり、ファイルを参照したり、スペースを再利用したりできます。"
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "インストール済みのアプリケーションまたはゲームのファイルです。クリックしてアプリケーションを特定し、全体をアンインストールします。"
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam ゲームファイル。クリックしてゲームを特定し、Steam からアンインストールします。"
+
+[messages.close-dialog]
+source = "Close"
+translation = "閉じる"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "ディスクを圧縮…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "ディスクを圧縮できませんでした。 Docker Desktop と WSL が停止していることを確認してから、再試行してください。 Windows の報告: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "WSL を停止し、ディスクを圧縮しています…"
+
+[messages.compress]
+source = "Compress"
+translation = "圧縮"
+
+[messages.contains]
+source = "Contains:"
+translation = "内容:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "ファイル { $files } 個、フォルダー { $folders } 個"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "エラーの詳細をコピー"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "ハードリンクされたファイルを一度だけ数える"
+
+[messages.czech]
+source = "Czech"
+translation = "チェコ語"
+
+[messages.danish]
+source = "Danish"
+translation = "デンマーク語"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "データ / 設定"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "日付 / 時刻"
+
+[messages.delay]
+source = "Delay:"
+translation = "遅延:"
+
+[messages.delete]
+source = "Delete"
+translation = "削除"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "これは元に戻せません。"
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds }s 経過しました"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = '次の項目を削除できませんでした: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "アイテムを削除できませんでした"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "完全に削除しています…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "完全に削除します"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "完全に削除しますか?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "ごみ箱への移動を準備中…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done }/{ $total } ファイル"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "追加のアイテムがキューに追加されました: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "ごみ箱へ移動中…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · ファイル: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "「{ $name }」はごみ箱に入れるには大きすぎます。"
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "ディスクマップを更新中…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "リサイクルワーカーが予期せず停止しました。再試行する前に選択した項目を確認してください。"
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "削除中…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "密度:"
+
+[messages.design-document]
+source = "Design document"
+translation = "デザイン文書"
+
+[messages.directories]
+source = "Directories"
+translation = "フォルダー"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "「削除」コマンドを無効にする"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "フォルダーを検索中…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "ディスクイメージ"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "表示色"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop が標準のインストール場所に見つかりませんでした。 Windows の [スタート] メニューから開きます。"
+
+[messages.document]
+source = "Document"
+translation = "文書"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "スキャン対象のフォルダー内にマウントされた別のドライブやネットワーク共有をスキャンしない"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "ダブルクリックで開く / 右クリックで操作を表示"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "全 { $total } 中 { $free } 空き"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }全体 { $total }、空き { $free }  ·  使用済み { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "オランダ語"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "{ $drive } のごみ箱にあるすべての項目を完全に削除します。"
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "ごみ箱を空にする"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "ごみ箱を空にしますか?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "{ $path } の内容を完全に削除しますか？Temp フォルダー自体は残ります。Windows が削除を拒否した項目はそのまま残ります。削除できる一時ファイルを増やすには、先にアプリケーションを終了してください。"
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Temp フォルダーをクリーンアップ"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Temp フォルダーをクリーンアップしますか?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "ごみ箱を空にしています…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "暗号化"
+
+[messages.english]
+source = "English"
+translation = "英語"
+
+[messages.equal]
+source = "Equal"
+translation = "均等"
+
+[messages.exit]
+source = "Exit"
+translation = "終了"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "展開して参照 · フォルダーをクリックして表示"
+
+[messages.file]
+source = "File"
+translation = "ファイル"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "ファイルの配置"
+
+[messages.file-size]
+source = "File Size"
+translation = "ファイルサイズ"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "ファイルの種類"
+
+[messages.file-types]
+source = "File types"
+translation = "ファイルの種類"
+
+[messages.filename]
+source = "Filename"
+translation = "ファイル名"
+
+[messages.files]
+source = "FILES"
+translation = "ファイル"
+
+[messages.files-2]
+source = "Files:"
+translation = "ファイル:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "ドライブを検索中…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "フィンランド語"
+
+[messages.folder]
+source = "FOLDER"
+translation = "フォルダー"
+
+[messages.folder-2]
+source = "Folder"
+translation = "フォルダー"
+
+[messages.folders]
+source = "Folders:"
+translation = "フォルダー:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "スキャンされなかったフォルダー"
+
+[messages.french]
+source = "French"
+translation = "フランス語"
+
+[messages.full-path]
+source = "Full Path"
+translation = "完全なパス"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "ゲームアーカイブ"
+
+[messages.german]
+source = "German"
+translation = "ドイツ語"
+
+[messages.greek]
+source = "Greek"
+translation = "ギリシャ語"
+
+[messages.help]
+source = "Help"
+translation = "ヘルプ"
+
+[messages.hidden]
+source = "Hidden"
+translation = "隠しファイル"
+
+[messages.horz]
+source = "Horz"
+translation = "横"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "ハンガリー語"
+
+[messages.icon]
+source = "Icon"
+translation = "アイコン"
+
+[messages.image]
+source = "Image"
+translation = "画像"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "インドネシア語"
+
+[messages.italian]
+source = "Italian"
+translation = "イタリア語"
+
+[messages.japanese]
+source = "Japanese"
+translation = "日本語"
+
+[messages.korean]
+source = "Korean"
+translation = "韓国語"
+
+[messages.language]
+source = "Language"
+translation = "言語"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "MIT-0（MIT No Attribution）ライセンスで提供されます。いかなる保証もありません。"
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "リアルタイム · 未反映の変更を処理中"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "デモ データ - 架空のファイルとサイズ"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "リアルタイム更新が停止しました · 再接続するには再スキャンしてください"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "リアルタイム · バックグラウンドで変更を反映中"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "リアルタイム更新を利用できません: スキャンがキャンセルされました · 更新するには再スキャンしてください"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "リアルタイム更新が停止しました: { $error } · 再接続するには再スキャンしてください"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "リアルタイム更新を利用できません: { $error } · 更新するには再スキャンしてください"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "リアルタイム · 変更を監視中"
+
+[messages.location]
+source = "Location:"
+translation = "場所:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "ファイルが多い"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "大切なもののために空き容量を確保しましょう。"
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "ドライブの使用済み容量に対する集計済みバイト数の割合です。推定値であり、ファイル数の割合ではありません。"
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "その他のオプション"
+
+[messages.modified]
+source = "Modified:"
+translation = "更新日時:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "選択した項目をゴミ箱に移動"
+
+[messages.msec]
+source = "msec"
+translation = "ミリ秒"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "色を落ち着かせる"
+
+[messages.name]
+source = "Name:"
+translation = "名前:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "ドライブが見つかりません。「その他のフォルダー…」からフォルダーを選択してください。"
+
+[messages.no-extension]
+source = "No extension"
+translation = "拡張子なし"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "このフォルダーにファイルはありません。"
+
+[messages.normal]
+source = "Normal"
+translation = "通常"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "ノルウェー語（ブークモール）"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% スキャン済み"
+
+[messages.offline]
+source = "Offline"
+translation = "オフライン"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "ドライブやフォルダーを開いて、容量の使用状況を確認しましょう。"
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "フォルダーやドライブを開いて、ディレクトリツリーを表示します。"
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "フォルダーを開いて開始"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "ドライブを開く…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "フォルダーを開く…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "エクスプローラーで開く"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "ファイルマネージャーで開く"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Finder で開く"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "選択した項目を開く"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "その他のフォルダー…"
+
+[messages.palette]
+source = "Palette"
+translation = "配色"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "スキャンを一時停止"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS は一部のフォルダー（メール、メッセージ、他のユーザーのフォルダーなど）を保護します。これらを含めるには、「システム設定」›「プライバシーとセキュリティ」で Clawback に「フルディスクアクセス」を許可してください。"
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "一部のフォルダーは、他のユーザーまたは root のみが読み取れます。これらを含めるには、管理者権限で Clawback を実行してください（例: `sudo -E clawback /`）。"
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "一部のシステムフォルダーは管理者のみが読み取れます。これらを含めるには、Clawback を管理者として実行してください。"
+
+[messages.polish]
+source = "Polish"
+translation = "ポーランド語"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "ポルトガル語（ブラジル）"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "ポルトガルのポルトガル語"
+
+[messages.properties]
+source = "Properties"
+translation = "プロパティ"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "プロパティ…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "ディスク使用量は、圧縮、スパースデータ、割り当てオーバーヘッドなどにより、ファイルサイズとは異なります。"
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "{ $name } のプロパティ"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "削除できなかった項目: { $count } 件。{ $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "読み取り専用"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "ファイルの詳細を読み込み中…"
+
+[messages.ready]
+source = "Ready"
+translation = "準備完了"
+
+[messages.recent]
+source = "Recent"
+translation = "最近使った項目"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "圧縮はディスクの内容を保存し、ゼロで埋められたブロックを再利用することで Windows ファイル サイズを削減します。スペースがほとんど、またはまったく再利用されない場合があります。まず、Docker または Linux 内の不要なデータをクリーンアップします。"
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "WSL ディスク領域を再利用する"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "圧縮する前に、作業内容を保存し、Docker Desktop を終了して、WSL セッションを閉じます。 PowerShell でこのコマンドを実行して、すべての WSL ディストリビューションを停止します。圧縮が完了するまで、Docker と WSL を停止したままにします。 Windows は管理者の許可を求めます。"
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "ウィンドウの位置を記憶"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "再解析ポイント"
+
+[messages.rescan]
+source = "Rescan"
+translation = "再スキャン"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "ドライブを再スキャン"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "スキャンを再開"
+
+[messages.romanian]
+source = "Romanian"
+translation = "ルーマニア語"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "実行 / 開く"
+
+[messages.russian]
+source = "Russian"
+translation = "ロシア語"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback はフォルダーをスキャンできませんでした。\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = '次のパスをスキャンできませんでした: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "スキャンを一時停止中"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+ファイル { $files } 個、フォルダー { $folders } 個"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "スキャン中"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "スキャンオプションは次回のスキャンから適用されます。"
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "表示するフォルダーを選択"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "表示するドライブを選択"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "セルビア語（キリル文字）"
+
+[messages.settings]
+source = "Settings…"
+translation = "設定…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "外観"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "動作"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "左は水平な形、中央はそれらのバランスをとる、右は垂直な形を好む。"
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "ファイルの削除"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "サイズの計算方法"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "ファイルの詳細"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "ファイル名"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "変更を保存"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "スキャン範囲"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "ウィンドウと操作"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "ファイル情報のヒントを表示"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "ファイル名のヒントを表示"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "空き容量を表示"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "空き容量を表示"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "ファイルマネージャーで表示"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "マウスポインターを重ねた項目に枠を表示"
+
+[messages.size]
+source = "SIZE"
+translation = "サイズ"
+
+[messages.size-2]
+source = "Size:"
+translation = "サイズ:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "ディスク上のサイズ:"
+
+[messages.source-code]
+source = "Source code"
+translation = "ソースコード"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "スペイン語（ラテンアメリカ）"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "スペイン語（スペイン）"
+
+[messages.sparse]
+source = "Sparse"
+translation = "スパースファイル"
+
+[messages.special-file]
+source = "Special file"
+translation = "特殊ファイル"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "同じファイルシステム内のみスキャン"
+
+[messages.swedish]
+source = "Swedish"
+translation = "スウェーデン語"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "シンボリックリンク"
+
+[messages.symlink]
+source = "Symlink"
+translation = "シンボリックリンク"
+
+[messages.system]
+source = "System"
+translation = "システム"
+
+[messages.system-default]
+source = "System default"
+translation = "システムの既定値"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "次回の Clawback 起動時に反映されます"
+
+[messages.temp]
+source = "Temp"
+translation = "一時ファイル"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "削除できなかった項目が { $count } 個残っています。最初の理由：{ $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "タイ語"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "スキャン処理が予期せず停止しました。"
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "ファイルが少なすぎる"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "ファイルが多すぎる"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "ツールチップ"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "管理者権限で高速な NTFS スキャンを試します。現在のスキャンは続行されます。"
+
+[messages.turbo]
+source = "Turbo"
+translation = "ターボ"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "ターボ: フォルダーを構成中 · { $files } ファイル"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "ターボがキャンセルされました — 通常スキャンを続行中"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "ターボの進捗を表示中 · 結果を検証中…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "ターボが通常のスキャンより多くの項目を構成すると、カウンターはターボの値に切り替わります。ターボのツリー全体の検証が終わるまで、マップには通常のスキャンのプレビューが表示されます。ターボが失敗した場合は、通常のスキャンが続行されます。"
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "ターボ: MFT を読み取り中 { $percent }% · { $records } レコード"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "ターボ: MFT を読み込み中…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "ターボ: ファイル名を解決中…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "ターボ: 結果を並べ替え中…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "ターボ: 結果を読み込み中…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "ターボを利用できません — 通常スキャンを続行中"
+
+[messages.turkish]
+source = "Turkish"
+translation = "トルコ語"
+
+[messages.type]
+source = "TYPE"
+translation = "種類"
+
+[messages.type-2]
+source = "Type:"
+translation = "種類:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "ウクライナ語"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "インストールの詳細"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "アンインストール"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "アプリケーションの検索が完了しませんでした。何も削除されませんでした。もう一度やり直してください。"
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "インストールされているアプリケーションを特定しています…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "アンインストーラーを起動します…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "このフォルダーに対してアプリケーションを識別できませんでした。インストールされているアプリまたは Steam を開いて、そのコンテンツを管理します。"
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "インストールされているアプリを開く"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Steam ライブラリを開く"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "パブリッシャー: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "マップは変更をリアルタイムで反映します。リアルタイム更新を利用できない場合は、アンインストール後に再スキャンしてください。"
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "選択範囲外のファイルを含むアプリケーション全体を削除します。"
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "選択されたアイテム"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "アンインストール…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Steam 経由でアンインストール…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Steam アプリ ID: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "アプリケーションまたはゲームをアンインストールする"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "バージョン: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Steam によって管理"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "登録された Windows アプリケーション"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "この場所はインストールされたソフトウェアに属します。選択したフォルダー外のファイルを含むアプリケーション全体をアンインストールするには、以下のアプリケーションを選択してください。 Windows または Steam が削除を処理します。"
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows はアンインストーラーを開始できませんでした (エラー { $code })。このアプリケーションを管理するには、「インストールされているアプリ」を開いてください。"
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "登録されたアンインストーラーが見つかりませんでした。このアプリケーションを管理するには、「Windows インストール済みアプリ」を開いてください。"
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "読み取れないフォルダー"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "一つ上の階層へ"
+
+[messages.updating]
+source = "Updating…"
+translation = "更新中…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "ディスク上のサイズではなくファイルサイズを使用"
+
+[messages.vert]
+source = "Vert"
+translation = "縦"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "ファイルが非常に少ない"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "ファイルが非常に多い"
+
+[messages.video]
+source = "Video"
+translation = "動画"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "ベトナム語"
+
+[messages.view]
+source = "View"
+translation = "表示"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Windows の許可を待機中…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  合計 { $total }  -  空き { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "同時実行タスク { $count } 件"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "現在の同時実行数の上限です。測定した処理速度と待ち時間に応じて自動調整されます。"
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Linux ファイルの参照"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "このディストリビューションをエクスプローラーで開きます。これによりディストリビューションが起動する場合があります。"
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "何をしたいですか?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "クリーンアップ ガイダンスを表示する"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows は管理者の許可を求めます。"
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "ディスクの内容を保持しながら、ゼロで埋められたブロックを再利用します。 Docker と WSL を停止する必要があります。"
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "圧縮する準備はできましたか?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Linux の作業を保存し、Docker Desktop を終了します。 Clawback はすべての WSL セッションを停止し、このディスクを圧縮します。 Docker と WSL は終了するまで閉じたままにしておきます。"
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "未使用のディスク領域を回復します。"
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "ファイルを削除せずに、ゼロで埋められたブロックを回収します。先に Linux または Docker 内の不要なデータを削除してください。回収できる容量は状況によって異なります。処理中は Docker と WSL を停止したままにしてください。"
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "コマンドをコピー"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "ファイルの詳細"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "ディスクファイル"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL仮想ディスク"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL ディストリビューション"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "Docker Desktop で、イメージ、停止したコンテナー、およびボリュームを確認します。ビルドキャッシュは「docker builder prune」でクリーンアップすることもできます。ボリュームにはデータベースや必要なその他のファイルが含まれる場合があります。削除する前に内容を確認してください。クリーンアップとディスク圧縮は別の手順です。"
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Docker のイメージ、コンテナー、ボリューム、ビルドキャッシュを保存します。"
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Docker Desktop の Linux 環境を保存します。 Docker アプリケーション データは別のディスクに保存される場合があります。"
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "ディストリビューションのファイルを参照し、不要になったデータを削除します。 Linux パッケージ マネージャーを使用して、パッケージ キャッシュをクリーンアップします。クリーンアップ後、ディストリビューション内の「sudo fstrim -av」は、WSL をシャットダウンして圧縮する前に未使用のブロックを解放するのに役立つ場合があります。"
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "この Linux ディストリビューションのファイル システム (プログラムや Linux 側のファイルを含む) を保存します。"
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Docker Desktop を開く"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "不要なデータを削除する前に、コンテナ、イメージ、ボリュームを確認してください。"
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — データディスク"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — システムディスク"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "不明な Linux ディストリビューション"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "このパスは WSL インストールのように見えますが、現在の Windows ユーザーに一致する登録が見つかりませんでした。パッケージとファイルのパスが識別に役立つ場合があります。"
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Windows パッケージ"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "ディスクを圧縮…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "WSL を停止して圧縮"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "全体を表示"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "拡大"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "拡大"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "縮小"

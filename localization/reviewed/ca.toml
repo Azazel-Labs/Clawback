@@ -1,0 +1,1331 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "527366c0cb05eeea29d2d148b76a9d3e372556f958237d31e9f2a344fcd7aab2"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Un mapa ràpid i multiplataforma de l’espai en disc."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Quant a Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Tots els fitxers"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Aplicació / biblioteca"
+
+[messages.arch]
+source = "Arch"
+translation = "Arxiu"
+
+[messages.archive]
+source = "Archive"
+translation = "Arxiu comprimit"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "Recurs 3D"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Marcat per a còpia de seguretat"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Comprimit"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Xifrat"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Enllaç o redirecció al sistema de fitxers"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Temporal"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Atributs"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Atributs:"
+
+[messages.audio]
+source = "Audio"
+translation = "Àudio"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Torna a analitzar automàticament en suprimir"
+
+[messages.back]
+source = "Back"
+translation = "Enrere"
+
+[messages.bias]
+source = "Bias:"
+translation = "Preferència:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Dades binàries"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Cancel·la"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Català"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Xinès simplificat"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Xinès tradicional"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Recupera l’espai del disc."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Configuració de Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "S’està netejant la carpeta Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Feu clic per netejar els fitxers temporals"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Feu clic per buidar la paperera de reciclatge d'aquesta unitat"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · Disc virtual WSL. Feu clic per veure els detalls del disc, buscar fitxers o recuperar espai."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Arxius d'aplicació o joc instal·lats. Feu clic per identificar i desinstal·lar tota l'aplicació."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Fitxers de jocs de Steam. Feu clic per identificar el joc i desinstal·lar-lo mitjançant Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Tancar"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Compacta el disc…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "No s’ha pogut compactar el disc. Assegureu-vos que Docker Desktop i WSL estiguin aturats i torneu-ho a provar. Windows ha informat: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "S’està aturant WSL i compactant el disc…"
+
+[messages.compress]
+source = "Compress"
+translation = "Comprimeix"
+
+[messages.contains]
+source = "Contains:"
+translation = "Conté:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } fitxer
+       *[other] { $files } fitxers
+    }, { $folders ->
+        [one] { $folders } carpeta
+       *[other] { $folders } carpetes
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Copia els detalls de l'error"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Compta només una vegada els fitxers amb enllaços durs"
+
+[messages.czech]
+source = "Czech"
+translation = "Txec"
+
+[messages.danish]
+source = "Danish"
+translation = "Danès"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Dades / configuració"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Data / hora"
+
+[messages.delay]
+source = "Delay:"
+translation = "Retard:"
+
+[messages.delete]
+source = "Delete"
+translation = "Suprimeix"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Això no es pot desfer."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds } s transcorreguts"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'No s’ha pogut suprimir { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "No s'ha pogut suprimir l'element"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "S'està suprimint permanentment…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Suprimeix permanentment"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Vols suprimir-lo permanentment?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "S’està preparant per enviar a la paperera…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } de { $total } fitxers"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Elements addicionals a la cua: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "S’està movent a la paperera de reciclatge…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Fitxers: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = '"{ $name }" és massa gran per a la paperera de reciclatge.'
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "S’està actualitzant el mapa del disc…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "El procés de reciclatge s’ha aturat inesperadament. Comproveu l’element seleccionat abans de tornar-ho a provar."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "S’està suprimint...\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Densitat:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Document de disseny"
+
+[messages.directories]
+source = "Directories"
+translation = "Directoris"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "Desactiva l’ordre «Suprimeix»"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "S’estan descobrint carpetes…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Imatge de disc"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Colors de visualització"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "No s'ha pogut trobar Docker Desktop a les seves ubicacions d'instal·lació estàndard. Obriu-lo des del menú Inici de Windows."
+
+[messages.document]
+source = "Document"
+translation = "Document"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "No entris en altres unitats ni en muntatges de xarxa dins de la carpeta analitzada"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Feu doble clic per explorar / Feu clic dret per a més accions"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } lliure de { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } lliures de { $total }  ·  { $used } utilitzats  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Neerlandès"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Tot el que hi ha a la paperera de reciclatge a { $drive } se suprimirà permanentment."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Buida la paperera de reciclatge"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Buidar la paperera de reciclatge?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Suprimir permanentment el contingut de { $path }? La carpeta Temp es conservarà. Els elements que Windows es nega a eliminar es deixaran al seu lloc. Tanqueu primer les aplicacions per alliberar més fitxers temporals."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Neteja la carpeta Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Voleu netejar la carpeta Temp?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "S'està buidant la paperera de reciclatge…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Xifra"
+
+[messages.english]
+source = "English"
+translation = "Anglès"
+
+[messages.equal]
+source = "Equal"
+translation = "Equilibrat"
+
+[messages.exit]
+source = "Exit"
+translation = "Surt"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Desplegueu per navegar · Feu clic en una carpeta per veure-la"
+
+[messages.file]
+source = "File"
+translation = "Fitxer"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Disposició dels fitxers"
+
+[messages.file-size]
+source = "File Size"
+translation = "Mida del fitxer"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "TIPUS DE FITXER"
+
+[messages.file-types]
+source = "File types"
+translation = "Tipus de fitxer"
+
+[messages.filename]
+source = "Filename"
+translation = "Nom del fitxer"
+
+[messages.files]
+source = "FILES"
+translation = "FITXERS"
+
+[messages.files-2]
+source = "Files:"
+translation = "Fitxers:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "S’estan cercant unitats..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Finès"
+
+[messages.folder]
+source = "FOLDER"
+translation = "CARPETA"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Carpeta"
+
+[messages.folders]
+source = "Folders:"
+translation = "Carpetes:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Carpetes no analitzades"
+
+[messages.french]
+source = "French"
+translation = "Francès"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Camí complet"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Arxiu de joc"
+
+[messages.german]
+source = "German"
+translation = "Alemany"
+
+[messages.greek]
+source = "Greek"
+translation = "Grec"
+
+[messages.help]
+source = "Help"
+translation = "Ajuda"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Ocult"
+
+[messages.horz]
+source = "Horz"
+translation = "Horitz."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Hongarès"
+
+[messages.icon]
+source = "Icon"
+translation = "Icona"
+
+[messages.image]
+source = "Image"
+translation = "Imatge"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Indonesi"
+
+[messages.italian]
+source = "Italian"
+translation = "Italià"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Japonès"
+
+[messages.korean]
+source = "Korean"
+translation = "Coreà"
+
+[messages.language]
+source = "Language"
+translation = "Idioma"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Llicència MIT-0 (MIT No Attribution). Sense cap mena de garantia."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "En directe · Processant els canvis pendents"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Dades de demostració: fitxers i mides de ficció"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Actualització en directe aturada · Torna a escanejar per reconnectar"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "En directe · Sincronitzant els canvis en segon pla"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Actualització en directe no disponible: Escaneig cancel·lat · Torna a escanejar per actualitzar"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Actualització en directe aturada: { $error } · Torna a escanejar per reconnectar"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Actualització en directe no disponible: { $error } · Torna a escanejar per actualitzar"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "En directe · Observant els canvis"
+
+[messages.location]
+source = "Location:"
+translation = "Ubicació:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Molts fitxers"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Fes lloc per al que importa."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Bytes representats respecte a l’espai utilitzat de la unitat; és una estimació, no un percentatge del nombre de fitxers."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Opcions diverses"
+
+[messages.modified]
+source = "Modified:"
+translation = "Modificat:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Mou l’element seleccionat a la paperera"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Colors apagats"
+
+[messages.name]
+source = "Name:"
+translation = "Nom:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "No s’ha trobat cap unitat. Feu servir «Una altra carpeta...» per triar-ne una."
+
+[messages.no-extension]
+source = "No extension"
+translation = "Sense extensió"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "No hi ha fitxers en aquesta carpeta."
+
+[messages.normal]
+source = "Normal"
+translation = "Normal"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Noruec bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% DE L’ANÀLISI"
+
+[messages.offline]
+source = "Offline"
+translation = "Fora de línia"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   D’acord   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Obriu una unitat o una carpeta per veure on va el vostre espai."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Obriu una carpeta o una unitat per navegar pel seu arbre de directoris."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Obriu una carpeta per començar"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Obre una unitat..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Obre una carpeta…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Obre a l'Explorador"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Obre al Gestor de fitxers"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Obre al Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Obre l’element seleccionat"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Una altra carpeta..."
+
+[messages.palette]
+source = "Palette"
+translation = "Paleta"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Posa en pausa l’anàlisi"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS protegeix algunes carpetes (Mail, Messages, altres usuaris, …). Concediu a Clawback «Accés total al disc» a Configuració del Sistema › Privadesa i seguretat per incloure-les."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Algunes carpetes només les poden llegir altres usuaris o root. Executeu Clawback amb privilegis elevats (per exemple, `sudo -E clawback /`) per incloure-les."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Algunes carpetes del sistema només les poden llegir els administradors. Executeu Clawback com a administrador per incloure-les."
+
+[messages.polish]
+source = "Polish"
+translation = "Polonès"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Portuguès del Brasil"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Portuguès europeu"
+
+[messages.properties]
+source = "Properties"
+translation = "Propietats"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Propietats..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "L’ús del disc difereix de la mida del fitxer, per exemple a causa de la compressió, les dades disperses o l’espai addicional d’assignació."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Propietats de { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Elements que no s'han pogut suprimir: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Només lectura"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "S’estan llegint els detalls del fitxer…"
+
+[messages.ready]
+source = "Ready"
+translation = "Preparat"
+
+[messages.recent]
+source = "Recent"
+translation = "Recents"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "La compactació conserva el contingut del disc i redueix la mida del fitxer de Windows recuperant blocs plens de zeros. Pot recuperar poc o gens d'espai. Netegeu primer les dades no desitjades dins de Docker o Linux."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Recupera espai de disc WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Abans de compactar, deseu el vostre treball, sortiu de Docker Desktop i tanqueu les sessions WSL. Executeu aquesta ordre a PowerShell per aturar totes les distribucions WSL. Manteniu Docker i WSL aturats fins que acabi la compactació. Windows demanarà permís d'administrador."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Recorda la posició de la finestra"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Punt de reanàlisi"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Torna a analitzar"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Torna a analitzar la unitat"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Reprèn l’anàlisi"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Romanès"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Executa / Obre"
+
+[messages.russian]
+source = "Russian"
+translation = "Rus"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback no ha pogut analitzar la carpeta.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback no ha pogut analitzar { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Anàlisi en pausa"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } fitxer
+       *[other] { $files } fitxers
+    }, { $folders ->
+        [one] { $folders } carpeta
+       *[other] { $folders } carpetes
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "S’està analitzant"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Les opcions d’anàlisi s’aplicaran a la propera anàlisi."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Seleccioneu una carpeta per veure-la"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Seleccioneu una unitat per veure-la"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Serbi, ciríl·lic"
+
+[messages.settings]
+source = "Settings…"
+translation = "Configuració…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Aparença"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Comportament"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "L’esquerra afavoreix formes horitzontals; el centre les equilibra; la dreta afavoreix formes verticals."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Supressió de fitxers"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Còmput de mides"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Detalls del fitxer"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Noms de fitxer"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Desa els canvis"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Límits de l’anàlisi"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Finestra i interacció"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Mostra els consells d’informació del fitxer"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Mostra els consells de nom del fitxer"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Mostra l’espai lliure"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Mostra l’espai lliure"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Mostra al gestor de fitxers"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Mostra els quadres en passar-hi per sobre"
+
+[messages.size]
+source = "SIZE"
+translation = "MIDA"
+
+[messages.size-2]
+source = "Size:"
+translation = "Mida:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Mida al disc:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Codi font"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Espanyol d’Amèrica Llatina"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Espanyol d’Espanya"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Fitxer dispers"
+
+[messages.special-file]
+source = "Special file"
+translation = "Fitxer especial"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Queda’t en un sol sistema de fitxers"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Suec"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Enllaç simbòlic"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Enllaç simbòlic"
+
+[messages.system]
+source = "System"
+translation = "Sistema"
+
+[messages.system-default]
+source = "System default"
+translation = "Valor predeterminat del sistema"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "S’aplicarà la propera vegada que s’iniciï Clawback"
+
+[messages.temp]
+source = "Temp"
+translation = "Temporal"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "La neteja ha deixat { $count } elements que no s'han pogut eliminar. Primer motiu: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Tai"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "El procés d’anàlisi s’ha aturat inesperadament."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Massa pocs fitxers"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Massa fitxers"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Indicadors de funció"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Proveu una anàlisi NTFS més ràpida amb permís d’administrador. L’anàlisi actual continua."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: s’estan muntant les carpetes · { $files } fitxers"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo cancel·lat — l’anàlisi normal continua"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Es mostra el progrés de Turbo · s’estan validant els resultats…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Els comptadors passen a Turbo quan aquest ha muntat més entrades. El mapa manté la previsualització de l’anàlisi normal fins que es valida l’arbre complet de Turbo. Si Turbo falla, l’anàlisi normal continua."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: s’està llegint la MFT { $percent }% · { $records } registres"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: s’està llegint la MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: s’estan resolent els noms de fitxer…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: s’estan ordenant els resultats…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: s’estan carregant els resultats…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo no disponible — l’anàlisi normal continua"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Turc"
+
+[messages.type]
+source = "TYPE"
+translation = "TIPUS"
+
+[messages.type-2]
+source = "Type:"
+translation = "Tipus:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Ucraïnès"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Detalls de la instal·lació"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Desinstal·la"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "La cerca de l'aplicació no s'ha acabat. No s'ha esborrat res. Torna-ho a provar."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Identificant les aplicacions instal·lades…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Inicieu el desinstal·lador…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "No s'ha pogut identificar cap aplicació per a aquesta carpeta. Obriu Aplicacions instal·lades o Steam per gestionar el seu contingut."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Obriu les aplicacions instal·lades"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Obriu la biblioteca de Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Editor: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "El mapa segueix els canvis en directe. Torneu a analitzar després de desinstal·lar si les actualitzacions en directe no estan disponibles."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Elimina tota l'aplicació, inclosos els fitxers fora de la vostra selecció."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Element seleccionat"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Desinstal·la…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Desinstal·la mitjançant Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "ID de l'aplicació Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Desinstal·la una aplicació o un joc"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Versió: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Gestionat per Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Aplicació registrada de Windows"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Aquesta ubicació pertany al programari instal·lat. Trieu una aplicació a continuació per desinstal·lar tota l'aplicació, inclosos els fitxers fora de la carpeta seleccionada. Windows o Steam s'encarregaran de l'eliminació."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows no ha pogut iniciar el desinstal·lador (error { $code }). Obriu Aplicacions instal·lades per gestionar aquesta aplicació."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "No s'ha pogut trobar el desinstal·lador registrat. Obriu les aplicacions instal·lades de Windows per gestionar aquesta aplicació."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Carpetes il·legibles"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Puja un nivell"
+
+[messages.updating]
+source = "Updating…"
+translation = "S’està actualitzant…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Fes servir la longitud dels fitxers, no la mida al disc"
+
+[messages.vert]
+source = "Vert"
+translation = "Vert."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Molt pocs fitxers"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Moltíssims fitxers"
+
+[messages.video]
+source = "Video"
+translation = "Vídeo"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Vietnamita"
+
+[messages.view]
+source = "View"
+translation = "Visualització"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "S’està esperant el permís de Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  { $total } en total  -  { $free } lliures  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } tasca simultània
+       *[other] { $count } tasques simultànies
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Límit de concurrència actual; s’adapta automàticament al rendiment i a la latència mesurats."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Exploreu fitxers Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Obriu aquesta distribució a l'Explorador. Això pot iniciar la distribució."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Què t'agradaria fer?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Mostra les instruccions de neteja"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows demanarà permís d'administrador."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Recupera blocs plens de zeros mentre es conserva el contingut del disc. Requereix que Docker i WSL estiguin aturats."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Preparat per compactar?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Deseu el vostre treball de Linux i sortiu de Docker Desktop. Clawback aturarà totes les sessions WSL i després compactarà aquest disc. Manteniu Docker i WSL tancats fins que acabi."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Recupera l'espai de disc no utilitzat."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Recupera els blocs plens de zeros sense suprimir els fitxers. Neteja primer les dades dins de Linux o Docker; l'espai recuperat varia. Docker i WSL han de romandre aturats durant la compactació."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Copia l'ordre"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Detalls del fitxer"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Fitxer de disc"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Disc virtual WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Distribució WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = 'A Docker Desktop, reviseu imatges, contenidors aturats i volums. La memòria cau de compilació també es pot netejar amb "docker builder prune". Els volums poden contenir bases de dades o altres fitxers que necessiteu; inspeccioneu-los abans de retirar-los. La neteja i la compactació del disc són passos separats.'
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Emmagatzema imatges de Docker, contenidors, volums i memòria cau de creació."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Emmagatzema l'entorn Linux de Docker Desktop. Les dades de l'aplicació Docker es poden emmagatzemar en un disc independent."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = """Examineu els fitxers de la distribució i elimineu les dades que ja no necessiteu. Utilitzeu el seu gestor de paquets Linux per netejar la memòria cau de paquets. Després de la neteja, "sudo fstrim -av" dins de la distribució pot ajudar a alliberar blocs no utilitzats abans d'apagar WSL i compactar."""
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Emmagatzema el sistema de fitxers d'aquesta distribució de Linux, inclosos els seus programes i fitxers del costat de Linux."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Obre Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Reviseu els contenidors, les imatges i els volums abans d'eliminar les dades no desitjades."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — disc de dades"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — disc del sistema"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Distribució de Linux no identificada"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Aquest camí sembla una instal·lació WSL, però no s'ha trobat cap registre coincident per a l'usuari actual de Windows. El paquet i la ruta del fitxer poden ajudar a identificar-lo."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Paquet de Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Compacta el disc…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Atura WSL i compacta"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Zoom complet"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Amplia"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Amplia"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Redueix"

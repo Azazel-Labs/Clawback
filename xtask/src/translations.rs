@@ -7,6 +7,7 @@ use std::{
 use syn::{parse::Parser, visit::Visit};
 #[path = "../../localization/catalog.rs"]
 mod catalog;
+mod review;
 
 #[derive(Default)]
 struct Extractor {
@@ -99,10 +100,23 @@ fn extract(directory: &Path, extractor: &mut Extractor) -> Result<()> {
     Ok(())
 }
 
-#[derive(Clone, Copy, Debug, clap::Subcommand)]
+#[derive(Clone, Debug, clap::Subcommand)]
 pub enum Action {
     /// Validate tr! messages against the English catalog and check formatting
     Check,
+    /// Record explicitly selected string reviews (or the README) for one locale
+    Review {
+        /// One supported locale, for example fr or zh-Hant
+        locale: String,
+        /// Message IDs, including attributes such as button.label
+        ids: Vec<String>,
+        /// Review every string and the README in this locale
+        #[arg(long, conflicts_with_all = ["ids", "readme"])]
+        all: bool,
+        /// Review only the README, without accepting any changed UI strings
+        #[arg(long, conflicts_with = "ids")]
+        readme: bool,
+    },
     /// Format the Fluent catalogs in place
     Fmt {
         /// Report unformatted catalogs instead of rewriting them
@@ -121,7 +135,21 @@ pub fn run(root: &Path, action: Action) -> Result<()> {
     if let Some(errors) = extractor.error {
         return Err(errors.into_iter().map(|error| error.to_string()).collect::<Vec<_>>().join("\n").into());
     }
+    if let Action::Review { locale, ids, all, readme } = action {
+        return review::run(root, &locale, &ids, all, readme);
+    }
     let catalogs = catalog::load(&directory)?;
+    let mut stale = Vec::new();
+    for locale in catalogs.keys().filter(|locale| *locale != "en") {
+        stale.extend(review::check(root, locale)?);
+    }
+    if !stale.is_empty() {
+        return Err(format!(
+            "{}\nReview the listed IDs with cargo xtask translations review <locale> <id>...",
+            stale.join("\n\n")
+        )
+        .into());
+    }
     let source = catalogs.get("en").ok_or("missing English catalog")?;
     for (id, arguments) in &extractor.messages {
         if source.get(id) != Some(arguments) {

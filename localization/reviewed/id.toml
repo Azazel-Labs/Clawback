@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "761613c0baf0e7c195a13f6330d1c0f618c2607253788cc3a60d5e3a9307946a"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Peta ruang disk lintas platform yang cepat."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Tentang Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Bahasa Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Semua berkas"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Aplikasi / pustaka"
+
+[messages.arch]
+source = "Arch"
+translation = "Arsip"
+
+[messages.archive]
+source = "Archive"
+translation = "Arsip"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "Aset 3D"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Ditandai untuk cadangan"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Terkompresi"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Terenkripsi"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Tautan atau pengalihan sistem file"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Sementara"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Atribut"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Atribut:"
+
+[messages.audio]
+source = "Audio"
+translation = "Audio"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Pindai ulang otomatis setelah penghapusan"
+
+[messages.back]
+source = "Back"
+translation = "Kembali"
+
+[messages.bias]
+source = "Bias:"
+translation = "Pembobotan:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Data biner"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Batal"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Bahasa Katala"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Bahasa Tionghoa Sederhana"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Bahasa Tionghoa Tradisional"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Rebut kembali ruang disk Anda."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Pengaturan Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Membersihkan folder Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Klik untuk membersihkan file-file sementara Anda"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Klik untuk mengosongkan Recycle Bin drive ini"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · disk virtual WSL. Klik untuk detail disk, jelajahi file, atau dapatkan kembali ruang."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "File aplikasi atau game yang diinstal. Klik untuk mengidentifikasi dan menghapus instalasi seluruh aplikasi."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "File game Steam. Klik untuk mengidentifikasi game dan mencopot pemasangannya melalui Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Tutup"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Padatkan disk…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Tidak dapat memadatkan disk. Pastikan Docker Desktop dan WSL dihentikan, lalu coba lagi. Windows melaporkan: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Menghentikan WSL dan memadatkan disk…"
+
+[messages.compress]
+source = "Compress"
+translation = "Kompresi"
+
+[messages.contains]
+source = "Contains:"
+translation = "Berisi:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "{ $files } berkas, { $folders } folder"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Salin detail kesalahan"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Hak cipta © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Hitung berkas dengan tautan keras hanya sekali"
+
+[messages.czech]
+source = "Czech"
+translation = "Bahasa Ceko"
+
+[messages.danish]
+source = "Danish"
+translation = "Bahasa Denmark"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Data / konfigurasi"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Tanggal / Waktu"
+
+[messages.delay]
+source = "Delay:"
+translation = "Jeda:"
+
+[messages.delete]
+source = "Delete"
+translation = "Hapus"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Ini tidak dapat dibatalkan."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds } detik berlalu"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Gagal menghapus { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Tidak dapat menghapus item"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Menghapus secara permanen…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Hapus secara permanen"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Hapus secara permanen?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Menyiapkan pemindahan ke Tempat Sampah…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } dari { $total } file"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Item tambahan antri: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Memindahkan ke Tempat Sampah…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · File: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "“{ $name }” terlalu besar untuk Recycle Bin."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Memperbarui peta disk…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Proses pemindahan ke Tempat Sampah berhenti secara tak terduga. Periksa item yang dipilih sebelum mencoba lagi."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Menghapus...\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Kepadatan:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Dokumen desain"
+
+[messages.directories]
+source = "Directories"
+translation = "Direktori"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = 'Nonaktifkan perintah "Hapus"'
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Mencari folder…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Citra disk"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Warna tampilan"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop tidak dapat ditemukan di lokasi instalasi standarnya. Buka dari menu Start Windows."
+
+[messages.document]
+source = "Document"
+translation = "Dokumen"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Jangan masuk ke drive lain atau sistem berkas jaringan yang terpasang di dalam folder yang dipindai"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Klik dua kali untuk menjelajah / Klik kanan untuk tindakan"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } tersedia dari { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } kosong dari { $total }  ·  { $used } terpakai  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Bahasa Belanda"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Semua yang ada di Recycle Bin Anda di { $drive } akan dihapus secara permanen."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Kosongkan Tempat Sampah"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Kosongkan Recycle Bin?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Hapus konten { $path } secara permanen? Folder Temp akan disimpan. Item yang ditolak oleh Windows untuk dihapus akan dibiarkan di tempatnya. Tutup aplikasi terlebih dahulu untuk mengosongkan lebih banyak file sementara."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Bersihkan folder Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Bersihkan folder Temp Anda?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Mengosongkan Tempat Sampah…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Enkripsi"
+
+[messages.english]
+source = "English"
+translation = "Bahasa Inggris"
+
+[messages.equal]
+source = "Equal"
+translation = "Sama"
+
+[messages.exit]
+source = "Exit"
+translation = "Keluar"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Perluas untuk menjelajah · Klik folder untuk melihat"
+
+[messages.file]
+source = "File"
+translation = "Berkas"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Tata letak berkas"
+
+[messages.file-size]
+source = "File Size"
+translation = "Ukuran berkas"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "JENIS BERKAS"
+
+[messages.file-types]
+source = "File types"
+translation = "Jenis berkas"
+
+[messages.filename]
+source = "Filename"
+translation = "Nama berkas"
+
+[messages.files]
+source = "FILES"
+translation = "BERKAS"
+
+[messages.files-2]
+source = "Files:"
+translation = "Berkas:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Mencari drive..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Bahasa Finlandia"
+
+[messages.folder]
+source = "FOLDER"
+translation = "FOLDER"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Folder"
+
+[messages.folders]
+source = "Folders:"
+translation = "Folder:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Folder yang tidak dipindai"
+
+[messages.french]
+source = "French"
+translation = "Bahasa Prancis"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Jalur lengkap"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Arsip gim"
+
+[messages.german]
+source = "German"
+translation = "Bahasa Jerman"
+
+[messages.greek]
+source = "Greek"
+translation = "Bahasa Yunani"
+
+[messages.help]
+source = "Help"
+translation = "Bantuan"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Tersembunyi"
+
+[messages.horz]
+source = "Horz"
+translation = "Horizontal"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Bahasa Hungaria"
+
+[messages.icon]
+source = "Icon"
+translation = "Ikon"
+
+[messages.image]
+source = "Image"
+translation = "Gambar"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Bahasa Indonesia"
+
+[messages.italian]
+source = "Italian"
+translation = "Bahasa Italia"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Bahasa Jepang"
+
+[messages.korean]
+source = "Korean"
+translation = "Bahasa Korea"
+
+[messages.language]
+source = "Language"
+translation = "Bahasa"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Dilisensikan dengan MIT-0 (MIT Tanpa Atribusi). Tanpa jaminan apa pun."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Langsung · Memproses perubahan tertunda"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Data demo - file dan ukuran fiktif"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Pembaruan langsung dihentikan · Pindai ulang untuk menyambung kembali"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Langsung · Merekonsiliasi perubahan di latar belakang"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Pembaruan langsung tidak tersedia: Pemindaian dibatalkan · Pindai ulang untuk memperbarui"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Pembaruan langsung dihentikan: { $error } · Pindai ulang untuk menyambung kembali"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Pembaruan langsung tidak tersedia: { $error } · Pindai ulang untuk memperbarui"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Langsung · Memperhatikan perubahan"
+
+[messages.location]
+source = "Location:"
+translation = "Lokasi:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Banyak berkas"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Sediakan ruang untuk hal yang penting."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Jumlah bita yang dipetakan dibandingkan ruang drive yang terpakai; perkiraan, bukan persentase jumlah berkas."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Opsi lainnya"
+
+[messages.modified]
+source = "Modified:"
+translation = "Diubah:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Pindahkan item yang dipilih ke tempat sampah"
+
+[messages.msec]
+source = "msec"
+translation = "mdtk"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Redupkan warna"
+
+[messages.name]
+source = "Name:"
+translation = "Nama:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = 'Tidak ada drive yang ditemukan. Gunakan "Folder lain..." untuk memilih folder.'
+
+[messages.no-extension]
+source = "No extension"
+translation = "Tanpa ekstensi"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Tidak ada berkas di folder ini."
+
+[messages.normal]
+source = "Normal"
+translation = "Normal"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Bahasa Norwegia Bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% PEMINDAIAN"
+
+[messages.offline]
+source = "Offline"
+translation = "Luring"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Buka drive atau folder untuk melihat penggunaan ruang Anda."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Buka folder atau drive untuk menjelajahi pohon direktorinya."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Buka folder untuk memulai"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Buka drive..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Buka folder…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Buka di Explorer"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Buka di Manajer File"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Buka di Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Buka item yang dipilih"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Folder lain..."
+
+[messages.palette]
+source = "Palette"
+translation = "Palet"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Jeda pemindaian"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = 'macOS melindungi beberapa folder (Mail, Messages, pengguna lain, …). Berikan "Akses Disk Penuh" kepada Clawback di Pengaturan Sistem › Privasi & Keamanan untuk menyertakannya.'
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Beberapa folder hanya dapat dibaca oleh pengguna lain atau root. Jalankan Clawback dengan hak akses lebih tinggi (misalnya `sudo -E clawback /`) untuk menyertakannya."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Beberapa folder sistem hanya dapat dibaca oleh administrator. Jalankan Clawback sebagai administrator untuk menyertakannya."
+
+[messages.polish]
+source = "Polish"
+translation = "Bahasa Polandia"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Bahasa Portugis Brasil"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Bahasa Portugis Eropa"
+
+[messages.properties]
+source = "Properties"
+translation = "Properti"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Properti..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Penggunaan disk berbeda dari ukuran file, misalnya karena kompresi, data yang jarang, atau overhead alokasi."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Properti { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Item yang tidak dapat dihapus: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Hanya baca"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Membaca detail berkas…"
+
+[messages.ready]
+source = "Ready"
+translation = "Siap"
+
+[messages.recent]
+source = "Recent"
+translation = "Terbaru"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Pemadatan mempertahankan konten disk dan mengurangi ukuran file Windows dengan mengambil kembali blok yang diisi dengan nol. Ini mungkin mendapatkan kembali sedikit atau tidak ada ruang sama sekali. Bersihkan data yang tidak diinginkan di dalam Docker atau Linux terlebih dahulu."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Mendapatkan kembali ruang disk WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Sebelum memadatkan, simpan pekerjaan Anda, keluar dari Docker Desktop dan tutup sesi WSL. Jalankan perintah ini di PowerShell untuk menghentikan semua distribusi WSL. Biarkan Docker dan WSL dihentikan hingga pemadatan selesai. Windows akan meminta izin administrator."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Ingat posisi jendela"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Titik reparse"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Pindai ulang"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Pindai ulang drive"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Lanjutkan pemindaian"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Bahasa Rumania"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Jalankan / Buka"
+
+[messages.russian]
+source = "Russian"
+translation = "Bahasa Rusia"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback tidak dapat memindai folder.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback tidak dapat memindai { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Pemindaian dijeda"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files } berkas, { $folders } folder"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Memindai"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Opsi pemindaian berlaku untuk pemindaian berikutnya."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Pilih folder untuk dilihat"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Pilih drive untuk dilihat"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Bahasa Serbia, Sirilik"
+
+[messages.settings]
+source = "Settings…"
+translation = "Pengaturan…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Tampilan"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Perilaku"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Kiri mengutamakan bentuk horizontal; tengah menyeimbangkannya; kanan mengutamakan bentuk vertikal."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Penghapusan file"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Perhitungan ukuran"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Detail file"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Nama file"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Simpan perubahan"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Batas pemindaian"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Jendela dan interaksi"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Tampilkan petunjuk informasi berkas"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Tampilkan petunjuk nama berkas"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Tampilkan ruang kosong"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Tampilkan ruang kosong"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Tampilkan di pengelola berkas"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Tampilkan kotak saat penunjuk diarahkan"
+
+[messages.size]
+source = "SIZE"
+translation = "UKURAN"
+
+[messages.size-2]
+source = "Size:"
+translation = "Ukuran:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Ukuran di disk:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Kode sumber"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Bahasa Spanyol Amerika Latin"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Bahasa Spanyol dari Spanyol"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Jarang"
+
+[messages.special-file]
+source = "Special file"
+translation = "Berkas khusus"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Tetap di satu sistem berkas"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Bahasa Swedia"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Tautan simbolis"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Tautan simbolis"
+
+[messages.system]
+source = "System"
+translation = "Sistem"
+
+[messages.system-default]
+source = "System default"
+translation = "Bawaan sistem"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Berlaku saat Clawback dimulai kembali"
+
+[messages.temp]
+source = "Temp"
+translation = "Sementara"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Pembersihan menyisakan { $count } item yang tidak dapat dihapus. Alasan pertama: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Bahasa Thai"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Tugas pemindaian berhenti secara tidak terduga."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Terlalu sedikit berkas"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Terlalu banyak berkas"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Petunjuk"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Coba pemindaian NTFS yang lebih cepat dengan izin administrator. Pemindaian saat ini tetap berjalan."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: menyusun folder · { $files } file"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo dibatalkan — pemindaian biasa berlanjut"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Menampilkan kemajuan Turbo · memvalidasi hasil…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Penghitung beralih ke Turbo ketika Turbo telah menyusun lebih banyak entri. Peta tetap menampilkan pratinjau pemindaian biasa sampai seluruh pohon Turbo tervalidasi. Jika Turbo gagal, pemindaian biasa berlanjut."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: membaca MFT { $percent }% · { $records } rekaman"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: membaca MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: menentukan nama file…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: mengurutkan hasil…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: memuat hasil…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo tidak tersedia — pemindaian biasa berlanjut"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Bahasa Turki"
+
+[messages.type]
+source = "TYPE"
+translation = "JENIS"
+
+[messages.type-2]
+source = "Type:"
+translation = "Jenis:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Bahasa Ukraina"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Detail instalasi"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Copot pemasangan"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Pencarian aplikasi tidak selesai. Tidak ada yang dihapus. Coba lagi."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Mengidentifikasi aplikasi yang diinstal…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Jalankan program pencopot pemasangan…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Tidak ada aplikasi yang dapat diidentifikasi untuk folder ini. Buka Aplikasi Terinstal atau Steam untuk mengelola kontennya."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Buka Aplikasi yang Terinstal"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Buka perpustakaan Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Penerbit: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Peta mengikuti perubahan langsung. Gunakan Pindai Ulang setelah menghapus instalasi jika pembaruan langsung tidak tersedia."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Menghapus seluruh aplikasi, termasuk file di luar pilihan Anda."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Item yang dipilih"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Copot pemasangan…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Copot pemasangan melalui Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "ID aplikasi Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Copot pemasangan aplikasi atau game"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Versi: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Dikelola oleh Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Aplikasi Windows Terdaftar"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Lokasi ini milik perangkat lunak yang diinstal. Pilih aplikasi di bawah ini untuk menghapus instalasi seluruh aplikasi, termasuk file di luar folder yang dipilih. Windows atau Steam akan menangani penghapusan tersebut."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows tidak dapat memulai uninstaller (kesalahan { $code }). Buka Aplikasi Terpasang untuk mengelola aplikasi ini."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Uninstaller terdaftar tidak dapat ditemukan. Buka Aplikasi Terinstal Windows untuk mengelola aplikasi ini."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Folder yang tidak dapat dibaca"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Naik satu tingkat"
+
+[messages.updating]
+source = "Updating…"
+translation = "Memperbarui…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Gunakan panjang berkas, bukan ukuran di disk"
+
+[messages.vert]
+source = "Vert"
+translation = "Vertikal"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Sangat sedikit berkas"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Sangat banyak berkas"
+
+[messages.video]
+source = "Video"
+translation = "Video"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Bahasa Vietnam"
+
+[messages.view]
+source = "View"
+translation = "Tampilan"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Menunggu izin Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  { $total } Total  -  { $free } Kosong  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "{ $count } tugas bersamaan"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Batas tugas bersamaan saat ini; menyesuaikan secara otomatis dengan laju pemrosesan dan latensi yang terukur."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Jelajahi file Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Buka distribusi ini di Explorer. Ini mungkin memulai distribusi."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Apa yang ingin kamu lakukan?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Tampilkan panduan pembersihan"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows akan meminta izin administrator."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Mendapatkan kembali blok yang berisi nol sambil mempertahankan isi disk. Docker dan WSL harus dihentikan."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Siap memadatkan disk?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Simpan pekerjaan Linux Anda dan keluar dari Docker Desktop. Clawback akan menghentikan semua sesi WSL, lalu memadatkan disk ini. Biarkan Docker dan WSL tetap tertutup hingga selesai."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Memulihkan ruang disk yang tidak terpakai."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Mengambil kembali blok yang berisi nol tanpa menghapus berkas Anda. Bersihkan data di dalam Linux atau Docker terlebih dahulu; ruang yang diperoleh bervariasi. Docker dan WSL harus tetap berhenti selama pemadatan."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Salin perintah"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Detail file"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Berkas diska"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Disk virtual WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Distribusi WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "Di Docker Desktop, tinjau image, container yang telah dihentikan, dan volume. Cache build juga dapat dibersihkan dengan “docker builder prune”. Volume mungkin berisi database atau file lain yang Anda perlukan; periksa sebelum menghapusnya. Pembersihan dan pemadatan disk adalah langkah terpisah."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Menyimpan image Docker, container, volume, dan build cache."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Menyimpan lingkungan Linux Docker Desktop. Data aplikasi Docker dapat disimpan dalam disk terpisah."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "Jelajahi file distribusi dan hapus data yang tidak lagi Anda perlukan. Gunakan manajer paket Linux untuk membersihkan cache paket. Setelah pembersihan, “sudo fstrim -av” di dalam distribusi dapat membantu melepaskan blok yang tidak digunakan sebelum mematikan WSL dan memadatkannya."
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Menyimpan sistem file distribusi Linux ini, termasuk program dan file sisi Linux."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Buka Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Tinjau image, container, dan volume sebelum menghapus data yang tidak diinginkan."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — disk data"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — disk sistem"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Distribusi Linux tak dikenal"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Jalur ini terlihat seperti instalasi WSL, tetapi tidak ditemukan registrasi yang cocok untuk pengguna Windows saat ini. Paket dan jalur file dapat membantu mengidentifikasinya."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Paket Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Padatkan disk…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Hentikan WSL dan padatkan"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Tampilkan semua"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Perbesar"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Perbesar"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Perkecil"

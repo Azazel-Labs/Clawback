@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "3d8b9a8eb2f73d66d66279a7b98eaad9a533be59b5e69d05afaf52f6a9468990"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Gyors, többplatformos lemezterület-térkép."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "A Clawback névjegye"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Összes fájl"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Alkalmazás / programkönyvtár"
+
+[messages.arch]
+source = "Arch"
+translation = "Archiválandó"
+
+[messages.archive]
+source = "Archive"
+translation = "Tömörített archívum"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D-s erőforrás"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Biztonsági mentésre megjelölve"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Tömörítve"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Titkosított"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Fájlrendszer hivatkozás vagy átirányítás"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Ideiglenes"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Attribútumok"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Attribútumok:"
+
+[messages.audio]
+source = "Audio"
+translation = "Hang"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Automatikus újravizsgálat törlés után"
+
+[messages.back]
+source = "Back"
+translation = "Vissza"
+
+[messages.bias]
+source = "Bias:"
+translation = "Elrendezési irány:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Bináris adatok"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Mégse"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Katalán"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Egyszerűsített kínai"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Hagyományos kínai"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Szerezze vissza a lemezterületét."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "A Clawback beállításai"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Temp mappa tisztítása…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Kattintson ide az ideiglenes fájlok törléséhez"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Kattintson a meghajtó Lomtárának kiürítéséhez"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · WSL virtuális lemez. Kattintson a lemez részleteinek megtekintéséhez, a fájlok böngészéséhez vagy a tárhely visszanyeréséhez."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Telepített alkalmazás- vagy játékfájlok. Kattintson az egész alkalmazás azonosításához és eltávolításához."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam játékfájlok. Kattintson a játék azonosításához és a Steamen keresztüli eltávolításához."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Bezárás"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Lemez tömörítése…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Nem sikerült tömöríteni a lemezt. Győződjön meg arról, hogy a Docker Desktop és a WSL le van állítva, majd próbálja újra. A Windows bejelentette: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "A WSL leállítása és a lemez tömörítése…"
+
+[messages.compress]
+source = "Compress"
+translation = "Tömörített"
+
+[messages.contains]
+source = "Contains:"
+translation = "Tartalom:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "{ $files } fájl, { $folders } mappa"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Hiba részleteinek másolása"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "A merev hivatkozású fájlok csak egyszer számítanak"
+
+[messages.czech]
+source = "Czech"
+translation = "Cseh"
+
+[messages.danish]
+source = "Danish"
+translation = "Dán"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Adatok / konfiguráció"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Dátum / idő"
+
+[messages.delay]
+source = "Delay:"
+translation = "Késleltetés:"
+
+[messages.delete]
+source = "Delete"
+translation = "Törlés"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Ezt nem lehet visszavonni."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds } mp telt el"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Az elem nem törölhető: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Nem sikerült törölni az elemet"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Végleges törlés…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Végleges törlés"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Véglegesen törli?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Lomtárba helyezés előkészítése…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } / { $total } fájl"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "További tételek a sorban: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Áthelyezés a Lomtárba…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Fájlok: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "A „{ $name }” túl nagy a Lomtárhoz."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Lemeztérkép frissítése…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "A Lomtárba helyező folyamat váratlanul leállt. Újrapróbálkozás előtt ellenőrizze a kiválasztott elemet."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Törlés…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Sűrűség:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Tervdokumentum"
+
+[messages.directories]
+source = "Directories"
+translation = "Mappák"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "A „Törlés” parancs letiltása"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Mappák keresése…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Lemezkép"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Megjelenítési színek"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "A Docker Desktop nem található a szabványos telepítési helyeken. Nyissa meg a Windows Start menüjéből."
+
+[messages.document]
+source = "Document"
+translation = "Dokumentum"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Ne vizsgálja át a mappán belül csatolt más meghajtókat vagy hálózati megosztásokat"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Dupla kattintás a böngészéshez / Jobb kattintás a műveletekhez"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } szabad a következőből: { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }Szabad: { $free } / { $total }  ·  Foglalt: { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Holland"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "A { $drive } Lomtárában lévő összes elem véglegesen törlődik."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Ürítse ki a Lomtárat"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Kiüríti a Lomtárat?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Véglegesen törli a { $path } tartalmát? A Temp mappa megmarad. Azok az elemek, amelyeket a Windows nem hajlandó törölni, a helyükön maradnak. Először zárja be az alkalmazásokat további ideiglenes fájlok felszabadításához."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Tisztítsa meg a Temp mappát"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Tisztítsa meg a Temp mappát?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Lomtár ürítése…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Titkosított"
+
+[messages.english]
+source = "English"
+translation = "Angol"
+
+[messages.equal]
+source = "Equal"
+translation = "Kiegyensúlyozott"
+
+[messages.exit]
+source = "Exit"
+translation = "Kilépés"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Kibontás a böngészéshez · Kattintson egy mappára a megtekintéshez"
+
+[messages.file]
+source = "File"
+translation = "Fájl"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Fájlok elrendezése"
+
+[messages.file-size]
+source = "File Size"
+translation = "Fájlméret"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "FÁJLTÍPUS"
+
+[messages.file-types]
+source = "File types"
+translation = "Fájltípusok"
+
+[messages.filename]
+source = "Filename"
+translation = "Fájlnév"
+
+[messages.files]
+source = "FILES"
+translation = "FÁJLOK"
+
+[messages.files-2]
+source = "Files:"
+translation = "Fájlok:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Meghajtók keresése…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "Finn"
+
+[messages.folder]
+source = "FOLDER"
+translation = "MAPPA"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Mappa"
+
+[messages.folders]
+source = "Folders:"
+translation = "Mappák:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Át nem vizsgált mappák"
+
+[messages.french]
+source = "French"
+translation = "Francia"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Teljes elérési út"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Játékarchívum"
+
+[messages.german]
+source = "German"
+translation = "Német"
+
+[messages.greek]
+source = "Greek"
+translation = "Görög"
+
+[messages.help]
+source = "Help"
+translation = "Súgó"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Rejtett"
+
+[messages.horz]
+source = "Horz"
+translation = "Vízsz."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Magyar"
+
+[messages.icon]
+source = "Icon"
+translation = "Ikon"
+
+[messages.image]
+source = "Image"
+translation = "Kép"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Indonéz"
+
+[messages.italian]
+source = "Italian"
+translation = "Olasz"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Japán"
+
+[messages.korean]
+source = "Korean"
+translation = "Koreai"
+
+[messages.language]
+source = "Language"
+translation = "Nyelv"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "MIT-0 (MIT No Attribution) licenc alatt. Mindenféle garancia nélkül."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Élő · Függőben lévő változások feldolgozása"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Demo adatok – kitalált fájlok és méretek"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Élő frissítés leállítva · Újracsatlakozáshoz indítson új vizsgálatot"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Élő · Változások egyeztetése a háttérben"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Élő frissítés nem érhető el: Vizsgálat megszakítva · Frissítéshez indítson új vizsgálatot"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Élő frissítés leállítva: { $error } · Újracsatlakozáshoz indítson új vizsgálatot"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Élő frissítés nem érhető el: { $error } · Frissítéshez indítson új vizsgálatot"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Élő · Figyeli a változásokat"
+
+[messages.location]
+source = "Location:"
+translation = "Hely:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Sok fájl"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Csináljon helyet annak, ami fontos."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "A számba vett bájtok aránya a foglalt lemezterülethez képest; becslés, nem a fájlok számának százaléka."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Egyéb beállítások"
+
+[messages.modified]
+source = "Modified:"
+translation = "Módosítva:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Kijelölt elem áthelyezése a kukába"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Színek tompítása"
+
+[messages.name]
+source = "Name:"
+translation = "Név:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "Nem található meghajtó. Válasszon mappát a „Másik mappa…” lehetőséggel."
+
+[messages.no-extension]
+source = "No extension"
+translation = "Nincs kiterjesztés"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Nincsenek fájlok ebben a mappában."
+
+[messages.normal]
+source = "Normal"
+translation = "Normál"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Norvég bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% FELDOLGOZVA"
+
+[messages.offline]
+source = "Offline"
+translation = "Offline"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Nyisson meg egy meghajtót vagy mappát a helyfoglalás megtekintéséhez."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Nyisson meg egy mappát vagy meghajtót a könyvtárfa böngészéséhez."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Kezdéshez nyisson meg egy mappát"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Meghajtó megnyitása…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Mappa megnyitása…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Nyissa meg az Intézőben"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Nyissa meg a Fájlkezelőben"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Megnyitás a Finderben"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Kijelölt elem megnyitása"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Másik mappa…"
+
+[messages.palette]
+source = "Palette"
+translation = "Paletta"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Vizsgálat szüneteltetése"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "A macOS véd bizonyos mappákat (Mail, Üzenetek, más felhasználók mappái stb.). Ezek bevonásához adjon a Clawback számára teljes lemezhozzáférést a Rendszerbeállítások › Adatvédelem és biztonság alatt."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Egyes mappákat csak más felhasználók vagy a root olvashatnak. Ezek bevonásához futtassa a Clawback programot emelt jogosultsággal (például `sudo -E clawback /`)."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Egyes rendszermappákat csak rendszergazdák olvashatnak. Ezek bevonásához futtassa a Clawback programot rendszergazdaként."
+
+[messages.polish]
+source = "Polish"
+translation = "Lengyel"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Brazil portugál"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Európai portugál"
+
+[messages.properties]
+source = "Properties"
+translation = "Tulajdonságok"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Tulajdonságok…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "A lemezhasználat eltér a fájlmérettől, például a tömörítés, a ritka adatok vagy az allokációs többlet miatt."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Tulajdonságok: { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Nem törölhető elemek: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Csak olvasható"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Fájladatok olvasása…"
+
+[messages.ready]
+source = "Ready"
+translation = "Kész"
+
+[messages.recent]
+source = "Recent"
+translation = "Legutóbbiak"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "A tömörítés megőrzi a lemez tartalmát, és a nullákkal töltött blokkok felszabadításával csökkenti a Windowsban tárolt lemezfájl méretét. Előfordulhat, hogy csak kevés helyet vagy egyáltalán nem szabadít fel. Először törölje a szükségtelen adatokat a Dockeren vagy a Linuxon belül."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "WSL lemezterület visszaszerzése"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "A tömörítés előtt mentse el munkáját, lépjen ki a Docker Desktopból, és zárja be a WSL-munkameneteket. Futtassa ezt a parancsot a PowerShellben az összes WSL-terjesztés leállításához. Tartsa leállítva a Dockert és a WSL-t a tömörítés befejezéséig. A Windows rendszergazdai engedélyt kér."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Ablakhelyzet megjegyzése"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Újraelemzési pont"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Újravizsgálat"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Meghajtó újravizsgálata"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Vizsgálat folytatása"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Román"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Futtatás / Megnyitás"
+
+[messages.russian]
+source = "Russian"
+translation = "Orosz"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "A Clawback nem tudta átvizsgálni a mappát.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Az útvonal nem vizsgálható át: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Vizsgálat szüneteltetve"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files } fájl, { $folders } mappa"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Vizsgálat"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "A vizsgálati beállítások a következő vizsgálatra érvényesek."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Válassza ki a megtekintendő mappát"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Válassza ki a megtekintendő meghajtót"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Szerb, cirill"
+
+[messages.settings]
+source = "Settings…"
+translation = "Beállítások…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Megjelenés"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Működés"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Balra a vízszintes alakzatokat részesíti előnyben; középen kiegyensúlyozza őket; jobbra a függőleges alakzatokat részesíti előnyben."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Fájlok törlése"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Méretszámítás"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Fájlok részletei"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Fájlnevek"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Módosítások mentése"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Vizsgálati határok"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Ablak és kezelés"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Fájladatokat tartalmazó tippek megjelenítése"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Fájlneveket tartalmazó tippek megjelenítése"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Szabad hely megjelenítése"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Szabad hely megjelenítése"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Megjelenítés a fájlkezelőben"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Keret megjelenítése az egérmutató alatt"
+
+[messages.size]
+source = "SIZE"
+translation = "MÉRET"
+
+[messages.size-2]
+source = "Size:"
+translation = "Méret:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Lemezen elfoglalt méret:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Forráskód"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Latin-amerikai spanyol"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Spanyolországi spanyol"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Ritka fájl"
+
+[messages.special-file]
+source = "Special file"
+translation = "Speciális fájl"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Maradjon egy fájlrendszeren belül"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Svéd"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Szimbolikus hivatkozás"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Szimbolikus hivatkozás"
+
+[messages.system]
+source = "System"
+translation = "Rendszer"
+
+[messages.system-default]
+source = "System default"
+translation = "Rendszer alapértelmezése"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "A Clawback következő indításakor lép életbe"
+
+[messages.temp]
+source = "Temp"
+translation = "Ideiglenes"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "A tisztítás során { $count } olyan elem maradt, amelyeket nem lehetett eltávolítani. Első ok: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Thai"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "A vizsgálati feladat váratlanul leállt."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Túl kevés fájl"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Túl sok fájl"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Eszköztippek"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Próbáljon gyorsabb NTFS-vizsgálatot rendszergazdai engedéllyel. A jelenlegi vizsgálat folytatódik."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbó"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbó: mappák összeállítása · { $files } fájl"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbó megszakítva — a normál vizsgálat folytatódik"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Turbó előrehaladásának megjelenítése · eredmények ellenőrzése…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "A számlálók a Turbóra váltanak, amikor az több bejegyzést állított össze. A térkép a normál vizsgálat előnézetét mutatja, amíg a teljes Turbó-fa ellenőrzése be nem fejeződik. Ha a Turbó hibát jelez, a normál vizsgálat folytatódik."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbó: MFT olvasása { $percent }% · { $records } rekord"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbó: MFT olvasása…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbó: fájlnevek feloldása…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbó: eredmények rendezése…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbó: eredmények betöltése…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbó nem érhető el — a normál vizsgálat folytatódik"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Török"
+
+[messages.type]
+source = "TYPE"
+translation = "TÍPUS"
+
+[messages.type-2]
+source = "Type:"
+translation = "Típus:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Ukrán"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Telepítési részletek"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Eltávolítás"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Az alkalmazás keresése nem fejeződött be. Semmi sem lett törölve. Próbálja újra."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "A telepített alkalmazások azonosítása…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Indítsa el az eltávolító programot…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Nem azonosítható alkalmazás ehhez a mappához. Nyissa meg a Telepített alkalmazások vagy a Steam alkalmazást a tartalmának kezeléséhez."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Nyissa meg a telepített alkalmazásokat"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Nyissa meg a Steam könyvtárat"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Kiadó: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "A térkép élő változásokat követ. Ha az élő frissítések nem érhetők el, az eltávolítás után használja az Újrakeresést."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Eltávolítja a teljes alkalmazást, beleértve a kiválasztotton kívüli fájlokat is."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Kiválasztott tétel"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Eltávolítás…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Távolítsa el a Steamen keresztül…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Steam alkalmazás azonosítója: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Távolítson el egy alkalmazást vagy játékot"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Verzió: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Kezeli a Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Regisztrált Windows alkalmazás"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Ez a hely a telepített szoftverhez tartozik. Válasszon ki egy alkalmazást alább a teljes alkalmazás eltávolításához, beleértve a kiválasztott mappán kívüli fájlokat is. A Windows vagy a Steam kezeli az eltávolítást."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "A Windows nem tudta elindítani az eltávolítót ({ $code } hiba). Az alkalmazás kezeléséhez nyissa meg a Telepített alkalmazásokat."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "A regisztrált eltávolító nem található. Az alkalmazás kezeléséhez nyissa meg a Windows Telepített alkalmazások beállítását."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Nem olvasható mappák"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Egy szinttel feljebb"
+
+[messages.updating]
+source = "Updating…"
+translation = "Frissítés…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Fájlméretek használata a lemezen elfoglalt hely helyett"
+
+[messages.vert]
+source = "Vert"
+translation = "Függ."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Nagyon kevés fájl"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Nagyon sok fájl"
+
+[messages.video]
+source = "Video"
+translation = "Videó"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Vietnámi"
+
+[messages.view]
+source = "View"
+translation = "Nézet"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Várakozás a Windows engedélyére…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  Összesen { $total }  -  Szabad { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "{ $count } párhuzamos feladat"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "A párhuzamos feladatok aktuális korlátja; a mért átviteli sebességhez és késleltetéshez automatikusan igazodik."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Linux-fájlok böngészése"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Nyissa meg ezt a disztribúciót az Intézőben. Ez elindíthatja a disztribúciót."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Mit szeretne tenni?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Jelenítse meg a tisztítási útmutatót"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "A Windows rendszergazdai engedélyt kér."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Nyerje vissza a nullával töltött blokkokat, miközben megőrzi a lemez tartalmát. A Docker és a WSL leállítása szükséges."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Tömörítésre kész?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Mentse el linuxos munkáját, és lépjen ki a Docker Desktopból. A Clawback leállítja az összes WSL-munkamenetet, majd tömöríti ezt a lemezt. Tartsa zárva a Dockert és a WSL-t, amíg be nem fejeződik."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "A fel nem használt lemezterület helyreállítása."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Visszanyeri a nullával töltött blokkokat a fájlok törlése nélkül. Először tisztítsa meg a Linuxot vagy a Dockert; a megtakarítások változóak. A Dockernek és a WSL-nek leállított állapotban kell maradnia a tömörítés alatt."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Parancs másolása"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Fájl részletei"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Lemezfájl"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL virtuális lemez"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL-disztribúció"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "A Docker Desktopban tekintse át a lemezképeket, a leállított konténereket és a köteteket. A build-gyorsítótár a „docker builder prune” segítségével is tisztítható. A kötetek adatbázisokat vagy egyéb szükséges fájlokat tartalmazhatnak; ellenőrizze őket, mielőtt eltávolítaná őket. A tisztítás és a lemeztömörítés külön lépések."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Tárolja a Docker-lemezképeket, konténereket, köteteket és build-gyorsítótárat."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Tárolja a Docker Desktop Linux környezetét. A Docker alkalmazás adatai külön lemezen tárolhatók."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "Böngésszen a disztribúció fájljaiban, és távolítsa el a már nem szükséges adatokat. Használja a Linux csomagkezelőjét a csomaggyorsítótárak tisztításához. A tisztítás után a disztribúcióban található „sudo fstrim -av” segíthet felszabadítani a nem használt blokkokat a WSL leállítása és a tömörítés előtt."
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Tárolja ennek a Linux-disztribúciónak a fájlrendszerét, beleértve a programokat és a Linux-oldali fájlokat."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Nyissa meg a Docker Desktopot"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "A nem kívánt adatok eltávolítása előtt tekintse át a konténereket, lemezképeket és köteteket."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — adatlemez"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop – rendszerlemez"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Azonosítatlan Linux disztribúció"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Ez az elérési út WSL-telepítésnek tűnik, de a jelenlegi Windows-felhasználóhoz nem található megfelelő regisztráció. A csomag és a fájl elérési útja segíthet azonosítani."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Windows csomag"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Lemez tömörítése…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "WSL leállítása és tömörítés"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Teljes nézet"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Nagyítás"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Nagyítás"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Kicsinyítés"

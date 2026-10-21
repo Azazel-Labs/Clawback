@@ -1,0 +1,1331 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "82878308ca9a13b6ead5dbb33362c4d032ba556645d7e82ac01c59e27343d02a"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Nopea, poikittaissuuntainen levyn välilyöntikartta."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Tietoja Clawbactista"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Kaikki tiedostot"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Sovellus / kirjasto"
+
+[messages.arch]
+source = "Arch"
+translation = "Kaari"
+
+[messages.archive]
+source = "Archive"
+translation = "Arkistoi"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D assetti"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Merkitty varmuuskopiointia varten"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Pakattu"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Salattu"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Tiedostojärjestelmän linkki tai uudelleenohjaus"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Väliaikainen"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Ominaisuudet"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Attribuutit:"
+
+[messages.audio]
+source = "Audio"
+translation = "Ääni"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Automaattinen uudelleenskannaus Poisto"
+
+[messages.back]
+source = "Back"
+translation = "Takaisin"
+
+[messages.bias]
+source = "Bias:"
+translation = "Bannerit:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Binaariset tiedot"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Peruuta"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Katalaani"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Yksinkertaistettu Kiina"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Perinteinen Kiina"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Käännä levytilaasi takaisin."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Clawbackin Asetukset"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Siivotaan Temp-kansiota…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Napsauta puhdistaaksesi väliaikaiset tiedostosi"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Napsauta tyhjentääksesi tämän aseman roskakorin"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · WSL-virtuaalilevy. Napsauta nähdäksesi levyn tiedot, selaa tiedostoja tai vapauta tilaa."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Asennetut sovellus- tai pelitiedostot. Napsauta tunnistaaksesi ja poistaaksesi koko sovelluksen."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam-pelitiedostot. Napsauta tunnistaaksesi pelin ja poistaaksesi sen Steamin kautta."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Sulje"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Tiivistä levy…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Levyä ei voitu tiivistää. Varmista, että Docker Desktop ja WSL on pysäytetty, ja yritä sitten uudelleen. Windows ilmoitti: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "WSL:n pysäyttäminen ja levyn tiivistäminen…"
+
+[messages.compress]
+source = "Compress"
+translation = "Pakkaa"
+
+[messages.contains]
+source = "Contains:"
+translation = "Sisältää:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }, { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Kopioi virheen tiedot"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Laske vaikeasti linkitetyt tiedostot kerran"
+
+[messages.czech]
+source = "Czech"
+translation = "Tšekki"
+
+[messages.danish]
+source = "Danish"
+translation = "Tanska"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Tiedot / asetukset"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Päivämäärä / Aika"
+
+[messages.delay]
+source = "Delay:"
+translation = "Viive:"
+
+[messages.delete]
+source = "Delete"
+translation = "Poista"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Tätä ei voi kumota."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds }s kulunut"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Kohteen { $path } poistaminen epäonnistui{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Kohdetta ei voitu poistaa"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Poistetaan pysyvästi…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Poista pysyvästi"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Poistetaanko pysyvästi?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Valmistellaan kierrätystä…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } / { $total } tiedostoa"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Lisää kohteita jonossa: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Siirretään roskakoriin…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Tiedostot: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = '"{ $name }" on liian suuri roskakoriin.'
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Päivitetään levykarttaa…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Kierrätystyöntekijä pysähtyi yllättäen. Tarkista valittu kohde ennen kuin yrität uudelleen."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Poistetaan…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Tiheys:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Suunnittele asiakirja"
+
+[messages.directories]
+source = "Directories"
+translation = "Hakemistot"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = 'Poista "Poista" Komento Käytöstä'
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Löytää kansioita…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Levyn kuva"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Näytä Värit"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktopia ei löytynyt sen vakioasennuspaikoista. Avaa se Windowsin Käynnistä-valikosta."
+
+[messages.document]
+source = "Document"
+translation = "Asiakirja"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Älä laskeudu muihin asemiin tai verkkokiinnikkeisiin skannattujen kansion sisällä"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Kaksoisnapsauta tutkiaksesi / hiiren kakkospainikkeella toimintoja"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } vapaana / { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon } { $drive }{ "\u000A        " }{ $free } vapaa { $total } · { $used } käytetty · { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Hollanti"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Kaikki aseman { $drive } roskakorissa oleva sisältö poistetaan pysyvästi."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Tyhjennä roskakori"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Tyhjennä roskakori?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Poistetaanko kohteen { $path } sisältö pysyvästi? Temp-kansio säilytetään. Kohteet, joita Windows kieltäytyy poistamasta, jätetään paikoilleen. Sulje sovellukset ensin vapauttaaksesi lisää väliaikaisia tiedostoja."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Puhdista Temp-kansio"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Puhdista Temp-kansiosi?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Roskakoria tyhjennetään…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Salaa"
+
+[messages.english]
+source = "English"
+translation = "Englanti"
+
+[messages.equal]
+source = "Equal"
+translation = "Yhtäläinen"
+
+[messages.exit]
+source = "Exit"
+translation = "Poistu"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Laajenna selataksesi · Napsauta kansiota nähdäksesi"
+
+[messages.file]
+source = "File"
+translation = "Tiedosto"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Tiedoston Asettelu"
+
+[messages.file-size]
+source = "File Size"
+translation = "Tiedoston Koko"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "TIEDOSTO TYYPPI"
+
+[messages.file-types]
+source = "File types"
+translation = "Tiedostotyypit"
+
+[messages.filename]
+source = "Filename"
+translation = "Tiedostonimi"
+
+[messages.files]
+source = "FILES"
+translation = "TIEDOSTOT"
+
+[messages.files-2]
+source = "Files:"
+translation = "Tiedostot:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Etsitään asemia..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Suomi"
+
+[messages.folder]
+source = "FOLDER"
+translation = "SEURAAVA"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Kansio"
+
+[messages.folders]
+source = "Folders:"
+translation = "Kansiot:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Kansioita Ei Skannattu"
+
+[messages.french]
+source = "French"
+translation = "Ranska"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Koko Polku"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Pelin arkisto"
+
+[messages.german]
+source = "German"
+translation = "Saksa"
+
+[messages.greek]
+source = "Greek"
+translation = "Kreikka"
+
+[messages.help]
+source = "Help"
+translation = "Ohje"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Piilotettu"
+
+[messages.horz]
+source = "Horz"
+translation = "Vaaka"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Unkari"
+
+[messages.icon]
+source = "Icon"
+translation = "Kuvake"
+
+[messages.image]
+source = "Image"
+translation = "Kuva"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Indonesialainen"
+
+[messages.italian]
+source = "Italian"
+translation = "Italia"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Japani"
+
+[messages.korean]
+source = "Korean"
+translation = "Korealainen"
+
+[messages.language]
+source = "Language"
+translation = "Kieli"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Lisensoitu MIT-0 (MIT No Attribution). Ei minkäänlaista takuuta."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Reaaliaikainen · Käsitellään odottavia muutoksia"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Demodata - kuvitteelliset tiedostot ja koot"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Reaaliaikainen päivitys pysäytetty · Skannaa uudelleen yhteyden palauttamiseksi"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Live · Taustamuutosten yhteensovittaminen"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Reaaliaikainen päivitys ei ole käytettävissä: Skannaus peruutettu · Skannaa uudelleen päivittääksesi"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Reaaliaikainen päivitys pysäytetty: { $error } · Skannaa uudelleen yhteyden palauttamiseksi"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Reaaliaikainen päivitys ei ole käytettävissä: { $error } · Skannaa uudelleen päivittääksesi"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Live · Muutoksia seuraamassa"
+
+[messages.location]
+source = "Location:"
+translation = "Sijainti:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Paljon tiedostoja"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Tee tilaa sille, mikä on tärkeää."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Kartoitetut tavut suhteessa käytettyyn asematilaan; arvio, ei tiedostojen lukuprosenttiosuus."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Sekalaiset Asetukset"
+
+[messages.modified]
+source = "Modified:"
+translation = "Muokattu:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Siirrä valittu kohde roskakoriin"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Mykistä värit"
+
+[messages.name]
+source = "Name:"
+translation = "Nimi:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = 'Asemia ei löytynyt. Käytä "Muut kansiot..." valitaksesi kansion.'
+
+[messages.no-extension]
+source = "No extension"
+translation = "Ei laajennusta"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Tässä kansiossa ei ole tiedostoja."
+
+[messages.normal]
+source = "Normal"
+translation = "Normaali"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Norjan bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% SCAN:stä"
+
+[messages.offline]
+source = "Offline"
+translation = "Offline-tilassa"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Avaa asema tai kansio nähdäksesi mihin välilyönti menee."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Avaa kansio tai asema selataksesi sen hakemistopuuta."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Avaa aloitettava kansio"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Avaa Asema..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Avaa kansio…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Avaa Explorerissa"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Avaa Tiedostonhallinnassa"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Avaa Finderissa"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Avaa valittu kohde"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Muu Kansio..."
+
+[messages.palette]
+source = "Palette"
+translation = "Paletti"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Keskeytä skannaus"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = 'macOS suojaa joitakin kansioita (sähköposti, viestit, muut käyttäjät, …). Myönnä Clawback "Full Disk Access" järjestelmäasetuksissa › Yksityisyys ja tietoturva sisällyttää ne.'
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Jotkut kansiot ovat vain muiden käyttäjien luettavissa. Suorita Clawback korotetuilla oikeuksilla (esim. `sudo -E clawback /`) sisällyttämään ne."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Jotkin järjestelmäkansiot ovat vain järjestelmänvalvojien luettavissa. Suorita Clawback järjestelmänvalvojana sisällyttääksesi ne."
+
+[messages.polish]
+source = "Polish"
+translation = "Puola"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Brasilian Portugali"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Euroopan Portugali"
+
+[messages.properties]
+source = "Properties"
+translation = "Ominaisuudet"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Ominaisuudet..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Levyn tilankäyttö eroaa tiedostokoosta esimerkiksi pakkauksen, harvojen tiedostojen tai tilanvarauksen lisäkulujen vuoksi."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "{ $name } Ominaisuudet"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Kohteet, joita ei voitu poistaa: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Vain Lukukerralla"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Luetaan tiedoston tietoja…"
+
+[messages.ready]
+source = "Ready"
+translation = "Valmis"
+
+[messages.recent]
+source = "Recent"
+translation = "Viimeisimmät"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Tiivistäminen säilyttää levyn sisällön ja pienentää sen tiedoston kokoa Windowsissa vapauttamalla nollilla täytettyjä lohkoja. Tilaa voi vapautua vain vähän tai ei lainkaan. Poista ensin tarpeettomat tiedot Dockerista tai Linuxista."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Vapauta WSL-levytilaa"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Tallenna työsi ennen tiivistämistä, sulje Docker Desktop ja sulje WSL-istunnot. Suorita tämä komento PowerShellissä lopettaaksesi kaikki WSL-jakelut. Pidä Docker ja WSL pysäytettyinä, kunnes tiivistys on valmis. Windows pyytää järjestelmänvalvojan lupaa."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Muista Ikkunan Sijainti"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Uudelleenjäsennyspiste"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Uudelleen"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Uudelleenskannaa Asema"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Jatka skannaa"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Romania"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Suorita / Avaa"
+
+[messages.russian]
+source = "Russian"
+translation = "Venäjä"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback ei voinut skannata kansiota.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback ei voinut skannata kohdetta { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Skannaus keskeytetty"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }, { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Skannataan"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Skannaus vaihtoehtoja sovelletaan seuraavaan etsintään."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Valitse näytettävä kansio"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Valitse näkyvä asema"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Serbia, kyrillinen"
+
+[messages.settings]
+source = "Settings…"
+translation = "Asetukset…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Ulkoasu"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Käyttäytyminen"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Vasen suosii vaakasuoraa muotoa; keskeltä tasapainottaa niitä; oikea suosii pystymuotoja."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Poistetaan tiedostoja"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Koko kirjanpito"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Tiedoston tiedot"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Tiedostojen nimet"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Tallenna muutokset"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Skannaa rajoja"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Ikkunan ja vuorovaikutus"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Näytä tiedostotiedot-vihjeet"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Näytä tiedostonimi-vihjeet"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Näytä Vapaa Tila"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Näytä vapaa tila"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Näytä tiedostonhallinnassa"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Näytä Kaatumisen Laatikot"
+
+[messages.size]
+source = "SIZE"
+translation = "KOKO"
+
+[messages.size-2]
+source = "Size:"
+translation = "Koko:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Koko levyllä:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Lähdekoodi"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Latinalainen Amerikka Espanja"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Espanjasta alkaen Espanja"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Harva"
+
+[messages.special-file]
+source = "Special file"
+translation = "Erityinen tiedosto"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Pysy yhdellä tiedostojärjestelmällä"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Ruotsi"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Symbolinen linkki"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Symbolinen linkki"
+
+[messages.system]
+source = "System"
+translation = "Järjestelmä"
+
+[messages.system-default]
+source = "System default"
+translation = "Järjestelmän oletus"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Ota voimaan seuraavan kerran Clawbackin käynnistyessä"
+
+[messages.temp]
+source = "Temp"
+translation = "Väliaikainen"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Siivouksesta jäi { $count } kohdetta, joita ei voitu poistaa. Ensimmäinen syy: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Thaimaalainen"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Työntekijä pysähtyi yllättäen."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Liian Muutamia Tiedostoja"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Liian Monia Tiedostoja"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Työkaluvihjeet"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Kokeile nopeampaa NTFS skannaa järjestelmänvalvojan luvalla. Nykyinen skannaus on käynnissä."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: kokoaa kansioita · { $files } tiedostoja"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo peruutettu — normaali skannaus jatkuu"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Näytetään Turbon edistyminen · tulosten validointi…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Laskurit siirtyvät Turboon, kun se on koonnut lisää merkintöjä. Kartta pitää säännöllisen kuvauksen esikatselun kunnes Turbo on validoitu. Jos Turbo epäonnistuu, säännöllinen kuvaus jatkuu."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: lukee MFT { $percent }% · { $records } tietueita"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: lukee MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: ratkaistaan tiedostonimet…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: lajittelu tulokset…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: lataus tulokset…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo ei saatavilla — normaali skannaus jatkuu"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Turkki"
+
+[messages.type]
+source = "TYPE"
+translation = "TYYPPI"
+
+[messages.type-2]
+source = "Type:"
+translation = "Tyyppi:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Ukraina"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Asennustiedot"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Poista asennus"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Sovelluksen haku ei päättynyt. Mitään ei poistettu. Yritä uudelleen."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Asennettujen sovellusten tunnistaminen…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Käynnistä asennuksen poisto…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Tälle kansiolle ei voitu tunnistaa sovellusta. Avaa Asennetut sovellukset tai Steam hallitaksesi sen sisältöä."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Avaa asennetut sovellukset"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Avaa Steam-kirjasto"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Julkaisija: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Kartta seuraa reaaliaikaisia muutoksia. Skannaa uudelleen asennuksen poistamisen jälkeen, jos reaaliaikaisia päivityksiä ei ole saatavilla."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Poistaa koko sovelluksen, mukaan lukien valintasi ulkopuoliset tiedostot."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Valittu kohde"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Poista asennus…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Poista asennus Steamin kautta…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Steam-sovelluksen tunnus: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Poista sovelluksen tai pelin asennus"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Versio: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Steamin hallinnoima"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Rekisteröity Windows-sovellus"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Tämä sijainti kuuluu asennetulle ohjelmistolle. Valitse alta sovellus poistaaksesi koko sovelluksen, mukaan lukien valitun kansion ulkopuoliset tiedostot. Windows tai Steam hoitaa poiston."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows ei voinut käynnistää asennuksen poistoohjelmaa (virhe { $code }). Avaa Asennetut sovellukset hallitaksesi tätä sovellusta."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Rekisteröityä asennuksen poistoohjelmaa ei löydy. Avaa Windowsin asennetut sovellukset hallitaksesi tätä sovellusta."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Lukukelvottomat kansiot"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Ylös taso"
+
+[messages.updating]
+source = "Updating…"
+translation = "Päivitetään…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Käytä tiedoston pituuksia, ei levyä"
+
+[messages.vert]
+source = "Vert"
+translation = "Pysty"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Hyvin Muutamia Tiedostoja"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Hyvin Monia Tiedostoja"
+
+[messages.video]
+source = "Video"
+translation = "Video"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Vietnam"
+
+[messages.view]
+source = "View"
+translation = "Näytä"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Odotetaan Windows-lupaa…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  { $total } yhteensä  -  { $free } vapaana  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } työntekijä
+       *[other] { $count } työntekijät
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Nykyinen valuuttaraja; mukautuu automaattisesti mitattuun ulostuloon ja latenssiin."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Selaa Linux-tiedostoja"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Avaa tämä jakelu Resurssienhallinnassa. Tämä saattaa käynnistää jakelun."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Mitä haluaisit tehdä?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Näytä puhdistusohjeet"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows pyytää järjestelmänvalvojan lupaa."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Ota takaisin nollatäytettyjä lohkoja säilyttäen samalla levyn sisältö. Edellyttää Dockerin ja WSL:n pysäyttämistä."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Valmis tiivistämään?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Tallenna Linux-työsi ja sulje Docker Desktop. Clawback pysäyttää kaikki WSL-istunnot ja tiivistää sitten tämän levyn. Pidä Docker ja WSL suljettuina, kunnes se on valmis."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Palauta käyttämätön levytila."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Palauttaa nollalla täytetyt lohkot poistamatta tiedostojasi. Puhdista ensin Linuxin tai Dockerin sisällä; säästöt vaihtelevat. Dockerin ja WSL:n on pysyttävä pysäytettyinä tiivistyksen aikana."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Kopioi komento"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Tiedoston tiedot"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Levytiedosto"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL-virtuaalilevy"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL-jakelu"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "Tarkista Docker Desktopissa levykuvat, pysäytetyt kontit ja taltiot. Koontivälimuistin voi myös tyhjentää komennolla ”docker builder prune”. Taltiot voivat sisältää tietokantoja tai muita tarvitsemiasi tiedostoja; tarkista ne ennen poistamista. Siivous ja levyn tiivistäminen ovat erillisiä vaiheita."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Tallentaa Docker-levykuvat, kontit, taltiot ja koontivälimuistin."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Tallentaa Docker Desktopin Linux-ympäristön. Docker-sovellustiedot voidaan tallentaa erilliselle levylle."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = 'Selaa jakelun tiedostoja ja poista tarpeettomat tiedot. Tyhjennä pakettien välimuistit jakelun Linux-paketinhallinnalla. Siivouksen jälkeen jakelussa suoritettu "sudo fstrim -av" voi auttaa vapauttamaan käyttämättömiä lohkoja ennen WSL:n sulkemista ja levyn tiivistämistä.'
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Tallentaa tämän Linux-jakelun tiedostojärjestelmän, mukaan lukien sen ohjelmat ja Linux-puolen tiedostot."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Avaa Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Tarkista kontit, levykuvat ja taltiot ennen tarpeettomien tietojen poistamista."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — tietolevy"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — järjestelmälevy"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Tuntematon Linux-jakelu"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Tämä polku näyttää WSL-asennukselta, mutta vastaavaa rekisteröintiä ei löytynyt nykyiselle Windows-käyttäjälle. Paketti ja tiedostopolku voivat auttaa tunnistamaan sen."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Windows-paketti"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Tiivistä levy…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Pysäytä WSL ja tiivistä"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Zoomaus Täynnä"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Zoomaa Sisään"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Zoomaa sisään"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Zoomaa Ulos"

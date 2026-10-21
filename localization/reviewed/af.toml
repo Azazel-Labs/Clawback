@@ -1,0 +1,1331 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "dac7326cf03183cfed632b656c32776e5475e0c6603b0be5704b13f5594a6654"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "'n Vinnige, kruisplatform-kaart van skyfspasie."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Oor Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Alle lêers"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Toepassing / biblioteek"
+
+[messages.arch]
+source = "Arch"
+translation = "Argief"
+
+[messages.archive]
+source = "Archive"
+translation = "Argief"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D-bate"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Gemerk vir rugsteun"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Saamgepers"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Geënkripteer"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Lêerstelselskakel of herleiding"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Tydelik"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Eienskappe"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Eienskappe:"
+
+[messages.audio]
+source = "Audio"
+translation = "Oudio"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Skandeer outomaties weer ná uitvee"
+
+[messages.back]
+source = "Back"
+translation = "Terug"
+
+[messages.bias]
+source = "Bias:"
+translation = "Voorkeur:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Binêre data"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Kanselleer"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Katalaans"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Vereenvoudigde Sjinees"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Tradisionele Sjinees"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Eis jou skyfspasie terug."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Clawback-instellings"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Maak Temp-lêergids skoon…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Klik om jou tydelike lêers skoon te maak"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Klik om hierdie aandrywer se asblik leeg te maak"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · WSL virtuele skyf. Klik vir skyfbesonderhede, blaai deur lêers of herwin spasie."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Geïnstalleerde toepassing- of speletjielêers. Klik om die hele toepassing te identifiseer en te verwyder."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam-speletjielêers. Klik om die speletjie te identifiseer en te verwyder deur Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Sluit"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Verdig skyf…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Kon nie die skyf verdig nie. Maak seker dat Docker Desktop en WSL gestop is, en probeer dan weer. Windows berig: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Stop tans WSL en verdig die skyf…"
+
+[messages.compress]
+source = "Compress"
+translation = "Kompakteer"
+
+[messages.contains]
+source = "Contains:"
+translation = "Bevat:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } lêer
+       *[other] { $files } lêers
+    }, { $folders ->
+        [one] { $folders } vouer
+       *[other] { $folders } vouers
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Kopieer foutbesonderhede"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Kopiereg © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Tel hardgekoppelde lêers net een keer"
+
+[messages.czech]
+source = "Czech"
+translation = "Tsjeggies"
+
+[messages.danish]
+source = "Danish"
+translation = "Deens"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Data / konfigurasie"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Datum / tyd"
+
+[messages.delay]
+source = "Delay:"
+translation = "Vertraging:"
+
+[messages.delete]
+source = "Delete"
+translation = "Vee uit"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Dit kan nie ongedaan gemaak word nie."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds } s verloop"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Kon nie { $path } uitvee nie{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Kon nie item uitvee nie"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Vee tans permanent uit…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Skrap permanent"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Vee permanent uit?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Berei tans voor om te herwin…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } van { $total } lêers"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Bykomende items in tou: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Skuif tans na herwinblik…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Lêers: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = '"{ $name }" is te groot vir die asblik.'
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Werk tans skyfkaart by…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Die herwinningsproses het onverwags gestop. Gaan die gekose item na voordat jy weer probeer."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Vee tans uit...\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Digtheid:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Ontwerpdokument"
+
+[messages.directories]
+source = "Directories"
+translation = "Gidse"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = 'Deaktiveer "Vee uit"-opdrag'
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Soek tans vouers…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Skyfbeeld"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Vertoonkleure"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop kon nie in sy standaard installasie liggings gevind word nie. Maak dit oop vanaf die Windows Start-kieslys."
+
+[messages.document]
+source = "Document"
+translation = "Dokument"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Moenie in ander dryf- of netwerkaanhegtings binne die geskandeerde vouer ingaan nie"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Dubbelklik om te verken / Regsklik vir aksies"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } vry van { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } vry van { $total }  ·  { $used } gebruik  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Nederlands"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Alles in jou asblik op { $drive } sal permanent uitgevee word."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Maak asblik leeg"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Maak die asblik leeg?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Vee die inhoud van { $path } permanent uit? Die Temp-lêergids sal gehou word. Items wat Windows weier om uit te vee, sal in plek gelaat word. Maak eers toepassings toe om meer tydelike lêers vry te stel."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Maak Temp-lêergids skoon"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Maak jou Temp-lêergids skoon?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Maak asblik leeg…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Enkripteer"
+
+[messages.english]
+source = "English"
+translation = "Engels"
+
+[messages.equal]
+source = "Equal"
+translation = "Gelyk"
+
+[messages.exit]
+source = "Exit"
+translation = "Verlaat"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Vou uit om te blaai · Klik op 'n vouer om dit te bekyk"
+
+[messages.file]
+source = "File"
+translation = "Lêer"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Lêeruitleg"
+
+[messages.file-size]
+source = "File Size"
+translation = "Lêergrootte"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "LÊERTIPE"
+
+[messages.file-types]
+source = "File types"
+translation = "Lêertipes"
+
+[messages.filename]
+source = "Filename"
+translation = "Lêernaam"
+
+[messages.files]
+source = "FILES"
+translation = "LÊERS"
+
+[messages.files-2]
+source = "Files:"
+translation = "Lêers:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Soek tans dryfeenhede..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Fins"
+
+[messages.folder]
+source = "FOLDER"
+translation = "VOUER"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Vouer"
+
+[messages.folders]
+source = "Folders:"
+translation = "Vouers:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Vouers nie geskandeer nie"
+
+[messages.french]
+source = "French"
+translation = "Frans"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Volle pad"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Speletjie-argief"
+
+[messages.german]
+source = "German"
+translation = "Duits"
+
+[messages.greek]
+source = "Greek"
+translation = "Grieks"
+
+[messages.help]
+source = "Help"
+translation = "Hulp"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Versteek"
+
+[messages.horz]
+source = "Horz"
+translation = "Horis."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Hongaars"
+
+[messages.icon]
+source = "Icon"
+translation = "Ikoon"
+
+[messages.image]
+source = "Image"
+translation = "Prent"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Indonesies"
+
+[messages.italian]
+source = "Italian"
+translation = "Italiaans"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Japannees"
+
+[messages.korean]
+source = "Korean"
+translation = "Koreaans"
+
+[messages.language]
+source = "Language"
+translation = "Taal"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Gelisensieer onder MIT-0 (MIT No Attribution). Geen waarborg van enige aard nie."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Regstreeks · Besig om agterstallige veranderinge te verwerk"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Demo-data - fiktiewe lêers en groottes"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Intydse opdaterings gestop · Skandeer weer om te herkoppel"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Regstreeks · Veranderinge word in die agtergrond gesinchroniseer"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Intydse opdaterings nie beskikbaar nie: Skandering gekanselleer · Skandeer weer om te verfris"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Intydse opdaterings gestop: { $error } · Skandeer weer om te herkoppel"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Intydse opdaterings nie beskikbaar nie: { $error } · Skandeer weer om te verfris"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Regstreeks · Kyk vir veranderinge"
+
+[messages.location]
+source = "Location:"
+translation = "Ligging:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Baie lêers"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Maak plek vir wat saak maak."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Gekarteerde grepe relatief tot gebruikte dryfspasie; 'n skatting, nie 'n persentasie van lêers nie."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Diverse opsies"
+
+[messages.modified]
+source = "Modified:"
+translation = "Gewysig:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Skuif gekose item na die asblik"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Gedempte kleure"
+
+[messages.name]
+source = "Name:"
+translation = "Naam:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = """Geen dryfeenhede gevind nie. Gebruik "Ander vouer..." om 'n vouer te kies."""
+
+[messages.no-extension]
+source = "No extension"
+translation = "Geen uitbreiding"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Geen lêers in hierdie vouer nie."
+
+[messages.normal]
+source = "Normal"
+translation = "Normaal"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Noorse Bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% VAN SKANDERING"
+
+[messages.offline]
+source = "Offline"
+translation = "Vanlyn"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Maak 'n dryfeenheid of vouer oop om te sien waarheen jou spasie gaan."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Maak 'n vouer of dryfeenheid oop om sy gidsboom te deurblaai."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Maak 'n vouer oop om te begin"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Maak dryfeenheid oop..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Maak vouer oop…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Maak oop in Explorer"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Maak oop in lêerbestuurder"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Maak oop in Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Maak gekose item oop"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Ander vouer..."
+
+[messages.palette]
+source = "Palette"
+translation = "Palet"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Onderbreek skandering"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = 'macOS beskerm sommige vouers (Mail, Messages, ander gebruikers, …). Gee Clawback "Full Disk Access" in System Settings › Privacy & Security om hulle in te sluit.'
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Sommige vouers kan slegs deur ander gebruikers of root gelees word. Laat loop Clawback met verhoogde regte (byvoorbeeld `sudo -E clawback /`) om hulle in te sluit."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Sommige stelselvouers kan slegs deur administrateurs gelees word. Laat loop Clawback as administrateur om hulle in te sluit."
+
+[messages.polish]
+source = "Polish"
+translation = "Pools"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Brasiliaanse Portugees"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Europese Portugees"
+
+[messages.properties]
+source = "Properties"
+translation = "Eienskappe"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Eienskappe..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Skyfgebruik verskil van lêergrootte, byvoorbeeld as gevolg van kompressie, yl data of toewysingsbokoste."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Eienskappe van { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Items wat nie uitgevee kon word nie: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Leesalleen"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Lees tans lêerbesonderhede…"
+
+[messages.ready]
+source = "Ready"
+translation = "Gereed"
+
+[messages.recent]
+source = "Recent"
+translation = "Onlangs"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Verdigting bewaar die inhoud van die skyf en verklein sy lêer in Windows deur blokke wat met nulle gevul is, terug te eis. Dit kan min of geen spasie herwin nie. Maak eers ongewenste data binne Docker of Linux skoon."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Herwin WSL-skyfspasie"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Voordat jy verdig, stoor jou werk, verlaat Docker Desktop en maak WSL-sessies toe. Voer hierdie opdrag in PowerShell uit om alle WSL-verspreidings te stop. Hou Docker en WSL gestop totdat verdigting klaar is. Windows sal vir administrateur toestemming vra."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Onthou vensterposisie"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Herontledingspunt"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Skandeer weer"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Skandeer dryfeenheid weer"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Hervat skandering"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Roemeens"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Laat loop / Maak oop"
+
+[messages.russian]
+source = "Russian"
+translation = "Russies"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback kon nie die vouer skandeer nie.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback kon nie { $path } skandeer nie{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Skandering onderbreek"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } lêer
+       *[other] { $files } lêers
+    }, { $folders ->
+        [one] { $folders } vouer
+       *[other] { $folders } vouers
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Skandeer tans"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Skanderingsopsies geld vir die volgende skandering."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Kies 'n vouer om te bekyk"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Kies dryfeenheid om te bekyk"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Serwies, Cyrillies"
+
+[messages.settings]
+source = "Settings…"
+translation = "Instellings…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Voorkoms"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Gedrag"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Links verkies horisontale vorms; die middel balanseer hulle; regs verkies vertikale vorms."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Uitvee van lêers"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Grootteberekening"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Lêerbesonderhede"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Lêername"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Stoor veranderinge"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Skanderingsgrense"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Venster en interaksie"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Wys lêerinligting-wenke"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Wys lêernaam-wenke"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Wys vrye spasie"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Wys vrye spasie"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Wys in lêerbestuurder"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Wys sweefkassies"
+
+[messages.size]
+source = "SIZE"
+translation = "GROOTTE"
+
+[messages.size-2]
+source = "Size:"
+translation = "Grootte:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Grootte op skyf:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Bronkode"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Latyns-Amerikaanse Spaans"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Spaans van Spanje"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Yl lêer"
+
+[messages.special-file]
+source = "Special file"
+translation = "Spesiale lêer"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Bly op een lêerstelsel"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Sweeds"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Simboliese skakel"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Simboliese skakel"
+
+[messages.system]
+source = "System"
+translation = "Stelsel"
+
+[messages.system-default]
+source = "System default"
+translation = "Stelselverstek"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Tree in werking die volgende keer dat Clawback begin"
+
+[messages.temp]
+source = "Temp"
+translation = "Tydelik"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Opruiming het { $count } items gelaat wat nie verwyder kon word nie. Eerste rede: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Thai"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Die skanderingsproses het onverwags gestop."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Te min lêers"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Te veel lêers"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Wenke"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Probeer 'n vinniger NTFS-skandering met administrateurtoestemming. Die huidige skandering gaan voort."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: stel tans vouers saam · { $files } lêers"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo gekanselleer — normale skandering gaan voort"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Wys Turbo-vordering · valideer tans resultate…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Tellers skakel oor na Turbo wanneer dit meer inskrywings saamgestel het. Die kaart behou die gewone skanderingvoorskou totdat die volledige Turbo-boom gevalideer is. As Turbo misluk, gaan die gewone skandering voort."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: lees tans MFT { $percent }% · { $records } rekords"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: lees tans MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: los tans lêername op…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: sorteer tans resultate…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: laai tans resultate…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo nie beskikbaar nie — normale skandering gaan voort"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Turks"
+
+[messages.type]
+source = "TYPE"
+translation = "TIPE"
+
+[messages.type-2]
+source = "Type:"
+translation = "Tipe:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Oekraïens"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Installasiebesonderhede"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Deïnstalleer"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Die toepassingsoektog is nie voltooi nie. Niks is uitgevee nie. Probeer weer."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Identifiseer tans geïnstalleerde toepassings…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Begin deïnstalleerder…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Geen toepassing kon vir hierdie vouer geïdentifiseer word nie. Maak geïnstalleerde toepassings of Steam oop om die inhoud daarvan te bestuur."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Maak geïnstalleerde toepassings oop"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Maak Steam-biblioteek oop"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Uitgewer: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Die kaart volg intydse veranderinge. Skandeer weer ná deïnstallering as intydse opdaterings nie beskikbaar is nie."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Verwyder die hele toepassing, insluitend lêers buite jou keuse."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Geselekteerde item"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Deïnstalleer …"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Deïnstalleer deur Steam …"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Steam-program-ID: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Deïnstalleer 'n toepassing of speletjie"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Weergawe: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Bestuur deur Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Geregistreerde Windows-toepassing"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Hierdie ligging behoort aan geïnstalleerde sagteware. Kies 'n toepassing hieronder om die hele toepassing te deïnstalleer, insluitend lêers buite die geselekteerde vouer. Windows of Steam sal die verwydering hanteer."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows kon nie die deïnstalleerder begin nie (fout { $code }). Maak geïnstalleerde toepassings oop om hierdie toepassing te bestuur."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Die geregistreerde deïnstalleerder kon nie gevind word nie. Maak Windows-geïnstalleerde toepassings oop om hierdie toepassing te bestuur."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Onleesbare vouers"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Een vlak op"
+
+[messages.updating]
+source = "Updating…"
+translation = "Werk tans by…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Gebruik lêerlengtes, nie grootte op skyf nie"
+
+[messages.vert]
+source = "Vert"
+translation = "Vert."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Baie min lêers"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Uiters baie lêers"
+
+[messages.video]
+source = "Video"
+translation = "Video"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Viëtnamees"
+
+[messages.view]
+source = "View"
+translation = "Aansig"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Wag tans vir Windows-toestemming…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  { $total } totaal  -  { $free } vry  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } gelyktydige taak
+       *[other] { $count } gelyktydige take
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Huidige gelyktydigheidslimiet; pas outomaties aan by gemete deurset en vertraging."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Blaai deur Linux-lêers"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Maak hierdie verspreiding oop in Explorer. Dit kan die verspreiding begin."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Wat wil jy graag doen?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Wys opruimingsleiding"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows sal vir administrateur toestemming vra."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Herwin nul-gevulde blokke terwyl die inhoud van die skyf bewaar word. Vereis dat Docker en WSL gestop word."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Gereed om te verdig?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Stoor jou Linux-werk en verlaat Docker Desktop. Clawback sal alle WSL-sessies stop en dan hierdie skyf verdig. Hou Docker en WSL gesluit totdat dit klaar is."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Herwin ongebruikte skyfspasie."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Herwin nul-gevulde blokke sonder om jou lêers uit te vee. Maak eers binne Linux of Docker skoon; besparings verskil. Docker en WSL moet gestop bly tydens verdigting."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Kopieer opdrag"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Lêerbesonderhede"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Skyflêer"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL virtuele skyf"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL verspreiding"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "Gaan beelde, gestopte houers en volumes in Docker Desktop na. Die boukas kan ook met “docker builder prune” skoongemaak word. Volumes kan databasisse of ander nodige lêers bevat; ondersoek hulle voordat jy hulle verwyder. Opruiming en skyfverdigting is afsonderlike stappe."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Stoor Docker-beelde, houers, volumes en boukas."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Stoor Docker Desktop se Linux-omgewing. Docker-toepassingsdata kan op 'n aparte skyf gestoor word."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = 'Blaai deur die verspreiding se lêers en verwyder data wat jy nie meer nodig het nie. Gebruik sy Linux-pakketbestuurder om die pakketkas skoon te maak. Ná opruiming kan "sudo fstrim -av" binne die verspreiding help om ongebruikte blokke vry te stel voordat WSL afgesluit en die skyf verdig word.'
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Stoor hierdie Linux-verspreiding se lêerstelsel, insluitend sy programme en Linux-kantlêers."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Maak Docker Desktop oop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Hersien houers, beelde en volumes voordat ongewenste data verwyder word."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — dataskyf"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — stelselskyf"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Ongeïdentifiseerde Linux-verspreiding"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Hierdie pad lyk soos 'n WSL-installasie, maar geen ooreenstemmende registrasie is gevind vir die huidige Windows-gebruiker nie. Die pakket en lêerpad kan help om dit te identifiseer."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Windows-pakket"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Verdig skyf…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Stop WSL en verdig"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Volle zoem"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Zoem in"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Zoem in"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Zoem uit"

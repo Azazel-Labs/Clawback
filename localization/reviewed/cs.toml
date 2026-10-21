@@ -1,0 +1,1341 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "4bc97faf1c72ee6fa898cbdae5d5e959c0760da49b18a585520c8175700ec588"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Rychlá multiplatformní mapa využití disku."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "O aplikaci Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Afrikánština"
+
+[messages.all-files]
+source = "All files"
+translation = "Všechny soubory"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Aplikace / knihovna"
+
+[messages.arch]
+source = "Arch"
+translation = "Archivní"
+
+[messages.archive]
+source = "Archive"
+translation = "Archiv"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D prostředek"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Označeno pro zálohování"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Komprimovaný"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Šifrováno"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Odkaz na souborový systém nebo přesměrování"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Dočasné"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Atributy"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Atributy:"
+
+[messages.audio]
+source = "Audio"
+translation = "Zvuk"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Po odstranění automaticky znovu skenovat"
+
+[messages.back]
+source = "Back"
+translation = "Zpět"
+
+[messages.bias]
+source = "Bias:"
+translation = "Směr rozložení:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Binární data"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Zrušit"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Katalánština"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Zjednodušená čínština"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Tradiční čínština"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Získejte zpět místo na disku."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Nastavení Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Čištění složky Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Kliknutím vyčistíte dočasné soubory"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Kliknutím vyprázdníte koš tohoto disku"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · Virtuální disk WSL. Kliknutím zobrazíte podrobnosti o disku, můžete procházet soubory nebo uvolnit místo."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Nainstalované soubory aplikací nebo her. Kliknutím identifikujete a odinstalujete celou aplikaci."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Soubory her Steam. Kliknutím identifikujete hru a odinstalujete ji prostřednictvím služby Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Zavřít"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Zmenšit soubor disku…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Soubor disku se nepodařilo zmenšit. Ujistěte se, že Docker Desktop a WSL jsou zastavené, a zkuste to znovu. Windows nahlásil: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Zastavování WSL a zmenšování souboru disku…"
+
+[messages.compress]
+source = "Compress"
+translation = "Komprimovaný"
+
+[messages.contains]
+source = "Contains:"
+translation = "Obsah:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } soubor
+        [few] { $files } soubory
+        [many] { $files } souboru
+       *[other] { $files } souborů
+    }, { $folders ->
+        [one] { $folders } složka
+        [few] { $folders } složky
+        [many] { $folders } složky
+       *[other] { $folders } složek
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Kopírovat podrobnosti o chybě"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Soubory s pevnými odkazy počítat pouze jednou"
+
+[messages.czech]
+source = "Czech"
+translation = "Čeština"
+
+[messages.danish]
+source = "Danish"
+translation = "Dánština"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Data / konfigurace"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Datum / čas"
+
+[messages.delay]
+source = "Delay:"
+translation = "Prodleva:"
+
+[messages.delete]
+source = "Delete"
+translation = "Odstranit"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Toto nelze vrátit zpět."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds }s uplynulo"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Nelze odstranit položku: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Položku nelze smazat"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Trvalé mazání…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Trvale odstranit"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Smazat trvale?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Příprava na recyklaci…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } z { $total } souborů"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Další položky ve frontě: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Přesouvání do koše…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Soubory: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "Položka „{ $name }“ je příliš velká pro koš."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Aktualizace diskové mapy…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Recyklační pracovník byl neočekávaně zastaven. Před dalším pokusem zkontrolujte vybranou položku."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Odstraňování…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Hustota:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Návrhový dokument"
+
+[messages.directories]
+source = "Directories"
+translation = "Složky"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "Zakázat příkaz „Odstranit“"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Vyhledávání složek…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Obraz disku"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Barvy zobrazení"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop nebyl nalezen ve standardních instalačních umístěních. Otevřete jej z nabídky Start systému Windows."
+
+[messages.document]
+source = "Document"
+translation = "Dokument"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Neprohledávat jiné disky ani síťová připojení připojená uvnitř skenované složky"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Dvojklikem procházet / Pravým tlačítkem zobrazit akce"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } volných z { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }Volné: { $free } z { $total }  ·  Využité: { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Nizozemština"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Vše v koši na jednotce { $drive } bude trvale smazáno."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Vyprázdnit koš"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Vyprázdnit koš?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Trvale odstranit obsah složky { $path }? Složka Temp bude zachována. Položky, které systém Windows odmítne odstranit, zůstanou na místě. Nejprve zavřete aplikace, abyste uvolnili další dočasné soubory."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Vyčistit složku Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Vyčistit složku Temp?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Vyprazdňování koše…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Šifrovaný"
+
+[messages.english]
+source = "English"
+translation = "Angličtina"
+
+[messages.equal]
+source = "Equal"
+translation = "Vyvážené"
+
+[messages.exit]
+source = "Exit"
+translation = "Ukončit"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Rozbalením procházet · Kliknutím zobrazit složku"
+
+[messages.file]
+source = "File"
+translation = "Soubor"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Rozložení souborů"
+
+[messages.file-size]
+source = "File Size"
+translation = "Velikost souboru"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "TYP SOUBORU"
+
+[messages.file-types]
+source = "File types"
+translation = "Typy souborů"
+
+[messages.filename]
+source = "Filename"
+translation = "Název souboru"
+
+[messages.files]
+source = "FILES"
+translation = "SOUBORY"
+
+[messages.files-2]
+source = "Files:"
+translation = "Soubory:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Vyhledávání disků…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "Finština"
+
+[messages.folder]
+source = "FOLDER"
+translation = "SLOŽKA"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Složka"
+
+[messages.folders]
+source = "Folders:"
+translation = "Složky:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Neprohledané složky"
+
+[messages.french]
+source = "French"
+translation = "Francouzština"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Úplná cesta"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Herní archiv"
+
+[messages.german]
+source = "German"
+translation = "Němčina"
+
+[messages.greek]
+source = "Greek"
+translation = "Řečtina"
+
+[messages.help]
+source = "Help"
+translation = "Nápověda"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Skrytý"
+
+[messages.horz]
+source = "Horz"
+translation = "Vodor."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Maďarština"
+
+[messages.icon]
+source = "Icon"
+translation = "Ikona"
+
+[messages.image]
+source = "Image"
+translation = "Obrázek"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Indonéština"
+
+[messages.italian]
+source = "Italian"
+translation = "Italština"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Japonština"
+
+[messages.korean]
+source = "Korean"
+translation = "Korejština"
+
+[messages.language]
+source = "Language"
+translation = "Jazyk"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Licence MIT-0 (MIT No Attribution). Bez jakékoli záruky."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Živě · Zpracování zbývajících změn"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Demo data - fiktivní soubory a velikosti"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Živé aktualizace zastaveny · Opětovným skenováním se znovu připojíte"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Živě · Sladění změn na pozadí"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Živé aktualizace nejsou dostupné: Skenování zrušeno · Pro obnovení spusťte nové skenování"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Živé aktualizace zastaveny: { $error } · Opětovným skenováním se znovu připojíte"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Živé aktualizace nejsou dostupné: { $error } · Pro obnovení spusťte nové skenování"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Živě · Sledujeme změny"
+
+[messages.location]
+source = "Location:"
+translation = "Umístění:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Mnoho souborů"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Udělejte místo tomu, na čem záleží."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Započítané bajty vzhledem k využitému místu na disku; jde o odhad, nikoli o procento počtu souborů."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Další možnosti"
+
+[messages.modified]
+source = "Modified:"
+translation = "Změněno:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Přesunout vybranou položku do koše"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Ztlumit barvy"
+
+[messages.name]
+source = "Name:"
+translation = "Název:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "Nebyly nalezeny žádné disky. Vyberte složku pomocí „Jiná složka…“."
+
+[messages.no-extension]
+source = "No extension"
+translation = "Bez přípony"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "V této složce nejsou žádné soubory."
+
+[messages.normal]
+source = "Normal"
+translation = "Normální"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Norština bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% SKENOVÁNÍ"
+
+[messages.offline]
+source = "Offline"
+translation = "Offline"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Otevřete disk nebo složku a zjistěte, co zabírá místo."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Otevřete složku nebo disk a procházejte strom adresářů."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Začněte otevřením složky"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Otevřít disk…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Otevřít složku…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Otevřete v Průzkumníku"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Otevřete ve Správci souborů"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Otevřít ve Finderu"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Otevřít vybranou položku"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Jiná složka…"
+
+[messages.palette]
+source = "Palette"
+translation = "Paleta"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Pozastavit skenování"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS chrání některé složky (Mail, Zprávy, složky jiných uživatelů atd.). Chcete-li je zahrnout, povolte Clawback „Úplný přístup k disku“ v Nastavení systému › Soukromí a zabezpečení."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Některé složky mohou číst pouze jiní uživatelé nebo root. Chcete-li je zahrnout, spusťte Clawback se zvýšenými oprávněními (například `sudo -E clawback /`)."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Některé systémové složky mohou číst pouze správci. Chcete-li je zahrnout, spusťte Clawback jako správce."
+
+[messages.polish]
+source = "Polish"
+translation = "Polština"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Brazilská portugalština"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Evropská portugalština"
+
+[messages.properties]
+source = "Properties"
+translation = "Vlastnosti"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Vlastnosti…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Využití disku se liší od velikosti souboru, například z důvodu komprese, řídkých dat nebo režie alokace."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Vlastnosti: { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Položky, které nebylo možné smazat: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Jen pro čtení"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Čtení podrobností o souborech…"
+
+[messages.ready]
+source = "Ready"
+translation = "Připraveno"
+
+[messages.recent]
+source = "Recent"
+translation = "Nedávné"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Zmenšení souboru disku zachová jeho obsah a sníží velikost souboru ve Windows uvolněním bloků vyplněných nulami. Může uvolnit jen málo místa nebo žádné. Nejprve odstraňte nepotřebná data v Dockeru nebo Linuxu."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Uvolnit místo na disku WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Před zmenšením disku uložte práci, ukončete Docker Desktop a zavřete relace WSL. Tímto příkazem v PowerShellu zastavíte všechny distribuce WSL. Nechte Docker a WSL zastavené až do dokončení operace. Windows požádá o oprávnění správce."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Zapamatovat polohu okna"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Bod změny zpracování"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Skenovat znovu"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Skenovat disk znovu"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Pokračovat ve skenování"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Rumunština"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Spustit / Otevřít"
+
+[messages.russian]
+source = "Russian"
+translation = "Ruština"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback nemohl prohledat složku.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Nelze prohledat cestu: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Skenování pozastaveno"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } soubor
+        [few] { $files } soubory
+        [many] { $files } souboru
+       *[other] { $files } souborů
+    }, { $folders ->
+        [one] { $folders } složka
+        [few] { $folders } složky
+        [many] { $folders } složky
+       *[other] { $folders } složek
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Skenování"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Možnosti skenování se použijí při příštím skenování."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Vyberte složku k zobrazení"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Vyberte disk k zobrazení"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Srbština, cyrilice"
+
+[messages.settings]
+source = "Settings…"
+translation = "Nastavení…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Vzhled"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Chování"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Levice upřednostňuje vodorovné tvary, středová rovnováha mezi nimi; pravice upřednostňuje vertikální tvary."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Mazání souborů"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Účtování o velikosti"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Detaily souboru"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Názvy souborů"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Uložit změny"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Hranice skenování"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Okno & interakce"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Zobrazit tipy s informacemi o souborech"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Zobrazit tipy s názvy souborů"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Zobrazit volné místo"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Zobrazit volné místo"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Zobrazit ve správci souborů"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Zobrazit rámečky při najetí myší"
+
+[messages.size]
+source = "SIZE"
+translation = "VELIKOST"
+
+[messages.size-2]
+source = "Size:"
+translation = "Velikost:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Velikost na disku:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Zdrojový kód"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Latinskoamerická španělština"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Evropská španělština"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Řídký soubor"
+
+[messages.special-file]
+source = "Special file"
+translation = "Speciální soubor"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Zůstat v jednom souborovém systému"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Švédština"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Symbolický odkaz"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Symbolický odkaz"
+
+[messages.system]
+source = "System"
+translation = "Systémový"
+
+[messages.system-default]
+source = "System default"
+translation = "Jazyk systému"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Projeví se při příštím spuštění Clawback"
+
+[messages.temp]
+source = "Temp"
+translation = "Dočasný"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Po vyčištění zůstaly položky, které nebylo možné odstranit: { $count }. První důvod: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Thajština"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Úloha skenování byla neočekávaně ukončena."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Příliš málo souborů"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Příliš mnoho souborů"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Popisky"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Vyzkoušejte rychlejší skenování NTFS s oprávněními správce. Aktuální skenování bude pokračovat."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: montáž souborů · { $files }"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo zrušeno — běžné skenování pokračuje"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Zobrazuji Turbo průběh · ověřování výsledků…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Počítadlo přepne na Turbo poté, co sestaví více položek. Mapa udržuje pravidelný náhled skenování, dokud není ověřen kompletní Turbo strom. Pokud Turbo selže, bude pokračovat pravidelné skenování."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: čtení MFT { $percent }% · { $records } záznamů"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: čtení MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: řešení názvů souborů…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: výsledky třídění…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: Načítání výsledků…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo není dostupné — běžné skenování pokračuje"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Turečtina"
+
+[messages.type]
+source = "TYPE"
+translation = "TYP"
+
+[messages.type-2]
+source = "Type:"
+translation = "Typ:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Ukrajinština"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Podrobnosti o instalaci"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Odinstalovat"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Vyhledávání aplikací nebylo dokončeno. Nic nebylo smazáno. Zkuste to znovu."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Identifikace nainstalovaných aplikací…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Spusťte odinstalační program…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Pro tuto složku se nepodařilo určit žádnou aplikaci. Její obsah můžete spravovat v nastavení Nainstalované aplikace nebo ve Steamu."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Otevřete nainstalované aplikace"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Otevřete knihovnu Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Vydavatel: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Mapa sleduje změny v reálném čase. Pokud živé aktualizace nejsou dostupné, spusťte po odinstalaci nové skenování."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Odebere celou aplikaci, včetně souborů mimo váš výběr."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Vybraná položka"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Odinstalovat…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Odinstalujte přes Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "ID aplikace Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Odinstalujte aplikaci nebo hru"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Verze: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Spravováno službou Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Registrovaná aplikace pro Windows"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Toto umístění patří nainstalovanému softwaru. Vyberte aplikaci níže a odinstalujte celou aplikaci, včetně souborů mimo vybranou složku. O odstranění se postará Windows nebo Steam."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows nemohl spustit odinstalační program (chyba { $code }). Chcete-li tuto aplikaci spravovat, otevřete nainstalované aplikace."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Registrovaný odinstalační program nebyl nalezen. Chcete-li tuto aplikaci spravovat, otevřete nainstalované aplikace Windows."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Nečitelné složky"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "O úroveň výše"
+
+[messages.updating]
+source = "Updating…"
+translation = "Aktualizace…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Používat velikosti souborů místo místa zabraného na disku"
+
+[messages.vert]
+source = "Vert"
+translation = "Svisle"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Velmi málo souborů"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Velmi mnoho souborů"
+
+[messages.video]
+source = "Video"
+translation = "Video"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Vietnamština"
+
+[messages.view]
+source = "View"
+translation = "Zobrazení"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Čekání na oprávnění Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  Celkem { $total }  -  Volné { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } souběžná úloha
+        [few] { $count } souběžné úlohy
+        [many] { $count } souběžné úlohy
+       *[other] { $count } souběžných úloh
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Aktuální limit souběžných úloh; automaticky se přizpůsobuje naměřené propustnosti a latenci."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Procházení souborů Linuxu"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Otevřít tuto distribuci v Průzkumníku. Tím se může distribuce spustit."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Co byste chtěli dělat?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Zobrazit pokyny k čištění"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows požádá o oprávnění správce."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Uvolnit bloky vyplněné nulami při zachování obsahu disku. Docker a WSL musí být zastavené."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Připraveni zmenšit soubor disku?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Uložte svou práci v Linuxu a ukončete Docker Desktop. Clawback zastaví všechny relace WSL a poté zmenší soubor tohoto disku. Docker a WSL nechte zavřené až do dokončení."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Uvolnit nevyužité místo na disku."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Uvolní bloky vyplněné nulami bez smazání souborů. Nejprve vyčistěte data uvnitř Linuxu nebo Dockeru; množství uvolněného místa se liší. Docker a WSL musí zůstat během zmenšování disku zastavené."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Kopírovat příkaz"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Podrobnosti o souboru"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Soubor disku"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Virtuální disk WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Distribuce WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "V Docker Desktopu zkontrolujte obrazy, zastavené kontejnery a svazky. Mezipaměť sestavení lze také vyčistit pomocí „docker builder prune“. Svazky mohou obsahovat databáze nebo jiné potřebné soubory; před odstraněním je zkontrolujte. Vyčištění a zmenšení souboru disku jsou samostatné kroky."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Ukládá obrazy Dockeru, kontejnery, svazky a mezipaměť sestavení."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Ukládá prostředí Linuxu Docker Desktop. Data aplikace Docker mohou být uložena na samostatném disku."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "Procházejte soubory distribuce a odstraňte nepotřebná data. K vyčištění mezipaměti balíčků použijte správce balíčků dané distribuce. Po vyčištění může příkaz „sudo fstrim -av“ spuštěný v distribuci pomoci uvolnit nepoužívané bloky před vypnutím WSL a zmenšením souboru disku."
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Ukládá souborový systém této distribuce Linuxu, včetně jejích programů a souborů na straně Linuxu."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Otevřete Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Před odstraněním nepotřebných dat zkontrolujte kontejnery, obrazy a svazky."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — datový disk"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — systémový disk"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Neidentifikovaná distribuce Linuxu"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Tato cesta vypadá jako instalace WSL, ale pro aktuálního uživatele Windows nebyla nalezena žádná odpovídající registrace. Balíček a cesta k souboru mohou pomoci při jeho identifikaci."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Balíček pro Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Zmenšit soubor disku…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Zastavit WSL a zmenšit soubor disku"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Zobrazit vše"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Přiblížit"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Přiblížit"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Oddálit"

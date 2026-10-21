@@ -1,0 +1,1336 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "27fe22b64fd0c68e168e788e4abc46ef67346b605790b24dc9ca41a2c91ac692"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Брза мапа простора на диску за више платформи."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "О програму Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Африканс"
+
+[messages.all-files]
+source = "All files"
+translation = "Све датотеке"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Апликација / библиотека"
+
+[messages.arch]
+source = "Arch"
+translation = "Архива"
+
+[messages.archive]
+source = "Archive"
+translation = "Архива"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D ресурс"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Означено за резервну копију"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Компресовано"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Шифровано"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Веза или преусмеравање система датотека"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Привремени"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Атрибути"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Атрибути:"
+
+[messages.audio]
+source = "Audio"
+translation = "Аудио"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Аутоматски поново скенирај након брисања"
+
+[messages.back]
+source = "Back"
+translation = "Назад"
+
+[messages.bias]
+source = "Bias:"
+translation = "Склоност:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Бинарни подаци"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Откажи"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Каталонски"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Поједностављени кинески"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Традиционални кинески"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Вратите свој простор на диску."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Подешавања програма Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Чишћење Темп фолдера…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Кликните да бисте очистили своје привремене датотеке"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Кликните да испразните корпу за отпатке овог диска"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · WSL виртуелни диск. Кликните за детаље о диску, прегледајте датотеке или повратите простор."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Инсталиране датотеке апликације или игре. Кликните да бисте идентификовали и деинсталирали целу апликацију."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam фајлови игара. Кликните да бисте идентификовали игру и деинсталирали је преко Steam-а."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Затвори"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Сажми диск…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Није могуће компактирати диск. Уверите се да су Docker Desktop и WSL заустављени, а затим покушајте поново. Виндовс пријавио: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Заустављање WSL-а и сабијање диска…"
+
+[messages.compress]
+source = "Compress"
+translation = "Компримуј"
+
+[messages.contains]
+source = "Contains:"
+translation = "Садржи:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } датотека
+        [few] { $files } датотеке
+       *[other] { $files } датотека
+    }, { $folders ->
+        [one] { $folders } фасцикла
+        [few] { $folders } фасцикле
+       *[other] { $folders } фасцикли
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Копирај детаље грешке"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Ауторска права © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Датотеке са чврстим везама рачунај само једном"
+
+[messages.czech]
+source = "Czech"
+translation = "Чешки"
+
+[messages.danish]
+source = "Danish"
+translation = "Дански"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Подаци / конфигурација"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Датум / време"
+
+[messages.delay]
+source = "Delay:"
+translation = "Кашњење:"
+
+[messages.delete]
+source = "Delete"
+translation = "Избриши"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Ово се не може опозвати."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · протекло { $seconds } s"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Брисање ставке { $path } није успело{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Брисање ставке није успело"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Трајно брисање…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Избриши трајно"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Избрисати трајно?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Припрема за премештање у корпу…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } од { $total } фајлова"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Додатне ставке на чекању: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Премештање у корпу за отпатке…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Фајлови: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "„{ $name }“ је превелика за корпу за отпатке."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Ажурирање мапе диска…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Процес премештања у корпу се неочекивано зауставио. Проверите изабрану ставку пре него што покушате поново."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Брисање...\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Густина:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Дизајнерски документ"
+
+[messages.directories]
+source = "Directories"
+translation = "Директоријуми"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "Онемогући команду „Избриши“"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Откривање фасцикли…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Слика диска"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Боје приказа"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop није могао да се пронађе на својим стандардним локацијама за инсталацију. Отворите га из Виндовс Старт менија."
+
+[messages.document]
+source = "Document"
+translation = "Документ"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Не улази у друге дискове или мрежна прикључења унутар скениране фасцикле"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Двоструки клик за истраживање / Десни клик за радње"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } слободно од { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } слободно од { $total }  ·  { $used } заузето  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Холандски"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Све у вашој корпи за отпатке на { $drive } биће трајно избрисано."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Испразни корпу за отпатке"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Испразнити корпу за отпатке?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Трајно избрисати садржај { $path }? Фасцикла Темп ће бити сачувана. Ставке које Виндовс одбија да избрише остаће на месту. Прво затворите апликације да бисте ослободили још привремених датотека."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Очистите фасциклу Темп"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Очистите Темп фолдер?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Пражњење корпе за отпатке…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Шифруј"
+
+[messages.english]
+source = "English"
+translation = "Енглески"
+
+[messages.equal]
+source = "Equal"
+translation = "Уравнотежено"
+
+[messages.exit]
+source = "Exit"
+translation = "Изађи"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Проширите за прегледање · Кликните на фасциклу да бисте је приказали"
+
+[messages.file]
+source = "File"
+translation = "Датотека"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Распоред датотека"
+
+[messages.file-size]
+source = "File Size"
+translation = "Величина датотеке"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "ТИП ДАТОТЕКЕ"
+
+[messages.file-types]
+source = "File types"
+translation = "Типови датотека"
+
+[messages.filename]
+source = "Filename"
+translation = "Име датотеке"
+
+[messages.files]
+source = "FILES"
+translation = "ДАТОТЕКЕ"
+
+[messages.files-2]
+source = "Files:"
+translation = "Датотеке:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Тражење дискова..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Фински"
+
+[messages.folder]
+source = "FOLDER"
+translation = "ФАСЦИКЛА"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Фасцикла"
+
+[messages.folders]
+source = "Folders:"
+translation = "Фасцикле:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Нескениране фасцикле"
+
+[messages.french]
+source = "French"
+translation = "Француски"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Пуна путања"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Архива игре"
+
+[messages.german]
+source = "German"
+translation = "Немачки"
+
+[messages.greek]
+source = "Greek"
+translation = "Грчки"
+
+[messages.help]
+source = "Help"
+translation = "Помоћ"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Скривено"
+
+[messages.horz]
+source = "Horz"
+translation = "Хориз."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Мађарски"
+
+[messages.icon]
+source = "Icon"
+translation = "Икона"
+
+[messages.image]
+source = "Image"
+translation = "Слика"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Индонежански"
+
+[messages.italian]
+source = "Italian"
+translation = "Италијански"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Јапански"
+
+[messages.korean]
+source = "Korean"
+translation = "Корејски"
+
+[messages.language]
+source = "Language"
+translation = "Језик"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Лиценцирано под MIT-0 (MIT No Attribution). Без икакве гаранције."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Уживо · Обрада промена на чекању"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Демо подаци - измишљене датотеке и величине"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Ажурирање уживо је заустављено · Скенирајте поново за поновно повезивање"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Уживо · Усклађивање промена у позадини"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Ажурирање уживо није доступно: Скенирање је отказано · Скенирајте поново за освежавање"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Ажурирање уживо је заустављено: { $error } · Скенирајте поново за поновно повезивање"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Ажурирање уживо није доступно: { $error } · Скенирајте поново за освежавање"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Уживо · Праћење промена"
+
+[messages.location]
+source = "Location:"
+translation = "Локација:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Много датотека"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Направите места за оно што је важно."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Мапирани бајтови у односу на заузети простор диска; процена, а не проценат броја датотека."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Разне опције"
+
+[messages.modified]
+source = "Modified:"
+translation = "Измењено:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Премести изабрану ставку у отпатке"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Пригушене боје"
+
+[messages.name]
+source = "Name:"
+translation = "Име:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "Није пронађен ниједан диск. Користите „Друга фасцикла...“ да бисте изабрали фасциклу."
+
+[messages.no-extension]
+source = "No extension"
+translation = "Без екстензије"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Нема датотека у овој фасцикли."
+
+[messages.normal]
+source = "Normal"
+translation = "Нормално"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Норвешки букмол"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% СКЕНИРАЊА"
+
+[messages.offline]
+source = "Offline"
+translation = "Ван мреже"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   У реду   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Отворите диск или фасциклу да бисте видели где одлази ваш простор."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Отворите фасциклу или диск да бисте прегледали стабло директоријума."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Отворите фасциклу да бисте почели"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Отвори диск..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Отвори фасциклу…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Отворите у Екплореру"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Отворите у Менаџеру датотека"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Отворите у Финдер-у"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Отвори изабрану ставку"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Друга фасцикла..."
+
+[messages.palette]
+source = "Palette"
+translation = "Палета"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Паузирај скенирање"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS штити неке фасцикле (Mail, Messages, други корисници, …). Дајте програму Clawback „Full Disk Access“ у System Settings › Privacy & Security да бисте их укључили."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Неке фасцикле могу да читају само други корисници или root. Покрените Clawback са повишеним привилегијама (на пример `sudo -E clawback /`) да бисте их укључили."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Неке системске фасцикле могу да читају само администратори. Покрените Clawback као администратор да бисте их укључили."
+
+[messages.polish]
+source = "Polish"
+translation = "Пољски"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Бразилски португалски"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Европски португалски"
+
+[messages.properties]
+source = "Properties"
+translation = "Својства"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Својства..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Заузети простор на диску разликује се од величине датотеке, на пример због компресије, ретко попуњених датотека или додатног простора потребног за алокацију."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Својства: { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Ставке које није било могуће избрисати: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Само за читање"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Читање детаља датотеке…"
+
+[messages.ready]
+source = "Ready"
+translation = "Спремно"
+
+[messages.recent]
+source = "Recent"
+translation = "Недавно"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Сажимање чува садржај диска и смањује величину његове Виндовс датотеке враћањем блокова испуњених нулама. Може повратити мало или нимало простора. Прво очистите нежељене податке унутар Docker-а или Линук-а."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Вратите WSL простор на диску"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Пре сажимања, сачувајте свој рад, затворите Docker Desktop и затворите WSL сесије. Покрените ову команду у PowerShell-у да бисте зауставили све WSL дистрибуције. Држите Docker и WSL заустављене док се сабијање не заврши. Виндовс ће тражити дозволу администратора."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Запамти положај прозора"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Тачка поновне обраде"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Поново скенирај"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Поново скенирај диск"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Настави скенирање"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Румунски"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Покрени / Отвори"
+
+[messages.russian]
+source = "Russian"
+translation = "Руски"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback није успео да скенира фасциклу.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback није успео да скенира { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Скенирање је паузирано"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } датотека
+        [few] { $files } датотеке
+       *[other] { $files } датотека
+    }, { $folders ->
+        [one] { $folders } фасцикла
+        [few] { $folders } фасцикле
+       *[other] { $folders } фасцикли
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Скенирање"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Опције скенирања примењују се на следеће скенирање."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Изаберите фасциклу за приказ"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Изаберите диск за приказ"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Српски, ћирилица"
+
+[messages.settings]
+source = "Settings…"
+translation = "Подешавања…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Изглед"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Понашање"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Лево фаворизује хоризонталне облике; средина их уравнотежује; десно фаворизује вертикалне облике."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Брисање датотека"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Обрачун величине"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Детаљи датотеке"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Имена датотека"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Сачувај измене"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Границе скенирања"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Прозор и интеракција"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Прикажи савете са подацима о датотеци"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Прикажи савете са именом датотеке"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Прикажи слободан простор"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Прикажи слободан простор"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Прикажи у менаџеру датотека"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Прикажи оквире при прелазу мишем"
+
+[messages.size]
+source = "SIZE"
+translation = "ВЕЛИЧИНА"
+
+[messages.size-2]
+source = "Size:"
+translation = "Величина:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Величина на диску:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Изворни кôд"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Латиноамерички шпански"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Шпански из Шпаније"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Ретка датотека"
+
+[messages.special-file]
+source = "Special file"
+translation = "Посебна датотека"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Остани на једном систему датотека"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Шведски"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Симболичка веза"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Симболичка веза"
+
+[messages.system]
+source = "System"
+translation = "Систем"
+
+[messages.system-default]
+source = "System default"
+translation = "Подразумевано у систему"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Ступа на снагу при следећем покретању програма Clawback"
+
+[messages.temp]
+source = "Temp"
+translation = "Привремено"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Чишћење је оставило { $count } ставки које нису могле да се уклоне. Први разлог: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Тајландски"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Процес скенирања се неочекивано зауставио."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Премало датотека"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Превише датотека"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Описи алатки"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Испробајте брже NTFS скенирање уз администраторску дозволу. Тренутно скенирање се наставља."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Турбо"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Турбо: састављање фасцикли · датотека: { $files }"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Турбо је отказан — нормално скенирање се наставља"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Приказује се напредак Турба · провера резултата…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Бројачи прелазе на Турбо када он састави више ставки. Мапа задржава преглед обичног скенирања док се не провери комплетно Турбо стабло. Ако Турбо не успе, обично скенирање се наставља."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Турбо: читање MFT-а { $percent }% · записа: { $records }"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Турбо: читање MFT-а…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Турбо: разрешавање имена датотека…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Турбо: сортирање резултата…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Турбо: учитавање резултата…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Турбо није доступан — нормално скенирање се наставља"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Турски"
+
+[messages.type]
+source = "TYPE"
+translation = "ТИП"
+
+[messages.type-2]
+source = "Type:"
+translation = "Тип:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Украјински"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Детаљи инсталације"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Деинсталирај"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Тражење апликације није завршено. Ништа није обрисано. Покушајте поново."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Идентификовање инсталираних апликација…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Покрени програм за деинсталацију…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Није могуће идентификовати ниједну апликацију за ову фасциклу. Отворите инсталиране апликације или Steam да бисте управљали његовим садржајем."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Отворите инсталиране апликације"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Отворите Steam библиотеку"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Издавач: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Мапа прати промене уживо. Поново скенирајте након деинсталације ако ажурирања уживо нису доступна."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Уклања целу апликацију, укључујући датотеке ван вашег избора."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Изабрана ставка"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Деинсталирај…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Деинсталирајте преко Steam-а…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "ИД апликације Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Деинсталирајте апликацију или игру"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Верзија: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Управља Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Регистрована Виндовс апликација"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Ова локација припада инсталираном софтверу. Изаберите апликацију у наставку да бисте деинсталирали целу апликацију, укључујући датотеке изван изабране фасцикле. Виндовс или Steam ће обавити уклањање."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Виндовс није могао да покрене деинсталатор (грешка { $code }). Отворите инсталиране апликације да бисте управљали овом апликацијом."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Није могуће пронаћи регистровани програм за деинсталацију. Отворите Виндовс инсталиране апликације да бисте управљали овом апликацијом."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Нечитљиве фасцикле"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Један ниво горе"
+
+[messages.updating]
+source = "Updating…"
+translation = "Ажурирање…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Користи дужину датотека, а не величину на диску"
+
+[messages.vert]
+source = "Vert"
+translation = "Верт."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Веома мало датотека"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Веома много датотека"
+
+[messages.video]
+source = "Video"
+translation = "Видео"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Вијетнамски"
+
+[messages.view]
+source = "View"
+translation = "Приказ"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Чека се дозвола Windows-а…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  укупно { $total }  -  слободно { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } истовремени задатак
+        [few] { $count } истовремена задатка
+       *[other] { $count } истовремених задатака
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Тренутно ограничење истовремености; аутоматски се прилагођава измереној пропусности и кашњењу."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Прегледајте Линук датотеке"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Отворите ову дистрибуцију у Explorer-у. Ово може покренути дистрибуцију."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Шта желите да урадите?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Прикажи упутство за чишћење"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Виндовс ће тражити дозволу администратора."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Повратите блокове попуњене нулом уз очување садржаја диска. Захтева да Docker и WSL буду заустављени."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Спремни за сажимање?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Сачувајте свој рад у Linux-у и затворите Docker Desktop. Clawback ће зауставити све WSL сесије, а затим сажети овај диск. Не покрећите Docker и WSL док се поступак не заврши."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Повратите неискоришћени простор на диску."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Ослобађа блокове испуњене нулама без брисања ваших датотека. Прво очистите непотребне податке у Linux-у или Docker-у; количина ослобођеног простора варира. Docker и WSL морају остати заустављени током сажимања."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Копирај команду"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Детаљи о фајлу"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Диск фајл"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL виртуелни диск"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL дистрибуција"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "У Docker Desktop-у прегледајте слике, заустављене контејнере и волумене. Кеш за изградњу може се очистити и командом „docker builder prune“. Волумени могу садржати базе података или друге потребне датотеке; проверите их пре уклањања. Чишћење и сажимање диска су одвојени кораци."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Чува Docker слике, контејнере, волумене и кеш за изградњу."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Чува Линук окружење Docker Desktop-а. Подаци апликације Docker могу се чувати на посебном диску."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "Прегледајте датотеке дистрибуције и уклоните непотребне податке. Користите њен Linux управљач пакетима за чишћење кеша пакета. После чишћења, команда „sudo fstrim -av“ унутар дистрибуције може ослободити неискоришћене блокове пре гашења WSL-а и сажимања диска."
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Чува систем датотека ове дистрибуције Линука, укључујући њене програме и датотеке на страни Линука."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Отворите Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Прегледајте контејнере, слике и волумене пре уклањања нежељених података."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — диск са подацима"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — системски диск"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Неидентификована дистрибуција Линука"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Ова путања изгледа као WSL инсталација, али није пронађена одговарајућа регистрација за тренутног корисника Виндовс-а. Путања пакета и датотеке могу помоћи да се идентификују."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Виндовс пакет"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Сажми диск…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Заустави WSL и сажми диск"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Пуно увећање"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Увећај"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Увећај"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Умањи"

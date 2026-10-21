@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "d86f08a8082f98c0469827b4aa06b5f54de87b93dc3b3fc5b4e322202014b6f6"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "แผนผังพื้นที่ดิสก์ที่รวดเร็วและใช้งานได้หลายแพลตฟอร์ม"
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "เกี่ยวกับ Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "แอฟริกานส์"
+
+[messages.all-files]
+source = "All files"
+translation = "ไฟล์ทั้งหมด"
+
+[messages.application-library]
+source = "Application / library"
+translation = "แอปพลิเคชัน / ไลบรารี"
+
+[messages.arch]
+source = "Arch"
+translation = "เก็บถาวร"
+
+[messages.archive]
+source = "Archive"
+translation = "แฟ้มจัดเก็บ"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "ทรัพยากร 3 มิติ"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "ทำเครื่องหมายสำหรับการสำรองข้อมูล"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "บีบอัด"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "เข้ารหัส"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "ลิงก์หรือการเปลี่ยนเส้นทางของระบบไฟล์"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "ชั่วคราว"
+
+[messages.attributes]
+source = "Attributes"
+translation = "แอตทริบิวต์"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "แอตทริบิวต์:"
+
+[messages.audio]
+source = "Audio"
+translation = "เสียง"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "สแกนใหม่อัตโนมัติหลังลบ"
+
+[messages.back]
+source = "Back"
+translation = "ย้อนกลับ"
+
+[messages.bias]
+source = "Bias:"
+translation = "น้ำหนัก:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "ข้อมูลไบนารี"
+
+[messages.cancel]
+source = "Cancel"
+translation = "ยกเลิก"
+
+[messages.catalan]
+source = "Catalan"
+translation = "คาตาลัน"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "จีนตัวย่อ"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "จีนตัวเต็ม"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "เรียกคืนพื้นที่ดิสก์ของคุณ"
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "การตั้งค่า Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "กำลังทำความสะอาดโฟลเดอร์ Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "คลิกเพื่อล้างไฟล์ชั่วคราวของคุณ"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "คลิกเพื่อล้างถังรีไซเคิลของไดรฟ์นี้"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · ดิสก์เสมือน WSL คลิกเพื่อดูรายละเอียดดิสก์ เรียกดูไฟล์ หรือเรียกคืนพื้นที่"
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "ไฟล์ของแอปพลิเคชันหรือเกมที่ติดตั้งไว้ คลิกเพื่อระบุและถอนการติดตั้งทั้งแอปพลิเคชัน"
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "ไฟล์เกม Steam คลิกเพื่อระบุเกมและถอนการติดตั้งผ่าน Steam"
+
+[messages.close-dialog]
+source = "Close"
+translation = "ปิด"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "ลดขนาดดิสก์…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "ไม่สามารถลดขนาดดิสก์ได้ ตรวจสอบว่า Docker Desktop และ WSL หยุดทำงานแล้ว จากนั้นลองอีกครั้ง Windows รายงาน: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "กำลังหยุด WSL และลดขนาดดิสก์…"
+
+[messages.compress]
+source = "Compress"
+translation = "บีบอัด"
+
+[messages.contains]
+source = "Contains:"
+translation = "ประกอบด้วย:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "{ $files } ไฟล์, { $folders } โฟลเดอร์"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "คัดลอกรายละเอียดข้อผิดพลาด"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "ลิขสิทธิ์ © 2026 Azazel Labs"
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "นับไฟล์ที่มีฮาร์ดลิงก์เพียงครั้งเดียว"
+
+[messages.czech]
+source = "Czech"
+translation = "เช็ก"
+
+[messages.danish]
+source = "Danish"
+translation = "เดนมาร์ก"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "ข้อมูล / การกำหนดค่า"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "วันที่ / เวลา"
+
+[messages.delay]
+source = "Delay:"
+translation = "หน่วงเวลา:"
+
+[messages.delete]
+source = "Delete"
+translation = "ลบ"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "การดำเนินการนี้ไม่สามารถยกเลิกได้"
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · ผ่านไป { $seconds } วินาที"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'ลบ { $path }{ " ไม่สำเร็จ\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "ไม่สามารถลบรายการได้"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "กำลังลบอย่างถาวร…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "ลบอย่างถาวร"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "ลบอย่างถาวรหรือไม่?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "กำลังเตรียมย้ายไปถังขยะ…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } จาก { $total } ไฟล์"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "รายการเพิ่มเติมอยู่ในคิว: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "กำลังย้ายไปถังขยะ…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · ไฟล์: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "“{ $name }” ใหญ่เกินไปสำหรับถังรีไซเคิล"
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "กำลังอัปเดตแผนที่ดิสก์…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "กระบวนการย้ายไปถังขยะหยุดโดยไม่คาดคิด โปรดตรวจสอบรายการที่เลือกก่อนลองอีกครั้ง"
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "กำลังลบ...\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "ความหนาแน่น:"
+
+[messages.design-document]
+source = "Design document"
+translation = "เอกสารการออกแบบ"
+
+[messages.directories]
+source = "Directories"
+translation = "ไดเรกทอรี"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = 'ปิดใช้งานคำสั่ง "ลบ"'
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "กำลังค้นหาโฟลเดอร์…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "อิมเมจดิสก์"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "สีที่แสดง"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "ไม่พบ Docker Desktop ในตำแหน่งการติดตั้งมาตรฐาน เปิดจากเมนูเริ่มของ Windows"
+
+[messages.document]
+source = "Document"
+translation = "เอกสาร"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "ไม่เข้าไปในไดรฟ์อื่นหรือจุดเมานต์เครือข่ายภายในโฟลเดอร์ที่สแกน"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "ดับเบิลคลิกเพื่อสำรวจ / คลิกขวาเพื่อเลือกการทำงาน"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "ว่าง { $free } จากทั้งหมด { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } ว่างจาก { $total }  ·  ใช้แล้ว { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "ดัตช์"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "ทุกอย่างในถังรีไซเคิลของคุณบน { $drive } จะถูกลบอย่างถาวร"
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "ล้างถังรีไซเคิล"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "ล้างถังรีไซเคิลหรือไม่?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "ลบเนื้อหาของ { $path } อย่างถาวรหรือไม่? โฟลเดอร์ Temp จะยังคงอยู่ รายการที่ Windows ไม่ยอมให้ลบจะถูกเก็บไว้ โปรดปิดแอปพลิเคชันก่อนเพื่อให้ลบไฟล์ชั่วคราวได้มากขึ้น"
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "ล้างโฟลเดอร์ Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "ทำความสะอาดโฟลเดอร์ Temp ของคุณหรือไม่?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "กำลังล้างถังรีไซเคิล…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "เข้ารหัส"
+
+[messages.english]
+source = "English"
+translation = "อังกฤษ"
+
+[messages.equal]
+source = "Equal"
+translation = "เท่ากัน"
+
+[messages.exit]
+source = "Exit"
+translation = "ออก"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "ขยายเพื่อเรียกดู · คลิกโฟลเดอร์เพื่อดู"
+
+[messages.file]
+source = "File"
+translation = "ไฟล์"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "การจัดวางไฟล์"
+
+[messages.file-size]
+source = "File Size"
+translation = "ขนาดไฟล์"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "ประเภทไฟล์"
+
+[messages.file-types]
+source = "File types"
+translation = "ประเภทไฟล์"
+
+[messages.filename]
+source = "Filename"
+translation = "ชื่อไฟล์"
+
+[messages.files]
+source = "FILES"
+translation = "ไฟล์"
+
+[messages.files-2]
+source = "Files:"
+translation = "ไฟล์:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "กำลังค้นหาไดรฟ์..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "ฟินแลนด์"
+
+[messages.folder]
+source = "FOLDER"
+translation = "โฟลเดอร์"
+
+[messages.folder-2]
+source = "Folder"
+translation = "โฟลเดอร์"
+
+[messages.folders]
+source = "Folders:"
+translation = "โฟลเดอร์:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "โฟลเดอร์ที่ไม่ได้สแกน"
+
+[messages.french]
+source = "French"
+translation = "ฝรั่งเศส"
+
+[messages.full-path]
+source = "Full Path"
+translation = "พาธเต็ม"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "แฟ้มจัดเก็บเกม"
+
+[messages.german]
+source = "German"
+translation = "เยอรมัน"
+
+[messages.greek]
+source = "Greek"
+translation = "กรีก"
+
+[messages.help]
+source = "Help"
+translation = "วิธีใช้"
+
+[messages.hidden]
+source = "Hidden"
+translation = "ซ่อน"
+
+[messages.horz]
+source = "Horz"
+translation = "แนวนอน"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "ฮังการี"
+
+[messages.icon]
+source = "Icon"
+translation = "ไอคอน"
+
+[messages.image]
+source = "Image"
+translation = "รูปภาพ"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "อินโดนีเซีย"
+
+[messages.italian]
+source = "Italian"
+translation = "อิตาลี"
+
+[messages.japanese]
+source = "Japanese"
+translation = "ญี่ปุ่น"
+
+[messages.korean]
+source = "Korean"
+translation = "เกาหลี"
+
+[messages.language]
+source = "Language"
+translation = "ภาษา"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "อนุญาตให้ใช้ภายใต้ MIT-0 (MIT แบบไม่ต้องระบุที่มา) ไม่มีการรับประกันใด ๆ"
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "แบบสด · กำลังประมวลผลการเปลี่ยนแปลงที่ค้างอยู่"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "ข้อมูลสาธิต - ไฟล์และขนาดสมมติ"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "หยุดการอัปเดตแบบสดแล้ว · สแกนใหม่เพื่อเชื่อมต่ออีกครั้ง"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "แบบสด · กำลังปรับข้อมูลตามการเปลี่ยนแปลงในเบื้องหลัง"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "ไม่สามารถอัปเดตแบบสดได้: ยกเลิกการสแกนแล้ว · สแกนใหม่เพื่ออัปเดตข้อมูล"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "หยุดการอัปเดตแบบสดแล้ว: { $error } · สแกนใหม่เพื่อเชื่อมต่ออีกครั้ง"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "ไม่สามารถอัปเดตแบบสดได้: { $error } · สแกนใหม่เพื่ออัปเดตข้อมูล"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "แบบสด · กำลังเฝ้าดูการเปลี่ยนแปลง"
+
+[messages.location]
+source = "Location:"
+translation = "ตำแหน่ง:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "ไฟล์จำนวนมาก"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "เพิ่มพื้นที่ให้สิ่งสำคัญ"
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "จำนวนไบต์ที่แสดงในแผนผังเทียบกับพื้นที่ไดรฟ์ที่ใช้ เป็นค่าประมาณ ไม่ใช่เปอร์เซ็นต์ของจำนวนไฟล์"
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "ตัวเลือกอื่น ๆ"
+
+[messages.modified]
+source = "Modified:"
+translation = "แก้ไขเมื่อ:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "ย้ายรายการที่เลือกไปยังถังขยะ"
+
+[messages.msec]
+source = "msec"
+translation = "มิลลิวินาที"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "ลดความสดของสี"
+
+[messages.name]
+source = "Name:"
+translation = "ชื่อ:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = 'ไม่พบไดรฟ์ ใช้ "โฟลเดอร์อื่น..." เพื่อเลือกโฟลเดอร์'
+
+[messages.no-extension]
+source = "No extension"
+translation = "ไม่มีนามสกุล"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "ไม่มีไฟล์ในโฟลเดอร์นี้"
+
+[messages.normal]
+source = "Normal"
+translation = "ปกติ"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "นอร์เวย์บุคมอล"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% ของการสแกน"
+
+[messages.offline]
+source = "Offline"
+translation = "ออฟไลน์"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   ตกลง   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "เปิดไดรฟ์หรือโฟลเดอร์เพื่อดูว่าพื้นที่ถูกใช้ไปกับอะไร"
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "เปิดโฟลเดอร์หรือไดรฟ์เพื่อเรียกดูโครงสร้างไดเรกทอรี"
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "เปิดโฟลเดอร์เพื่อเริ่มต้น"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "เปิดไดรฟ์..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "เปิดโฟลเดอร์…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "เปิดใน Explorer"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "เปิดในตัวจัดการไฟล์"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "เปิดใน Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "เปิดรายการที่เลือก"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "โฟลเดอร์อื่น..."
+
+[messages.palette]
+source = "Palette"
+translation = "ชุดสี"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "หยุดสแกนชั่วคราว"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = 'macOS ปกป้องบางโฟลเดอร์ (Mail, Messages, ผู้ใช้อื่น ฯลฯ) ให้สิทธิ์ "การเข้าถึงดิสก์แบบเต็ม" แก่ Clawback ในการตั้งค่าระบบ › ความเป็นส่วนตัวและความปลอดภัย เพื่อรวมโฟลเดอร์เหล่านั้น'
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "บางโฟลเดอร์อ่านได้เฉพาะผู้ใช้อื่นหรือ root เรียกใช้ Clawback ด้วยสิทธิ์ที่สูงขึ้น (เช่น `sudo -E clawback /`) เพื่อรวมโฟลเดอร์เหล่านั้น"
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "บางโฟลเดอร์ของระบบอ่านได้เฉพาะผู้ดูแลระบบ เรียกใช้ Clawback ในฐานะผู้ดูแลระบบเพื่อรวมโฟลเดอร์เหล่านั้น"
+
+[messages.polish]
+source = "Polish"
+translation = "โปแลนด์"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "โปรตุเกสแบบบราซิล"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "โปรตุเกสแบบโปรตุเกส"
+
+[messages.properties]
+source = "Properties"
+translation = "คุณสมบัติ"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "คุณสมบัติ..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "พื้นที่ที่ใช้บนดิสก์ต่างจากขนาดไฟล์ได้ เช่น เนื่องจากการบีบอัด การเก็บข้อมูลแบบ sparse หรือพื้นที่ส่วนเกินจากการจัดสรร"
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "คุณสมบัติของ { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "รายการที่ไม่สามารถลบได้: { $count } { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "อ่านอย่างเดียว"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "กำลังอ่านรายละเอียดไฟล์…"
+
+[messages.ready]
+source = "Ready"
+translation = "พร้อม"
+
+[messages.recent]
+source = "Recent"
+translation = "ล่าสุด"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "การลดขนาดดิสก์จะรักษาเนื้อหาของดิสก์ไว้ และลดขนาดไฟล์ดิสก์ใน Windows โดยเรียกคืนบล็อกที่มีแต่เลขศูนย์ อาจเรียกคืนพื้นที่ได้น้อยหรือไม่ได้เลย ให้ล้างข้อมูลที่ไม่จำเป็นภายใน Docker หรือ Linux ก่อน"
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "เรียกคืนพื้นที่ดิสก์ WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "ก่อนลดขนาดดิสก์ ให้บันทึกงาน ออกจาก Docker Desktop และปิดเซสชัน WSL เรียกใช้คำสั่งนี้ใน PowerShell เพื่อหยุดดิสทริบิวชัน WSL ทั้งหมด อย่าเปิด Docker และ WSL จนกว่าการลดขนาดดิสก์จะเสร็จสิ้น Windows จะขอสิทธิ์ผู้ดูแลระบบ"
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "จดจำตำแหน่งหน้าต่าง"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "จุด Reparse"
+
+[messages.rescan]
+source = "Rescan"
+translation = "สแกนใหม่"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "สแกนไดรฟ์ใหม่"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "สแกนต่อ"
+
+[messages.romanian]
+source = "Romanian"
+translation = "โรมาเนีย"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "เรียกใช้ / เปิด"
+
+[messages.russian]
+source = "Russian"
+translation = "รัสเซีย"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback ไม่สามารถสแกนโฟลเดอร์ได้\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback ไม่สามารถสแกน { $path }{ " ได้\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "หยุดสแกนชั่วคราวแล้ว"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files } ไฟล์, { $folders } โฟลเดอร์"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "กำลังสแกน"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "ตัวเลือกการสแกนจะมีผลในการสแกนครั้งถัดไป"
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "เลือกโฟลเดอร์ที่ต้องการดู"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "เลือกไดรฟ์ที่ต้องการดู"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "เซอร์เบีย ซีริลลิก"
+
+[messages.settings]
+source = "Settings…"
+translation = "การตั้งค่า…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "รูปลักษณ์"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "ลักษณะการทำงาน"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "ด้านซ้ายเน้นรูปทรงแนวนอน ตรงกลางให้สมดุล และด้านขวาเน้นรูปทรงแนวตั้ง"
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "การลบไฟล์"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "การคำนวณขนาด"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "รายละเอียดไฟล์"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "ชื่อไฟล์"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "บันทึกการเปลี่ยนแปลง"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "ขอบเขตการสแกน"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "หน้าต่างและการโต้ตอบ"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "แสดงคำแนะนำข้อมูลไฟล์"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "แสดงคำแนะนำชื่อไฟล์"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "แสดงพื้นที่ว่าง"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "แสดงพื้นที่ว่าง"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "แสดงในตัวจัดการไฟล์"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "แสดงกรอบเมื่อวางตัวชี้เมาส์"
+
+[messages.size]
+source = "SIZE"
+translation = "ขนาด"
+
+[messages.size-2]
+source = "Size:"
+translation = "ขนาด:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "ขนาดบนดิสก์:"
+
+[messages.source-code]
+source = "Source code"
+translation = "ซอร์สโค้ด"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "สเปนแบบลาตินอเมริกา"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "สเปนแบบสเปน"
+
+[messages.sparse]
+source = "Sparse"
+translation = "แบบเบาบาง"
+
+[messages.special-file]
+source = "Special file"
+translation = "ไฟล์พิเศษ"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "อยู่ในระบบไฟล์เดียว"
+
+[messages.swedish]
+source = "Swedish"
+translation = "สวีเดน"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "ลิงก์สัญลักษณ์"
+
+[messages.symlink]
+source = "Symlink"
+translation = "ลิงก์สัญลักษณ์"
+
+[messages.system]
+source = "System"
+translation = "ระบบ"
+
+[messages.system-default]
+source = "System default"
+translation = "ค่าเริ่มต้นของระบบ"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "มีผลเมื่อเปิด Clawback ครั้งถัดไป"
+
+[messages.temp]
+source = "Temp"
+translation = "ชั่วคราว"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "หลังล้างข้อมูล ยังเหลือ { $count } รายการที่ไม่สามารถลบได้ สาเหตุแรก: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "ไทย"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "งานสแกนหยุดทำงานโดยไม่คาดคิด"
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "ไฟล์น้อยเกินไป"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "ไฟล์มากเกินไป"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "คำแนะนำเครื่องมือ"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "ลองสแกน NTFS ที่เร็วขึ้นด้วยสิทธิ์ผู้ดูแลระบบ การสแกนปัจจุบันจะยังทำงานต่อ"
+
+[messages.turbo]
+source = "Turbo"
+translation = "เทอร์โบ"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: กำลังจัดโฟลเดอร์ · { $files } ไฟล์"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "ยกเลิกเทอร์โบแล้ว — สแกนปกติต่อ"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "กำลังแสดงความคืบหน้า Turbo · กำลังตรวจสอบผลลัพธ์…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "ตัวนับจะเปลี่ยนไปแสดง Turbo เมื่อรวบรวมรายการได้มากกว่า แผนที่ยังแสดงตัวอย่างจากการสแกนปกติจนกว่าโครงสร้าง Turbo ทั้งหมดจะผ่านการตรวจสอบ หาก Turbo ล้มเหลว การสแกนปกติจะดำเนินต่อไป"
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: กำลังอ่าน MFT { $percent }% · { $records } ระเบียน"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "เทอร์โบ: กำลังอ่าน MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: กำลังระบุชื่อไฟล์…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: กำลังเรียงผลลัพธ์…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: กำลังโหลดผลลัพธ์…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "ไม่สามารถใช้เทอร์โบได้ — สแกนปกติต่อ"
+
+[messages.turkish]
+source = "Turkish"
+translation = "ตุรกี"
+
+[messages.type]
+source = "TYPE"
+translation = "ประเภท"
+
+[messages.type-2]
+source = "Type:"
+translation = "ประเภท:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "ยูเครน"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "รายละเอียดการติดตั้ง"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "ถอนการติดตั้ง"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "การค้นหาแอปพลิเคชันไม่เสร็จสิ้น ยังไม่ได้ลบสิ่งใด โปรดลองอีกครั้ง"
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "กำลังระบุแอปพลิเคชันที่ติดตั้ง…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "เริ่มโปรแกรมถอนการติดตั้ง…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "ไม่สามารถระบุแอปพลิเคชันสำหรับโฟลเดอร์นี้ได้ เปิดแอปที่ติดตั้งหรือ Steam เพื่อจัดการเนื้อหา"
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "เปิดแอปที่ติดตั้งไว้"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "เปิดไลบรารี Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "ผู้จัดพิมพ์: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "แผนที่ติดตามการเปลี่ยนแปลงแบบสด ให้สแกนใหม่หลังถอนการติดตั้ง หากไม่สามารถอัปเดตแบบสดได้"
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "ลบแอปพลิเคชันทั้งหมด รวมถึงไฟล์ที่อยู่นอกเหนือการเลือกของคุณ"
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "รายการที่เลือก"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "ถอนการติดตั้ง…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "ถอนการติดตั้งผ่าน Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "รหัสแอป Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "ถอนการติดตั้งแอปพลิเคชันหรือเกม"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "เวอร์ชัน: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "จัดการโดย Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "แอปพลิเคชันที่ลงทะเบียนใน Windows"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "ตำแหน่งนี้เป็นของซอฟต์แวร์ที่ติดตั้ง เลือกแอปพลิเคชันด้านล่างเพื่อถอนการติดตั้งแอปพลิเคชันทั้งหมด รวมถึงไฟล์ที่อยู่นอกโฟลเดอร์ที่เลือก Windows หรือ Steam จะจัดการการลบออก"
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows ไม่สามารถเริ่มโปรแกรมถอนการติดตั้งได้ (ข้อผิดพลาด { $code }) เปิดแอปที่ติดตั้งไว้เพื่อจัดการแอปพลิเคชันนี้"
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "ไม่พบโปรแกรมถอนการติดตั้งที่ลงทะเบียนไว้ เปิดแอปที่ติดตั้ง Windows เพื่อจัดการแอปพลิเคชันนี้"
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "โฟลเดอร์ที่อ่านไม่ได้"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "ขึ้นหนึ่งระดับ"
+
+[messages.updating]
+source = "Updating…"
+translation = "กำลังอัปเดต…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "ใช้ความยาวไฟล์แทนขนาดบนดิสก์"
+
+[messages.vert]
+source = "Vert"
+translation = "แนวตั้ง"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "ไฟล์น้อยมาก"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "ไฟล์มากมาย"
+
+[messages.video]
+source = "Video"
+translation = "วิดีโอ"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "เวียดนาม"
+
+[messages.view]
+source = "View"
+translation = "มุมมอง"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "กำลังรอการอนุญาตจาก Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  ทั้งหมด { $total }  -  ว่าง { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "{ $count } งานพร้อมกัน"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "จำนวนงานที่ทำพร้อมกันได้ในขณะนี้ ปรับอัตโนมัติตามอัตราการประมวลผลและความหน่วงที่วัดได้"
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "เรียกดูไฟล์ Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "เปิดดิสทริบิวชันนี้ใน Explorer ซึ่งอาจทำให้ดิสทริบิวชันเริ่มทำงาน"
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "คุณอยากจะทำอะไร?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "แสดงคำแนะนำในการล้างข้อมูล"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows จะขออนุญาตจากผู้ดูแลระบบ"
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "เรียกคืนบล็อกที่มีแต่เลขศูนย์โดยรักษาเนื้อหาของดิสก์ไว้ ต้องหยุด Docker และ WSL ก่อน"
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "พร้อมลดขนาดดิสก์หรือไม่?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "บันทึกงานใน Linux และออกจาก Docker Desktop จากนั้น Clawback จะหยุดเซสชัน WSL ทั้งหมดและลดขนาดดิสก์นี้ อย่าเปิด Docker และ WSL จนกว่าจะเสร็จสิ้น"
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "กู้คืนพื้นที่ดิสก์ที่ไม่ได้ใช้"
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "เรียกคืนบล็อกที่เต็มไปด้วยศูนย์โดยไม่ลบไฟล์ของคุณ ให้ล้างข้อมูลที่ไม่จำเป็นภายใน Linux หรือ Docker ก่อน พื้นที่ที่เรียกคืนได้จะแตกต่างกัน ต้องหยุด Docker และ WSL ไว้ตลอดการลดขนาดดิสก์"
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "คัดลอกคำสั่ง"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "รายละเอียดไฟล์"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "ไฟล์ดิสก์"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "ดิสก์เสมือน WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "ดิสทริบิวชัน WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "ใน Docker Desktop ให้ตรวจสอบอิมเมจ คอนเทนเนอร์ที่หยุดทำงาน และวอลุ่ม สามารถล้างบิลด์แคชด้วย “docker builder prune” ได้ด้วย วอลุ่มอาจมีฐานข้อมูลหรือไฟล์อื่นที่คุณต้องการ โปรดตรวจสอบก่อนลบ การล้างข้อมูลและการลดขนาดดิสก์เป็นขั้นตอนแยกกัน"
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "จัดเก็บอิมเมจ Docker คอนเทนเนอร์ วอลุ่ม และบิวด์แคช"
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "จัดเก็บสภาพแวดล้อม Linux ของ Docker Desktop ข้อมูลแอปพลิเคชัน Docker อาจจัดเก็บอยู่ในดิสก์แยกต่างหาก"
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "เรียกดูไฟล์ของดิสทริบิวชันและลบข้อมูลที่ไม่ต้องการแล้ว ใช้ตัวจัดการแพ็กเกจ Linux ของดิสทริบิวชันเพื่อล้างแคชแพ็กเกจ หลังล้างข้อมูล การเรียกใช้ “sudo fstrim -av” ภายในดิสทริบิวชันอาจช่วยคืนบล็อกที่ไม่ได้ใช้ก่อนปิด WSL และลดขนาดดิสก์"
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "จัดเก็บระบบไฟล์ของดิสทริบิวชัน Linux นี้ รวมถึงโปรแกรมและไฟล์ฝั่ง Linux"
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "เปิด Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "ตรวจสอบคอนเทนเนอร์ อิมเมจ และวอลุ่มก่อนลบข้อมูลที่ไม่จำเป็น"
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — ดิสก์ข้อมูล"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — ดิสก์ระบบ"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "ดิสทริบิวชัน Linux ที่ไม่สามารถระบุได้"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "เส้นทางนี้ดูเหมือนการติดตั้ง WSL แต่ไม่พบการลงทะเบียนที่ตรงกันสำหรับผู้ใช้ Windows ปัจจุบัน แพ็คเกจและพาธของไฟล์อาจช่วยระบุได้"
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "แพ็คเกจ Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "ลดขนาดดิสก์…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "หยุด WSL และลดขนาดดิสก์"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "แสดงทั้งหมด"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "ขยาย"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "ขยาย"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "ย่อ"

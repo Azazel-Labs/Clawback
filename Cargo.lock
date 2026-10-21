@@ -6203,6 +6203,7 @@ dependencies = [
  "fluent-syntax",
  "png",
  "proc-macro2",
+ "sha2 0.10.9",
  "syn 3.0.6",
  "toml_edit",
  "unic-langid",
