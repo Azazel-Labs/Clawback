@@ -182,6 +182,10 @@ cargo xtask package x86_64-pc-windows-msvc nightly
 ./packaging/windows/build-installer.ps1 -Target x86_64-pc-windows-msvc -Tag nightly -Compiler 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
 ```
 
+The optional Turbo task installs a service authorized for one Windows account,
+avoiding repeated UAC prompts. Updates preserve that authorization, and uninstall
+removes the service. See [Turbo service behavior and security](turbo-elevation.md).
+
 ## Marketing screenshots
 
 With a graphical desktop session and working GPU driver, run:
