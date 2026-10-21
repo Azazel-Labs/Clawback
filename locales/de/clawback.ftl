@@ -227,3 +227,117 @@ settings-window = Fenster & Interaktion
 settings-deletion = Lösche Dateien
 settings-scan-scope = Grenzen scannen
 settings-file-sizes = Abrechnungsgröße
+delete-permanently = Endgültiges Löschen…
+emptying-recycle-bin = Papierkorb wird geleert…
+delete-permanently-title = Endgültig löschen?
+delete-too-big-for-recycle-bin = „{ $name }“ ist zu groß für den Papierkorb.
+empty-recycle-bin-title = Papierkorb leeren?
+empty-recycle-bin-body = Der gesamte Inhalt deines Papierkorbs auf { $drive } wird endgültig gelöscht.
+delete-cannot-be-undone = Dies kann nicht rückgängig gemacht werden.
+delete-size-files =
+    { $size } · { $files ->
+        [one] { $files } Datei
+       *[other] { $files } Dateien
+    }
+delete-permanently-button = Endgültig löschen
+empty-recycle-bin-button = Papierkorb leeren
+delete-progress-files = { $done } von { $total } Dateien
+purge-failed =
+    { $count ->
+        [one] { $count } Element konnte nicht gelöscht werden.
+       *[other] { $count } Elemente konnten nicht gelöscht werden.
+    } { $error }
+delete-queued =
+    { $count ->
+        [one] { $count } weiteres Element wartet
+       *[other] { $count } weitere Elemente warten
+    }
+click-to-empty-recycle-bin = Klicken, um den Papierkorb dieses Laufwerks zu leeren
+click-to-clean-temp-folder = Klicken, um deine temporären Dateien zu bereinigen
+empty-temp-title = Deinen Temp-Ordner bereinigen?
+empty-temp-body = Den Inhalt von { $path } endgültig löschen? Der Temp-Ordner bleibt erhalten. Elemente, deren Löschung Windows verweigert, bleiben bestehen. Schließe zuerst Anwendungen, um weitere temporäre Dateien freizugeben.
+empty-temp-button = Temp-Ordner bereinigen
+cleaning-temp-folder = Temp-Ordner wird bereinigt…
+temp-cleanup-skipped = Bei der Bereinigung blieben { $count } Elemente übrig, die nicht entfernt werden konnten. Erster Grund: { $error }
+reclaim-wsl-space = WSL-Speicherplatz zurückgewinnen
+click-to-reclaim-wsl-space = VHDX · Virtueller WSL-Datenträger. Klicken, um Datenträgerdetails anzuzeigen, Dateien zu durchsuchen oder Platz zurückzugewinnen.
+reclaim-wsl-body = Die Komprimierung erhält den Inhalt des Datenträgers und verkleinert seine Windows-Datei, indem sie mit Nullen gefüllte Blöcke freigibt. Möglicherweise wird wenig oder kein Platz frei. Bereinige zuerst nicht benötigte Daten in Docker oder Linux.
+reclaim-wsl-stop = Speichere vor der Komprimierung deine Arbeit, beende Docker Desktop und schließe WSL-Sitzungen. Führe diesen Befehl in PowerShell aus, um alle WSL-Distributionen zu stoppen. Lass Docker und WSL bis zum Abschluss der Komprimierung gestoppt. Windows fragt nach Administratorberechtigung.
+compact-wsl-disk = Datenträger komprimieren…
+compacting-wsl-disk = WSL wird gestoppt und Datenträger komprimiert…
+compact-wsl-error = Der Datenträger konnte nicht komprimiert werden. Stelle sicher, dass Docker Desktop und WSL gestoppt sind, und versuche es erneut. Windows meldete: { $error }
+wsl-disk-title = Virtueller WSL-Datenträger
+wsl-owner-docker-data = Docker Desktop · Datenträger für Daten
+wsl-owner-docker-system = Docker Desktop · Systemdatenträger
+wsl-owner-unidentified = Nicht identifizierte Linux-Distribution
+wsl-owner-unidentified-detail = Dieser Pfad sieht nach einer WSL-Installation aus, aber für den aktuellen Windows-Benutzer wurde keine passende Registrierung gefunden. Paket und Dateipfad können bei der Identifizierung helfen.
+wsl-docker-data-description = Speichert Docker-Images, Container, Volumes und den Build-Cache.
+wsl-docker-system-description = Speichert die Linux-Umgebung von Docker Desktop. Docker-Anwendungsdaten können auf einem separaten Datenträger liegen.
+wsl-linux-description = Speichert das Dateisystem dieser Linux-Distribution einschließlich ihrer Programme und Linux-Dateien.
+wsl-distribution = WSL-Distribution
+wsl-package = Windows-Paket
+wsl-disk-path = Datenträgerdatei
+wsl-choose-action = Was möchtest du tun?
+wsl-open-docker = Docker Desktop öffnen
+wsl-open-docker-detail = Prüfe Container, Images und Volumes, bevor du nicht benötigte Daten entfernst.
+wsl-browse-linux = Linux-Dateien durchsuchen
+wsl-browse-linux-detail = Diese Distribution im Explorer öffnen. Dabei kann die Distribution gestartet werden.
+wsl-cleanup-help = Hinweise zur Bereinigung anzeigen
+wsl-docker-cleanup-help = Prüfe in Docker Desktop die Images, gestoppten Container und Volumes. Der Build-Cache lässt sich auch mit „docker builder prune“ bereinigen. Volumes können Datenbanken oder andere benötigte Dateien enthalten; prüfe sie vor dem Entfernen. Bereinigung und Datenträgerkomprimierung sind getrennte Schritte.
+wsl-linux-cleanup-help = Durchsuche die Dateien der Distribution und entferne nicht mehr benötigte Daten. Bereinige Paket-Caches mit ihrem Linux-Paketmanager. Nach der Bereinigung kann „sudo fstrim -av“ innerhalb der Distribution helfen, ungenutzte Blöcke freizugeben, bevor du WSL beendest und den Datenträger komprimierst.
+wsl-prepare-compaction = Datenträger komprimieren…
+wsl-compact-detail = Mit Nullen gefüllte Blöcke freigeben und den Datenträgerinhalt erhalten. Docker und WSL müssen gestoppt sein.
+docker-desktop-not-found = Docker Desktop wurde an den üblichen Installationsorten nicht gefunden. Öffne es über das Windows-Startmenü.
+drive-free-of-total = { $free } frei von { $total }
+live-watching = Live · Änderungen werden überwacht
+live-catching-up = Live · Änderungen werden aufgeholt
+live-reconciling = Live · Änderungen werden im Hintergrund abgeglichen
+live-stopped = Live-Aktualisierung gestoppt: { $error } · Zum Wiederverbinden neu scannen
+live-disconnected = Live-Aktualisierung gestoppt · Zum Wiederverbinden neu scannen
+live-unavailable = Live-Aktualisierung nicht verfügbar: { $error } · Zum Aktualisieren neu scannen
+live-scan-cancelled = Live-Aktualisierung nicht verfügbar: Scan abgebrochen · Zum Aktualisieren neu scannen
+live-demo = Demodaten – erfundene Dateien und Größen
+uninstall-identifying = Installierte Anwendungen werden identifiziert…
+uninstall-identification-failed = Die Anwendungssuche wurde nicht abgeschlossen. Es wurde nichts gelöscht. Versuche es erneut.
+uninstall-title = Anwendung oder Spiel deinstallieren
+uninstall-whole-application = Dieser Speicherort gehört zu installierter Software. Wähle unten eine Anwendung, um sie vollständig zu deinstallieren, einschließlich der Dateien außerhalb des ausgewählten Ordners. Windows oder Steam übernimmt die Entfernung.
+uninstall-no-match = Für diesen Ordner konnte keine Anwendung identifiziert werden. Öffne „Installierte Apps“ oder Steam, um seinen Inhalt zu verwalten.
+uninstall-publisher = Herausgeber: { $publisher }
+uninstall-version = Version: { $version }
+uninstall-steam-id = Steam-App-ID: { $id }
+uninstall-launch = Deinstallationsprogramm starten…
+uninstall-steam = Über Steam deinstallieren…
+uninstall-software = Deinstallieren…
+click-to-uninstall-software = Dateien einer installierten Anwendung oder eines Spiels. Klicken, um die gesamte Anwendung zu identifizieren und zu deinstallieren.
+click-to-uninstall-steam = Dateien eines Steam-Spiels. Klicken, um das Spiel zu identifizieren und über Steam zu deinstallieren.
+uninstall-open-apps = Installierte Apps öffnen
+uninstall-open-steam = Steam-Bibliothek öffnen
+uninstall-refresh-help = Die Karte verfolgt Änderungen live. Scanne nach der Deinstallation erneut, falls Live-Aktualisierungen nicht verfügbar sind.
+uninstaller-missing = Das registrierte Deinstallationsprogramm wurde nicht gefunden. Öffne „Installierte Apps“ in Windows, um diese Anwendung zu verwalten.
+uninstaller-launch-error = Windows konnte das Deinstallationsprogramm nicht starten (Fehler { $code }). Öffne „Installierte Apps“, um diese Anwendung zu verwalten.
+wsl-disk-details = Dateidetails
+open-in-explorer = Im Explorer öffnen
+open-in-finder = Im Finder öffnen
+open-in-file-manager = Im Dateimanager öffnen
+wsl-compact-summary = Ungenutzten Speicherplatz zurückgewinnen.
+wsl-compact-tooltip = Gibt mit Nullen gefüllte Blöcke frei, ohne deine Dateien zu löschen. Bereinige zuerst Linux oder Docker; der gewonnene Platz variiert. Docker und WSL müssen während der Komprimierung gestoppt bleiben.
+wsl-compact-ready = Bereit zur Komprimierung?
+wsl-compact-stop-short = Speichere deine Linux-Arbeit und beende Docker Desktop. Clawback stoppt alle WSL-Sitzungen und komprimiert dann diesen Datenträger. Lass Docker und WSL bis zum Abschluss geschlossen.
+wsl-compact-admin = Windows fragt nach Administratorberechtigung.
+wsl-copy-command = Befehl kopieren
+wsl-stop-and-compact = WSL stoppen und komprimieren
+close-dialog = Schließen
+uninstall-dialog-title = Deinstallieren
+uninstall-scope-short = Entfernt die gesamte Anwendung einschließlich der Dateien außerhalb deiner Auswahl.
+uninstall-via-steam = Von Steam verwaltet
+uninstall-via-windows = Registrierte Windows-Anwendung
+uninstall-details = Installationsdetails
+uninstall-selected-path = Ausgewähltes Element
+delete-failed-title = Element konnte nicht gelöscht werden
+copy-error-details = Fehlerdetails kopieren
+attribute-backup-flag = Zur Sicherung markiert
+attribute-compressed = Komprimiert
+attribute-encrypted = Verschlüsselt
+attribute-reparse-point = Dateisystemverknüpfung oder Umleitung
+attribute-temporary = Temporär
+properties-disk-size-detail = Der belegte Speicherplatz weicht von der Dateigröße ab, etwa durch Komprimierung, Sparse-Daten oder zusätzlichen Platz für die Speicherzuweisung.

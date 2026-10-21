@@ -227,3 +227,117 @@ settings-window = Janela e interação
 settings-deletion = Excluindo arquivos
 settings-scan-scope = Digitalizar limites
 settings-file-sizes = Contagem de tamanho
+delete-permanently = Excluindo permanentemente…
+emptying-recycle-bin = Esvaziando a lixeira…
+delete-permanently-title = Excluir permanentemente?
+delete-too-big-for-recycle-bin = “{ $name }” é grande demais para a lixeira.
+empty-recycle-bin-title = Esvaziar a lixeira?
+empty-recycle-bin-body = Todo o conteúdo da sua lixeira em { $drive } será excluído permanentemente.
+delete-cannot-be-undone = Esta ação não pode ser desfeita.
+delete-size-files =
+    { $size } · { $files ->
+        [one] { $files } arquivo
+       *[other] { $files } arquivos
+    }
+delete-permanently-button = Excluir permanentemente
+empty-recycle-bin-button = Esvaziar lixeira
+delete-progress-files = { $done } de { $total } arquivos
+purge-failed =
+    { $count ->
+        [one] Não foi possível excluir { $count } item.
+       *[other] Não foi possível excluir { $count } itens.
+    } { $error }
+delete-queued =
+    { $count ->
+        [one] Mais { $count } item na fila
+       *[other] Mais { $count } itens na fila
+    }
+click-to-empty-recycle-bin = Clique para esvaziar a lixeira desta unidade
+click-to-clean-temp-folder = Clique para limpar seus arquivos temporários
+empty-temp-title = Limpar sua pasta Temp?
+empty-temp-body = Excluir permanentemente o conteúdo de { $path }? A pasta Temp será mantida. Os itens que o Windows não permitir excluir permanecerão no lugar. Feche os aplicativos primeiro para liberar mais arquivos temporários.
+empty-temp-button = Limpar pasta Temp
+cleaning-temp-folder = Limpando a pasta Temp…
+temp-cleanup-skipped = A limpeza deixou { $count } itens que não puderam ser removidos. Primeiro motivo: { $error }
+reclaim-wsl-space = Recuperar espaço em disco do WSL
+click-to-reclaim-wsl-space = VHDX · Disco virtual do WSL. Clique para ver detalhes do disco, explorar arquivos ou recuperar espaço.
+reclaim-wsl-body = A compactação preserva o conteúdo do disco e reduz o tamanho do arquivo no Windows recuperando blocos preenchidos com zeros. Pode recuperar pouco ou nenhum espaço. Limpe primeiro os dados desnecessários dentro do Docker ou Linux.
+reclaim-wsl-stop = Antes de compactar, salve seu trabalho, saia do Docker Desktop e feche as sessões do WSL. Execute este comando no PowerShell para parar todas as distribuições do WSL. Mantenha o Docker e o WSL parados até a compactação terminar. O Windows solicitará permissão de administrador.
+compact-wsl-disk = Compactar disco…
+compacting-wsl-disk = Parando o WSL e compactando o disco…
+compact-wsl-error = Não foi possível compactar o disco. Verifique se o Docker Desktop e o WSL estão parados e tente novamente. O Windows informou: { $error }
+wsl-disk-title = Disco virtual do WSL
+wsl-owner-docker-data = Docker Desktop · disco de dados
+wsl-owner-docker-system = Docker Desktop · disco do sistema
+wsl-owner-unidentified = Distribuição Linux não identificada
+wsl-owner-unidentified-detail = Este caminho parece ser de uma instalação do WSL, mas não foi encontrado um registro correspondente para o usuário atual do Windows. O pacote e o caminho do arquivo podem ajudar a identificá-la.
+wsl-docker-data-description = Armazena imagens, contêineres, volumes e o cache de compilação do Docker.
+wsl-docker-system-description = Armazena o ambiente Linux do Docker Desktop. Os dados dos aplicativos Docker podem estar em um disco separado.
+wsl-linux-description = Armazena o sistema de arquivos desta distribuição Linux, incluindo seus programas e arquivos do lado do Linux.
+wsl-distribution = Distribuição do WSL
+wsl-package = Pacote do Windows
+wsl-disk-path = Arquivo do disco
+wsl-choose-action = O que você gostaria de fazer?
+wsl-open-docker = Abrir Docker Desktop
+wsl-open-docker-detail = Revise os contêineres, imagens e volumes antes de remover dados desnecessários.
+wsl-browse-linux = Explorar arquivos Linux
+wsl-browse-linux-detail = Abrir esta distribuição no Explorador. Isso pode iniciar a distribuição.
+wsl-cleanup-help = Mostrar orientações de limpeza
+wsl-docker-cleanup-help = No Docker Desktop, revise as imagens, os contêineres parados e os volumes. O cache de compilação também pode ser limpo com “docker builder prune”. Os volumes podem conter bancos de dados ou outros arquivos necessários; inspecione-os antes de removê-los. A limpeza e a compactação do disco são etapas separadas.
+wsl-linux-cleanup-help = Explore os arquivos da distribuição e remova os dados que não precisa mais. Use seu gerenciador de pacotes Linux para limpar os caches de pacotes. Após a limpeza, executar “sudo fstrim -av” dentro da distribuição pode ajudar a liberar blocos não utilizados antes de desligar o WSL e compactar.
+wsl-prepare-compaction = Compactar disco…
+wsl-compact-detail = Recupera blocos preenchidos com zeros preservando o conteúdo do disco. Exige que o Docker e o WSL estejam parados.
+docker-desktop-not-found = O Docker Desktop não foi encontrado nos locais de instalação padrão. Abra-o pelo menu Iniciar do Windows.
+drive-free-of-total = { $free } livres de { $total }
+live-watching = Ao vivo · Monitorando alterações
+live-catching-up = Ao vivo · Recuperando alterações pendentes
+live-reconciling = Ao vivo · Conciliando alterações em segundo plano
+live-stopped = Atualização ao vivo interrompida: { $error } · Analise novamente para reconectar
+live-disconnected = Atualização ao vivo interrompida · Analise novamente para reconectar
+live-unavailable = Atualização ao vivo indisponível: { $error } · Analise novamente para atualizar
+live-scan-cancelled = Atualização ao vivo indisponível: análise cancelada · Analise novamente para atualizar
+live-demo = Dados de demonstração: arquivos e tamanhos fictícios
+uninstall-identifying = Identificando aplicativos instalados…
+uninstall-identification-failed = A busca de aplicativos não terminou. Nada foi excluído. Tente novamente.
+uninstall-title = Desinstalar um aplicativo ou jogo
+uninstall-whole-application = Este local pertence a um software instalado. Escolha um aplicativo abaixo para desinstalá-lo por completo, incluindo arquivos fora da pasta selecionada. O Windows ou o Steam cuidará da remoção.
+uninstall-no-match = Não foi possível identificar um aplicativo para esta pasta. Abra Aplicativos instalados ou o Steam para gerenciar seu conteúdo.
+uninstall-publisher = Editor: { $publisher }
+uninstall-version = Versão: { $version }
+uninstall-steam-id = ID do aplicativo Steam: { $id }
+uninstall-launch = Iniciar desinstalador…
+uninstall-steam = Desinstalar pelo Steam…
+uninstall-software = Desinstalar…
+click-to-uninstall-software = Arquivos de um aplicativo ou jogo instalado. Clique para identificar e desinstalar o aplicativo completo.
+click-to-uninstall-steam = Arquivos de um jogo do Steam. Clique para identificar o jogo e desinstalá-lo pelo Steam.
+uninstall-open-apps = Abrir Aplicativos instalados
+uninstall-open-steam = Abrir biblioteca do Steam
+uninstall-refresh-help = O mapa acompanha as alterações ao vivo. Analise novamente após desinstalar se as atualizações ao vivo estiverem indisponíveis.
+uninstaller-missing = O desinstalador registrado não foi encontrado. Abra Aplicativos instalados do Windows para gerenciar este aplicativo.
+uninstaller-launch-error = O Windows não conseguiu iniciar o desinstalador (erro { $code }). Abra Aplicativos instalados para gerenciar este aplicativo.
+wsl-disk-details = Detalhes do arquivo
+open-in-explorer = Abrir no Explorador
+open-in-finder = Abrir no Finder
+open-in-file-manager = Abrir no gerenciador de arquivos
+wsl-compact-summary = Recuperar espaço em disco não utilizado.
+wsl-compact-tooltip = Recupera blocos preenchidos com zeros sem excluir seus arquivos. Limpe primeiro dentro do Linux ou Docker; o espaço recuperado varia. O Docker e o WSL devem permanecer parados durante a compactação.
+wsl-compact-ready = Pronto para compactar?
+wsl-compact-stop-short = Salve seu trabalho no Linux e saia do Docker Desktop. O Clawback parará todas as sessões do WSL e depois compactará este disco. Mantenha o Docker e o WSL fechados até terminar.
+wsl-compact-admin = O Windows solicitará permissão de administrador.
+wsl-copy-command = Copiar comando
+wsl-stop-and-compact = Parar o WSL e compactar
+close-dialog = Fechar
+uninstall-dialog-title = Desinstalar
+uninstall-scope-short = Remove o aplicativo inteiro, incluindo arquivos fora da sua seleção.
+uninstall-via-steam = Gerenciado pelo Steam
+uninstall-via-windows = Aplicativo registrado no Windows
+uninstall-details = Detalhes da instalação
+uninstall-selected-path = Item selecionado
+delete-failed-title = Não foi possível excluir o item
+copy-error-details = Copiar detalhes do erro
+attribute-backup-flag = Marcado para backup
+attribute-compressed = Comprimido
+attribute-encrypted = Criptografado
+attribute-reparse-point = Link ou redirecionamento do sistema de arquivos
+attribute-temporary = Temporário
+properties-disk-size-detail = O uso do disco difere do tamanho do arquivo, por exemplo, devido à compressão, dados esparsos ou espaço adicional de alocação.
