@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "508277194b19d7f55aeac1dc3d90f63cc628e8b3d2f5c86ef7f2387938ca71a3"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "빠른 크로스 플랫폼 디스크 공간 시각화 도구입니다."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Clawback 정보"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "아프리칸스어"
+
+[messages.all-files]
+source = "All files"
+translation = "모든 파일"
+
+[messages.application-library]
+source = "Application / library"
+translation = "애플리케이션 / 라이브러리"
+
+[messages.arch]
+source = "Arch"
+translation = "보관"
+
+[messages.archive]
+source = "Archive"
+translation = "압축 파일"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D 에셋"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "백업용으로 표시됨"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "압축됨"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "암호화됨"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "파일 시스템 링크 또는 리디렉션"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "임시"
+
+[messages.attributes]
+source = "Attributes"
+translation = "특성"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "특성:"
+
+[messages.audio]
+source = "Audio"
+translation = "오디오"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "삭제 후 자동으로 다시 스캔"
+
+[messages.back]
+source = "Back"
+translation = "뒤로"
+
+[messages.bias]
+source = "Bias:"
+translation = "배치 방향:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "바이너리 데이터"
+
+[messages.cancel]
+source = "Cancel"
+translation = "취소"
+
+[messages.catalan]
+source = "Catalan"
+translation = "카탈로니아어"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "중국어 간체"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "중국어 번체"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "디스크 공간을 되찾으세요."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Clawback 설정"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "임시 폴더를 청소 중…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "임시 파일을 정리하려면 클릭하세요."
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "이 드라이브의 휴지통을 비우려면 클릭하세요."
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · WSL 가상 디스크. 디스크 세부정보를 확인하거나, 파일을 찾아보거나, 공간을 확보하려면 클릭하세요."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "설치된 애플리케이션 또는 게임 파일. 전체 애플리케이션을 식별하고 제거하려면 클릭하세요."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam 게임 파일. 게임을 식별하고 Steam을 통해 제거하려면 클릭하세요."
+
+[messages.close-dialog]
+source = "Close"
+translation = "닫기"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "디스크 압축…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "디스크를 압축할 수 없습니다. Docker Desktop 및 WSL이 중지되었는지 확인한 후 다시 시도하세요. Windows 오류: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "WSL 중지 및 디스크 압축 중…"
+
+[messages.compress]
+source = "Compress"
+translation = "압축됨"
+
+[messages.contains]
+source = "Contains:"
+translation = "포함 항목:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "파일 { $files }개, 폴더 { $folders }개"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "오류 세부정보 복사"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "하드 링크된 파일은 한 번만 계산"
+
+[messages.czech]
+source = "Czech"
+translation = "체코어"
+
+[messages.danish]
+source = "Danish"
+translation = "덴마크어"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "데이터 / 구성"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "날짜 / 시간"
+
+[messages.delay]
+source = "Delay:"
+translation = "지연 시간:"
+
+[messages.delete]
+source = "Delete"
+translation = "삭제"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "이 작업은 취소할 수 없습니다."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds }초 경과"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = '다음 항목을 삭제하지 못했습니다: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "항목을 삭제할 수 없습니다."
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "영구 삭제 중…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "영구 삭제"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "영구적으로 삭제하시겠습니까?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "휴지통으로 이동 준비 중…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done }/{ $total } 파일"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "대기 중인 추가 항목: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "휴지통으로 이동 중…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · 파일: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "“{ $name }”은(는) 휴지통에 넣기에는 너무 큽니다."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "디스크 지도 업데이트 중…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "휴지통으로 이동하는 작업이 예기치 않게 중단되었습니다. 다시 시도하기 전에 선택한 항목을 확인하세요."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "삭제 중…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "밀도:"
+
+[messages.design-document]
+source = "Design document"
+translation = "디자인 문서"
+
+[messages.directories]
+source = "Directories"
+translation = "폴더"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "'삭제' 명령 비활성화"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "폴더 찾는 중…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "디스크 이미지"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "표시 색상"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop을 표준 설치 위치에서 찾을 수 없습니다. Windows 시작 메뉴에서 엽니다."
+
+[messages.document]
+source = "Document"
+translation = "문서"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "스캔하는 폴더 안에 마운트된 다른 드라이브나 네트워크 공유는 탐색하지 않음"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "두 번 클릭하여 탐색 / 마우스 오른쪽 버튼으로 클릭하여 작업 표시"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "전체 { $total } 중 { $free } 사용 가능"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }전체 { $total } 중 { $free } 사용 가능  ·  { $used } 사용 중  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "네덜란드어"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "{ $drive }의 휴지통에 있는 모든 내용이 영구적으로 삭제됩니다."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "휴지통 비우기"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "휴지통을 비우시겠습니까?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "{ $path }의 콘텐츠를 영구적으로 삭제하시겠습니까? Temp 폴더는 유지됩니다. Windows에서 삭제를 거부한 항목은 그대로 유지됩니다. 더 많은 임시 파일을 삭제할 수 있도록 먼저 응용프로그램을 닫으세요."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "임시 폴더 정리"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Temp 폴더를 정리하시겠습니까?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "휴지통 비우기…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "암호화됨"
+
+[messages.english]
+source = "English"
+translation = "영어"
+
+[messages.equal]
+source = "Equal"
+translation = "균형"
+
+[messages.exit]
+source = "Exit"
+translation = "종료"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "펼쳐서 탐색 · 폴더를 클릭하여 보기"
+
+[messages.file]
+source = "File"
+translation = "파일"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "파일 배치"
+
+[messages.file-size]
+source = "File Size"
+translation = "파일 크기"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "파일 형식"
+
+[messages.file-types]
+source = "File types"
+translation = "파일 형식"
+
+[messages.filename]
+source = "Filename"
+translation = "파일 이름"
+
+[messages.files]
+source = "FILES"
+translation = "파일"
+
+[messages.files-2]
+source = "Files:"
+translation = "파일:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "드라이브 찾는 중…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "핀란드어"
+
+[messages.folder]
+source = "FOLDER"
+translation = "폴더"
+
+[messages.folder-2]
+source = "Folder"
+translation = "폴더"
+
+[messages.folders]
+source = "Folders:"
+translation = "폴더:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "스캔하지 않은 폴더"
+
+[messages.french]
+source = "French"
+translation = "프랑스어"
+
+[messages.full-path]
+source = "Full Path"
+translation = "전체 경로"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "게임 아카이브"
+
+[messages.german]
+source = "German"
+translation = "독일어"
+
+[messages.greek]
+source = "Greek"
+translation = "그리스어"
+
+[messages.help]
+source = "Help"
+translation = "도움말"
+
+[messages.hidden]
+source = "Hidden"
+translation = "숨김"
+
+[messages.horz]
+source = "Horz"
+translation = "가로"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "헝가리어"
+
+[messages.icon]
+source = "Icon"
+translation = "아이콘"
+
+[messages.image]
+source = "Image"
+translation = "이미지"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "인도네시아어"
+
+[messages.italian]
+source = "Italian"
+translation = "이탈리아어"
+
+[messages.japanese]
+source = "Japanese"
+translation = "일본어"
+
+[messages.korean]
+source = "Korean"
+translation = "한국어"
+
+[messages.language]
+source = "Language"
+translation = "언어"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "MIT-0(MIT No Attribution) 라이선스가 적용됩니다. 어떠한 보증도 제공하지 않습니다."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "실시간 · 대기 중인 변경 사항 반영 중"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "데모 데이터 - 가상 파일 및 크기"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "실시간 업데이트 중지됨 · 다시 연결하려면 다시 검사하세요"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "실시간 · 백그라운드에서 변경 사항 반영 중"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "실시간 업데이트를 사용할 수 없음: 검사 취소됨 · 새로 고치려면 다시 검사하세요"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "실시간 업데이트 중지됨: { $error } · 다시 연결하려면 다시 검사하세요"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "실시간 업데이트를 사용할 수 없음: { $error } · 새로 고치려면 다시 검사하세요"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "실시간 · 변경 사항 감시 중"
+
+[messages.location]
+source = "Location:"
+translation = "위치:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "파일 많음"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "소중한 것을 위한 공간을 확보하세요."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "드라이브의 사용 공간 대비 집계된 바이트 수입니다. 추정치이며 파일 개수의 비율이 아닙니다."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "기타 옵션"
+
+[messages.modified]
+source = "Modified:"
+translation = "수정한 날짜:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "선택한 항목을 휴지통으로 이동"
+
+[messages.msec]
+source = "msec"
+translation = "밀리초"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "색상 톤 낮추기"
+
+[messages.name]
+source = "Name:"
+translation = "이름:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "드라이브를 찾지 못했습니다. '다른 폴더…'를 사용하여 폴더를 선택하세요."
+
+[messages.no-extension]
+source = "No extension"
+translation = "확장자 없음"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "이 폴더에 파일이 없습니다."
+
+[messages.normal]
+source = "Normal"
+translation = "일반"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "노르웨이어(보크몰)"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% 스캔 진행률"
+
+[messages.offline]
+source = "Offline"
+translation = "오프라인"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   확인   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "드라이브나 폴더를 열어 공간 사용 현황을 확인하세요."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "폴더나 드라이브를 열어 디렉터리 트리를 탐색하세요."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "폴더를 열어 시작하세요"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "드라이브 열기…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "폴더 열기…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "탐색기에서 열기"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "파일 관리자에서 열기"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Finder에서 열기"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "선택한 항목 열기"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "다른 폴더…"
+
+[messages.palette]
+source = "Palette"
+translation = "색상표"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "스캔 일시 중지"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS는 일부 폴더(Mail, 메시지, 다른 사용자의 폴더 등)를 보호합니다. 이러한 폴더를 포함하려면 시스템 설정 › 개인정보 보호 및 보안에서 Clawback에 '전체 디스크 접근 권한'을 부여하세요."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "일부 폴더는 다른 사용자나 root만 읽을 수 있습니다. 이러한 폴더를 포함하려면 관리자 권한으로 Clawback을 실행하세요(예: `sudo -E clawback /`)."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "일부 시스템 폴더는 관리자만 읽을 수 있습니다. 이러한 폴더를 포함하려면 Clawback을 관리자 권한으로 실행하세요."
+
+[messages.polish]
+source = "Polish"
+translation = "폴란드어"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "포르투갈어(브라질)"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "포르투갈 포르투갈어"
+
+[messages.properties]
+source = "Properties"
+translation = "속성"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "속성…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "압축, 희소 데이터 또는 할당 오버헤드 등으로 인해 디스크 사용량이 파일 크기와 다릅니다."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "속성: { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "삭제할 수 없는 항목: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "읽기 전용"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "파일 세부 정보 읽는 중…"
+
+[messages.ready]
+source = "Ready"
+translation = "준비됨"
+
+[messages.recent]
+source = "Recent"
+translation = "최근 항목"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "압축은 디스크 내용을 보존하면서 0으로 채워진 블록을 회수하여 Windows에 저장된 디스크 파일의 크기를 줄입니다. 확보되는 공간이 적거나 없을 수도 있습니다. 먼저 Docker 또는 Linux 내부에서 불필요한 데이터를 정리하세요."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "WSL 디스크 공간 회수"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "압축하기 전에 작업 내용을 저장하고 Docker Desktop을 종료하고 WSL 세션을 닫습니다. 모든 WSL 배포를 중지하려면 PowerShell에서 이 명령을 실행하세요. 압축이 완료될 때까지 Docker와 WSL을 중지된 상태로 유지합니다. Windows에서는 관리자 권한을 요청합니다."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "창 위치 기억"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "재분석 지점"
+
+[messages.rescan]
+source = "Rescan"
+translation = "다시 스캔"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "드라이브 다시 스캔"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "스캔 계속"
+
+[messages.romanian]
+source = "Romanian"
+translation = "루마니아어"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "실행 / 열기"
+
+[messages.russian]
+source = "Russian"
+translation = "러시아어"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback에서 폴더를 스캔하지 못했습니다.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = '다음 경로를 스캔하지 못했습니다: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "스캔 일시 중지됨"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+파일 { $files }개, 폴더 { $folders }개"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "스캔 중"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "스캔 옵션은 다음 스캔부터 적용됩니다."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "표시할 폴더 선택"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "표시할 드라이브 선택"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "세르비아어, 키릴 문자"
+
+[messages.settings]
+source = "Settings…"
+translation = "설정…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "모양"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "동작"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "왼쪽은 가로 형태를, 오른쪽은 세로 형태를 우선하며 가운데는 균형을 맞춥니다."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "파일 삭제"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "크기 계산"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "파일 세부정보"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "파일 이름"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "변경 사항 저장"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "검사 범위"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "창 및 조작"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "파일 정보 툴팁 표시"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "파일 이름 툴팁 표시"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "여유 공간 표시"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "여유 공간 표시"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "파일 관리자에서 표시"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "마우스를 올리면 테두리 표시"
+
+[messages.size]
+source = "SIZE"
+translation = "크기"
+
+[messages.size-2]
+source = "Size:"
+translation = "크기:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "디스크 할당 크기:"
+
+[messages.source-code]
+source = "Source code"
+translation = "소스 코드"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "스페인어(라틴 아메리카)"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "스페인어(스페인)"
+
+[messages.sparse]
+source = "Sparse"
+translation = "스파스 파일"
+
+[messages.special-file]
+source = "Special file"
+translation = "특수 파일"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "하나의 파일 시스템 내에서만 스캔"
+
+[messages.swedish]
+source = "Swedish"
+translation = "스웨덴어"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "심볼릭 링크"
+
+[messages.symlink]
+source = "Symlink"
+translation = "심볼릭 링크"
+
+[messages.system]
+source = "System"
+translation = "시스템"
+
+[messages.system-default]
+source = "System default"
+translation = "시스템 기본값"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "다음에 Clawback을 시작할 때 적용됩니다"
+
+[messages.temp]
+source = "Temp"
+translation = "임시"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "정리 후에도 제거할 수 없는 항목 { $count }개가 남았습니다. 첫 번째 이유: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "태국어"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "스캔 작업이 예기치 않게 중지되었습니다."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "파일 너무 적음"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "파일 너무 많음"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "툴팁"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "관리자 권한으로 더 빠른 NTFS 스캔을 시도합니다. 현재 스캔은 계속 실행됩니다."
+
+[messages.turbo]
+source = "Turbo"
+translation = "터보"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "터보: 폴더 구성 중 · 파일 { $files }개"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "터보 취소됨 — 일반 스캔 계속 진행 중"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "터보 진행 상황 표시 중 · 결과 검증 중…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "터보가 일반 검사보다 더 많은 항목을 구성하면 카운터가 터보로 전환됩니다. 터보 트리 전체의 검증이 끝날 때까지 지도에는 일반 검사의 미리보기가 표시됩니다. 터보가 실패하면 일반 검사가 계속됩니다."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "터보: MFT 읽는 중 { $percent }% · 레코드 { $records }개"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "터보: MFT 읽는 중…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "터보: 파일 이름 확인 중…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "터보: 결과 정렬 중…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "터보: 결과 불러오는 중…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "터보 사용 불가 — 일반 스캔 계속 진행 중"
+
+[messages.turkish]
+source = "Turkish"
+translation = "튀르키예어"
+
+[messages.type]
+source = "TYPE"
+translation = "형식"
+
+[messages.type-2]
+source = "Type:"
+translation = "형식:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "우크라이나어"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "설치 세부사항"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "제거"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "애플리케이션 조회가 완료되지 않았습니다. 아무것도 삭제되지 않았습니다. 다시 시도해 보세요."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "설치된 애플리케이션 식별 중…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "제거 프로그램 실행…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "이 폴더에 대해 애플리케이션을 식별할 수 없습니다. 설치된 앱 또는 Steam을 열어 콘텐츠를 관리하세요."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "설치된 앱 열기"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Steam 라이브러리 열기"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "게시자: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "지도는 실시간 변경 사항을 반영합니다. 실시간 업데이트를 사용할 수 없는 경우 제거 후 다시 검사하세요."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "선택 항목 외부의 파일을 포함하여 전체 애플리케이션을 제거합니다."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "선택된 항목"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "제거…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Steam을 통해 제거…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Steam 앱 ID: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "애플리케이션 또는 게임 제거"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "버전: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Steam에서 관리함"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "등록된 Windows 애플리케이션"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "이 위치는 설치된 소프트웨어에 속합니다. 선택한 폴더 외부의 파일을 포함하여 전체 애플리케이션을 제거하려면 아래 애플리케이션을 선택하십시오. Windows 또는 Steam에서 제거를 처리합니다."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows에서 제거 프로그램을 시작할 수 없습니다(오류 { $code }). 이 애플리케이션을 관리하려면 설치된 앱을 여세요."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "등록된 제거 프로그램을 찾을 수 없습니다. 이 애플리케이션을 관리하려면 Windows에 설치된 앱을 여세요."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "읽을 수 없는 폴더"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "상위 폴더로"
+
+[messages.updating]
+source = "Updating…"
+translation = "업데이트 중…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "디스크 할당 크기 대신 파일 크기 사용"
+
+[messages.vert]
+source = "Vert"
+translation = "세로"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "파일 매우 적음"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "파일 매우 많음"
+
+[messages.video]
+source = "Video"
+translation = "비디오"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "베트남어"
+
+[messages.view]
+source = "View"
+translation = "보기"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Windows 권한 승인 대기 중…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  전체 { $total }  -  여유 { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "동시 작업 { $count }개"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "현재 동시 작업 수 제한입니다. 측정된 처리량과 지연 시간에 따라 자동으로 조정됩니다."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Linux 파일 찾아보기"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "이 배포판을 탐색기에서 엽니다. 이 과정에서 배포판이 시작될 수 있습니다."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "무엇을 하고 싶나요?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "정리 지침 표시"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows에서 관리자 권한을 요청합니다."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "디스크 내용을 보존하면서 0으로 채워진 블록을 회수합니다. Docker 및 WSL을 중지해야 합니다."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "압축할 준비가 되셨나요?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Linux 작업을 저장하고 Docker Desktop을 종료하십시오. Clawback은 모든 WSL 세션을 중지한 다음 이 디스크를 압축합니다. 완료될 때까지 Docker와 WSL을 닫아 두세요."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "사용되지 않은 디스크 공간을 복구합니다."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "파일을 삭제하지 않고 0으로 채워진 블록을 회수합니다. 먼저 Linux 또는 Docker 내부의 불필요한 데이터를 정리하세요. 확보되는 공간은 상황에 따라 다릅니다. 압축 중에는 Docker와 WSL을 중지한 상태로 유지해야 합니다."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "명령 복사"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "파일 세부정보"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "디스크 파일"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL 가상 디스크"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL 배포판"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = 'Docker Desktop에서 이미지, 중지된 컨테이너 및 볼륨을 검토합니다. 빌드 캐시는 "docker builder prune"을 사용하여 정리할 수도 있습니다. 볼륨에는 필요한 데이터베이스나 기타 파일이 포함될 수 있습니다. 제거하기 전에 검사하십시오. 정리와 디스크 압축은 별도의 단계입니다.'
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Docker 이미지, 컨테이너, 볼륨 및 빌드 캐시를 저장합니다."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Docker Desktop의 Linux 환경을 저장합니다. Docker 애플리케이션 데이터는 별도의 디스크에 저장될 수 있습니다."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = '배포 파일을 찾아보고 더 이상 필요하지 않은 데이터를 제거하세요. Linux 패키지 관리자를 사용하여 패키지 캐시를 정리합니다. 정리 후 배포판 내부의 "sudo fstrim -av"는 WSL을 종료하고 압축하기 전에 사용되지 않은 블록을 해제하는 데 도움이 될 수 있습니다.'
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "프로그램 및 Linux 측 파일을 포함하여 이 Linux 배포판의 파일 시스템을 저장합니다."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Docker Desktop 열기"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "원치 않는 데이터를 제거하기 전에 컨테이너, 이미지 및 볼륨을 검토하십시오."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — 데이터 디스크"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — 시스템 디스크"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "식별되지 않은 Linux 배포판"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "이 경로는 WSL 설치와 유사하지만 현재 Windows 사용자와 일치하는 등록을 찾을 수 없습니다. 패키지와 파일 경로가 이를 식별하는 데 도움이 될 수 있습니다."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Windows 패키지"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "디스크 압축…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "WSL을 중지하고 압축"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "전체 보기"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "확대"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "확대"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "축소"

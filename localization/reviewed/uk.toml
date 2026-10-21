@@ -1,0 +1,1341 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "3d7cd7fa66a51ae1268eba3085707a7651c6abe1c526499213fb0f68f17a94ba"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Швидка кросплатформна мапа використання диска."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Про Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Африкаанс"
+
+[messages.all-files]
+source = "All files"
+translation = "Усі файли"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Застосунок / бібліотека"
+
+[messages.arch]
+source = "Arch"
+translation = "Архівний"
+
+[messages.archive]
+source = "Archive"
+translation = "Архів"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D-ресурс"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Позначено для резервного копіювання"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Стиснутий"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Зашифровано"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Посилання або перенаправлення у файловій системі"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Тимчасово"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Атрибути"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Атрибути:"
+
+[messages.audio]
+source = "Audio"
+translation = "Аудіо"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Автоматично сканувати повторно після видалення"
+
+[messages.back]
+source = "Back"
+translation = "Назад"
+
+[messages.bias]
+source = "Bias:"
+translation = "Напрям компонування:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Двійкові дані"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Скасувати"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Каталонська"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Китайська (спрощена)"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Китайська (традиційна)"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Поверніть собі місце на диску."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Налаштування Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Очищення тимчасової папки…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Натисніть, щоб очистити тимчасові файли"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Натисніть, щоб очистити кошик цього диска"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "Віртуальний диск VHDX · WSL. Натисніть, щоб переглянути деталі диска, переглянути файли або звільнити місце."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Встановлені файли програми або гри. Натисніть, щоб визначити та видалити всю програму."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Файли ігор Steam. Натисніть, щоб визначити гру та видалити через Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Закрити"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Стиснути диск…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Не вдалося стиснути диск. Переконайтеся, що Docker Desktop і WSL зупинено, а потім повторіть спробу. Windows повідомила: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Зупинка WSL і стиснення диска…"
+
+[messages.compress]
+source = "Compress"
+translation = "Стиснутий"
+
+[messages.contains]
+source = "Contains:"
+translation = "Вміст:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } файл
+        [few] { $files } файли
+        [many] { $files } файлів
+       *[other] { $files } файлу
+    }, { $folders ->
+        [one] { $folders } тека
+        [few] { $folders } теки
+        [many] { $folders } тек
+       *[other] { $folders } теки
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Копіювати деталі помилки"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Авторське право © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Рахувати файли з жорсткими посиланнями лише один раз"
+
+[messages.czech]
+source = "Czech"
+translation = "Чеська"
+
+[messages.danish]
+source = "Danish"
+translation = "Данська"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Дані / конфігурація"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Дата / час"
+
+[messages.delay]
+source = "Delay:"
+translation = "Затримка:"
+
+[messages.delete]
+source = "Delete"
+translation = "Видалити"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Цю дію неможливо скасувати."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · Минуло { $seconds } с"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Не вдалося видалити об’єкт: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Не вдалося видалити елемент"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Остаточне видалення…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Видалити остаточно"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Видалити остаточно?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Підготовка до переміщення в кошик…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } з { $total } файлів"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Додаткові елементи в черзі: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Переміщення до кошика…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Файли: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "«{ $name }» завелике для кошика."
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Оновлення карти диска…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Процес переробки скінчився несподівано. Перевірте обраний предмет, перш ніж спробувати знову."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Видалення…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Щільність:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Проєктний документ"
+
+[messages.directories]
+source = "Directories"
+translation = "Теки"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "Вимкнути команду «Видалити»"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Пошук тек…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Образ диска"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Кольори відображення"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Docker Desktop не вдалося знайти в стандартних місцях встановлення. Відкрийте його з меню «Пуск» Windows."
+
+[messages.document]
+source = "Document"
+translation = "Документ"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Не сканувати інші диски або мережеві ресурси, змонтовані всередині сканованої теки"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Подвійне клацання — відкрити / Права кнопка миші — дії"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } вільно з { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }Вільно { $free } з { $total }  ·  Зайнято { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Нідерландська"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Усе у вашому кошику на { $drive } буде видалено назавжди."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Очистити кошик"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Очистити кошик?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Назавжди видалити вміст { $path }? Папка Temp буде збережена. Елементи, які Windows відмовляється видалити, залишаться на місці. Спочатку закрийте програми, щоб звільнити більше тимчасових файлів."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Очистити папку Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Очистити папку Temp?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Очищення кошика…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Зашифрований"
+
+[messages.english]
+source = "English"
+translation = "Англійська"
+
+[messages.equal]
+source = "Equal"
+translation = "Збалансовано"
+
+[messages.exit]
+source = "Exit"
+translation = "Вийти"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Розгорніть для перегляду · Натисніть теку, щоб відкрити"
+
+[messages.file]
+source = "File"
+translation = "Файл"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Розташування файлів"
+
+[messages.file-size]
+source = "File Size"
+translation = "Розмір файлу"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "ТИП ФАЙЛУ"
+
+[messages.file-types]
+source = "File types"
+translation = "Типи файлів"
+
+[messages.filename]
+source = "Filename"
+translation = "Назва файлу"
+
+[messages.files]
+source = "FILES"
+translation = "ФАЙЛИ"
+
+[messages.files-2]
+source = "Files:"
+translation = "Файли:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Пошук дисків…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "Фінська"
+
+[messages.folder]
+source = "FOLDER"
+translation = "ТЕКА"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Тека"
+
+[messages.folders]
+source = "Folders:"
+translation = "Теки:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Непроскановані теки"
+
+[messages.french]
+source = "French"
+translation = "Французька"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Повний шлях"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Ігровий архів"
+
+[messages.german]
+source = "German"
+translation = "Німецька"
+
+[messages.greek]
+source = "Greek"
+translation = "Грецька"
+
+[messages.help]
+source = "Help"
+translation = "Довідка"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Прихований"
+
+[messages.horz]
+source = "Horz"
+translation = "Гориз."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Угорська"
+
+[messages.icon]
+source = "Icon"
+translation = "Піктограма"
+
+[messages.image]
+source = "Image"
+translation = "Зображення"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Індонезійська"
+
+[messages.italian]
+source = "Italian"
+translation = "Італійська"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Японська"
+
+[messages.korean]
+source = "Korean"
+translation = "Корейська"
+
+[messages.language]
+source = "Language"
+translation = "Мова"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Ліцензія MIT-0 (MIT No Attribution). Без жодних гарантій."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Наживо · Обробка накопичених змін"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Демонстраційні дані – вигадані файли та розміри"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Оновлення наживо зупинено · Повторіть сканування для відновлення з'єднання"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Наживо · Узгодження змін у фоновому режимі"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Оновлення наживо недоступні: Сканування скасовано · Повторіть сканування для оновлення"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Оновлення наживо зупинено: { $error } · Повторіть сканування для відновлення з'єднання"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Оновлення наживо недоступні: { $error } · Повторіть сканування для оновлення"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Наживо · Спостерігаємо за змінами"
+
+[messages.location]
+source = "Location:"
+translation = "Розташування:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Багато файлів"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Звільніть місце для важливого."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Обсяг врахованих байтів відносно зайнятого місця на диску; це оцінка, а не відсоток кількості файлів."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Інші параметри"
+
+[messages.modified]
+source = "Modified:"
+translation = "Змінено:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Перемістити вибраний об’єкт до кошика"
+
+[messages.msec]
+source = "msec"
+translation = "мс"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Приглушити кольори"
+
+[messages.name]
+source = "Name:"
+translation = "Назва:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "Дисків не знайдено. Скористайтеся пунктом «Інша тека…», щоб вибрати теку."
+
+[messages.no-extension]
+source = "No extension"
+translation = "Без розширення"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "У цій теці немає файлів."
+
+[messages.normal]
+source = "Normal"
+translation = "Звичайний"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Норвезька букмол"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% СКАНУВАННЯ"
+
+[messages.offline]
+source = "Offline"
+translation = "Автономний"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   Гаразд   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Відкрийте диск або теку, щоб дізнатися, що займає місце."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Відкрийте теку або диск для перегляду дерева каталогів."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Відкрийте теку, щоб почати"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Відкрити диск…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Відкрити теку…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Відкрити в провіднику"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Відкрити в менеджері файлів"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Відкрити в Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Відкрити вибраний об’єкт"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Інша тека…"
+
+[messages.palette]
+source = "Palette"
+translation = "Палітра"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Призупинити сканування"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS захищає деякі теки (Пошта, Повідомлення, теки інших користувачів тощо). Щоб включити їх до сканування, надайте Clawback повний доступ до диска в розділі «Системні параметри» › «Приватність і безпека»."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Деякі теки можуть читати лише інші користувачі або root. Щоб включити їх до сканування, запустіть Clawback із підвищеними правами (наприклад, `sudo -E clawback /`)."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Деякі системні теки можуть читати лише адміністратори. Щоб включити їх до сканування, запустіть Clawback від імені адміністратора."
+
+[messages.polish]
+source = "Polish"
+translation = "Польська"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Португальська (Бразилія)"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Португальська (Португалія)"
+
+[messages.properties]
+source = "Properties"
+translation = "Властивості"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Властивості…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Використання диска відрізняється від розміру файлу, наприклад через стиснення, розріджені дані або накладні витрати на розподіл."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Властивості: { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Елементи, які не вдалося видалити: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Лише читання"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Читання відомостей про файли…"
+
+[messages.ready]
+source = "Ready"
+translation = "Готово"
+
+[messages.recent]
+source = "Recent"
+translation = "Нещодавні"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Стиснення зберігає вміст диска та зменшує розмір його файлу у Windows, звільняючи блоки, заповнені нулями. Воно може звільнити мало місця або не звільнити його зовсім. Спочатку видаліть непотрібні дані всередині Docker або Linux."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Звільнення місця на диску WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Перед стисненням збережіть свою роботу, вийдіть із Docker Desktop і закрийте сеанси WSL. Виконайте цю команду в PowerShell, щоб зупинити всі дистрибутиви WSL. Тримайте Docker і WSL зупиненими, доки не завершиться ущільнення. Windows запитає дозвіл адміністратора."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Запам’ятовувати положення вікна"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Точка повторної обробки"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Сканувати повторно"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Сканувати диск повторно"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Продовжити сканування"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Румунська"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Запустити / Відкрити"
+
+[messages.russian]
+source = "Russian"
+translation = "Російська"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback не вдалося просканувати теку.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Не вдалося просканувати шлях: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Сканування призупинено"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } файл
+        [few] { $files } файли
+        [many] { $files } файлів
+       *[other] { $files } файлу
+    }, { $folders ->
+        [one] { $folders } тека
+        [few] { $folders } теки
+        [many] { $folders } тек
+       *[other] { $folders } теки
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Сканування"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Параметри сканування набудуть чинності під час наступного сканування."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Виберіть теку для перегляду"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Виберіть диск для перегляду"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Сербська, кирилиця"
+
+[messages.settings]
+source = "Settings…"
+translation = "Налаштування…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Зовнішній вигляд"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Поведінка"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Ліва кнопка - горизонтальні фігури; центри врівноважують ; права виступає вертикальними формами."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Видалення файлів"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Размірний облік"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Подробиці про файл"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Назви файлів"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Зберегти зміни"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Сканувати межі"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Вікно і взаємодія"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Показувати підказки з відомостями про файли"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Показувати підказки з назвами файлів"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Показувати вільне місце"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Показувати вільне місце"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Показати у файловому менеджері"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Показувати рамки під час наведення вказівника"
+
+[messages.size]
+source = "SIZE"
+translation = "РОЗМІР"
+
+[messages.size-2]
+source = "Size:"
+translation = "Розмір:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "На диску:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Початковий код"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Іспанська (Латинська Америка)"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Іспанська (Іспанія)"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Розріджений файл"
+
+[messages.special-file]
+source = "Special file"
+translation = "Спеціальний файл"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Не виходити за межі однієї файлової системи"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Шведська"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Символічне посилання"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Символічне посилання"
+
+[messages.system]
+source = "System"
+translation = "Системний"
+
+[messages.system-default]
+source = "System default"
+translation = "Мова системи"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Набуде чинності після наступного запуску Clawback"
+
+[messages.temp]
+source = "Temp"
+translation = "Тимчасовий"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Після очищення залишилося { $count } елементів, які не вдалося видалити. Перша причина: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Тайська"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Завдання сканування несподівано завершилося."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Замало файлів"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Забагато файлів"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Підказки"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Спробуйте швидше сканування NTFS із правами адміністратора. Поточне сканування триватиме."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Турбо"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Турбо: створення папок · { $files } файлів"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Турбо скасовано — звичайне сканування триває"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Показ поступу Turbo · перевірка результатів…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Лічильники перемикаються на Turbo, коли він збере більше записів. Карта зберігає попередні результати звичайного сканування до перевірки всього дерева Turbo. Якщо Turbo зазнає невдачі, звичайне сканування продовжиться."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Турбо: читання MFT { $percent }% · { $records } записів"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Турбо: читання MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: Розв'язання імен файлів…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Турбо: результати сортування…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Турбо: завантаження результатів…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Турбо недоступне — звичайне сканування триває"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Турецька"
+
+[messages.type]
+source = "TYPE"
+translation = "ТИП"
+
+[messages.type-2]
+source = "Type:"
+translation = "Тип:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Українська"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Деталі встановлення"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Видалити"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Пошук програми не завершено. Нічого не видалено. Спробуйте знову."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Ідентифікація встановлених програм…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Запустити програму видалення…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Не вдалося визначити програму для цієї папки. Відкрийте встановлені програми або Steam, щоб керувати їх вмістом."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Відкрийте встановлені програми"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Відкрити бібліотеку Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Видавець: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Карта відображає зміни в реальному часі. Повторіть сканування після видалення, якщо оновлення в реальному часі недоступні."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Видаляє всю програму, включно з файлами за межами вашого вибору."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Вибраний елемент"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Видалити…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Видалити через Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Ідентифікатор програми Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Видалення програми або гри"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Версія: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Керується Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Зареєстрована програма Windows"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Це розташування належить встановленому програмному забезпеченню. Виберіть програму нижче, щоб видалити всю програму, включаючи файли поза вибраною папкою. Windows або Steam обробить видалення."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows не вдалося запустити програму видалення (помилка { $code }). Відкрийте встановлені програми, щоб керувати цією програмою."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Зареєстрований деінсталятор не знайдено. Відкрийте встановлені програми Windows, щоб керувати цією програмою."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Недоступні для читання теки"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "На рівень вище"
+
+[messages.updating]
+source = "Updating…"
+translation = "Оновлення…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Використовувати розміри файлів замість зайнятого місця на диску"
+
+[messages.vert]
+source = "Vert"
+translation = "Верт."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Дуже мало файлів"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Дуже багато файлів"
+
+[messages.video]
+source = "Video"
+translation = "Відео"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "В’єтнамська"
+
+[messages.view]
+source = "View"
+translation = "Вигляд"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Очікування дозволу Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  Усього { $total }  -  Вільно { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } паралельне завдання
+        [few] { $count } паралельні завдання
+        [many] { $count } паралельних завдань
+       *[other] { $count } паралельного завдання
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Поточне обмеження кількості паралельних завдань; автоматично підлаштовується до виміряної пропускної здатності й затримки."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Перегляд файлів Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Відкрийте цей дистрибутив у Провіднику. Це може запустити дистрибутив."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Що ви хочете зробити?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Показати вказівки з очищення"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows запитає дозвіл адміністратора."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Звільнити блоки, заповнені нулями, зберігаючи вміст диска. Потрібно зупинити Docker і WSL."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Готові до ущільнення?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Збережіть роботу з Linux і вийдіть із Docker Desktop. Clawback зупинить усі сеанси WSL, а потім стисне цей диск. Тримайте Docker і WSL закритими, доки він не закінчиться."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Звільнити невикористане місце на диску."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Звільняє блоки, заповнені нулями, без видалення ваших файлів. Спочатку видаліть непотрібні дані всередині Linux або Docker; обсяг звільненого місця може відрізнятися. Docker і WSL мають залишатися зупиненими під час стиснення."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Копіювати команду"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Відомості про файл"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Дисковий файл"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Віртуальний диск WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Дистрибутив WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "У Docker Desktop перевірте образи, зупинені контейнери та томи. Кеш збирання також можна очистити командою «docker builder prune». Томи можуть містити бази даних або інші потрібні файли; перевірте їх перед видаленням. Очищення та стиснення диска — окремі кроки."
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Зберігає образи Docker, контейнери, томи та кеш збирання."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Зберігає середовище Linux Docker Desktop. Дані програми Docker можуть зберігатися на окремому диску."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "Перегляньте файли дистрибутива та видаліть дані, які вам більше не потрібні. Використовуйте його менеджер пакетів Linux, щоб очистити кеш пакетів. Після очищення «sudo fstrim -av» у дистрибутиві може допомогти звільнити невикористані блоки перед вимкненням WSL і стисненням."
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Зберігає файлову систему цього дистрибутива Linux, включаючи його програми та файли на стороні Linux."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Відкрити Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Перегляньте контейнери, образи та томи перед видаленням непотрібних даних."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — диск даних"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — системний диск"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Невідомий дистрибутив Linux"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Цей шлях виглядає як інсталяція WSL, але відповідної реєстрації для поточного користувача Windows не знайдено. Пакет і шлях до файлу можуть допомогти ідентифікувати його."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Пакет Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Стиснути диск…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Зупинити WSL і стиснути"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Показати все"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Збільшити"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Збільшити"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Зменшити"

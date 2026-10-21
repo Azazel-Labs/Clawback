@@ -1,0 +1,1331 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "ba8604277de6e29ac18fbca485faf8696e7112939209d9cc68186bb835a3974b"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Ένας γρήγορος, cross-platform χάρτης χώρου στο δίσκο."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Σχετικά Με Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Αφρικάανς"
+
+[messages.all-files]
+source = "All files"
+translation = "Όλα τα αρχεία"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Εφαρμογή / βιβλιοθήκη"
+
+[messages.arch]
+source = "Arch"
+translation = "Αρχειοθέτηση"
+
+[messages.archive]
+source = "Archive"
+translation = "Αρχειοθέτηση"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D στοιχείο"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Επισήμανση για δημιουργία αντιγράφων ασφαλείας"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Συμπιεσμένο"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Κρυπτογραφημένο"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Σύνδεση ή ανακατεύθυνση συστήματος αρχείων"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Προσωρινό"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Χαρακτηριστικά"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Ιδιότητες:"
+
+[messages.audio]
+source = "Audio"
+translation = "Ήχος"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Αυτόματη σάρωση κατά τη διαγραφή"
+
+[messages.back]
+source = "Back"
+translation = "Πίσω"
+
+[messages.bias]
+source = "Bias:"
+translation = "Προσανατολισμός:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Δυαδικά δεδομένα"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Ακύρωση"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Καταλανικά"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Απλοποιημένα Κινέζικα"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Παραδοσιακά Κινέζικα"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Ρυθμίστε πίσω το χώρο στο δίσκο."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Ρυθμίσεις Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Καθαρισμός φακέλου Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Κάντε κλικ για να καθαρίσετε τα προσωρινά αρχεία σας"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Κάντε κλικ για να αδειάσετε τον Κάδο Ανακύκλωσης αυτής της μονάδας"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · Εικονικός δίσκος WSL. Κάντε κλικ για λεπτομέρειες δίσκου, περιήγηση αρχείων ή ανάκτηση χώρου."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "Εγκατεστημένα αρχεία εφαρμογών ή παιχνιδιών. Κάντε κλικ για να αναγνωρίσετε και να απεγκαταστήσετε ολόκληρη την εφαρμογή."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Αρχεία παιχνιδιών Steam. Κάντε κλικ για να αναγνωρίσετε το παιχνίδι και να το απεγκαταστήσετε μέσω του Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Κλείσιμο"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Συμπύκνωση δίσκου…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Δεν ήταν δυνατή η συμπύκνωση του δίσκου. Βεβαιωθείτε ότι το Docker Desktop και το WSL έχουν σταματήσει και δοκιμάστε ξανά. Τα Windows ανέφεραν: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Διακοπή WSL και συμπύκνωση δίσκου…"
+
+[messages.compress]
+source = "Compress"
+translation = "Συμπίεση"
+
+[messages.contains]
+source = "Contains:"
+translation = "Περιέχει:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }, { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Αντιγραφή λεπτομερειών σφάλματος"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Πνευματικά Δικαιώματα © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Μέτρηση σκληρο-συνδεδεμένων αρχείων μία φορά"
+
+[messages.czech]
+source = "Czech"
+translation = "Τσέχικα"
+
+[messages.danish]
+source = "Danish"
+translation = "Δανικά"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Δεδομένα / διαμόρφωση"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Ημερομηνία / Ώρα"
+
+[messages.delay]
+source = "Delay:"
+translation = "Καθυστέρηση:"
+
+[messages.delete]
+source = "Delete"
+translation = "Διαγραφή"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Αυτό δεν μπορεί να αναιρεθεί."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · Πέρασαν { $seconds } δευτ."
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Αποτυχία διαγραφής του { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Δεν ήταν δυνατή η διαγραφή του στοιχείου"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Μόνιμη διαγραφή…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Οριστική διαγραφή"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Μόνιμη διαγραφή;"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Προετοιμασία για ανακύκλωση…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } από { $total } αρχεία"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Πρόσθετα στοιχεία στην ουρά: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Μεταφορά στον Κάδο Ανακύκλωσης…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · Αρχεία: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = 'Το "{ $name }" είναι πολύ μεγάλο για τον Κάδο Ανακύκλωσης.'
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Ενημέρωση χάρτη δίσκου…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Η εργασία μεταφοράς στον Κάδο Ανακύκλωσης σταμάτησε απροσδόκητα. Ελέγξτε το επιλεγμένο στοιχείο πριν προσπαθήσετε ξανά."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Διαγραφή…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Πυκνότητα:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Έγγραφο μελέτης"
+
+[messages.directories]
+source = "Directories"
+translation = "Κατάλογοι"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = 'Απενεργοποίηση Εντολής "Διαγραφής"'
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Αναζήτηση φακέλων…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Εικόνα δίσκου"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Χρώματα Εμφάνισης"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Δεν ήταν δυνατή η εύρεση του Docker Desktop στις τυπικές τοποθεσίες εγκατάστασης. Ανοίξτε το από το μενού Έναρξη των Windows."
+
+[messages.document]
+source = "Document"
+translation = "Έγγραφο"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Μην κατεβαίνετε σε άλλες μονάδες δίσκου ή τοποθετήσεις δικτύου μέσα στο φάκελο που έχει σαρωθεί"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Διπλό κλικ για εξερεύνηση / δεξί κλικ για ενέργειες"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } ελεύθερα από { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } ελεύθερα από { $total }  ·  { $used } σε χρήση  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Ολλανδικά"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Όλα στον Κάδο Ανακύκλωσης στο { $drive } θα διαγραφούν οριστικά."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Άδειασμα Κάδου Ανακύκλωσης"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Να αδειάσει ο Κάδος Ανακύκλωσης;"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Να διαγραφούν οριστικά τα περιεχόμενα του { $path }; Ο φάκελος Temp θα διατηρηθεί. Τα στοιχεία που τα Windows αρνούνται να διαγράψουν θα παραμείνουν στη θέση τους. Κλείστε πρώτα τις εφαρμογές για να ελευθερώσετε περισσότερα προσωρινά αρχεία."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Καθαρίστε το φάκελο Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Καθαρισμός του φακέλου Temp;"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Άδειασμα του Κάδου Ανακύκλωσης…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Κρυπτογράφηση"
+
+[messages.english]
+source = "English"
+translation = "Αγγλικά"
+
+[messages.equal]
+source = "Equal"
+translation = "Ίσο"
+
+[messages.exit]
+source = "Exit"
+translation = "Έξοδος"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Επέκταση για περιήγηση · Κάντε κλικ σε ένα φάκελο για προβολή"
+
+[messages.file]
+source = "File"
+translation = "Αρχείο"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Διάταξη Αρχείου"
+
+[messages.file-size]
+source = "File Size"
+translation = "Μέγεθος Αρχείου"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "ΤΥΠΟ ΦΙΛΟΥ"
+
+[messages.file-types]
+source = "File types"
+translation = "Τύποι αρχείων"
+
+[messages.filename]
+source = "Filename"
+translation = "Όνομα Αρχείου"
+
+[messages.files]
+source = "FILES"
+translation = "ΑΡΧΕΙΑ"
+
+[messages.files-2]
+source = "Files:"
+translation = "Αρχεία:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Εύρεση δίσκων..."
+
+[messages.finnish]
+source = "Finnish"
+translation = "Φινλανδικά"
+
+[messages.folder]
+source = "FOLDER"
+translation = "ΚΑΤΗΓΟΡΙΑ"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Φάκελος"
+
+[messages.folders]
+source = "Folders:"
+translation = "Φάκελοι:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Μη Σάρωση Φακέλων"
+
+[messages.french]
+source = "French"
+translation = "Γαλλικά"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Πλήρης Διαδρομή"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Αρχείο παιχνιδιού"
+
+[messages.german]
+source = "German"
+translation = "Γερμανικά"
+
+[messages.greek]
+source = "Greek"
+translation = "Ελληνικά"
+
+[messages.help]
+source = "Help"
+translation = "Βοήθεια"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Κρυφό"
+
+[messages.horz]
+source = "Horz"
+translation = "Οριζ."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Ουγγρικά"
+
+[messages.icon]
+source = "Icon"
+translation = "Εικονίδιο"
+
+[messages.image]
+source = "Image"
+translation = "Εικόνα"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Ινδονησιακά"
+
+[messages.italian]
+source = "Italian"
+translation = "Ιταλικά"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Ιαπωνικά"
+
+[messages.korean]
+source = "Korean"
+translation = "Κορεάτικα"
+
+[messages.language]
+source = "Language"
+translation = "Γλώσσα"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Αδειοδοτείται στο πλαίσιο MIT-0 (MIT No Attribution). Καμία εγγύηση οποιουδήποτε είδους."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "Ζωντανά · Επεξεργασία εκκρεμών αλλαγών"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Δεδομένα επίδειξης - φανταστικά αρχεία και μεγέθη"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Οι ζωντανές ενημερώσεις σταμάτησαν · Επαναλάβετε τη σάρωση για επανασύνδεση"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "Ζωντανά · Συγχρονισμός αλλαγών στο παρασκήνιο"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Οι ζωντανές ενημερώσεις δεν είναι διαθέσιμες: Η σάρωση ακυρώθηκε · Επαναλάβετε τη σάρωση για ανανέωση"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Οι ζωντανές ενημερώσεις σταμάτησαν: { $error } · Επαναλάβετε τη σάρωση για επανασύνδεση"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Οι ζωντανές ενημερώσεις δεν είναι διαθέσιμες: { $error } · Επαναλάβετε τη σάρωση για ανανέωση"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "Ζωντανά · Παρακολούθηση για αλλαγές"
+
+[messages.location]
+source = "Location:"
+translation = "Τοποθεσία:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Πολλά αρχεία"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Κάντε χώρο για αυτό που έχει σημασία."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Αντιστοιχισμένη bytes σε σχέση με το χρησιμοποιούμενο διάστημα κίνησης. μια εκτίμηση, όχι ένα ποσοστό αρχείου-καταμέτρησης."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Διάφορες Επιλογές"
+
+[messages.modified]
+source = "Modified:"
+translation = "Τροποποιήθηκε:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Μετακίνηση του επιλεγμένου αντικειμένου στον κάδο απορριμμάτων"
+
+[messages.msec]
+source = "msec"
+translation = "χιλ. δευτ."
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Σίγαση χρωμάτων"
+
+[messages.name]
+source = "Name:"
+translation = "Όνομα:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = 'Δεν βρέθηκαν δίσκοι. Χρησιμοποιήστε "Άλλος φάκελος..." για να επιλέξετε ένα φάκελο.'
+
+[messages.no-extension]
+source = "No extension"
+translation = "Καμία επέκταση"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Δεν υπάρχουν αρχεία σε αυτόν το φάκελο."
+
+[messages.normal]
+source = "Normal"
+translation = "Κανονικό"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Νορβηγικά Μπόκμαλ"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% ΤΗΣ SCAN"
+
+[messages.offline]
+source = "Offline"
+translation = "Αποσυνδεδεμένος"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Ανοίξτε έναν οδηγό ή ένα φάκελο για να δείτε πού πηγαίνει ο χώρος σας."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Ανοίξτε ένα φάκελο ή έναν οδηγό για να περιηγηθείτε στο δέντρο καταλόγων."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Άνοιγμα φακέλου για έναρξη"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Άνοιγμα Δίσκου..."
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Άνοιγμα φακέλου…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Άνοιγμα στον Explorer"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Άνοιγμα στη Διαχείριση αρχείων"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Άνοιγμα στο Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Άνοιγμα επιλεγμένου αντικειμένου"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Άλλος Φάκελος..."
+
+[messages.palette]
+source = "Palette"
+translation = "Παλέτα"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Παύση σάρωσης"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = 'macOS προστατεύει μερικούς φακέλους (Mail, Μηνύματα, άλλους χρήστες, …). Εκχωρήστε Clawback "Πλήρης Πρόσβαση στο Δίσκο" στις Ρυθμίσεις Συστήματος › Ιδιωτικότητα & Ασφάλεια για να τους συμπεριλάβετε.'
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Ορισμένοι φάκελοι είναι αναγνώσιμοι μόνο από άλλους χρήστες ή από root. Εκτέλεση Clawback με αυξημένα δικαιώματα (για παράδειγμα `sudo -E clawback /`) για να τους συμπεριλάβουν."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Ορισμένοι φάκελοι συστήματος είναι αναγνώσιμοι μόνο από τους διαχειριστές. Εκτελέστε Clawback ως διαχειριστής για να τους συμπεριλάβετε."
+
+[messages.polish]
+source = "Polish"
+translation = "Πολωνικά"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Πορτογαλικά Βραζιλίας"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Ευρωπαϊκά Πορτογαλικά"
+
+[messages.properties]
+source = "Properties"
+translation = "Ιδιότητες"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Ιδιότητες..."
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "Η χρήση του δίσκου διαφέρει από το μέγεθος του αρχείου, για παράδειγμα λόγω συμπίεσης, αραιών δεδομένων ή επιβαρύνσεων κατανομής."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Ιδιότητες του { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Στοιχεία που δεν ήταν δυνατό να διαγραφούν: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Μόνο Για Ανάγνωση"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Ανάγνωση λεπτομερειών αρχείου…"
+
+[messages.ready]
+source = "Ready"
+translation = "Έτοιμο"
+
+[messages.recent]
+source = "Recent"
+translation = "Πρόσφατα"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "Η συμπύκνωση διατηρεί τα περιεχόμενα του δίσκου και μειώνει το μέγεθος του αρχείου του στα Windows ανακτώντας μπλοκ γεμάτα μηδενικά. Μπορεί να ανακτήσει λίγο ή καθόλου χώρο. Καθαρίστε πρώτα τα ανεπιθύμητα δεδομένα μέσα στο Docker ή το Linux."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Ανάκτηση χώρου στο δίσκο WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Πριν από τη συμπύκνωση, αποθηκεύστε την εργασία σας, κλείστε το Docker Desktop και κλείστε τις συνεδρίες WSL. Εκτελέστε αυτήν την εντολή στο PowerShell για να σταματήσετε όλες τις διανομές WSL. Διατηρήστε το Docker και το WSL σταματημένα μέχρι να ολοκληρωθεί η συμπύκνωση. Τα Windows θα ζητήσουν άδεια διαχειριστή."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Απομνημόνευση Θέσης Παραθύρου"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Reparse- Pt"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Επανασάρωση"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Επανασάρωση Οδηγού"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Συνέχιση σάρωσης"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Ρουμανικά"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Εκτέλεση / Άνοιγμα"
+
+[messages.russian]
+source = "Russian"
+translation = "Ρωσικά"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Το Clawback δεν μπόρεσε να σαρώσει τον φάκελο.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Το Clawback δεν μπόρεσε να σαρώσει το { $path }{ ".\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Σάρωση σε παύση"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }, { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Σάρωση"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Οι επιλογές σάρωσης ισχύουν για την επόμενη σάρωση."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Επιλέξτε ένα φάκελο για προβολή"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Επιλογή μονάδας δίσκου για προβολή"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Σερβικά, κυριλλικά"
+
+[messages.settings]
+source = "Settings…"
+translation = "Ρυθμίσεις…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Εμφάνιση"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Συμπεριφορά"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "Η αριστερή θέση ευνοεί τα οριζόντια σχήματα, το κέντρο τα εξισορροπεί και η δεξιά θέση ευνοεί τα κάθετα σχήματα."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Διαγραφή αρχείων"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Υπολογισμός μεγεθών"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Λεπτομέρειες αρχείου"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Ονόματα αρχείων"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Αποθήκευση αλλαγών"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Όρια σάρωσης"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Παράθυρο και αλληλεπίδραση"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Εμφάνιση συμβουλών πληροφοριών αρχείου"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Εμφάνιση συμβουλών ονόματος αρχείου"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Εμφάνιση Ελεύθερου Χώρου"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Εμφάνιση ελεύθερου χώρου"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Εμφάνιση στη Διαχείριση Αρχείων"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Εμφάνιση Πλαισίων Rollover"
+
+[messages.size]
+source = "SIZE"
+translation = "ΜΕΓΕΘΟΣ"
+
+[messages.size-2]
+source = "Size:"
+translation = "Μέγεθος:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Μέγεθος στο δίσκο:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Πηγαίος κώδικας"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Ισπανικά Λατινικής Αμερικής"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Ισπανικά από Ισπανία"
+
+[messages.sparse]
+source = "Sparse"
+translation = "Αραιό"
+
+[messages.special-file]
+source = "Special file"
+translation = "Ειδικό αρχείο"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Παραμονή σε ένα σύστημα αρχείων"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Σουηδικά"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Συμβολικός σύνδεσμος"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Συμβολικός σύνδεσμος"
+
+[messages.system]
+source = "System"
+translation = "Σύστημα"
+
+[messages.system-default]
+source = "System default"
+translation = "Προεπιλογή συστήματος"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Εφαρμόζει την επόμενη φορά που ξεκινά η Clawback"
+
+[messages.temp]
+source = "Temp"
+translation = "Θερμοκρασία"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "Η εκκαθάριση άφησε { $count } στοιχεία που δεν ήταν δυνατό να αφαιρεθούν. Πρώτος λόγος: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Ταϊλανδικά"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "Ο εργαζόμενος στη σάρωση σταμάτησε απροσδόκητα."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Πολύ Λίγα Αρχεία"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Πάρα Πολλά Αρχεία"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Συμβουλές"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Δοκιμάστε μια ταχύτερη σάρωση NTFS με άδεια διαχειριστή. Η τρέχουσα σάρωση συνεχίζει να εκτελείται."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: οργάνωση φακέλων · { $files } αρχεία"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo ακυρώθηκε - κανονική σάρωση συνεχίζεται"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Εμφάνιση προόδου Turbo · επικύρωση αποτελεσμάτων…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "Οι μετρητές μεταβαίνουν στο Turbo όταν αυτό έχει οργανώσει περισσότερες καταχωρίσεις. Ο χάρτης διατηρεί την προεπισκόπηση της κανονικής σάρωσης μέχρι να επικυρωθεί το πλήρες δέντρο του Turbo. Αν το Turbo αποτύχει, η κανονική σάρωση συνεχίζεται."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: ανάγνωση MFT { $percent }% · { $records } εγγραφές"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: ανάγνωση MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: επίλυση ονομάτων αρχείων…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: ταξινόμηση αποτελεσμάτων…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: φόρτωση αποτελεσμάτων…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo μη διαθέσιμο - κανονική σάρωση συνεχίζεται"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Τουρκικά"
+
+[messages.type]
+source = "TYPE"
+translation = "ΤΥΠΟΣ"
+
+[messages.type-2]
+source = "Type:"
+translation = "Τύπος:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Ουκρανικά"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Λεπτομέρειες εγκατάστασης"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Απεγκατάσταση"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "Η αναζήτηση της εφαρμογής δεν ολοκληρώθηκε. Δεν διαγράφηκε τίποτα. Προσπαθήστε ξανά."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Αναγνώριση εγκατεστημένων εφαρμογών…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Εκκίνηση του προγράμματος απεγκατάστασης…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Δεν βρέθηκε καμία εφαρμογή για αυτόν τον φάκελο. Ανοίξτε τις Εγκατεστημένες εφαρμογές ή το Steam για να διαχειριστείτε τα περιεχόμενά του."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Ανοίξτε τις εγκατεστημένες εφαρμογές"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Ανοίξτε τη βιβλιοθήκη Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Εκδότης: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "Ο χάρτης ακολουθεί ζωντανές αλλαγές. Χρησιμοποιήστε την Επανάληψη σάρωσης μετά την απεγκατάσταση, εάν δεν υπάρχουν διαθέσιμες ζωντανές ενημερώσεις."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Καταργεί ολόκληρη την εφαρμογή, συμπεριλαμβανομένων των αρχείων εκτός της επιλογής σας."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Επιλεγμένο στοιχείο"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Απεγκατάσταση…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Απεγκατάσταση μέσω Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Αναγνωριστικό εφαρμογής Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Απεγκαταστήστε μια εφαρμογή ή ένα παιχνίδι"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Έκδοση: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Διαχειρίζεται από το Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Εγγεγραμμένη εφαρμογή Windows"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Αυτή η τοποθεσία ανήκει σε εγκατεστημένο λογισμικό. Επιλέξτε μια εφαρμογή παρακάτω για να απεγκαταστήσετε ολόκληρη την εφαρμογή, συμπεριλαμβανομένων των αρχείων εκτός του επιλεγμένου φακέλου. Τα Windows ή το Steam θα χειριστούν την αφαίρεση."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Τα Windows δεν μπόρεσαν να ξεκινήσουν το πρόγραμμα απεγκατάστασης (σφάλμα { $code }). Ανοίξτε τις Εγκατεστημένες εφαρμογές για να διαχειριστείτε αυτήν την εφαρμογή."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Δεν ήταν δυνατή η εύρεση του εγγεγραμμένου προγράμματος απεγκατάστασης. Ανοίξτε τις εγκατεστημένες εφαρμογές των Windows για να διαχειριστείτε αυτήν την εφαρμογή."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Μη αναγνώσιμοι φάκελοι"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Πάνω ένα επίπεδο"
+
+[messages.updating]
+source = "Updating…"
+translation = "Ενημέρωση…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Χρήση μηκών αρχείων, όχι μεγέθους στο δίσκο"
+
+[messages.vert]
+source = "Vert"
+translation = "Καθ."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Πολύ Λίγα Αρχεία"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Πολύ Πολλά Αρχεία"
+
+[messages.video]
+source = "Video"
+translation = "Βίντεο"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Βιετναμικά"
+
+[messages.view]
+source = "View"
+translation = "Προβολή"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "Αναμονή για δικαιώματα των Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  { $total } σύνολο  -  { $free } ελεύθερα  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } εργασία
+       *[other] { $count } εργασίες
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Τρέχον όριο ταυτόχρονων εργασιών· προσαρμόζεται αυτόματα στη μετρούμενη απόδοση και καθυστέρηση."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Περιηγηθείτε σε αρχεία Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Ανοίξτε αυτήν τη διανομή στον Explorer. Αυτό μπορεί να ξεκινήσει τη διανομή."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Τι θα θέλατε να κάνετε;"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Εμφάνιση καθοδήγησης καθαρισμού"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Τα Windows θα ζητήσουν άδεια διαχειριστή."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Ανακτά μπλοκ γεμάτα μηδενικά διατηρώντας τα περιεχόμενα του δίσκου. Απαιτεί να έχουν σταματήσει το Docker και το WSL."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Έτοιμοι για συμπύκνωση;"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Αποθηκεύστε την εργασία σας στο Linux και κλείστε το Docker Desktop. Το Clawback θα σταματήσει όλες τις συνεδρίες WSL και μετά θα συμπυκνώσει αυτόν τον δίσκο. Κρατήστε το Docker και το WSL κλειστά μέχρι να ολοκληρωθεί η διαδικασία."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Ανάκτηση αχρησιμοποίητου χώρου στο δίσκο."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Ανακτά μπλοκ γεμάτα μηδενικά χωρίς να διαγράφει τα αρχεία σας. Καθαρίστε πρώτα τα δεδομένα μέσα στο Linux ή το Docker· ο χώρος που ανακτάται ποικίλλει. Το Docker και το WSL πρέπει να παραμείνουν σταματημένα κατά τη συμπύκνωση."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Αντιγραφή εντολής"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Λεπτομέρειες αρχείου"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "Αρχείο δίσκου"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Εικονικός δίσκος WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Διανομή WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = 'Στο Docker Desktop, ελέγξτε τις εικόνες, τα σταματημένα κοντέινερ και τους τόμους. Η κρυφή μνήμη κατασκευής μπορεί επίσης να καθαριστεί με το "docker builder prune". Οι τόμοι μπορεί να περιέχουν βάσεις δεδομένων ή άλλα αρχεία που χρειάζεστε· ελέγξτε τους πριν τους αφαιρέσετε. Ο καθαρισμός και η συμπύκνωση του δίσκου είναι ξεχωριστά βήματα.'
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Αποθηκεύει εικόνες Docker, κοντέινερ, τόμους και την κρυφή μνήμη κατασκευής."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Αποθηκεύει το περιβάλλον Linux του Docker Desktop. Τα δεδομένα της εφαρμογής Docker μπορούν να αποθηκευτούν σε ξεχωριστό δίσκο."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = 'Περιηγηθείτε στα αρχεία της διανομής και αφαιρέστε δεδομένα που δεν χρειάζεστε πλέον. Χρησιμοποιήστε τον διαχειριστή πακέτων της διανομής για να καθαρίσετε τις κρυφές μνήμες πακέτων. Μετά την εκκαθάριση, η εκτέλεση του "sudo fstrim -av" μέσα στη διανομή μπορεί να βοηθήσει στην απελευθέρωση αχρησιμοποίητων μπλοκ πριν από τον τερματισμό του WSL και τη συμπύκνωση του δίσκου.'
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Αποθηκεύει το σύστημα αρχείων αυτής της διανομής Linux, συμπεριλαμβανομένων των προγραμμάτων και των αρχείων του Linux."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Άνοιγμα του Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Ελέγξτε τα κοντέινερ, τις εικόνες και τους τόμους πριν αφαιρέσετε ανεπιθύμητα δεδομένα."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — δίσκος δεδομένων"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — δίσκος συστήματος"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Μη αναγνωρισμένη διανομή Linux"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Αυτή η διαδρομή μοιάζει με εγκατάσταση WSL, αλλά δεν βρέθηκε αντίστοιχη εγγραφή για τον τρέχοντα χρήστη των Windows. Το πακέτο και η διαδρομή αρχείου μπορεί να βοηθήσουν στην αναγνώρισή του."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Πακέτο Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Συμπύκνωση δίσκου…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Διακοπή WSL και συμπύκνωση"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Πλήρης Μεγέθυνση"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Μεγέθυνση"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Μεγέθυνση"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Σμίκρυνση"

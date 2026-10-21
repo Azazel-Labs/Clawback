@@ -83,6 +83,9 @@ and Linux. The locked egui/eframe 0.36.2 family and sysinfo 0.39.6 require 1.95;
 lowering it further would require dependency changes. Rust's minimum version is
 a compiler requirement, not a guarantee of support for older operating systems.
 
+For Git-based translation updates and source-change checks, see
+[translations.md](translations.md).
+
 ```
 cargo run --release -- --gui
 ```

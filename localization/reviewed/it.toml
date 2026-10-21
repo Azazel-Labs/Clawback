@@ -1,0 +1,1325 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "f2b6682d521b4facc81bb1f2f274f86822a70359142e1d87b8774d0153ed983b"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "Una mappa dello spazio su disco veloce e multipiattaforma."
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "Informazioni su Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "Afrikaans"
+
+[messages.all-files]
+source = "All files"
+translation = "Tutti i file"
+
+[messages.application-library]
+source = "Application / library"
+translation = "Applicazione / libreria"
+
+[messages.arch]
+source = "Arch"
+translation = "Archivio"
+
+[messages.archive]
+source = "Archive"
+translation = "Archivio compresso"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "Risorsa 3D"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "Contrassegnato per il backup"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "Compresso"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "Crittografato"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "Collegamento o reindirizzamento al file system"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "Temporaneo"
+
+[messages.attributes]
+source = "Attributes"
+translation = "Attributi"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "Attributi:"
+
+[messages.audio]
+source = "Audio"
+translation = "Audio"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "Ripeti automaticamente la scansione dopo l’eliminazione"
+
+[messages.back]
+source = "Back"
+translation = "Indietro"
+
+[messages.bias]
+source = "Bias:"
+translation = "Orientamento:"
+
+[messages.binary-data]
+source = "Binary data"
+translation = "Dati binari"
+
+[messages.cancel]
+source = "Cancel"
+translation = "Annulla"
+
+[messages.catalan]
+source = "Catalan"
+translation = "Catalano"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "Cinese semplificato"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "Cinese tradizionale"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "Recupera spazio sul disco."
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Impostazioni di Clawback"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "Pulizia cartella Temp…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "Fare clic per pulire i file temporanei"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "Fare clic per svuotare il cestino di questa unità"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX · Disco virtuale WSL. Fai clic per i dettagli del disco, sfoglia i file o recupera spazio."
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "File di un'applicazione o di un gioco installato. Fai clic per identificare e disinstallare l'intera applicazione."
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "File di gioco Steam. Fai clic per identificare il gioco e disinstallarlo tramite Steam."
+
+[messages.close-dialog]
+source = "Close"
+translation = "Chiudi"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "Compatta disco…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "Impossibile compattare il disco. Assicurati che Docker Desktop e WSL siano arrestati, quindi riprova. Windows ha segnalato: { $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "Arresto di WSL e compattazione del disco…"
+
+[messages.compress]
+source = "Compress"
+translation = "Compresso"
+
+[messages.contains]
+source = "Contains:"
+translation = "Contenuto:"
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $files } file, { $folders ->
+        [one] { $folders } cartella
+       *[other] { $folders } cartelle
+    }"""
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "Copia i dettagli dell'errore"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "Copyright © 2026 Azazel Labs."
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "Conta una sola volta i file con collegamenti fisici"
+
+[messages.czech]
+source = "Czech"
+translation = "Ceco"
+
+[messages.danish]
+source = "Danish"
+translation = "Danese"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "Dati / configurazione"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "Data / ora"
+
+[messages.delay]
+source = "Delay:"
+translation = "Ritardo:"
+
+[messages.delete]
+source = "Delete"
+translation = "Elimina"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "Questa operazione non può essere annullata."
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · { $seconds }s trascorso"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Impossibile eliminare l’elemento: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "Impossibile eliminare l'elemento"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "Eliminazione permanente…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "Elimina in modo permanente"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "Eliminare definitivamente?"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "Preparazione al riciclo…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "{ $done } di { $total } file"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "Elementi aggiuntivi in coda: { $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "Spostamento nel cestino…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · File: { $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = '"{ $name }" è troppo grande per il Cestino.'
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "Aggiornamento mappa disco…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "Il worker di riciclaggio si è fermato inaspettatamente. Controllare l'elemento selezionato prima di riprovare."
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "Eliminazione in corso…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "Densità:"
+
+[messages.design-document]
+source = "Design document"
+translation = "Documento di progettazione"
+
+[messages.directories]
+source = "Directories"
+translation = "Cartelle"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "Disabilita il comando «Elimina»"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "Ricerca delle cartelle…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "Immagine disco"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "Colori di visualizzazione"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "Impossibile trovare Docker Desktop nelle posizioni di installazione standard. Aprilo dal menu Start di Windows."
+
+[messages.document]
+source = "Document"
+translation = "Documento"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "Non analizzare altre unità o condivisioni di rete montate all’interno della cartella analizzata"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "Doppio clic per esplorare / Clic destro per le azioni"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "{ $free } disponibili su { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }Spazio libero: { $free } su { $total }  ·  In uso: { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "Olandese"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "Tutto il contenuto del Cestino sull'unità { $drive } verrà eliminato definitivamente."
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "Svuota il Cestino"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "Svuotare il cestino?"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "Eliminare definitivamente il contenuto di { $path }? La cartella Temp verrà mantenuta. Gli elementi che Windows rifiuta di eliminare verranno lasciati al loro posto. Chiudi prima le applicazioni per liberare più file temporanei."
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "Pulisci la cartella Temp"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "Pulire la cartella Temp?"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "Svuotamento del cestino…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "Crittografato"
+
+[messages.english]
+source = "English"
+translation = "Inglese"
+
+[messages.equal]
+source = "Equal"
+translation = "Bilanciato"
+
+[messages.exit]
+source = "Exit"
+translation = "Esci"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "Espandi per esplorare · Fai clic su una cartella per visualizzarla"
+
+[messages.file]
+source = "File"
+translation = "File"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "Disposizione dei file"
+
+[messages.file-size]
+source = "File Size"
+translation = "Dimensione dei file"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "TIPO DI FILE"
+
+[messages.file-types]
+source = "File types"
+translation = "Tipi di file"
+
+[messages.filename]
+source = "Filename"
+translation = "Nome del file"
+
+[messages.files]
+source = "FILES"
+translation = "FILE"
+
+[messages.files-2]
+source = "Files:"
+translation = "File:"
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "Ricerca delle unità…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "Finlandese"
+
+[messages.folder]
+source = "FOLDER"
+translation = "CARTELLA"
+
+[messages.folder-2]
+source = "Folder"
+translation = "Cartella"
+
+[messages.folders]
+source = "Folders:"
+translation = "Cartelle:"
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "Cartelle non analizzate"
+
+[messages.french]
+source = "French"
+translation = "Francese"
+
+[messages.full-path]
+source = "Full Path"
+translation = "Percorso completo"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "Archivio di gioco"
+
+[messages.german]
+source = "German"
+translation = "Tedesco"
+
+[messages.greek]
+source = "Greek"
+translation = "Greco"
+
+[messages.help]
+source = "Help"
+translation = "Aiuto"
+
+[messages.hidden]
+source = "Hidden"
+translation = "Nascosto"
+
+[messages.horz]
+source = "Horz"
+translation = "Orizz."
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "Ungherese"
+
+[messages.icon]
+source = "Icon"
+translation = "Icona"
+
+[messages.image]
+source = "Image"
+translation = "Immagine"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "Indonesiano"
+
+[messages.italian]
+source = "Italian"
+translation = "Italiano"
+
+[messages.japanese]
+source = "Japanese"
+translation = "Giapponese"
+
+[messages.korean]
+source = "Korean"
+translation = "Coreano"
+
+[messages.language]
+source = "Language"
+translation = "Lingua"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "Distribuito con licenza MIT-0 (MIT No Attribution). Senza garanzie di alcun tipo."
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "In tempo reale · Recupero delle modifiche in sospeso"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "Dati demo: file e dimensioni fittizi"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "Aggiornamenti in tempo reale interrotti · Ripeti la scansione per riconnettere"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "In tempo reale · Riconciliazione delle modifiche in background"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "Aggiornamenti in tempo reale non disponibili: Scansione annullata · Ripeti la scansione per aggiornare"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "Aggiornamenti in tempo reale interrotti: { $error } · Ripeti la scansione per riconnettere"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "Aggiornamenti in tempo reale non disponibili: { $error } · Ripeti la scansione per aggiornare"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "In tempo reale · Monitoraggio delle modifiche"
+
+[messages.location]
+source = "Location:"
+translation = "Percorso:"
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "Molti file"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "Fai spazio a ciò che conta."
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "Byte conteggiati rispetto allo spazio occupato sull’unità; è una stima, non una percentuale del numero di file."
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "Altre opzioni"
+
+[messages.modified]
+source = "Modified:"
+translation = "Ultima modifica:"
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "Sposta l’elemento selezionato nel cestino"
+
+[messages.msec]
+source = "msec"
+translation = "ms"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "Attenua i colori"
+
+[messages.name]
+source = "Name:"
+translation = "Nome:"
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "Nessuna unità trovata. Usa «Altra cartella…» per scegliere una cartella."
+
+[messages.no-extension]
+source = "No extension"
+translation = "Senza estensione"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "Nessun file in questa cartella."
+
+[messages.normal]
+source = "Normal"
+translation = "Normale"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "Norvegese bokmål"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% DELLA SCANSIONE"
+
+[messages.offline]
+source = "Offline"
+translation = "Offline"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   OK   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "Apri un’unità o una cartella per vedere cosa occupa spazio."
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "Apri una cartella o un’unità per esplorarne l’albero delle cartelle."
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "Apri una cartella per iniziare"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "Apri unità…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "Apri cartella…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "Apri in Esplora risorse"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "Aprire in File Manager"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "Apri nel Finder"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "Apri l’elemento selezionato"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "Altra cartella…"
+
+[messages.palette]
+source = "Palette"
+translation = "Tavolozza"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "Sospendi scansione"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS protegge alcune cartelle (Mail, Messaggi, cartelle di altri utenti, …). Concedi a Clawback «Accesso completo al disco» in Impostazioni di Sistema › Privacy e sicurezza per includerle."
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "Alcune cartelle possono essere lette solo da altri utenti o da root. Esegui Clawback con privilegi elevati (ad esempio `sudo -E clawback /`) per includerle."
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "Alcune cartelle di sistema possono essere lette solo dagli amministratori. Esegui Clawback come amministratore per includerle."
+
+[messages.polish]
+source = "Polish"
+translation = "Polacco"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "Portoghese brasiliano"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "Portoghese europeo"
+
+[messages.properties]
+source = "Properties"
+translation = "Proprietà"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "Proprietà…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "L'utilizzo del disco differisce dalla dimensione del file, ad esempio a causa della compressione, dei dati sparsi o del sovraccarico dell'allocazione."
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "Proprietà di { $name }"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "Elementi che non possono essere eliminati: { $count }. { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "Sola lettura"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "Lettura dei dettagli dei file…"
+
+[messages.ready]
+source = "Ready"
+translation = "Pronto"
+
+[messages.recent]
+source = "Recent"
+translation = "Recenti"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "La compattazione preserva il contenuto del disco e riduce le dimensioni del file Windows recuperando i blocchi riempiti con zeri. Potrebbe recuperare poco o nessuno spazio. Pulisci prima i dati indesiderati all'interno di Docker o Linux."
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "Recuperare spazio su disco WSL"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "Prima della compattazione, salva il lavoro, esci da Docker Desktop e chiudi le sessioni WSL. Esegui questo comando in PowerShell per interrompere tutte le distribuzioni WSL. Mantieni Docker e WSL interrotti fino al termine della compattazione. Windows chiederà l'autorizzazione di amministratore."
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "Ricorda la posizione della finestra"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "Punto di analisi"
+
+[messages.rescan]
+source = "Rescan"
+translation = "Ripeti scansione"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "Ripeti scansione dell’unità"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "Riprendi scansione"
+
+[messages.romanian]
+source = "Romanian"
+translation = "Rumeno"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "Esegui / Apri"
+
+[messages.russian]
+source = "Russian"
+translation = "Russo"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback non ha potuto analizzare la cartella.\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Impossibile analizzare il percorso: { $path }{ "\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "Scansione sospesa"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files } file, { $folders ->
+        [one] { $folders } cartella
+       *[other] { $folders } cartelle
+    }"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "Scansione in corso"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "Le opzioni di scansione si applicano alla prossima scansione."
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "Seleziona la cartella da visualizzare"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "Seleziona l’unità da visualizzare"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "Serbo, cirillico"
+
+[messages.settings]
+source = "Settings…"
+translation = "Impostazioni…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "Aspetto"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "Comportamento"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "La sinistra favorisce le forme orizzontali; il centro li compensa; destra favorisce le forme verticali."
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "Eliminazione file"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "Contabilità delle dimensioni"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "Dettagli file"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "Nomi dei file"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "Salva modifiche"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "Scansione dei confini"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "Finestra & interazione"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "Mostra suggerimenti con le informazioni sui file"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "Mostra suggerimenti con i nomi dei file"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "Mostra spazio libero"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "Mostra spazio libero"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "Mostra nel gestore di file"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "Mostra i contorni al passaggio del mouse"
+
+[messages.size]
+source = "SIZE"
+translation = "DIMENSIONE"
+
+[messages.size-2]
+source = "Size:"
+translation = "Dimensioni:"
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "Dimensioni su disco:"
+
+[messages.source-code]
+source = "Source code"
+translation = "Codice sorgente"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "Spagnolo latinoamericano"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "Spagnolo di Spagna"
+
+[messages.sparse]
+source = "Sparse"
+translation = "File sparse"
+
+[messages.special-file]
+source = "Special file"
+translation = "File speciale"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "Rimani nello stesso file system"
+
+[messages.swedish]
+source = "Swedish"
+translation = "Svedese"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "Collegamento simbolico"
+
+[messages.symlink]
+source = "Symlink"
+translation = "Collegamento simbolico"
+
+[messages.system]
+source = "System"
+translation = "Sistema"
+
+[messages.system-default]
+source = "System default"
+translation = "Lingua del sistema"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "Ha effetto al prossimo avvio di Clawback"
+
+[messages.temp]
+source = "Temp"
+translation = "Temporaneo"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "La pulizia ha lasciato { $count } elementi che non è stato possibile rimuovere. Primo motivo: { $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "Thailandese"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "L’attività di scansione si è interrotta inaspettatamente."
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "Troppo pochi file"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "Troppi file"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "Suggerimenti"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "Prova una scansione NTFS più veloce con i permessi di amministratore. La scansione attuale continuerà."
+
+[messages.turbo]
+source = "Turbo"
+translation = "Turbo"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo: assembling folders · { $files } file"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "Turbo annullato — la scansione normale continua"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "Visualizzazione dei progressi Turbo · validazione dei risultati…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "I contatori passano a Turbo quando ha assemblato più voci. La mappa mantiene l'anteprima di scansione regolare fino a quando non viene convalidato l'albero Turbo completo. Se Turbo fallisce, la scansione regolare continua."
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo: lettura MFT { $percent }% · { $records } record"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "Turbo: lettura della MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo: risoluzione nomi file…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo: ordinamento dei risultati…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo: risultati di caricamento…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "Turbo non disponibile — la scansione normale continua"
+
+[messages.turkish]
+source = "Turkish"
+translation = "Turco"
+
+[messages.type]
+source = "TYPE"
+translation = "TIPO"
+
+[messages.type-2]
+source = "Type:"
+translation = "Tipo:"
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "Ucraino"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "Dettagli di installazione"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "Disinstalla"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "La ricerca dell'applicazione non è stata completata. Niente è stato cancellato. Riprova."
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "Identificazione delle applicazioni installate…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "Avvia il programma di disinstallazione…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "Nessuna applicazione identificata per questa cartella. Apri App installate o Steam per gestirne i contenuti."
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "Aprire le app installate"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "Apri la libreria Steam"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "Editore: { $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "La mappa segue i cambiamenti in tempo reale. Utilizzare Ripeti scansione dopo la disinstallazione se gli aggiornamenti live non sono disponibili."
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "Rimuove l'intera applicazione, inclusi i file non selezionati."
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "Elemento selezionato"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "Disinstalla…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "Disinstallazione tramite Steam…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "ID app Steam: { $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "Disinstallare un'applicazione o un gioco"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "Versione: { $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "Gestito da Steam"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "Applicazione Windows registrata"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "Questa posizione appartiene al software installato. Scegli un'applicazione di seguito per disinstallare l'intera applicazione, inclusi i file esterni alla cartella selezionata. Windows o Steam gestiranno la rimozione."
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows non è riuscito ad avviare il programma di disinstallazione (errore { $code }). Apri App installate per gestire questa applicazione."
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "Impossibile trovare il programma di disinstallazione registrato. Apri le app installate di Windows per gestire questa applicazione."
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "Cartelle non leggibili"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "Sali di un livello"
+
+[messages.updating]
+source = "Updating…"
+translation = "Aggiornamento in corso…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "Usa le dimensioni dei file anziché lo spazio occupato su disco"
+
+[messages.vert]
+source = "Vert"
+translation = "Vert."
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "Pochissimi file"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "Moltissimi file"
+
+[messages.video]
+source = "Video"
+translation = "Video"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "Vietnamita"
+
+[messages.view]
+source = "View"
+translation = "Visualizza"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "In attesa dell’autorizzazione di Windows…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  Totale: { $total }  -  Spazio libero: { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = """
+{ $count ->
+        [one] { $count } attività simultanea
+       *[other] { $count } attività simultanee
+    }"""
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "Limite attuale delle attività simultanee; si adatta automaticamente alla velocità di trasferimento e alla latenza misurate."
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "Sfoglia i file Linux"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "Apri questa distribuzione in Esplora file. Questa operazione potrebbe avviare la distribuzione."
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "Cosa ti piacerebbe fare?"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "Mostra la guida alla pulizia"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows richiederà l'autorizzazione di amministratore."
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "Recupera i blocchi riempiti con zero preservando il contenuto del disco. Richiede l'arresto di Docker e WSL."
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "Pronti per la compattazione?"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "Salva il lavoro in Linux ed esci da Docker Desktop. Clawback arresterà tutte le sessioni WSL, quindi compatterà questo disco. Mantieni Docker e WSL chiusi fino al termine."
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "Recupera lo spazio su disco inutilizzato."
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "Recupera i blocchi riempiti con zero senza eliminare i file. Pulisci prima all'interno di Linux o Docker; il risparmio varia. Docker e WSL devono rimanere fermi durante la compattazione."
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "Copia comando"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "Dettagli del file"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "File del disco"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "Disco virtuale WSL"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "Distribuzione WSL"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = 'In Docker Desktop, rivedere le immagini, i contenitori e i volumi arrestati. La cache di build può anche essere pulita con "docker builder prune". I volumi possono contenere database o altri file necessari; ispezionarli prima di rimuoverli. La pulizia e la compattazione del disco sono passaggi separati.'
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "Archivia immagini, container, volumi e cache di compilazione di Docker."
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "Memorizza l'ambiente Linux di Docker Desktop. I dati dell'applicazione Docker possono essere archiviati in un disco separato."
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = """Sfoglia i file della distribuzione e rimuovi i dati che non ti servono più. Usa il suo gestore di pacchetti Linux per pulire le cache dei pacchetti. Dopo la pulizia, "sudo fstrim -av" all'interno della distribuzione può aiutare a rilasciare i blocchi inutilizzati prima di chiudere WSL e compattarlo."""
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "Memorizza il filesystem di questa distribuzione Linux, inclusi i suoi programmi e i file lato Linux."
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "Apri Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "Esamina contenitori, immagini e volumi prima di rimuovere dati indesiderati."
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop: disco dati"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop: disco di sistema"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "Distribuzione Linux non identificata"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "Questo percorso sembra un'installazione WSL, ma non è stata trovata alcuna registrazione corrispondente per l'utente Windows corrente. Il pacchetto e il percorso del file possono aiutare a identificarlo."
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Pacchetto Windows"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "Compatta disco…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "Arresta WSL e compatta"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "Mostra tutto"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "Ingrandisci"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "Ingrandisci"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "Riduci"

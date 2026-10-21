@@ -74,7 +74,10 @@ Clawback only counts what your account can read and lists the folders it couldn'
 
 ## Contributing
 
-Build instructions and project layout are in [docs/development.md](docs/development.md). Translations are managed through Crowdin. Maintainers can find the release process in [docs/releases.md](docs/releases.md).
+Build instructions and project layout are in [docs/development.md](docs/development.md).
+Translations are [maintained in Git](docs/translations.md); CI requires complete
+catalogs and localized READMEs reviewed against the current English sources.
+Maintainers can find the release process in [docs/releases.md](docs/releases.md).
 
 ## License
 

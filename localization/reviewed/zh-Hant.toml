@@ -1,0 +1,1314 @@
+version = 2
+
+[readme]
+source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
+translation = "62b4309d04a06da2976ee8cd714de44b40696796816862ff8799ae78c8620314"
+
+[messages.a-fast-cross-platform-disk-space-map]
+source = "A fast, cross-platform disk space map."
+translation = "快速、跨平台的磁碟空間視覺化工具。"
+
+[messages.about-clawback]
+source = "About Clawback"
+translation = "關於 Clawback"
+
+[messages.afrikaans]
+source = "Afrikaans"
+translation = "南非荷蘭文"
+
+[messages.all-files]
+source = "All files"
+translation = "所有檔案"
+
+[messages.application-library]
+source = "Application / library"
+translation = "應用程式 / 程式庫"
+
+[messages.arch]
+source = "Arch"
+translation = "封存"
+
+[messages.archive]
+source = "Archive"
+translation = "壓縮檔"
+
+[messages.asset-3d]
+source = "3D asset"
+translation = "3D 資源"
+
+[messages.attribute-backup-flag]
+source = "Marked for backup"
+translation = "已標記為需要備份"
+
+[messages.attribute-compressed]
+source = "Compressed"
+translation = "已壓縮"
+
+[messages.attribute-encrypted]
+source = "Encrypted"
+translation = "已加密"
+
+[messages.attribute-reparse-point]
+source = "Filesystem link or redirect"
+translation = "檔案系統連結或重定向"
+
+[messages.attribute-temporary]
+source = "Temporary"
+translation = "暫存"
+
+[messages.attributes]
+source = "Attributes"
+translation = "屬性"
+
+[messages.attributes-2]
+source = "Attributes:"
+translation = "屬性："
+
+[messages.audio]
+source = "Audio"
+translation = "音訊"
+
+[messages.auto-rescan-on-delete]
+source = "Auto Rescan on Delete"
+translation = "刪除後自動重新掃描"
+
+[messages.back]
+source = "Back"
+translation = "返回"
+
+[messages.bias]
+source = "Bias:"
+translation = "配置傾向："
+
+[messages.binary-data]
+source = "Binary data"
+translation = "二進位資料"
+
+[messages.cancel]
+source = "Cancel"
+translation = "取消"
+
+[messages.catalan]
+source = "Catalan"
+translation = "加泰蘭文"
+
+[messages.chinese-simplified]
+source = "Simplified Chinese"
+translation = "簡體中文"
+
+[messages.chinese-traditional]
+source = "Traditional Chinese"
+translation = "繁體中文"
+
+[messages.claw-back-your-disk-space]
+source = "Claw back your disk space."
+translation = "取回你的磁碟空間。"
+
+[messages.clawback-settings]
+source = "Clawback Settings"
+translation = "Clawback 設定"
+
+[messages.cleaning-temp-folder]
+source = "Cleaning Temp folder…"
+translation = "正在清理暫存資料夾…"
+
+[messages.click-to-clean-temp-folder]
+source = "Click to clean your temporary files"
+translation = "按一下以清理暫存檔案"
+
+[messages.click-to-empty-recycle-bin]
+source = "Click to empty this drive’s Recycle Bin"
+translation = "按一下以清空該磁碟機的資源回收筒"
+
+[messages.click-to-reclaim-wsl-space]
+source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
+translation = "VHDX·WSL 虛擬磁碟。按一下可查看磁碟詳細資料、瀏覽檔案或回收空間。"
+
+[messages.click-to-uninstall-software]
+source = "Installed application or game files. Click to identify and uninstall the whole application."
+translation = "已安裝的應用程式或遊戲檔案。按一下以識別並解除安裝整個應用程式。"
+
+[messages.click-to-uninstall-steam]
+source = "Steam game files. Click to identify the game and uninstall through Steam."
+translation = "Steam 遊戲檔案。點擊識別遊戲並透過Steam解除安裝。"
+
+[messages.close-dialog]
+source = "Close"
+translation = "關閉"
+
+[messages.compact-wsl-disk]
+source = "Compact disk…"
+translation = "壓縮磁碟…"
+
+[messages.compact-wsl-error]
+source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
+translation = "無法壓縮磁碟。請確認 Docker Desktop 和 WSL 已停止，然後再試一次。Windows 回報：{ $error }"
+
+[messages.compacting-wsl-disk]
+source = "Stopping WSL and compacting disk…"
+translation = "停止 WSL 和壓縮磁碟…"
+
+[messages.compress]
+source = "Compress"
+translation = "已壓縮"
+
+[messages.contains]
+source = "Contains:"
+translation = "包含："
+
+[messages.contents-count]
+source = """
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = "{ $files } 個檔案，{ $folders } 個資料夾"
+
+[messages.copy-error-details]
+source = "Copy error details"
+translation = "複製錯誤詳細訊息"
+
+[messages.copyright-2026-azazel-labs]
+source = "Copyright © 2026 Azazel Labs."
+translation = "著作權所有 © 2026 Azazel Labs。"
+
+[messages.count-hard-linked-files-once]
+source = "Count hard-linked files once"
+translation = "硬式連結檔案僅計算一次"
+
+[messages.czech]
+source = "Czech"
+translation = "捷克文"
+
+[messages.danish]
+source = "Danish"
+translation = "丹麥文"
+
+[messages.data-configuration]
+source = "Data / configuration"
+translation = "資料 / 組態"
+
+[messages.date-time]
+source = "Date / Time"
+translation = "日期 / 時間"
+
+[messages.delay]
+source = "Delay:"
+translation = "延遲："
+
+[messages.delete]
+source = "Delete"
+translation = "刪除"
+
+[messages.delete-cannot-be-undone]
+source = "This can’t be undone."
+translation = "這無法撤銷。"
+
+[messages.delete-details]
+source = "{ $size } · { $seconds }s elapsed"
+translation = "{ $size } · 已經過 { $seconds } 秒"
+
+[messages.delete-error]
+source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
+translation = '無法刪除 { $path }{ "。\u000A\u000A" }{ $error }'
+
+[messages.delete-failed-title]
+source = "Couldn’t delete item"
+translation = "無法刪除項目"
+
+[messages.delete-permanently]
+source = "Deleting permanently…"
+translation = "正在永久刪除…"
+
+[messages.delete-permanently-button]
+source = "Delete permanently"
+translation = "永久刪除"
+
+[messages.delete-permanently-title]
+source = "Delete permanently?"
+translation = "永久刪除？"
+
+[messages.delete-preparing]
+source = "Preparing to recycle…"
+translation = "正在準備移至資源回收筒…"
+
+[messages.delete-progress-files]
+source = "{ $done } of { $total } files"
+translation = "已處理 { $done } 個檔案，共 { $total } 個"
+
+[messages.delete-queued]
+source = """
+{ $count ->
+        [one] { $count } more item queued
+       *[other] { $count } more items queued
+    }"""
+translation = "排隊的其他項目：{ $count }"
+
+[messages.delete-recycling]
+source = "Moving to Recycle Bin…"
+translation = "正在移至資源回收筒…"
+
+[messages.delete-size-files]
+source = """
+{ $size } · { $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    }"""
+translation = "{ $size } · 檔案：{ $files }"
+
+[messages.delete-too-big-for-recycle-bin]
+source = "“{ $name }” is too big for the Recycle Bin."
+translation = "「{ $name }」太大，無法放入資源回收筒。"
+
+[messages.delete-updating]
+source = "Updating disk map…"
+translation = "正在更新磁碟地圖…"
+
+[messages.delete-worker-stopped]
+source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
+translation = "移至資源回收筒的工作程序意外停止。請先檢查所選項目，再試一次。"
+
+[messages.deleting]
+source = '{ "Deleting...\u000A" }{ $path }'
+translation = '{ "正在刪除…\u000A" }{ $path }'
+
+[messages.density]
+source = "Density:"
+translation = "密度："
+
+[messages.design-document]
+source = "Design document"
+translation = "設計文件"
+
+[messages.directories]
+source = "Directories"
+translation = "資料夾"
+
+[messages.disable-delete-command]
+source = 'Disable "Delete" Command'
+translation = "停用「刪除」命令"
+
+[messages.discovering-folders]
+source = "Discovering folders…"
+translation = "正在尋找資料夾…"
+
+[messages.disk-image]
+source = "Disk image"
+translation = "磁碟映像"
+
+[messages.display-colors]
+source = "Display Colors"
+translation = "顯示色彩"
+
+[messages.docker-desktop-not-found]
+source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
+translation = "在標準安裝位置找不到 Docker Desktop。從 Windows 開始功能表開啟它。"
+
+[messages.document]
+source = "Document"
+translation = "文件"
+
+[messages.don-t-descend-into-other-drives-or-network]
+source = "Don't descend into other drives or network mounts inside the scanned folder"
+translation = "不掃描此資料夾內掛載的其他磁碟機或網路共用資源"
+
+[messages.double-click-to-explore-right-click-for-actions]
+source = "Double-click to explore / Right-click for actions"
+translation = "按兩下以瀏覽 / 按右鍵以查看操作"
+
+[messages.drive-free-of-total]
+source = "{ $free } free of { $total }"
+translation = "可用 { $free }，共 { $total }"
+
+[messages.drive-summary]
+source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }可用 { $free }，共 { $total }  ·  已用 { $used }  ·  { $filesystem }'
+
+[messages.dutch]
+source = "Dutch"
+translation = "荷蘭文"
+
+[messages.empty-recycle-bin-body]
+source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
+translation = "{ $drive } 上資源回收筒中的所有內容都將永久刪除。"
+
+[messages.empty-recycle-bin-button]
+source = "Empty Recycle Bin"
+translation = "清空資源回收筒"
+
+[messages.empty-recycle-bin-title]
+source = "Empty the Recycle Bin?"
+translation = "清空資源回收筒？"
+
+[messages.empty-temp-body]
+source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
+translation = "永久刪除{ $path }的內容？ Temp 資料夾將被保留。 Windows 拒絕刪除的項目將保留在原處。首先關閉應用程式以釋放更多暫存檔案。"
+
+[messages.empty-temp-button]
+source = "Clean Temp folder"
+translation = "清理暫存資料夾"
+
+[messages.empty-temp-title]
+source = "Clean your Temp folder?"
+translation = "清理您的暫存資料夾？"
+
+[messages.emptying-recycle-bin]
+source = "Emptying Recycle Bin…"
+translation = "正在清空資源回收筒…"
+
+[messages.encrypt]
+source = "Encrypt"
+translation = "已加密"
+
+[messages.english]
+source = "English"
+translation = "英文"
+
+[messages.equal]
+source = "Equal"
+translation = "均衡"
+
+[messages.exit]
+source = "Exit"
+translation = "結束"
+
+[messages.expand-to-browse-click-a-folder-to-view]
+source = "Expand to browse · Click a folder to view"
+translation = "展開以瀏覽 · 按一下資料夾以查看"
+
+[messages.file]
+source = "File"
+translation = "檔案"
+
+[messages.file-layout]
+source = "File Layout"
+translation = "檔案配置"
+
+[messages.file-size]
+source = "File Size"
+translation = "檔案大小"
+
+[messages.file-type]
+source = "FILE TYPE"
+translation = "檔案類型"
+
+[messages.file-types]
+source = "File types"
+translation = "檔案類型"
+
+[messages.filename]
+source = "Filename"
+translation = "檔案名稱"
+
+[messages.files]
+source = "FILES"
+translation = "檔案"
+
+[messages.files-2]
+source = "Files:"
+translation = "檔案："
+
+[messages.finding-drives]
+source = "Finding drives..."
+translation = "正在尋找磁碟機…"
+
+[messages.finnish]
+source = "Finnish"
+translation = "芬蘭文"
+
+[messages.folder]
+source = "FOLDER"
+translation = "資料夾"
+
+[messages.folder-2]
+source = "Folder"
+translation = "資料夾"
+
+[messages.folders]
+source = "Folders:"
+translation = "資料夾："
+
+[messages.folders-not-scanned]
+source = "Folders Not Scanned"
+translation = "未掃描的資料夾"
+
+[messages.french]
+source = "French"
+translation = "法文"
+
+[messages.full-path]
+source = "Full Path"
+translation = "完整路徑"
+
+[messages.game-archive]
+source = "Game archive"
+translation = "遊戲資源封存檔"
+
+[messages.german]
+source = "German"
+translation = "德文"
+
+[messages.greek]
+source = "Greek"
+translation = "希臘文"
+
+[messages.help]
+source = "Help"
+translation = "說明"
+
+[messages.hidden]
+source = "Hidden"
+translation = "隱藏"
+
+[messages.horz]
+source = "Horz"
+translation = "水平"
+
+[messages.hungarian]
+source = "Hungarian"
+translation = "匈牙利文"
+
+[messages.icon]
+source = "Icon"
+translation = "圖示"
+
+[messages.image]
+source = "Image"
+translation = "影像"
+
+[messages.indonesian]
+source = "Indonesian"
+translation = "印尼文"
+
+[messages.italian]
+source = "Italian"
+translation = "義大利文"
+
+[messages.japanese]
+source = "Japanese"
+translation = "日文"
+
+[messages.korean]
+source = "Korean"
+translation = "韓文"
+
+[messages.language]
+source = "Language"
+translation = "語言"
+
+[messages.licensed-under-mit-0-mit-no-attribution-no]
+source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
+translation = "採用 MIT-0（MIT No Attribution）授權條款。不提供任何形式的擔保。"
+
+[messages.live-catching-up]
+source = "Live · Catching up"
+translation = "即時 · 正在處理待更新的變更"
+
+[messages.live-demo]
+source = "Demo data - fictional files and sizes"
+translation = "示範資料 - 虛構檔案與大小"
+
+[messages.live-disconnected]
+source = "Live stopped · Rescan to reconnect"
+translation = "即時更新已停止 · 重新掃描以重新連線"
+
+[messages.live-reconciling]
+source = "Live · Reconciling changes in background"
+translation = "即時 · 正在背景同步變更"
+
+[messages.live-scan-cancelled]
+source = "Live unavailable: scan cancelled · Rescan to refresh"
+translation = "無法使用即時更新: 掃描已取消 · 重新掃描以更新"
+
+[messages.live-stopped]
+source = "Live stopped: { $error } · Rescan to reconnect"
+translation = "即時更新已停止: { $error } · 重新掃描以重新連線"
+
+[messages.live-unavailable]
+source = "Live unavailable: { $error } · Rescan to refresh"
+translation = "無法使用即時更新: { $error } · 重新掃描以更新"
+
+[messages.live-watching]
+source = "Live · Watching for changes"
+translation = "即時 · 正在監視變更"
+
+[messages.location]
+source = "Location:"
+translation = "位置："
+
+[messages.lots-of-files]
+source = "Lots of Files"
+translation = "檔案較多"
+
+[messages.make-room-for-what-matters]
+source = "Make room for what matters."
+translation = "為重要的事物騰出空間。"
+
+[messages.mapped-bytes-relative-to-used-drive-space-an]
+source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
+translation = "已統計位元組數占磁碟機已用空間的比例；這是估計值，並非檔案數量的百分比。"
+
+[messages.miscellaneous-options]
+source = "Miscellaneous Options"
+translation = "其他選項"
+
+[messages.modified]
+source = "Modified:"
+translation = "修改時間："
+
+[messages.move-selected-item-to-trash]
+source = "Move selected item to trash"
+translation = "將選取的項目移至資源回收筒"
+
+[messages.msec]
+source = "msec"
+translation = "毫秒"
+
+[messages.mute-colors]
+source = "Mute colors"
+translation = "柔化色彩"
+
+[messages.name]
+source = "Name:"
+translation = "名稱："
+
+[messages.no-drives-found-use-other-folder-to-pick]
+source = 'No drives found. Use "Other Folder..." to pick a folder.'
+translation = "找不到磁碟機。請使用「其他資料夾…」選取資料夾。"
+
+[messages.no-extension]
+source = "No extension"
+translation = "無副檔名"
+
+[messages.no-files-in-this-folder]
+source = "No files in this folder."
+translation = "此資料夾中沒有檔案。"
+
+[messages.normal]
+source = "Normal"
+translation = "一般"
+
+[messages.norwegian-bokmal]
+source = "Norwegian Bokmål"
+translation = "巴克摩挪威文"
+
+[messages.of-scan]
+source = "% OF SCAN"
+translation = "% 掃描進度"
+
+[messages.offline]
+source = "Offline"
+translation = "離線"
+
+[messages.ok]
+source = '{ "   OK   " }'
+translation = '{ "   確定   " }'
+
+[messages.open-a-drive-or-folder-to-see-where]
+source = "Open a drive or folder to see where your space goes."
+translation = "開啟磁碟機或資料夾，查看空間使用情況。"
+
+[messages.open-a-folder-or-drive-to-browse-its]
+source = "Open a folder or drive to browse its directory tree."
+translation = "開啟資料夾或磁碟機，瀏覽其目錄樹。"
+
+[messages.open-a-folder-to-begin]
+source = "Open a folder to begin"
+translation = "開啟資料夾以開始"
+
+[messages.open-drive]
+source = "Open Drive..."
+translation = "開啟磁碟機…"
+
+[messages.open-folder]
+source = "Open folder…"
+translation = "開啟資料夾…"
+
+[messages.open-in-explorer]
+source = "Open in Explorer"
+translation = "在檔案總管中開啟"
+
+[messages.open-in-file-manager]
+source = "Open in File Manager"
+translation = "在檔案管理員中開啟"
+
+[messages.open-in-finder]
+source = "Open in Finder"
+translation = "在 Finder 中開啟"
+
+[messages.open-selected-item]
+source = "Open selected item"
+translation = "開啟選取的項目"
+
+[messages.other-folder]
+source = "Other Folder..."
+translation = "其他資料夾…"
+
+[messages.palette]
+source = "Palette"
+translation = "配色方案"
+
+[messages.pause-scan]
+source = "Pause scan"
+translation = "暫停掃描"
+
+[messages.permission-hint-macos]
+source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
+translation = "macOS 會保護某些資料夾（郵件、訊息、其他使用者的資料夾等）。請在「系統設定」›「隱私權與安全性」中授予 Clawback「完整磁碟存取權」，以便掃描這些資料夾。"
+
+[messages.permission-hint-unix]
+source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
+translation = "某些資料夾僅允許其他使用者或 root 讀取。請以提高的權限執行 Clawback（例如 `sudo -E clawback /`），以便掃描這些資料夾。"
+
+[messages.permission-hint-windows]
+source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
+translation = "某些系統資料夾僅允許系統管理員讀取。請以系統管理員身分執行 Clawback，以便掃描這些資料夾。"
+
+[messages.polish]
+source = "Polish"
+translation = "波蘭文"
+
+[messages.portuguese-brazil]
+source = "Brazilian Portuguese"
+translation = "葡萄牙文（巴西）"
+
+[messages.portuguese-portugal]
+source = "European Portuguese"
+translation = "葡萄牙葡萄牙文"
+
+[messages.properties]
+source = "Properties"
+translation = "內容"
+
+[messages.properties-2]
+source = "Properties..."
+translation = "內容…"
+
+[messages.properties-disk-size-detail]
+source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
+translation = "磁碟使用情況與檔案大小不同，例如由於壓縮、稀疏資料或分配開銷。"
+
+[messages.properties-title]
+source = "{ $name } Properties"
+translation = "{ $name } 的內容"
+
+[messages.purge-failed]
+source = """
+{ $count ->
+        [one] { $count } item couldn’t be deleted.
+       *[other] { $count } items couldn’t be deleted.
+    } { $error }"""
+translation = "無法刪除的項目：{ $count }。 { $error }"
+
+[messages.read-only]
+source = "Read-Only"
+translation = "唯讀"
+
+[messages.reading-file-details]
+source = "Reading file details…"
+translation = "正在讀取檔案詳細資訊…"
+
+[messages.ready]
+source = "Ready"
+translation = "就緒"
+
+[messages.recent]
+source = "Recent"
+translation = "最近使用"
+
+[messages.reclaim-wsl-body]
+source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
+translation = "壓縮保留磁碟內容並透過回收填充零的區塊來減少其 Windows 檔案大小。它可能會回收很少的空間或根本不回收空間。首先清理 Docker 或 Linux 內部不需要的資料。"
+
+[messages.reclaim-wsl-space]
+source = "Reclaim WSL disk space"
+translation = "回收 WSL 磁碟空間"
+
+[messages.reclaim-wsl-stop]
+source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
+translation = "壓縮之前，請儲存您的工作，退出 Docker Desktop 並關閉 WSL 工作階段。在 PowerShell 中執行此命令以停止所有 WSL 發行版本。保持 Docker 和 WSL 停止，直到壓縮完成。 Windows 將請求系統管理員權限。"
+
+[messages.remember-window-position]
+source = "Remember Window Position"
+translation = "記住視窗位置"
+
+[messages.reparse-pt]
+source = "Reparse-Pt"
+translation = "重新剖析點"
+
+[messages.rescan]
+source = "Rescan"
+translation = "重新掃描"
+
+[messages.rescan-drive]
+source = "Rescan Drive"
+translation = "重新掃描磁碟機"
+
+[messages.resume-scan]
+source = "Resume scan"
+translation = "繼續掃描"
+
+[messages.romanian]
+source = "Romanian"
+translation = "羅馬尼亞文"
+
+[messages.run-open]
+source = "Run / Open"
+translation = "執行 / 開啟"
+
+[messages.russian]
+source = "Russian"
+translation = "俄文"
+
+[messages.scan-folder-error]
+source = '{ "Clawback could not scan the folder.\u000A\u000A" }{ $error }'
+translation = '{ "Clawback 無法掃描此資料夾。\u000A\u000A" }{ $error }'
+
+[messages.scan-path-error]
+source = 'Clawback could not scan { $path }{ ".\u000A\u000A" }{ $error }'
+translation = 'Clawback 無法掃描 { $path }{ "。\u000A\u000A" }{ $error }'
+
+[messages.scan-paused]
+source = "Scan paused"
+translation = "掃描已暫停"
+
+[messages.scan-summary]
+source = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files ->
+        [one] { $files } file
+       *[other] { $files } files
+    } | { $folders ->
+        [one] { $folders } folder
+       *[other] { $folders } folders
+    }"""
+translation = """
+{ $size } | { contents-count }
+
+# reference contents-count
+{ $files } 個檔案，{ $folders } 個資料夾"""
+
+[messages.scanning]
+source = "Scanning"
+translation = "正在掃描"
+
+[messages.scanning-options-apply-to-the-next-scan]
+source = "Scanning options apply to the next scan."
+translation = "掃描選項將於下次掃描時生效。"
+
+[messages.select-a-folder-to-view]
+source = "Select a Folder to View"
+translation = "選取要查看的資料夾"
+
+[messages.select-drive-to-view]
+source = "Select Drive to View"
+translation = "選取要查看的磁碟機"
+
+[messages.serbian-cyrillic]
+source = "Serbian, Cyrillic"
+translation = "塞爾維亞文（西里爾文）"
+
+[messages.settings]
+source = "Settings…"
+translation = "設定…"
+
+[messages.settings-appearance]
+source = "Appearance"
+translation = "外觀"
+
+[messages.settings-behavior]
+source = "Behavior"
+translation = "行為"
+
+[messages.settings-bias-help]
+source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
+translation = "靠左偏好橫向形狀；置中平衡兩者；靠右偏好直向形狀。"
+
+[messages.settings-deletion]
+source = "Deleting files"
+translation = "刪除檔案"
+
+[messages.settings-file-sizes]
+source = "Size accounting"
+translation = "大小計算"
+
+[messages.settings-info-tips]
+source = "File details"
+translation = "檔案詳細資料"
+
+[messages.settings-name-tips]
+source = "File names"
+translation = "檔案名稱"
+
+[messages.settings-save]
+source = "Save changes"
+translation = "儲存變更"
+
+[messages.settings-scan-scope]
+source = "Scan boundaries"
+translation = "掃描範圍"
+
+[messages.settings-window]
+source = "Window & interaction"
+translation = "視窗與互動"
+
+[messages.show-file-info-tips]
+source = "Show file details tooltips"
+translation = "顯示檔案資訊提示"
+
+[messages.show-file-name-tips]
+source = "Show file name tooltips"
+translation = "顯示檔案名稱提示"
+
+[messages.show-free-space]
+source = "Show Free Space"
+translation = "顯示可用空間"
+
+[messages.show-free-space-2]
+source = "Show free space"
+translation = "顯示可用空間"
+
+[messages.show-in-file-manager]
+source = "Show in File Manager"
+translation = "在檔案管理員中顯示"
+
+[messages.show-rollover-boxes]
+source = "Show Rollover Boxes"
+translation = "滑鼠停留時顯示框線"
+
+[messages.size]
+source = "SIZE"
+translation = "大小"
+
+[messages.size-2]
+source = "Size:"
+translation = "大小："
+
+[messages.size-on-disk]
+source = "Size on disk:"
+translation = "磁碟大小："
+
+[messages.source-code]
+source = "Source code"
+translation = "原始碼"
+
+[messages.spanish-latin-america]
+source = "Latin American Spanish"
+translation = "西班牙文（拉丁美洲）"
+
+[messages.spanish-spain]
+source = "Spanish from Spain"
+translation = "西班牙文（西班牙）"
+
+[messages.sparse]
+source = "Sparse"
+translation = "疏鬆檔案"
+
+[messages.special-file]
+source = "Special file"
+translation = "特殊檔案"
+
+[messages.stay-on-one-filesystem]
+source = "Stay on one filesystem"
+translation = "僅掃描同一檔案系統"
+
+[messages.swedish]
+source = "Swedish"
+translation = "瑞典文"
+
+[messages.symbolic-link]
+source = "Symbolic link"
+translation = "符號連結"
+
+[messages.symlink]
+source = "Symlink"
+translation = "符號連結"
+
+[messages.system]
+source = "System"
+translation = "系統"
+
+[messages.system-default]
+source = "System default"
+translation = "跟隨系統"
+
+[messages.takes-effect-the-next-time-clawback-starts]
+source = "Takes effect the next time Clawback starts"
+translation = "下次啟動 Clawback 時生效"
+
+[messages.temp]
+source = "Temp"
+translation = "暫存"
+
+[messages.temp-cleanup-skipped]
+source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
+translation = "清理後仍有 { $count } 個項目無法刪除。第一個原因：{ $error }"
+
+[messages.thai]
+source = "Thai"
+translation = "泰文"
+
+[messages.the-scan-worker-stopped-unexpectedly]
+source = "The scan worker stopped unexpectedly."
+translation = "掃描工作意外停止。"
+
+[messages.too-few-files]
+source = "Too Few Files"
+translation = "檔案過少"
+
+[messages.too-many-files]
+source = "Too Many Files"
+translation = "檔案過多"
+
+[messages.tooltips]
+source = "Tooltips"
+translation = "工具提示"
+
+[messages.try-a-faster-ntfs-scan-with-administrator-permission]
+source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
+translation = "嘗試以系統系統管理員權限執行更快的 NTFS 掃描。目前的掃描將繼續執行。"
+
+[messages.turbo]
+source = "Turbo"
+translation = "加速"
+
+[messages.turbo-assembling]
+source = "Turbo: assembling folders · { $files } files"
+translation = "Turbo：正在建立資料夾結構 · { $files } 個檔案"
+
+[messages.turbo-cancelled-normal-scan-continues]
+source = "Turbo cancelled — normal scan continues"
+translation = "已取消加速 — 一般掃描繼續進行"
+
+[messages.turbo-main-progress]
+source = "Showing Turbo progress · validating results…"
+translation = "正在顯示 Turbo 進度 · 正在驗證結果…"
+
+[messages.turbo-progress-help]
+source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
+translation = "當 Turbo 整理出的項目更多時，計數器會切換為顯示 Turbo 的進度。在完整的 Turbo 目錄樹通過驗證前，地圖會繼續顯示一般掃描的預覽。如果 Turbo 失敗，一般掃描會繼續。"
+
+[messages.turbo-read-progress]
+source = "Turbo: reading MFT { $percent }% · { $records } records"
+translation = "Turbo：正在讀取 MFT { $percent }% · { $records } 筆記錄"
+
+[messages.turbo-reading-mft]
+source = "Turbo: reading MFT…"
+translation = "加速：正在讀取 MFT…"
+
+[messages.turbo-resolving]
+source = "Turbo: resolving file names…"
+translation = "Turbo：正在解析檔案名稱…"
+
+[messages.turbo-sorting]
+source = "Turbo: sorting results…"
+translation = "Turbo：正在排序結果…"
+
+[messages.turbo-transferring]
+source = "Turbo: loading results…"
+translation = "Turbo：正在載入結果…"
+
+[messages.turbo-unavailable-normal-scan-continues]
+source = "Turbo unavailable — normal scan continues"
+translation = "無法使用加速 — 一般掃描繼續進行"
+
+[messages.turkish]
+source = "Turkish"
+translation = "土耳其文"
+
+[messages.type]
+source = "TYPE"
+translation = "類型"
+
+[messages.type-2]
+source = "Type:"
+translation = "類型："
+
+[messages.ukrainian]
+source = "Ukrainian"
+translation = "烏克蘭文"
+
+[messages.uninstall-details]
+source = "Installation details"
+translation = "安裝詳細資料"
+
+[messages.uninstall-dialog-title]
+source = "Uninstall"
+translation = "解除安裝"
+
+[messages.uninstall-identification-failed]
+source = "The application lookup did not finish. Nothing was deleted. Try again."
+translation = "應用程式查詢未完成。未刪除任何內容。請再試一次。"
+
+[messages.uninstall-identifying]
+source = "Identifying installed applications…"
+translation = "識別已安裝的應用程式…"
+
+[messages.uninstall-launch]
+source = "Launch uninstaller…"
+translation = "啟動解除安裝程式…"
+
+[messages.uninstall-no-match]
+source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
+translation = "無法辨識此資料夾的應用程式。打開已安裝的應用程式或 Steam 來管理其內容。"
+
+[messages.uninstall-open-apps]
+source = "Open Installed Apps"
+translation = "開啟已安裝的應用程式"
+
+[messages.uninstall-open-steam]
+source = "Open Steam library"
+translation = "開啟 Steam 庫"
+
+[messages.uninstall-publisher]
+source = "Publisher: { $publisher }"
+translation = "發布者：{ $publisher }"
+
+[messages.uninstall-refresh-help]
+source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
+translation = "磁碟地圖會隨檔案變更即時更新。如果無法使用即時更新，請在解除安裝後重新掃描。"
+
+[messages.uninstall-scope-short]
+source = "Removes the whole application, including files outside your selection."
+translation = "刪除整個應用程式，包括您選擇之外的檔案。"
+
+[messages.uninstall-selected-path]
+source = "Selected item"
+translation = "所選項目"
+
+[messages.uninstall-software]
+source = "Uninstall…"
+translation = "解除安裝…"
+
+[messages.uninstall-steam]
+source = "Uninstall through Steam…"
+translation = "透過 Steam 解除安裝…"
+
+[messages.uninstall-steam-id]
+source = "Steam app ID: { $id }"
+translation = "Steam 應用程式 ID：{ $id }"
+
+[messages.uninstall-title]
+source = "Uninstall an application or game"
+translation = "解除安裝應用程式或遊戲"
+
+[messages.uninstall-version]
+source = "Version: { $version }"
+translation = "版本：{ $version }"
+
+[messages.uninstall-via-steam]
+source = "Managed by Steam"
+translation = "由 Steam 管理"
+
+[messages.uninstall-via-windows]
+source = "Registered Windows application"
+translation = "已註冊的 Windows 應用程式"
+
+[messages.uninstall-whole-application]
+source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
+translation = "此位置屬於已安裝的軟體。選擇下面的應用程式以解除安裝整個應用程式，包括所選資料夾之外的檔案。 Windows 或 Steam 將處理刪除操作。"
+
+[messages.uninstaller-launch-error]
+source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
+translation = "Windows 無法啟動解除安裝程式（錯誤 { $code }）。打開已安裝的應用程式來管理此應用程式。"
+
+[messages.uninstaller-missing]
+source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
+translation = "找不到已註冊的解除安裝程式。請開啟 Windows 的「已安裝的應用程式」來管理此應用程式。"
+
+[messages.unreadable-folders]
+source = "Unreadable folders"
+translation = "無法讀取的資料夾"
+
+[messages.up-a-level]
+source = "Up a level"
+translation = "返回上一層"
+
+[messages.updating]
+source = "Updating…"
+translation = "正在更新…"
+
+[messages.use-file-lengths-not-size-on-disk]
+source = "Use file lengths, not size on disk"
+translation = "使用檔案大小，而非磁碟佔用空間"
+
+[messages.vert]
+source = "Vert"
+translation = "垂直"
+
+[messages.very-few-files]
+source = "Very Few Files"
+translation = "檔案很少"
+
+[messages.very-many-files]
+source = "Very Many Files"
+translation = "檔案很多"
+
+[messages.video]
+source = "Video"
+translation = "影片"
+
+[messages.vietnamese]
+source = "Vietnamese"
+translation = "越南文"
+
+[messages.view]
+source = "View"
+translation = "檢視"
+
+[messages.waiting-for-windows-permission]
+source = "Waiting for Windows permission…"
+translation = "正在等待 Windows 授權…"
+
+[messages.window-title]
+source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
+translation = "{ $path }  -  總計 { $total }  -  可用 { $free }  -  Clawback"
+
+[messages.workers]
+source = """
+{ $count ->
+        [one] { $count } worker
+       *[other] { $count } workers
+    }"""
+translation = "{ $count } 個並行工作"
+
+[messages.workers-help]
+source = "Current concurrency limit; automatically adapts to measured throughput and latency."
+translation = "目前的並行工作上限；根據測得的傳輸速率和延遲自動調整。"
+
+[messages.wsl-browse-linux]
+source = "Browse Linux files"
+translation = "瀏覽 Linux 檔案"
+
+[messages.wsl-browse-linux-detail]
+source = "Open this distribution in Explorer. This may start the distribution."
+translation = "在檔案總管中開啟此發行版。這可能會啟動該發行版。"
+
+[messages.wsl-choose-action]
+source = "What would you like to do?"
+translation = "你想做什麼？"
+
+[messages.wsl-cleanup-help]
+source = "Show cleanup guidance"
+translation = "顯示清理指南"
+
+[messages.wsl-compact-admin]
+source = "Windows will ask for administrator permission."
+translation = "Windows 將請求系統管理員權限。"
+
+[messages.wsl-compact-detail]
+source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
+translation = "回收零填充區塊，同時保留磁碟內容。需要停止 Docker 和 WSL。"
+
+[messages.wsl-compact-ready]
+source = "Ready to compact?"
+translation = "準備好壓縮了嗎？"
+
+[messages.wsl-compact-stop-short]
+source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
+translation = "儲存您的 Linux 工作並退出 Docker Desktop。 Clawback 將停止所有 WSL 工作階段，然後壓縮該磁碟。保持 Docker 和 WSL 關閉，直到完成。"
+
+[messages.wsl-compact-summary]
+source = "Recover unused disk space."
+translation = "恢復未使用的磁碟空間。"
+
+[messages.wsl-compact-tooltip]
+source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
+translation = "回收填滿零的區塊，不會刪除您的檔案。請先清理 Linux 或 Docker 內部不需要的資料；可回收的空間依情況而異。壓縮期間必須保持 Docker 和 WSL 停止。"
+
+[messages.wsl-copy-command]
+source = "Copy command"
+translation = "複製指令"
+
+[messages.wsl-disk-details]
+source = "File details"
+translation = "檔案詳細資料"
+
+[messages.wsl-disk-path]
+source = "Disk file"
+translation = "磁碟檔案"
+
+[messages.wsl-disk-title]
+source = "WSL virtual disk"
+translation = "WSL 虛擬磁碟"
+
+[messages.wsl-distribution]
+source = "WSL distribution"
+translation = "WSL 發行版"
+
+[messages.wsl-docker-cleanup-help]
+source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
+translation = "在 Docker Desktop 中，檢查映像、已停止的容器和磁碟區。也可以使用「docker builder prune」清理建置快取。磁碟區可能包含資料庫或其他需要的檔案，請在刪除前檢查。清理和壓縮磁碟是兩個獨立步驟。"
+
+[messages.wsl-docker-data-description]
+source = "Stores Docker images, containers, volumes and build cache."
+translation = "儲存 Docker 映像、容器、磁碟區和建置快取。"
+
+[messages.wsl-docker-system-description]
+source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
+translation = "儲存Docker Desktop的Linux環境。 Docker 應用程式資料可能儲存在單獨的磁碟中。"
+
+[messages.wsl-linux-cleanup-help]
+source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
+translation = "瀏覽發行版的檔案並刪除不再需要的資料。使用其 Linux 套件管理器來清理套件快取。清理後，發行版內的“sudo fstrim -av”可能有助於在關閉 WSL 和壓縮之前釋放未使用的區塊。"
+
+[messages.wsl-linux-description]
+source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
+translation = "儲存此 Linux 發行版的檔案系統，包括其程式和 Linux 端檔案。"
+
+[messages.wsl-open-docker]
+source = "Open Docker Desktop"
+translation = "開啟 Docker Desktop"
+
+[messages.wsl-open-docker-detail]
+source = "Review containers, images and volumes before removing unwanted data."
+translation = "在刪除不需要的資料之前檢查容器、映像和磁碟區。"
+
+[messages.wsl-owner-docker-data]
+source = "Docker Desktop — data disk"
+translation = "Docker Desktop — 資料盤"
+
+[messages.wsl-owner-docker-system]
+source = "Docker Desktop — system disk"
+translation = "Docker Desktop — 系統磁碟"
+
+[messages.wsl-owner-unidentified]
+source = "Unidentified Linux distribution"
+translation = "未識別的 Linux 發行版本"
+
+[messages.wsl-owner-unidentified-detail]
+source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
+translation = "此路徑看起來是 WSL 安裝位置，但找不到目前 Windows 使用者的相符註冊資訊。套件和檔案路徑可能有助於辨識它。"
+
+[messages.wsl-package]
+source = "Windows package"
+translation = "Windows 套件"
+
+[messages.wsl-prepare-compaction]
+source = "Compact disk…"
+translation = "壓縮磁碟…"
+
+[messages.wsl-stop-and-compact]
+source = "Stop WSL and compact"
+translation = "停止 WSL 並壓縮磁碟"
+
+[messages.zoom-full]
+source = "Zoom Full"
+translation = "顯示全部"
+
+[messages.zoom-in]
+source = "Zoom In"
+translation = "放大"
+
+[messages.zoom-in-2]
+source = "Zoom in"
+translation = "放大"
+
+[messages.zoom-out]
+source = "Zoom Out"
+translation = "縮小"
