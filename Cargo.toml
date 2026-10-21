@@ -5,7 +5,7 @@ default-members = [".", "crates/clawback-core"]
 [workspace.package]
 version = "0.3.0"
 edition = "2024"
-rust-version = "1.98"
+rust-version = "1.95"
 license = "MIT-0"
 repository = "https://github.com/Azazel-Labs/Clawback"
 authors = ["Azazel Labs"]
