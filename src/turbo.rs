@@ -1,4 +1,5 @@
 //! Windows-only read-only MFT helper. The GUI never elevates itself.
+pub mod service;
 mod wire;
 use crate::platform::{Apartment, wide};
 use clawback_core::{
@@ -120,7 +121,7 @@ impl Attempt {
         let cancelled = stop.clone();
         let reporter = control.clone();
         let thread = std::thread::Builder::new().name("clawback-turbo".into()).spawn(move || {
-            let result = launch(&root, &options, cancelled, paused, &reporter, true);
+            let result = launch(&root, &options, cancelled, paused, &reporter, Launch::Elevated);
             if let Err(error) = &result {
                 reporter.failed(error);
             }
@@ -213,12 +214,32 @@ fn server(name: &str) -> io::Result<File> {
     Ok(unsafe { File::from_raw_handle(handle) })
 }
 
-fn spawn_helper(name: &str, elevated: bool) -> io::Result<OwnedHandle> {
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Launch {
+    Elevated,
+    #[cfg(feature = "turbo-probe")]
+    ConsentOnly,
+    Unelevated,
+    Service,
+}
+
+fn spawn_helper(name: &str, mode: Launch) -> io::Result<OwnedHandle> {
+    if matches!(mode, Launch::Elevated | Launch::Service)
+        && let Some(process) = service::request(name)?
+    {
+        return Ok(process);
+    }
+    if mode == Launch::Service {
+        return Err(io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "Turbo service unavailable or this user is not authorized",
+        ));
+    }
     let executable = wide(std::env::current_exe()?.as_os_str());
     // Only internally generated ASCII pipe names and a numeric PID are passed.
     // No shell, user-supplied command line, or root path interpolation.
     let arguments = wide(OsStr::new(&format!("--mft-worker {} {name}", std::process::id())));
-    let verb = wide(OsStr::new(if elevated { "runas" } else { "open" }));
+    let verb = wide(OsStr::new(if mode == Launch::Unelevated { "open" } else { "runas" }));
     // COM is scoped to this dedicated launcher thread; the shell manages without it.
     let _apartment = Apartment::enter().ok();
     // SAFETY: Win32 structure permits zero initialization before setting cbSize.
@@ -294,13 +315,13 @@ fn launch(
     stop: Arc<AtomicBool>,
     paused: Arc<AtomicBool>,
     control: &Control,
-    elevated: bool,
+    mode: Launch,
 ) -> io::Result<ScanResult> {
     // The elevated process may start in a different working directory.
     let root = std::path::absolute(root)?;
     let name = pipe_name()?;
     let mut pipe = server(&name)?;
-    let process = spawn_helper(&name, elevated)?;
+    let process = spawn_helper(&name, mode)?;
     let start = Instant::now();
     loop {
         if stop.load(Ordering::Relaxed) {
@@ -350,7 +371,11 @@ fn launch(
         return Err(io::Error::last_os_error());
     }
     pipe.write_all(wire::MAGIC)?;
-    wire::string(&mut pipe, root.as_os_str())?;
+    // Resolve mounted-folder volumes while still running as the caller. The
+    // service worker accepts only a local drive root or a volume GUID, never an
+    // arbitrary path which could cause LocalSystem to contact a network share.
+    let request_root = service::volume_root(&root).unwrap_or_else(|| root.clone());
+    wire::string(&mut pipe, request_root.as_os_str())?;
     wire::write_options(&mut pipe, options)?;
     control.set(Status::Reading);
     let mut input = BufReader::with_capacity(
@@ -379,10 +404,12 @@ fn launch(
 
 pub fn worker_entry() -> Option<io::Result<()>> {
     let mut args = std::env::args_os().skip(1);
-    if args.next().as_deref() != Some(OsStr::new("--mft-worker")) {
-        return None;
-    }
-    Some(worker_args(args).and_then(|(parent, name)| worker(parent, &name)))
+    let service = match args.next()?.to_str()? {
+        "--mft-worker" => false,
+        "--mft-service-worker" => true,
+        _ => return None,
+    };
+    Some(worker_args(args).and_then(|(parent, name)| worker(parent, &name, service)))
 }
 
 /// `<parent PID> <pipe name>`, where the name must be one that parent generates.
@@ -397,7 +424,16 @@ fn worker_args(mut args: impl Iterator<Item = OsString>) -> io::Result<(u32, Str
     Ok((parent, name))
 }
 
-fn worker(parent: u32, name: &str) -> io::Result<()> {
+fn worker(parent: u32, name: &str, service: bool) -> io::Result<()> {
+    // A service client must not retain a privileged worker by sending half a request.
+    let handshake = Arc::new(AtomicBool::new(false));
+    let completed = handshake.clone();
+    std::thread::Builder::new().name("clawback-turbo-handshake".into()).spawn(move || {
+        std::thread::sleep(Duration::from_secs(30));
+        if !completed.load(Ordering::Acquire) {
+            std::process::exit(1);
+        }
+    })?;
     // Identification only: a pipe server must never impersonate this elevated client.
     let mut pipe = OpenOptions::new()
         .read(true)
@@ -415,7 +451,17 @@ fn worker(parent: u32, name: &str) -> io::Result<()> {
         return Err(wire::invalid());
     }
     let root = PathBuf::from(wire::read_string(&mut pipe)?);
-    let scan = MftScan::new(&root, wire::read_options(&mut pipe)?)?;
+    let options = wire::read_options(&mut pipe)?;
+    if service && !service::local_volume_root(&root) {
+        wire::write_tag(&mut pipe, wire::Tag::Failed)?;
+        wire::write_error(
+            &mut pipe,
+            &io::Error::new(io::ErrorKind::Unsupported, "Turbo service requires a local volume root"),
+        )?;
+        return Ok(());
+    }
+    let scan = MftScan::new(&root, options)?;
+    handshake.store(true, Ordering::Release);
     let telemetry = scan.shared().clone();
     let shared = telemetry.clone();
     let mut commands = pipe.try_clone()?;
@@ -554,7 +600,7 @@ fn probe(args: &[OsString]) -> io::Result<()> {
         Arc::new(AtomicBool::new(false)),
         Arc::new(AtomicBool::new(false)),
         &control,
-        matches!(mode, "elevated" | "decline"),
+        if matches!(mode, "elevated" | "decline") { Launch::ConsentOnly } else { Launch::Unelevated },
     );
     match result {
         Ok(result) if mode != "decline" => {

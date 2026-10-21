@@ -165,17 +165,34 @@ jobs:
           $name = "clawback-$env:RELEASE_TAG-$env:RELEASE_TARGET"
           $setup = (Resolve-Path "dist/$name-setup.exe").Path
           $installDir = Join-Path $env:ProgramFiles 'Clawback'
+          $sid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
           # Exercise both a fresh installation and reinstall/upgrade in place.
           foreach ($attempt in 1..2) {
-            $process = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-') -Wait -PassThru -WindowStyle Hidden
+            $installArgs = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', '/TASKS=turbo')
+            if ($attempt -eq 1) { $installArgs += "/TurboUser=$sid" }
+            $process = Start-Process -FilePath $setup -ArgumentList $installArgs -Wait -PassThru -WindowStyle Hidden
             if ($process.ExitCode -ne 0) { throw "Install attempt $attempt failed: $($process.ExitCode)" }
             $expected = (Get-FileHash "dist/$name/clawback.exe").Hash
             $actual = (Get-FileHash (Join-Path $installDir 'clawback.exe')).Hash
             if ($actual -ne $expected) { throw 'Installed executable differs from portable build' }
+            if ((Get-Service ClawbackTurbo).Status -ne 'Running') { throw 'Turbo service did not start' }
+            $process = Start-Process -FilePath (Join-Path $installDir 'clawback.exe') -ArgumentList '--turbo-service-check' -Wait -PassThru -WindowStyle Hidden
+            if ($process.ExitCode -ne 0) { throw "Turbo broker protocol check failed: $($process.ExitCode)" }
           }
+          Restart-Service ClawbackTurbo
+          (Get-Service ClawbackTurbo).WaitForStatus('Running', [TimeSpan]::FromSeconds(30))
+          $process = Start-Process -FilePath (Join-Path $installDir 'clawback.exe') -ArgumentList '--turbo-service-check' -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) { throw 'Turbo service failed after restart' }
+          # A different authorized SID must deny this caller without opening UAC.
+          $app = Join-Path $installDir 'clawback.exe'
+          $process = Start-Process -FilePath $app -ArgumentList @('--turbo-service-install', 'S-1-5-21-111-222-333-1001') -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) { throw 'Could not configure denied-user test' }
+          $process = Start-Process -FilePath $app -ArgumentList '--turbo-service-check' -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -eq 0) { throw 'Turbo service accepted an unauthorized user' }
           $process = Start-Process -FilePath (Join-Path $installDir 'unins000.exe') -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART') -Wait -PassThru -WindowStyle Hidden
           if ($process.ExitCode -ne 0) { throw "Uninstall failed: $($process.ExitCode)" }
           if (Test-Path -LiteralPath (Join-Path $installDir 'clawback.exe')) { throw 'Uninstall left the executable behind' }
+          if (Get-Service ClawbackTurbo -ErrorAction SilentlyContinue) { throw 'Uninstall left the service behind' }
       - name: Remove unpacked payload
         shell: bash
         run: rm -rf "dist/clawback-${{ needs.plan.outputs.tag }}-${{ matrix.target }}"

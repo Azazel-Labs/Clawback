@@ -105,6 +105,13 @@ fn launch_mode(mode: Mode, graphical: bool, terminal: bool, dumb: bool) -> Optio
 
 fn main() -> ExitCode {
     #[cfg(windows)]
+    if let Some(result) = turbo::service::entry() {
+        return match result {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => std::process::exit(error.raw_os_error().unwrap_or(1)),
+        };
+    }
+    #[cfg(windows)]
     if let Some(result) = app::special::worker_entry() {
         return match result {
             Ok(()) => ExitCode::SUCCESS,
