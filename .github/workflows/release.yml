@@ -131,8 +131,54 @@ jobs:
           else
             tar -C dist -czf "dist/$name.tar.gz" "$name"
           fi
-          rm -rf "dist/$name"
           ls -l dist
+      - name: Install Inno Setup 6.7.3
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = Join-Path $env:RUNNER_TEMP 'innosetup-6.7.3.exe'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe' -OutFile $setup
+          $signature = Get-AuthenticodeSignature -LiteralPath $setup
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'CN=Pyrsys B\.V\.') {
+            throw 'Inno Setup download has an unexpected or invalid signature'
+          }
+          $installDir = Join-Path $env:RUNNER_TEMP 'inno-setup'
+          $process = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', '/NOICONS', "/DIR=`"$installDir`"") -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) { throw "Inno Setup installation failed: $($process.ExitCode)" }
+          "INNO_COMPILER=$installDir\ISCC.exe" >> $env:GITHUB_ENV
+      - name: Build Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ needs.plan.outputs.tag }}
+          RELEASE_TARGET: ${{ matrix.target }}
+        run: ./packaging/windows/build-installer.ps1 -Target $env:RELEASE_TARGET -Tag $env:RELEASE_TAG -Compiler $env:INNO_COMPILER
+      - name: Smoke test Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ needs.plan.outputs.tag }}
+          RELEASE_TARGET: ${{ matrix.target }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $name = "clawback-$env:RELEASE_TAG-$env:RELEASE_TARGET"
+          $setup = (Resolve-Path "dist/$name-setup.exe").Path
+          $installDir = Join-Path $env:ProgramFiles 'Clawback'
+          # Exercise both a fresh installation and reinstall/upgrade in place.
+          foreach ($attempt in 1..2) {
+            $process = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-') -Wait -PassThru -WindowStyle Hidden
+            if ($process.ExitCode -ne 0) { throw "Install attempt $attempt failed: $($process.ExitCode)" }
+            $expected = (Get-FileHash "dist/$name/clawback.exe").Hash
+            $actual = (Get-FileHash (Join-Path $installDir 'clawback.exe')).Hash
+            if ($actual -ne $expected) { throw 'Installed executable differs from portable build' }
+          }
+          $process = Start-Process -FilePath (Join-Path $installDir 'unins000.exe') -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART') -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) { throw "Uninstall failed: $($process.ExitCode)" }
+          if (Test-Path -LiteralPath (Join-Path $installDir 'clawback.exe')) { throw 'Uninstall left the executable behind' }
+      - name: Remove unpacked payload
+        shell: bash
+        run: rm -rf "dist/clawback-${{ needs.plan.outputs.tag }}-${{ matrix.target }}"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: clawback-${{ matrix.target }}
