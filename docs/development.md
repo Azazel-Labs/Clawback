@@ -160,6 +160,28 @@ Use `cargo run -- --gui` to launch the desktop interface explicitly. To measure 
 Static map geometry and label strings are prepared on the layout worker. Each UI frame prepares at most eight new labels, with a 1 ms preparation budget; subsequent frames reuse the cached geometry and text. At high density, the largest readable labels take priority while every box remains interactive.
 
 
+## Windows release installers
+
+The release workflow builds both portable ZIPs and `-setup.exe` installers for
+Windows x64 and ARM64, including nightly and prerelease builds. Both formats use
+the same `cargo xtask package` payload, including documentation and licenses.
+The existing release upload and SHA-256 checksum steps include the installers.
+
+The installer uses pinned Inno Setup 6.7.3, downloaded from its official release
+and checked for a valid publisher signature. It installs to Program Files with
+administrator approval, adds a Start menu shortcut and optional desktop shortcut,
+and registers an uninstaller. Reinstalling updates the same application entry;
+nightly and stable builds replace each other rather than installing side by side.
+The release job checks installation, reinstallation, executable integrity and
+uninstallation on each Windows runner before publishing.
+
+To compile locally after building the target binary and installing Inno Setup:
+
+```powershell
+cargo xtask package x86_64-pc-windows-msvc nightly
+./packaging/windows/build-installer.ps1 -Target x86_64-pc-windows-msvc -Tag nightly -Compiler 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+```
+
 ## Marketing screenshots
 
 With a graphical desktop session and working GPU driver, run:
