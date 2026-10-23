@@ -1,5 +1,8 @@
 # Releasing Clawback
 
+For the Windows Steam depot and its first-launch Turbo helper setup, see
+[Steam distribution](steam.md).
+
 Release tooling is Rust: `cargo xtask`. You need Rust and Git, with push access to
 the repository. VS Code provides the same commands under **Tasks: Run Task →
 Clawback: Release …**.

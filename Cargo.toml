@@ -90,6 +90,8 @@ include = [
 ]
 
 [features]
+## Isolated Windows Turbo service for the Steam distribution.
+steam = []
 screenshots = []
 turbo-probe = []
 startup-probe = []

@@ -1,0 +1,64 @@
+name: Build Steam Windows depot
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_id:
+        description: Steamworks app ID
+        required: true
+        type: string
+      depot_id:
+        description: Windows x64 depot ID
+        required: true
+        type: string
+      tag:
+        description: Package label (builds the selected workflow ref)
+        required: true
+        default: nightly
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: rustup toolchain install
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: . -> target/steam
+      - name: Install compiler in portable mode
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = Join-Path $env:RUNNER_TEMP 'innosetup-6.7.3.exe'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe' -OutFile $setup
+          $signature = Get-AuthenticodeSignature -LiteralPath $setup
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'CN=Pyrsys B\.V\.') {
+            throw 'Unexpected Inno Setup signature'
+          }
+          $installDir = Join-Path $env:RUNNER_TEMP 'inno-setup'
+          $process = Start-Process -FilePath $setup -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', '/PORTABLE=1', "/DIR=`"$installDir`"") -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -ne 0) { throw 'Compiler installation failed' }
+          "INNO_COMPILER=$installDir\ISCC.exe" >> $env:GITHUB_ENV
+      - name: Build depot
+        shell: pwsh
+        env:
+          STEAM_APP_ID: ${{ inputs.app_id }}
+          STEAM_DEPOT_ID: ${{ inputs.depot_id }}
+          STEAM_TAG: ${{ inputs.tag }}
+        run: ./packaging/steam/build-depot.ps1 -AppId $env:STEAM_APP_ID -DepotId $env:STEAM_DEPOT_ID -Tag $env:STEAM_TAG -Compiler $env:INNO_COMPILER
+      - name: Test helper install, upgrade, authorization, and removal
+        shell: pwsh
+        env:
+          STEAM_TAG: ${{ inputs.tag }}
+        run: ./packaging/steam/test-helper.ps1 -Depot "dist/steam-$env:STEAM_TAG-windows"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: steam-windows
+          path: |
+            dist/steam-*/content/**
+            dist/steam-*/*.vdf
+          if-no-files-found: error
