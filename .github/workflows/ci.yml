@@ -61,6 +61,12 @@ jobs:
         run: cargo xtask translations check
       - name: Tests
         run: cargo test --workspace --locked
+      - name: Steam Turbo service checks
+        if: runner.os == 'Windows'
+        run: |
+          cargo clippy --locked --all-targets --features steam -- -D warnings
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --features steam turbo::
       - name: Windows Turbo helper failure path (no elevation)
         if: runner.os == 'Windows'
         run: cargo xtask test-turbo smoke .

@@ -124,7 +124,7 @@ fn protected_executable() -> io::Result<std::path::PathBuf> {
     unsafe {
         CoTaskMemFree(folder.cast());
     }
-    let expected = std::path::PathBuf::from(path?).join("Clawback/clawback.exe");
+    let expected = std::path::PathBuf::from(path?).join(super::INSTALL_FOLDER).join("clawback.exe");
     let actual = std::env::current_exe()?.canonicalize()?;
     // Reject junctions/symlinks, including the installation directory itself.
     for ancestor in expected.ancestors() {
@@ -134,7 +134,10 @@ fn protected_executable() -> io::Result<std::path::PathBuf> {
         }
     }
     if actual != expected.canonicalize()? {
-        return Err(io::Error::other("Install the Turbo service from Program Files\\Clawback"));
+        return Err(io::Error::other(format!(
+            "Install the Turbo service from Program Files\\{}",
+            super::INSTALL_FOLDER
+        )));
     }
     Ok(expected)
 }
@@ -212,7 +215,11 @@ pub(super) fn install(authorized_sid: Option<&str>) -> io::Result<()> {
     stop()?;
     let command = wide(OsStr::new(&format!("\"{}\" --turbo-service {sid}", executable.display())));
     let name = wide(OsStr::new(NAME));
-    let display = wide(OsStr::new("Clawback Turbo (read-only NTFS scans)"));
+    let display = wide(OsStr::new(if cfg!(feature = "steam") {
+        "Clawback Steam Turbo (read-only NTFS scans)"
+    } else {
+        "Clawback Turbo (read-only NTFS scans)"
+    }));
     let access = SERVICE_CHANGE_CONFIG | SERVICE_START | SERVICE_QUERY_STATUS;
     let handle = match service(access) {
         Ok(handle) => {

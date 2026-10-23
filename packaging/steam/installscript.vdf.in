@@ -1,0 +1,21 @@
+"InstallScript"
+{
+    "Run Process"
+    {
+        "Clawback Steam Turbo @REVISION@"
+        {
+            "HasRunKey" "HKEY_LOCAL_MACHINE\\Software\\Valve\\Steam\\Apps\\@APP_ID@"
+            "Process 1" "%INSTALLDIR%\\redist\\clawback-turbo-setup.exe"
+            "Command 1" "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-"
+            "AsCurrentUser" "1"
+        }
+    }
+    "Run Process On Uninstall"
+    {
+        "Clawback Steam Turbo"
+        {
+            "Process 1" "%ProgramW6432%\\Clawback Steam Turbo\\unins000.exe"
+            "Command 1" "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART"
+        }
+    }
+}

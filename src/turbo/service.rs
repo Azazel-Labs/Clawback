@@ -47,8 +47,10 @@ use windows_sys::Win32::{
     },
 };
 
-const NAME: &str = "ClawbackTurbo";
-const PIPE: &str = r"\\.\pipe\ClawbackTurbo-v1";
+const NAME: &str = if cfg!(feature = "steam") { "ClawbackSteamTurbo" } else { "ClawbackTurbo" };
+const PIPE: &str =
+    if cfg!(feature = "steam") { r"\\.\pipe\ClawbackSteamTurbo-v1" } else { r"\\.\pipe\ClawbackTurbo-v1" };
+const INSTALL_FOLDER: &str = if cfg!(feature = "steam") { "Clawback Steam Turbo" } else { "Clawback" };
 const MAGIC: &[u8; 8] = b"CLAWBRK1";
 // Excludes FILE_CREATE_PIPE_INSTANCE: clients must never create broker instances.
 const CLIENT_ACCESS: u32 = 0x0012_019b;
