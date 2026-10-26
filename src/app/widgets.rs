@@ -70,6 +70,42 @@ pub(super) fn fit_text(
     kept(low)
 }
 
+/// A strip of tabs on a shared baseline, the active one underlined in the accent color.
+pub(super) fn tabs<T: Copy + PartialEq>(ui: &mut eframe::egui::Ui, current: &mut T, tabs: &[(T, String)]) {
+    use crate::theme;
+    use eframe::egui::{FontId, Rect, Sense, Stroke, pos2, vec2};
+    let height = 30.0;
+    let (strip, _) = ui.allocate_exact_size(vec2(ui.available_width(), height), Sense::hover());
+    let painter = ui.painter().clone();
+    painter.hline(strip.x_range(), strip.bottom() - 0.5, Stroke::new(1.0, theme::PANEL_EDGE));
+    let mut left = strip.left();
+    for (index, (value, label)) in tabs.iter().enumerate() {
+        let galley = painter.layout_no_wrap(label.clone(), FontId::proportional(13.0), theme::TEXT);
+        let tab = Rect::from_min_size(pos2(left, strip.top()), vec2(galley.size().x + 24.0, height));
+        let response = ui
+            .interact(tab, ui.id().with(("tab", index)), Sense::click())
+            .on_hover_cursor(eframe::egui::CursorIcon::PointingHand);
+        if response.clicked() {
+            *current = *value;
+        }
+        let active = *current == *value;
+        if response.hovered() && !active {
+            painter.rect_filled(tab.shrink2(vec2(2.0, 3.0)), 4.0, theme::ROW_ALT);
+        }
+        let color = if active || response.hovered() { theme::TEXT } else { theme::MUTED };
+        painter.galley_with_override_text_color(tab.center() - galley.size() / 2.0, galley, color);
+        if active {
+            let underline = Rect::from_min_max(
+                pos2(tab.left() + 6.0, strip.bottom() - 2.5),
+                pos2(tab.right() - 6.0, strip.bottom()),
+            );
+            painter.rect_filled(underline, 1.0, theme::ACCENT);
+        }
+        left = tab.right() + 2.0;
+    }
+    ui.add_space(4.0);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -1,7 +1,7 @@
 //! Prepare static map geometry off-thread, then amortize font work across frames.
 use crate::theme;
 use clawback_core::{
-    Tree, format,
+    NodeId, Tree, format,
     layout::{DisplayBox, Item},
     palette,
 };
@@ -15,6 +15,35 @@ use std::{
 /// Pick the higher-contrast ink once on the layout worker, not each frame.
 fn label_color(rgb: palette::Rgb) -> Color32 {
     theme::rgb(palette::ink(rgb))
+}
+
+/// Map colors while comparing with a snapshot: each changed entry's growth (positive) or
+/// shrinkage (negative) in -1..=1. Entries without a change are dimmed.
+#[derive(Debug, Default)]
+pub struct Tint(pub HashMap<NodeId, f32>);
+
+impl Tint {
+    const GREW: palette::Rgb = [226, 104, 92];
+    const SHRANK: palette::Rgb = [96, 186, 128];
+    const QUIET: palette::Rgb = [52, 56, 60];
+
+    fn apply(&self, node: Option<NodeId>, base: palette::Rgb) -> palette::Rgb {
+        let mix = |a: palette::Rgb, b: palette::Rgb, t: f32| {
+            std::array::from_fn(|i| (f32::from(a[i]) + (f32::from(b[i]) - f32::from(a[i])) * t) as u8)
+        };
+        let quiet = mix(base, Self::QUIET, 0.7);
+        match node.and_then(|node| self.0.get(&node)) {
+            Some(&level) if level > 0.0 => mix(quiet, Self::GREW, 0.35 + 0.65 * level.min(1.0)),
+            Some(&level) if level < 0.0 => mix(quiet, Self::SHRANK, 0.35 + 0.65 * (-level).min(1.0)),
+            _ => quiet,
+        }
+    }
+
+    /// How strongly a change of `delta` bytes shows: 1 MB is faint, 10 GB and more is full.
+    pub fn level(delta: i128) -> f32 {
+        let magnitude = ((delta.unsigned_abs() as f64).max(1.0).log10() - 6.0) / 4.0;
+        (magnitude.clamp(0.1, 1.0) as f32).copysign(delta as f32)
+    }
 }
 
 /// Vertical distance between label lines.
@@ -115,9 +144,17 @@ impl PreparedMap {
         schemes: [usize; 2],
         muted: bool,
         free: [u64; 2],
+        tint: Option<&Tint>,
     ) -> Self {
         let _span = crate::perf::span("worker.map_geometry");
         let special = crate::app::special::Inventory::discover(tree, false);
+        let base_color = |b: &DisplayBox| {
+            if b.item == Item::Free {
+                return theme::FREE_SPACE;
+            }
+            let base = palette::display_color(schemes[usize::from(b.folder)], b.depth, muted);
+            tint.map_or(base, |tint| tint.apply(b.node(), base))
+        };
         let mut mesh = Mesh::default();
         mesh.reserve_vertices(boxes.len() * 8);
         mesh.reserve_triangles(boxes.len() * 4);
@@ -126,9 +163,7 @@ impl PreparedMap {
             if !rect.is_positive() {
                 continue;
             }
-            let scheme = schemes[usize::from(b.folder)];
-            let base =
-                if b.item == Item::Free { theme::FREE_SPACE } else { palette::display_color(scheme, b.depth, muted) };
+            let base = base_color(b);
             mesh.add_colored_rect(rect, theme::BORDER);
             let rect = rect.shrink(0.6);
             if !rect.is_positive() {
@@ -187,11 +222,7 @@ impl PreparedMap {
                         lines.push(format::date(node.mtime));
                     }
                 }
-                let color = if b.item == Item::Free {
-                    theme::TEXT
-                } else {
-                    label_color(palette::display_color(schemes[usize::from(b.folder)], b.depth, muted))
-                };
+                let color = if b.item == Item::Free { theme::TEXT } else { label_color(base_color(b)) };
                 LabelSpec {
                     key: LabelKey { color, folder: b.folder, lines },
                     rect: screen_rect(b, origin),
@@ -300,7 +331,7 @@ mod tests {
                 folder: false,
             })
             .collect();
-        let mut prepared = PreparedMap::build(&tree, &boxes, Pos2::ZERO, [0, 0], false, [0, 0]);
+        let mut prepared = PreparedMap::build(&tree, &boxes, Pos2::ZERO, [0, 0], false, [0, 0], None);
         assert_eq!(prepared.pending.len(), MAX_LABELS);
         let mesh = prepared.mesh.clone();
         let ctx = egui::Context::default();

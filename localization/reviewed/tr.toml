@@ -92,6 +92,42 @@ translation = "İptal"
 source = "Catalan"
 translation = "Katalanca"
 
+[messages.changes]
+source = "Changes"
+translation = "Değişiklikler"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "{ $snapshot } tarihinden beri"
+
+[messages.changes-all]
+source = "All"
+translation = "Tümü"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Karşılaştırılıyor…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } boşaldı"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Büyüyen"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } arttı"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Bu anlık görüntüden beri hiçbir şey değişmedi."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Küçülen"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Basitleştirilmiş Çince"
@@ -731,6 +767,90 @@ translation = "Hazır"
 source = "Recent"
 translation = "Son kullanılanlar"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Geri kazan"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "{ $browser } önbelleği; önce { $browser } uygulamasını kapatın"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Programı tarafından yeniden oluşturduğu bir önbellek olarak işaretlenmiş"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Önbellekler"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Temizlik"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Geliştirme artıkları"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Geri kazanılacak alan aranıyor…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } bulundu"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle proje önbelleği; sonraki derlemede yeniden oluşturulur"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Son oynanma: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Hiç oynanmadı"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm paketleri; npm install bunları geri yükler"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Burada geri kazanılacak belirgin bir şey yok."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "{ $tool } indirme önbelleği; gerektiğinde yeniden doldurulur"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods paketleri; pod install bunları geri yükler"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python sanal ortamı; gereksinimlerinizden yeniden oluşturun"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Boşaltılmayı bekleyen silinmiş öğeler"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust derleme çıktısı; cargo build bunu yeniden oluşturur"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Haritada göstermek için tıklayın."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Uygulamaların bıraktığı geçici dosyalar"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL sanal diski; kendi kendine küçülmez"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Sıkıştırma, diskin içeriğini korur ve sıfırlarla dolu blokları geri kazanarak Windows'taki disk dosyasının boyutunu azaltır. Çok az alan kazandırabilir veya hiç kazandırmayabilir. Önce Docker veya Linux içindeki gereksiz verileri temizleyin."
@@ -908,6 +1028,102 @@ translation = "Boyut:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Diskteki boyut:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Anlık görüntü dosyası aç"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Anlık görüntüyle karşılaştır…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Karşılaştır"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Bu anlık görüntüyü sil"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Tüm dosyalar (en büyük; kesin dosya değişiklikleri)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Yalnızca klasörler (en küçük)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Klasörler ve en az şu boyuttaki dosyalar"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Tüm dosyalar"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback anlık görüntüsü"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "{ $size } veya daha büyük dosyalar"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Yalnızca klasörler"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Ad (isteğe bağlı)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Anlık görüntüler yükleniyor…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Anlık görüntülerin saklanacağı bir ayarlar klasörü yok."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "{ $path } için henüz kayıtlı anlık görüntü yok. Dosya › Anlık görüntüyü kaydet ile bir tane kaydedin."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Bu anlık görüntü görüntülediğiniz klasörün değil, { $path } konumunun."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Anlık görüntüyle karşılaştır"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Anlık görüntüyü kaydet…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Anlık görüntü bu taramayı kaydeder; böylece daha sonra neyin büyüdüğünü, küçüldüğünü, eklendiğini veya kaybolduğunu görebilirsiniz."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Anlık görüntüyü kaydet"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Anlık görüntü kaydedilemedi: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Anlık görüntü kaydet"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Kaydediliyor…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Karşılaştırmayı durdur"
 
 [messages.source-code]
 source = "Source code"

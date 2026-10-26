@@ -92,6 +92,42 @@ translation = "Zrušit"
 source = "Catalan"
 translation = "Katalánština"
 
+[messages.changes]
+source = "Changes"
+translation = "Změny"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "od { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Vše"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Porovnávání…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } uvolněno"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Narostlo"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } přibylo"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Od tohoto snímku se nic nezměnilo."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Zmenšilo se"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Zjednodušená čínština"
@@ -742,6 +778,90 @@ translation = "Připraveno"
 source = "Recent"
 translation = "Nedávné"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Uvolnit"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Mezipaměť { $browser }; nejdřív zavřete { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Program ji označil jako mezipaměť, kterou znovu vytvoří"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Mezipaměti"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Úklid"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Pozůstatky vývoje"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Hledá se místo k uvolnění…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Nalezeno { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Mezipaměť projektu Gradle; obnoví se při dalším sestavení"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Naposledy hráno { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Nikdy nehráno"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Balíčky npm; npm install je obnoví"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Není tu nic zjevného k uvolnění."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Mezipaměť stahování { $tool }; v případě potřeby se znovu naplní"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Balíčky CocoaPods; pod install je obnoví"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Virtuální prostředí Pythonu; znovu ho vytvořte podle požadavků"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Odstraněné položky čekající na vysypání"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Výstup sestavení Rustu; cargo build ho znovu vytvoří"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Kliknutím to zobrazíte na mapě."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Dočasné soubory, které zanechaly aplikace"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Virtuální disk WSL; sám se nezmenšuje"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Zmenšení souboru disku zachová jeho obsah a sníží velikost souboru ve Windows uvolněním bloků vyplněných nulami. Může uvolnit jen málo místa nebo žádné. Nejprve odstraňte nepotřebná data v Dockeru nebo Linuxu."
@@ -929,6 +1049,102 @@ translation = "Velikost:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Velikost na disku:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Otevřít soubor snímku"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Porovnat se snímkem…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Porovnat"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Odstranit tento snímek"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Všechny soubory (největší; přesné změny souborů)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Jen složky (nejmenší)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Složky a soubory o velikosti alespoň"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Všechny soubory"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Snímek Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Soubory o velikosti { $size } a více"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Jen složky"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Název (nepovinný)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Načítání snímků…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Není k dispozici složka nastavení, kam ukládat snímky."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Zatím nejsou uloženy žádné snímky { $path }. Uložte jeden přes Soubor › Uložit snímek."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Tento snímek je z { $path }, ne ze složky, kterou si prohlížíte."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Porovnat se snímkem"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Uložit snímek…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Snímek zaznamená toto prohledání, abyste později viděli, co narostlo, zmenšilo se, přibylo nebo zmizelo."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Uložit snímek"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Snímek se nepodařilo uložit: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Uložit snímek"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Ukládání…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Ukončit porovnávání"
 
 [messages.source-code]
 source = "Source code"

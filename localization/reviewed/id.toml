@@ -92,6 +92,42 @@ translation = "Batal"
 source = "Catalan"
 translation = "Bahasa Katala"
 
+[messages.changes]
+source = "Changes"
+translation = "Perubahan"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "sejak { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Semua"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Membandingkan…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } dibebaskan"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Bertambah"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } bertambah"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Tidak ada yang berubah sejak snapshot ini."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Berkurang"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Bahasa Tionghoa Sederhana"
@@ -731,6 +767,90 @@ translation = "Siap"
 source = "Recent"
 translation = "Terbaru"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Klaim kembali"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Cache { $browser }; tutup { $browser } terlebih dahulu"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Ditandai programnya sebagai cache yang dibuat ulang"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Cache"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Pembersihan"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Sisa pengembangan"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Mencari ruang yang bisa diklaim kembali…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } ditemukan"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Cache proyek Gradle; dibangun ulang pada build berikutnya"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Terakhir dimainkan { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Belum pernah dimainkan"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Paket npm; npm install memulihkannya"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Tidak ada yang jelas untuk diklaim kembali di sini."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Cache unduhan { $tool }; diisi ulang saat diperlukan"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Paket CocoaPods; pod install memulihkannya"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Lingkungan virtual Python; buat ulang dari requirement Anda"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Item terhapus yang menunggu dikosongkan"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Hasil build Rust; cargo build membuatnya lagi"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Klik untuk menampilkannya di peta."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "File sementara yang ditinggalkan aplikasi"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Disk virtual WSL; tidak menyusut sendiri"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Pemadatan mempertahankan konten disk dan mengurangi ukuran file Windows dengan mengambil kembali blok yang diisi dengan nol. Ini mungkin mendapatkan kembali sedikit atau tidak ada ruang sama sekali. Bersihkan data yang tidak diinginkan di dalam Docker atau Linux terlebih dahulu."
@@ -908,6 +1028,102 @@ translation = "Ukuran:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Ukuran di disk:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Buka file snapshot"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Bandingkan dengan snapshot…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Bandingkan"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Hapus snapshot ini"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Semua file (terbesar; perubahan file yang persis)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Hanya folder (terkecil)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Folder dan file berukuran minimal"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Semua file"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Snapshot Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "File { $size } atau lebih"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Hanya folder"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Nama (opsional)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Memuat snapshot…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Tidak ada folder pengaturan untuk menyimpan snapshot."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Belum ada snapshot tersimpan dari { $path }. Simpan satu lewat File › Simpan snapshot."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Snapshot itu berasal dari { $path }, bukan folder yang sedang Anda lihat."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Bandingkan dengan snapshot"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Simpan snapshot…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Snapshot mencatat pemindaian ini, agar nanti Anda bisa melihat apa yang bertambah, berkurang, muncul, atau hilang."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Simpan snapshot"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Tidak dapat menyimpan snapshot: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Simpan snapshot"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Menyimpan…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Berhenti membandingkan"
 
 [messages.source-code]
 source = "Source code"

@@ -268,6 +268,16 @@ pub fn pick_folder(start: Option<&Path>) -> Option<PathBuf> {
     d.pick_folder()
 }
 
+/// Native picker for a saved snapshot file.
+pub fn pick_snapshot(start: Option<&Path>) -> Option<PathBuf> {
+    let mut d =
+        rfd::FileDialog::new().set_title(tr!("snapshot-browse")).add_filter(tr!("snapshot-file-type"), &["clawsnap"]);
+    if let Some(s) = start {
+        d = d.set_directory(s);
+    }
+    d.pick_file()
+}
+
 /// Human-readable attribute names for the info tip and properties.
 pub fn attributes(path: &Path) -> Vec<String> {
     let Ok(md) = std::fs::symlink_metadata(path) else { return Vec::new() };

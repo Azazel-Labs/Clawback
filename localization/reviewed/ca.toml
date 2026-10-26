@@ -92,6 +92,42 @@ translation = "Cancel·la"
 source = "Catalan"
 translation = "Català"
 
+[messages.changes]
+source = "Changes"
+translation = "Canvis"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "des de { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Tot"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "S’està comparant…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } alliberats"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Ha crescut"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } més"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "No ha canviat res des d’aquesta instantània."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "S’ha reduït"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Xinès simplificat"
@@ -738,6 +774,90 @@ translation = "Preparat"
 source = "Recent"
 translation = "Recents"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Recupera"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Memòria cau de { $browser }; tanca { $browser } abans"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "El seu programa l’ha marcada com a memòria cau que torna a crear"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Memòries cau"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Neteja"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Restes de desenvolupament"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "S’està cercant espai per recuperar…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } trobats"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Memòria cau del projecte Gradle; es reconstrueix a la propera compilació"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Última partida: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Mai jugat"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Paquets npm; npm install els restaura"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "No hi ha res evident per recuperar aquí."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Memòria cau de baixades de { $tool }; es torna a omplir quan cal"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Paquets de CocoaPods; pod install els restaura"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Entorn virtual de Python; torna’l a crear a partir dels requisits"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Elements suprimits pendents de buidar"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Sortida de compilació de Rust; cargo build la torna a crear"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Fes clic per mostrar-ho al mapa."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Fitxers temporals que han deixat les aplicacions"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Disc virtual de WSL; no s’encongeix sol"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "La compactació conserva el contingut del disc i redueix la mida del fitxer de Windows recuperant blocs plens de zeros. Pot recuperar poc o gens d'espai. Netegeu primer les dades no desitjades dins de Docker o Linux."
@@ -921,6 +1041,102 @@ translation = "Mida:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Mida al disc:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Obre un fitxer d’instantània"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Compara amb una instantània…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Compara"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Suprimeix aquesta instantània"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Tots els fitxers (la més gran; canvis exactes de fitxers)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Només carpetes (la més petita)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Carpetes i fitxers d’almenys"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Tots els fitxers"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Instantània de Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Fitxers de { $size } o més"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Només carpetes"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Nom (opcional)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "S’estan carregant les instantànies…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "No hi ha cap carpeta de configuració on guardar instantànies."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Encara no hi ha instantànies desades de { $path }. Desa’n una amb Fitxer › Desa una instantània."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Aquesta instantània és de { $path }, no de la carpeta que estàs veient."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Compara amb una instantània"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Desa una instantània…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Una instantània registra aquesta exploració, perquè després puguis veure què ha crescut, què s’ha reduït, què ha aparegut o què ha desaparegut."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Desa la instantània"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "No s’ha pogut desar la instantània: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Desa una instantània"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "S’està desant…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Deixa de comparar"
 
 [messages.source-code]
 source = "Source code"

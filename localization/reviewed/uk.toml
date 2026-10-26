@@ -92,6 +92,42 @@ translation = "Скасувати"
 source = "Catalan"
 translation = "Каталонська"
 
+[messages.changes]
+source = "Changes"
+translation = "Зміни"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "з { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Усі"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Порівняння…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } звільнено"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Виросло"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } більше"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "З часу цього знімка нічого не змінилося."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Зменшилося"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Китайська (спрощена)"
@@ -742,6 +778,90 @@ translation = "Готово"
 source = "Recent"
 translation = "Нещодавні"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Звільнити"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Кеш { $browser }; спершу закрийте { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Програма позначила його як кеш, який створить знову"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Кеші"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Очищення"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Залишки розробки"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Пошук місця, яке можна звільнити…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Знайдено { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Кеш проєкту Gradle; перебудовується під час наступної збірки"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Останній запуск: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Жодного разу не запускалася"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Пакети npm; npm install відновить їх"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Тут немає нічого очевидного, що можна звільнити."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Кеш завантажень { $tool }; заповнюється знову за потреби"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Пакети CocoaPods; pod install відновить їх"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Віртуальне середовище Python; створіть його знову за залежностями"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Видалені об’єкти, що чекають на очищення"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Результат збірки Rust; cargo build створить його знову"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Натисніть, щоб показати на мапі."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Тимчасові файли, залишені програмами"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Віртуальний диск WSL; сам він не зменшується"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Стиснення зберігає вміст диска та зменшує розмір його файлу у Windows, звільняючи блоки, заповнені нулями. Воно може звільнити мало місця або не звільнити його зовсім. Спочатку видаліть непотрібні дані всередині Docker або Linux."
@@ -929,6 +1049,102 @@ translation = "Розмір:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "На диску:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Відкрити файл знімка"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Порівняти зі знімком…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Порівняти"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Видалити цей знімок"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Усі файли (найбільший; точні зміни файлів)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Лише папки (найменший)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Папки й файли розміром від"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Усі файли"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Знімок Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Файли від { $size }"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Лише папки"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Назва (необов’язково)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Завантаження знімків…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Немає папки налаштувань, де можна зберігати знімки."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Збережених знімків { $path } ще немає. Збережіть знімок через Файл › Зберегти знімок."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Цей знімок зроблено для { $path }, а не для папки, яку ви переглядаєте."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Порівняти зі знімком"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Зберегти знімок…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Знімок фіксує це сканування, щоб згодом побачити, що виросло, зменшилося, з’явилося чи зникло."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Зберегти знімок"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Не вдалося зберегти знімок: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Зберегти знімок"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Збереження…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Припинити порівняння"
 
 [messages.source-code]
 source = "Source code"

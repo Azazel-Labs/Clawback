@@ -92,6 +92,42 @@ translation = "ยกเลิก"
 source = "Catalan"
 translation = "คาตาลัน"
 
+[messages.changes]
+source = "Changes"
+translation = "การเปลี่ยนแปลง"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "ตั้งแต่ { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "ทั้งหมด"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "กำลังเปรียบเทียบ…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "ว่างขึ้น { $size }"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "ใหญ่ขึ้น"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "เพิ่มขึ้น { $size }"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "ไม่มีอะไรเปลี่ยนแปลงตั้งแต่สแนปช็อตนี้"
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "เล็กลง"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "จีนตัวย่อ"
@@ -731,6 +767,90 @@ translation = "พร้อม"
 source = "Recent"
 translation = "ล่าสุด"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "เรียกคืนพื้นที่"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "แคชของ { $browser } ปิด { $browser } ก่อน"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "โปรแกรมของมันทำเครื่องหมายว่าเป็นแคชที่สร้างใหม่ได้"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "แคช"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "ล้างข้อมูล"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "สิ่งที่เหลือจากการพัฒนา"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "กำลังหาพื้นที่ที่เรียกคืนได้…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "พบ { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "แคชโปรเจกต์ Gradle ซึ่งสร้างใหม่ในการบิลด์ครั้งถัดไป"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "เล่นล่าสุด { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "ยังไม่เคยเล่น"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "แพ็กเกจ npm ใช้ npm install เพื่อกู้คืน"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "ไม่มีอะไรที่ควรเรียกคืนอย่างชัดเจนที่นี่"
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "แคชการดาวน์โหลดของ { $tool } ซึ่งจะดาวน์โหลดใหม่เมื่อจำเป็น"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "แพ็กเกจ CocoaPods ใช้ pod install เพื่อกู้คืน"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "สภาพแวดล้อมเสมือนของ Python สร้างใหม่จากรายการที่ต้องใช้ได้"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "รายการที่ลบแล้วซึ่งรอการล้าง"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "ผลลัพธ์การบิลด์ Rust ซึ่ง cargo build สร้างใหม่ได้"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "คลิกเพื่อแสดงบนแผนที่"
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "ไฟล์ชั่วคราวที่แอปทิ้งไว้"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "ดิสก์เสมือน WSL ซึ่งไม่หดเล็กลงเอง"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "การลดขนาดดิสก์จะรักษาเนื้อหาของดิสก์ไว้ และลดขนาดไฟล์ดิสก์ใน Windows โดยเรียกคืนบล็อกที่มีแต่เลขศูนย์ อาจเรียกคืนพื้นที่ได้น้อยหรือไม่ได้เลย ให้ล้างข้อมูลที่ไม่จำเป็นภายใน Docker หรือ Linux ก่อน"
@@ -908,6 +1028,102 @@ translation = "ขนาด:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "ขนาดบนดิสก์:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "เปิดไฟล์สแนปช็อต"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "เปรียบเทียบกับสแนปช็อต…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "เปรียบเทียบ"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "ลบสแนปช็อตนี้"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "ทุกไฟล์ (ใหญ่ที่สุด; การเปลี่ยนแปลงไฟล์ที่แม่นยำ)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "เฉพาะโฟลเดอร์ (เล็กที่สุด)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "โฟลเดอร์และไฟล์ที่มีขนาดอย่างน้อย"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "ทุกไฟล์"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "สแนปช็อตของ Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "ไฟล์ขนาด { $size } ขึ้นไป"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "เฉพาะโฟลเดอร์"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "ชื่อ (ไม่บังคับ)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "กำลังโหลดสแนปช็อต…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "ไม่มีโฟลเดอร์การตั้งค่าสำหรับเก็บสแนปช็อต"
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "ยังไม่มีสแนปช็อตที่บันทึกไว้ของ { $path } บันทึกได้ที่ ไฟล์ › บันทึกสแนปช็อต"
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "สแนปช็อตนั้นเป็นของ { $path } ไม่ใช่โฟลเดอร์ที่คุณกำลังดู"
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "เปรียบเทียบกับสแนปช็อต"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "บันทึกสแนปช็อต…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "สแนปช็อตจะบันทึกการสแกนนี้ไว้ เพื่อให้คุณดูภายหลังได้ว่าอะไรใหญ่ขึ้น เล็กลง ปรากฏขึ้น หรือหายไป"
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "บันทึกสแนปช็อต"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "ไม่สามารถบันทึกสแนปช็อต: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "บันทึกสแนปช็อต"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "กำลังบันทึก…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "หยุดเปรียบเทียบ"
 
 [messages.source-code]
 source = "Source code"

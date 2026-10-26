@@ -44,6 +44,7 @@ pub fn tree() -> Tree {
                 ("Design/design.fig", 1400),
                 ("Public/Media/media.zip", 2800),
                 ("node_modules/.cache/build-cache.bin", 1900),
+                ("package.json", 0),
             ],
         ),
         (
@@ -91,6 +92,29 @@ pub fn tree() -> Tree {
     }
     tree.sort_all();
     tree
+}
+
+/// A fictional earlier snapshot of [`tree`], for capturing the Changes view: May's backup
+/// had not been made yet, a game was smaller and the downloads held more.
+pub fn baseline(tree: &Tree) -> clawback_core::snapshot::Snapshot {
+    let mut earlier = tree.clone();
+    let find = |tree: &Tree, path: &str| tree.find_path(&tree.root_path().join(path)).expect("demo path");
+    let resize = |tree: &mut Tree, path: &str, megabytes: u64| {
+        let node = find(tree, path);
+        let size = megabytes * 1024 * 1024;
+        tree.update_file(node, NewEntry::file(tree.node(node).name.clone(), size));
+    };
+    resize(&mut earlier, "Games/Starfall/Content/Paks/Windows/worlds.pak", 15000);
+    resize(&mut earlier, "Downloads/texture-library.zip", 14000);
+    resize(&mut earlier, "Movies/Road Trips/Desert Roads.mkv", 17000);
+    let may = find(&earlier, "Backups/Workstation/2026/May");
+    earlier.remove(may);
+    clawback_core::snapshot::Snapshot::capture(
+        &earlier,
+        clawback_core::snapshot::Detail::Files { min_size: 0 },
+        1_777_000_000,
+        "April",
+    )
 }
 
 pub fn view(tree: &Tree) -> NodeId {

@@ -92,6 +92,42 @@ translation = "Hủy"
 source = "Catalan"
 translation = "Tiếng Catalan"
 
+[messages.changes]
+source = "Changes"
+translation = "Thay đổi"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "kể từ { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Tất cả"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Đang so sánh…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "Giải phóng { $size }"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Tăng"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "Tăng { $size }"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Không có gì thay đổi kể từ ảnh chụp này."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Giảm"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Tiếng Trung giản thể"
@@ -731,6 +767,90 @@ translation = "Sẵn sàng"
 source = "Recent"
 translation = "Gần đây"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Lấy lại dung lượng"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Bộ nhớ đệm của { $browser }; hãy đóng { $browser } trước"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Được chương trình đánh dấu là bộ nhớ đệm có thể tạo lại"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Bộ nhớ đệm"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Dọn dẹp"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Phần còn lại khi phát triển"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Đang tìm dung lượng có thể lấy lại…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Tìm thấy { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Bộ nhớ đệm dự án Gradle; được tạo lại ở lần biên dịch sau"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Chơi lần cuối { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Chưa từng chơi"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Gói npm; npm install sẽ khôi phục chúng"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Không có gì rõ ràng để lấy lại ở đây."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Bộ nhớ đệm tải xuống của { $tool }; được tải lại khi cần"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Gói CocoaPods; pod install sẽ khôi phục chúng"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Môi trường ảo Python; hãy tạo lại từ danh sách yêu cầu"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Các mục đã xóa đang chờ dọn sạch"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Kết quả biên dịch Rust; cargo build sẽ tạo lại"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Bấm để hiển thị trên bản đồ."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Tệp tạm thời ứng dụng để lại"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Ổ đĩa ảo WSL; nó không tự thu nhỏ"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Thu gọn giữ nguyên nội dung đĩa và giảm kích thước tệp đĩa trong Windows bằng cách thu hồi các khối chứa toàn số không. Thao tác này có thể thu hồi ít hoặc không thu hồi được dung lượng nào. Trước tiên hãy dọn dữ liệu không cần thiết bên trong Docker hoặc Linux."
@@ -908,6 +1028,102 @@ translation = "Kích thước:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Kích thước trên đĩa:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Mở tệp ảnh chụp"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "So sánh với ảnh chụp…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "So sánh"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Xóa ảnh chụp này"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Mọi tệp (lớn nhất; thay đổi tệp chính xác)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Chỉ thư mục (nhỏ nhất)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Thư mục và tệp có kích thước tối thiểu"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Mọi tệp"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Ảnh chụp Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Tệp từ { $size } trở lên"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Chỉ thư mục"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Tên (không bắt buộc)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Đang tải ảnh chụp…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Không có thư mục cài đặt để giữ ảnh chụp."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Chưa có ảnh chụp nào của { $path } được lưu. Hãy lưu bằng Tệp › Lưu ảnh chụp."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Ảnh chụp đó là của { $path }, không phải thư mục bạn đang xem."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "So sánh với một ảnh chụp"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Lưu ảnh chụp…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Ảnh chụp ghi lại lần quét này, để sau này bạn thấy những gì đã tăng, giảm, xuất hiện hoặc biến mất."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Lưu ảnh chụp"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Không thể lưu ảnh chụp: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Lưu một ảnh chụp"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Đang lưu…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Dừng so sánh"
 
 [messages.source-code]
 source = "Source code"

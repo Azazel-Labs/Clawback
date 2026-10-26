@@ -92,6 +92,42 @@ translation = "Anulează"
 source = "Catalan"
 translation = "Catalană"
 
+[messages.changes]
+source = "Changes"
+translation = "Modificări"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "de la { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Toate"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Se compară…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } eliberați"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "A crescut"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } în plus"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Nimic nu s-a schimbat de la acest instantaneu."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "S-a micșorat"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Chineză simplificată"
@@ -731,6 +767,90 @@ translation = "Pregătit"
 source = "Recent"
 translation = "Recente"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Recuperează"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Cache-ul { $browser }; închide mai întâi { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Marcat de programul său ca memorie cache pe care o recreează"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Memorii cache"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Curățenie"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Resturi de dezvoltare"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Se caută spațiu de recuperat…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "S-au găsit { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Cache-ul proiectului Gradle; se reconstruiește la următoarea compilare"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Ultima dată jucat la { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Nejucat niciodată"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Pachete npm; npm install le restaurează"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Nimic evident de recuperat aici."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Cache-ul de descărcări { $tool }; se umple din nou când e nevoie"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Pachete CocoaPods; pod install le restaurează"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Mediu virtual Python; recreează-l din cerințe"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Elemente șterse care așteaptă golirea"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rezultatul compilării Rust; cargo build îl recreează"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Fă clic pentru a-l afișa pe hartă."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Fișiere temporare lăsate de aplicații"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Disc virtual WSL; nu se micșorează singur"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Compactarea păstrează conținutul discului și reduce dimensiunea fișierului său din Windows prin recuperarea blocurilor pline cu zerouri. Poate recupera puțin spațiu sau deloc. Curățați mai întâi datele nedorite din Docker sau Linux."
@@ -908,6 +1028,102 @@ translation = "Dimensiune:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Dimensiune pe disc:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Deschide un fișier de instantaneu"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Compară cu un instantaneu…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Compară"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Șterge acest instantaneu"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Toate fișierele (cel mai mare; modificări exacte ale fișierelor)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Doar foldere (cel mai mic)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Foldere și fișiere de cel puțin"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Toate fișierele"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Instantaneu Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Fișiere de { $size } sau mai mari"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Doar foldere"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Nume (opțional)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Se încarcă instantaneele…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Nu există un folder de setări în care să se păstreze instantaneele."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Nu există încă instantanee salvate pentru { $path }. Salvează unul din Fișier › Salvează instantaneul."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Acel instantaneu este al { $path }, nu al folderului pe care îl vezi."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Compară cu un instantaneu"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Salvează instantaneul…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Un instantaneu înregistrează această scanare, ca să vezi mai târziu ce a crescut, ce s-a micșorat, ce a apărut sau ce a dispărut."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Salvează instantaneul"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Instantaneul nu a putut fi salvat: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Salvează un instantaneu"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Se salvează…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Oprește compararea"
 
 [messages.source-code]
 source = "Source code"

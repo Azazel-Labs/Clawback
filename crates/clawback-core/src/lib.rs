@@ -21,6 +21,7 @@ mod profiling;
 pub mod report;
 pub mod scan;
 pub mod settings;
+pub mod snapshot;
 pub mod sync;
 #[cfg(test)]
 mod testing;

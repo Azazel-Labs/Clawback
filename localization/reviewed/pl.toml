@@ -92,6 +92,42 @@ translation = "Anuluj"
 source = "Catalan"
 translation = "Kataloński"
 
+[messages.changes]
+source = "Changes"
+translation = "Zmiany"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "od { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Wszystko"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Porównywanie…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } zwolniono"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Urosło"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } więcej"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Od tej migawki nic się nie zmieniło."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Zmalało"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Chiński uproszczony"
@@ -742,6 +778,90 @@ translation = "Gotowe"
 source = "Recent"
 translation = "Ostatnie"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Odzyskaj"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Pamięć podręczna { $browser }; najpierw zamknij { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Program oznaczył ją jako pamięć podręczną, którą odtwarza"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Pamięci podręczne"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Porządki"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Pozostałości programistyczne"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Szukanie miejsca do odzyskania…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Znaleziono { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Pamięć podręczna projektu Gradle; odbudowywana przy następnej kompilacji"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Ostatnio grano { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Nigdy nie grano"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Pakiety npm; npm install je przywraca"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Nie ma tu nic oczywistego do odzyskania."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Pamięć podręczna pobierania { $tool }; uzupełniana w razie potrzeby"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Pakiety CocoaPods; pod install je przywraca"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Środowisko wirtualne Pythona; utwórz je ponownie z wymagań"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Usunięte elementy czekające na opróżnienie"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Wynik kompilacji Rusta; cargo build tworzy go ponownie"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Kliknij, aby pokazać to na mapie."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Pliki tymczasowe pozostawione przez aplikacje"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Dysk wirtualny WSL; sam się nie zmniejsza"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Kompaktowanie zachowuje zawartość dysku i zmniejsza rozmiar jego pliku w systemie Windows, odzyskując bloki wypełnione zerami. Może odzyskać niewiele miejsca lub nie odzyskać go wcale. Najpierw usuń niepotrzebne dane w Dockerze lub Linuksie."
@@ -929,6 +1049,102 @@ translation = "Rozmiar:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Rozmiar na dysku:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Otwórz plik migawki"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Porównaj z migawką…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Porównaj"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Usuń tę migawkę"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Wszystkie pliki (największa; dokładne zmiany plików)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Tylko foldery (najmniejsza)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Foldery i pliki o rozmiarze co najmniej"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Wszystkie pliki"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Migawka Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Pliki o rozmiarze { $size } lub większym"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Tylko foldery"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Nazwa (opcjonalnie)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Wczytywanie migawek…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Brak folderu ustawień, w którym można przechowywać migawki."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Brak zapisanych migawek { $path }. Zapisz jedną przez Plik › Zapisz migawkę."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Ta migawka dotyczy { $path }, a nie oglądanego folderu."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Porównaj z migawką"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Zapisz migawkę…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Migawka zapisuje to skanowanie, aby później można było zobaczyć, co urosło, zmalało, pojawiło się lub zniknęło."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Zapisz migawkę"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Nie udało się zapisać migawki: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Zapisz migawkę"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Zapisywanie…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Zakończ porównywanie"
 
 [messages.source-code]
 source = "Source code"
