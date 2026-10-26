@@ -30,6 +30,12 @@ pub fn screen_rect(b: &DisplayBox, origin: Pos2) -> Rect {
     Rect::from_min_size(origin + vec2(b.x as f32, b.y as f32), vec2((b.w + 1) as f32, (b.h + 1) as f32))
 }
 
+/// A folder drawn as one cell with no contents, such as an installed game. Its special
+/// presentation draws its own label.
+pub fn is_collapsed_folder(tree: &Tree, b: &DisplayBox) -> bool {
+    !b.folder && b.node().is_some_and(|node| tree.node(node).is_dir())
+}
+
 /// Large file cells add size and date lines below the name.
 pub fn shows_details(b: &DisplayBox) -> bool {
     !b.folder && b.h >= 56 && b.w >= 88
@@ -147,8 +153,11 @@ impl PreparedMap {
         }
         // At high density most cells cannot carry legible labels. Keep every
         // cell interactive but prioritize the largest readable labels.
-        let mut candidates: Vec<_> =
-            boxes.iter().enumerate().filter(|(_, b)| b.item != Item::Filler && b.w >= 48 && b.h >= 14).collect();
+        let mut candidates: Vec<_> = boxes
+            .iter()
+            .enumerate()
+            .filter(|(_, b)| b.item != Item::Filler && b.w >= 48 && b.h >= 14 && !is_collapsed_folder(tree, b))
+            .collect();
         candidates.sort_by_key(|(_, b)| std::cmp::Reverse(i64::from(b.w) * i64::from(b.h)));
         candidates.truncate(MAX_LABELS);
         let pending = candidates

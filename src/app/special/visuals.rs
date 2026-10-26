@@ -14,11 +14,16 @@ use super::windows::programs::steam::{self, Art};
 pub struct Visuals {
     recycle_bin_icons: [Option<egui::TextureHandle>; 2],
     #[cfg(windows)]
-    game_art: std::collections::HashMap<(u32, Art), GameArt>,
+    games: GameArt,
 }
 
+/// Steam's cached library images, decoded on workers and kept as textures.
 #[cfg(windows)]
-enum GameArt {
+#[derive(Default)]
+pub struct GameArt(std::collections::HashMap<(u32, Art), ArtSlot>);
+
+#[cfg(windows)]
+enum ArtSlot {
     Loading(Option<crate::background::Job<(), Option<egui::ColorImage>>>),
     Ready(Option<egui::TextureHandle>),
 }
@@ -109,63 +114,91 @@ impl Visuals {
     /// Steam's library art below each game tile's label: the header on wide tiles, the
     /// capsule on tall ones, and the icon where neither fits.
     fn paint_games(&mut self, painter: &egui::Painter, tree: &Tree, boxes: &[DisplayBox], origin: Pos2) {
-        for tile in boxes.iter().filter(|tile| !tile.folder && tile.w >= 40 && tile.h >= 40) {
+        for tile in boxes.iter().filter(|tile| maprender::is_collapsed_folder(tree, tile)) {
             let Some(node) = tile.node() else { continue };
-            if !tree.node(node).is_dir() {
-                continue;
-            }
             let Some(game) = steam::game_at(tree, node) else { continue };
             let rect = maprender::screen_rect(tile, origin);
-            let lines = if maprender::shows_details(tile) { 3.0 } else { 1.0 };
-            let body = Rect::from_min_max(rect.min + vec2(0.0, lines * maprender::LINE + 2.0), rect.max).shrink(4.0);
-            if body.width() < 20.0 || body.height() < 20.0 {
+            if rect.width() < 24.0 || rect.height() < 14.0 {
                 continue;
             }
-            let preferred = if body.width() < 96.0 || body.height() < 48.0 {
-                [Art::Icon, Art::Header, Art::Capsule]
-            } else if body.height() > body.width() * 1.2 {
-                [Art::Capsule, Art::Header, Art::Icon]
-            } else {
-                [Art::Header, Art::Capsule, Art::Icon]
-            };
-            let Some(texture) = preferred.into_iter().find_map(|art| self.game_texture(painter.ctx(), game.id, art))
-            else {
-                continue;
-            };
-            let size = texture.size_vec2();
-            let mut scale = (body.width() / size.x).min(body.height() / size.y);
-            if preferred[0] == Art::Icon {
-                scale = scale.min(64.0 / size.x.max(size.y));
+            let clip = painter.with_clip_rect(rect.shrink(1.0).intersect(painter.clip_rect()));
+            // The name, and the size where there is room, in a band across the top.
+            let two_lines = rect.width() >= 88.0 && rect.height() >= 56.0;
+            let band = Rect::from_min_size(rect.min, vec2(rect.width(), if two_lines { 34.0 } else { 18.0 }));
+            let body = Rect::from_min_max(pos2(rect.left(), band.bottom()), rect.max).shrink(3.0);
+            if body.width() >= 20.0 && body.height() >= 20.0 {
+                let preferred: &[Art] = if body.width() < 96.0 || body.height() < 48.0 {
+                    &[Art::Icon, Art::Header, Art::Capsule]
+                } else if body.height() > body.width() * 1.2 {
+                    &[Art::Capsule, Art::Hero, Art::Header, Art::Icon]
+                } else if body.width() > 480.0 {
+                    &[Art::Hero, Art::Header, Art::Capsule, Art::Icon]
+                } else {
+                    &[Art::Header, Art::Hero, Art::Capsule, Art::Icon]
+                };
+                if let Some((art, texture)) = self.games.first(painter.ctx(), game.id, preferred) {
+                    let size = texture.size_vec2();
+                    let (target, uv) = if art == Art::Hero {
+                        // The banner has no title, so it may be cropped to fill the tile.
+                        let scale = (body.width() / size.x).max(body.height() / size.y);
+                        let shown = body.size() / (size * scale);
+                        (body, Rect::from_center_size(pos2(0.5, 0.5), shown))
+                    } else {
+                        // Others keep their whole picture; a small icon is never blown up past 2x.
+                        let fit = (body.width() / size.x).min(body.height() / size.y);
+                        let scale = if art == Art::Icon { fit.min(2.0) } else { fit };
+                        (
+                            Rect::from_center_size(body.center(), size * scale),
+                            Rect::from_min_max(Pos2::ZERO, pos2(1.0, 1.0)),
+                        )
+                    };
+                    clip.image(texture.id(), target, uv, Color32::WHITE);
+                }
             }
-            painter.with_clip_rect(rect.intersect(painter.clip_rect())).image(
-                texture.id(),
-                Rect::from_center_size(body.center(), size * scale),
-                Rect::from_min_max(Pos2::ZERO, pos2(1.0, 1.0)),
-                Color32::WHITE,
-            );
+            clip.rect_filled(band, 0.0, Color32::from_black_alpha(120));
+            let name_font = FontId::proportional(12.0);
+            let name = crate::app::widgets::fit_text(painter, &game.name, &name_font, band.width() - 8.0, false);
+            clip.text(band.left_top() + vec2(4.0, 2.0), egui::Align2::LEFT_TOP, name, name_font, theme::TEXT);
+            if two_lines {
+                clip.text(
+                    band.left_top() + vec2(4.0, 18.0),
+                    egui::Align2::LEFT_TOP,
+                    format::size(tree.node(node).size),
+                    FontId::proportional(11.0),
+                    theme::MUTED,
+                );
+            }
         }
+    }
+}
+
+#[cfg(windows)]
+impl GameArt {
+    /// The first of `preferred` that Steam has cached, once decoded, and which one it is.
+    pub fn first(&mut self, ctx: &egui::Context, id: u32, preferred: &[Art]) -> Option<(Art, egui::TextureHandle)> {
+        preferred.iter().find_map(|&art| self.texture(ctx, id, art).map(|texture| (art, texture)))
     }
 
     /// A game's image once it is decoded; `None` while loading or when Steam has none cached.
-    fn game_texture(&mut self, ctx: &egui::Context, id: u32, art: Art) -> Option<egui::TextureHandle> {
-        let slot = self.game_art.entry((id, art)).or_insert_with(|| {
-            GameArt::Loading(Some(crate::background::Job::spawn((), ctx, move || {
+    fn texture(&mut self, ctx: &egui::Context, id: u32, art: Art) -> Option<egui::TextureHandle> {
+        let slot = self.0.entry((id, art)).or_insert_with(|| {
+            ArtSlot::Loading(Some(crate::background::Job::spawn((), ctx, move || {
                 let bytes = std::fs::read(steam::art_path(id, art)?).ok()?;
                 let image = image::load_from_memory(&bytes).ok()?.to_rgba8();
                 let size = [image.width() as usize, image.height() as usize];
                 Some(egui::ColorImage::from_rgba_unmultiplied(size, image.as_raw()))
             })))
         });
-        if let GameArt::Loading(job) = slot
+        if let ArtSlot::Loading(job) = slot
             && let Some(((), image)) = crate::background::Job::poll(job)
         {
-            *slot = GameArt::Ready(
+            *slot = ArtSlot::Ready(
                 image.map(|image| ctx.load_texture(format!("steam-{id}-{art:?}"), image, egui::TextureOptions::LINEAR)),
             );
         }
         match slot {
-            GameArt::Ready(texture) => texture.clone(),
-            GameArt::Loading(_) => None,
+            ArtSlot::Ready(texture) => texture.clone(),
+            ArtSlot::Loading(_) => None,
         }
     }
 }
