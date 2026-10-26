@@ -264,6 +264,7 @@ reclaim-finding = Hledá se místo k uvolnění…
 reclaim-found = Nalezeno { $size }
 reclaim-nothing = Není tu nic zjevného k uvolnění.
 reclaim-cleanup = Úklid
+reclaim-games = Hry
 reclaim-developer = Pozůstatky vývoje
 reclaim-caches = Mezipaměti
 reclaim-recycle-bin = Odstraněné položky čekající na vysypání

@@ -258,6 +258,7 @@ reclaim-finding = Etsitään vapautettavaa tilaa…
 reclaim-found = Löytyi { $size }
 reclaim-nothing = Täällä ei ole mitään selvästi vapautettavaa.
 reclaim-cleanup = Siivous
+reclaim-games = Pelit
 reclaim-developer = Kehityksen jäänteet
 reclaim-caches = Välimuistit
 reclaim-recycle-bin = Poistetut kohteet odottavat tyhjentämistä

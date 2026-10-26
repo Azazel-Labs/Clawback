@@ -799,6 +799,10 @@ translation = "Đang tìm dung lượng có thể lấy lại…"
 source = "{ $size } found"
 translation = "Tìm thấy { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Trò chơi"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Bộ nhớ đệm dự án Gradle; được tạo lại ở lần biên dịch sau"

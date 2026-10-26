@@ -100,6 +100,7 @@ reclaim-finding = Looking for space to reclaim…
 reclaim-found = { $size } found
 reclaim-nothing = Nothing obvious to reclaim here.
 reclaim-cleanup = Cleanup
+reclaim-games = Games
 reclaim-developer = Developer leftovers
 reclaim-caches = Caches
 reclaim-recycle-bin = Deleted items waiting to be emptied

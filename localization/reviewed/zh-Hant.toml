@@ -799,6 +799,10 @@ translation = "正在尋找可回收的空間…"
 source = "{ $size } found"
 translation = "找到 { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "遊戲"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Gradle 專案快取，下次建置時重建"

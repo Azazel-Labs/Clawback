@@ -799,6 +799,10 @@ translation = "Geri kazanılacak alan aranıyor…"
 source = "{ $size } found"
 translation = "{ $size } bulundu"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Oyunlar"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Gradle proje önbelleği; sonraki derlemede yeniden oluşturulur"

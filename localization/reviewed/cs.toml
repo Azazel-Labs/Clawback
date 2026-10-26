@@ -810,6 +810,10 @@ translation = "Hledá se místo k uvolnění…"
 source = "{ $size } found"
 translation = "Nalezeno { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Hry"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Mezipaměť projektu Gradle; obnoví se při dalším sestavení"

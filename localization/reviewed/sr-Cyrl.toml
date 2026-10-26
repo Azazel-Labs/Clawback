@@ -808,6 +808,10 @@ translation = "Тражи се простор за враћање…"
 source = "{ $size } found"
 translation = "Пронађено { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Игре"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Кеш Gradle пројекта; поново се гради при следећем превођењу"

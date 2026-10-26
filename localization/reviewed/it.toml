@@ -803,6 +803,10 @@ translation = "Ricerca di spazio da recuperare…"
 source = "{ $size } found"
 translation = "Trovati { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Giochi"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Cache del progetto Gradle; ricostruita alla prossima compilazione"

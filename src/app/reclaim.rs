@@ -27,8 +27,10 @@ const MIN_DEVELOPER: u64 = 500 * 1024 * 1024;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum Section {
-    /// The Recycle Bin, Temp, WSL disks and installed games.
+    /// The Recycle Bin, Temp and WSL disks.
     Cleanup,
+    /// Installed games, least recently played first.
+    Games,
     Developer,
     Caches,
 }
@@ -37,6 +39,7 @@ impl Section {
     fn title(self) -> String {
         match self {
             Self::Cleanup => tr!("reclaim-cleanup"),
+            Self::Games => tr!("reclaim-games"),
             Self::Developer => tr!("reclaim-developer"),
             Self::Caches => tr!("reclaim-caches"),
         }
@@ -67,6 +70,8 @@ struct Item {
     /// Steam app ID, for its library icon.
     #[cfg_attr(not(windows), allow(dead_code))] // Steam games are found on Windows.
     game: Option<u32>,
+    /// Seconds since the Unix epoch, for ordering games; 0 when never played.
+    last_played: i64,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -320,12 +325,16 @@ fn find(tree: &Tree, is_mount: bool, cancel: &AtomicBool) -> Option<Vec<Item>> {
     items.retain(|item| {
         item.size
             >= match item.section {
-                Section::Cleanup => 1,
+                Section::Cleanup | Section::Games => 1,
                 Section::Developer => MIN_DEVELOPER,
                 Section::Caches => MIN_CACHE,
             }
     });
-    items.sort_by(|a, b| a.section.cmp(&b.section).then(b.size.cmp(&a.size)));
+    items.sort_by(|a, b| {
+        let order =
+            if a.section == Section::Games { a.last_played.cmp(&b.last_played) } else { std::cmp::Ordering::Equal };
+        a.section.cmp(&b.section).then(order).then(b.size.cmp(&a.size))
+    });
     Some(items)
 }
 
@@ -340,6 +349,7 @@ fn item(tree: &Tree, node: NodeId, section: Section, icon: &'static str, title: 
         size: tree.node(node).size,
         action: Action::Delete,
         game: None,
+        last_played: 0,
     }
 }
 
@@ -438,7 +448,8 @@ fn game(tree: &Tree, id: NodeId) -> Option<Item> {
     Some(Item {
         action: Action::Uninstall,
         game: Some(game.id),
-        ..item(tree, id, Section::Cleanup, icon::GAME_CONTROLLER, game.name, detail)
+        last_played: game.last_played.unwrap_or(0),
+        ..item(tree, id, Section::Games, icon::GAME_CONTROLLER, game.name, detail)
     })
 }
 
