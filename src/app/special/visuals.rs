@@ -183,6 +183,16 @@ impl GameArt {
     fn texture(&mut self, ctx: &egui::Context, id: u32, art: Art) -> Option<egui::TextureHandle> {
         let slot = self.0.entry((id, art)).or_insert_with(|| {
             ArtSlot::Loading(Some(crate::background::Job::spawn((), ctx, move || {
+                #[cfg(feature = "screenshots")]
+                if crate::demo::capturing() {
+                    let size = match art {
+                        Art::Hero => [1920, 620],
+                        Art::Header => [920, 430],
+                        Art::Capsule => [600, 900],
+                        Art::Icon => [64, 64],
+                    };
+                    return crate::demo::game_art(id, size);
+                }
                 let bytes = std::fs::read(steam::art_path(id, art)?).ok()?;
                 let image = image::load_from_memory(&bytes).ok()?.to_rgba8();
                 let size = [image.width() as usize, image.height() as usize];
