@@ -11,10 +11,12 @@ pub(crate) struct LinkIndex {
 }
 
 impl LinkIndex {
+    /// Index the files whose data other names may share. On most drives that is a small
+    /// fraction of them; links made later are found by [`Self::update`].
     pub fn new(tree: &Tree) -> Self {
         let mut index = Self::default();
         for id in tree.descendants(ROOT) {
-            if !tree.node(id).is_dir() {
+            if may_share(tree.node(id).flags) {
                 index.insert(tree, id);
             }
         }
@@ -82,8 +84,23 @@ impl LinkIndex {
             self.detach(tree, id);
             tree.node_mut(id).file_id = entry.file_id;
         }
+        let Some(key) = entry.file_id else { return apply(tree, id, entry, false) || changed_identity };
+        if !self.owners.contains_key(&key) {
+            if !may_share(entry.flags) {
+                return apply(tree, id, entry, false) || changed_identity;
+            }
+            // A new link to a file that had one when it was indexed: its other names
+            // already count its bytes, so index them before this one.
+            let siblings: Vec<_> = tree
+                .descendants(ROOT)
+                .filter(|&other| other != id && !tree.node(other).is_dir() && tree.node(other).file_id == Some(key))
+                .collect();
+            for sibling in siblings {
+                self.insert(tree, sibling);
+            }
+        }
         self.insert(tree, id);
-        let owner = entry.file_id.and_then(|key| self.owners.get(&key).copied()).unwrap_or(id);
+        let owner = self.owners.get(&key).copied().unwrap_or(id);
         let mut changed = changed_identity;
         changed |= apply(tree, owner, entry, false);
         if let Some(aliases) = entry.file_id.and_then(|key| self.aliases.get(&key)) {
@@ -95,10 +112,16 @@ impl LinkIndex {
     }
 }
 
+fn may_share(node_flags: u8) -> bool {
+    node_flags & (flags::LINKED | flags::HARDLINK_DUP) != 0
+}
+
 fn apply(tree: &mut Tree, id: NodeId, metadata: &NewEntry, duplicate: bool) -> bool {
     let node = tree.node(id);
     let size = if duplicate { 0 } else { metadata.size };
-    let flags = (node.flags & !flags::HARDLINK_DUP) | if duplicate { flags::HARDLINK_DUP } else { 0 };
+    let flags = (node.flags & !(flags::HARDLINK_DUP | flags::LINKED))
+        | (metadata.flags & flags::LINKED)
+        | if duplicate { flags::HARDLINK_DUP } else { 0 };
     if (node.size, node.len, node.mtime, node.flags, node.file_id)
         == (size, metadata.len, metadata.mtime, flags, metadata.file_id)
     {
@@ -124,7 +147,30 @@ mod tests {
     use std::path::Path;
 
     fn entry(name: &str, key: FileId, size: u64) -> NewEntry {
-        NewEntry { name: name.into(), kind: Kind::File, size, len: size, mtime: 1, flags: 0, file_id: Some(key) }
+        NewEntry {
+            name: name.into(),
+            kind: Kind::File,
+            size,
+            len: size,
+            mtime: 1,
+            flags: flags::LINKED,
+            file_id: Some(key),
+        }
+    }
+
+    #[test]
+    fn single_link_files_stay_unindexed_until_a_second_link_appears() {
+        let mut tree = Tree::new(Path::new("/root"));
+        let mut single = entry("a", (1, 10), 100);
+        single.flags = 0;
+        let a = tree.add_children(ROOT, vec![single, entry("linked", (1, 30), 5)]).start;
+        let mut index = LinkIndex::new(&tree);
+        assert_eq!(index.owners.len(), 1);
+        let b = tree.add_children(ROOT, vec![entry("b", (1, 10), 100)]).start;
+        assert!(index.update(&mut tree, b, &entry("b", (1, 10), 100)));
+        assert_eq!(tree.root().size, 105);
+        assert_eq!((tree.node(a).size, tree.node(b).size), (100, 0));
+        assert!(tree.node(b).has(flags::HARDLINK_DUP));
     }
 
     #[test]

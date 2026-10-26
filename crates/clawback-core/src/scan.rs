@@ -825,17 +825,23 @@ impl Ctx<'_> {
             self.accounting.measure(exact_path.as_deref().unwrap_or_else(|| Path::new("")), md, options.apparent_size)
         };
         #[cfg(target_os = "macos")]
-        let measured: io::Result<_> =
-            Ok((if options.apparent_size { md.len() } else { md.allocated() }, md.len(), Some((md.dev(), md.ino()))));
+        let measured: io::Result<Measurement> = Ok((
+            if options.apparent_size { md.len() } else { md.allocated() },
+            md.len(),
+            Some((md.dev(), md.ino())),
+            md.nlink() > 1,
+        ));
         match measured {
-            Ok((size, len, file_id)) => {
+            Ok((size, len, file_id, linked)) => {
+                // Only files with several links can be counted more than once.
+                let linked = linked && file_id.is_some();
                 let duplicate = options.dedupe_hardlinks
-                    && may_have_aliases(md)
+                    && linked
                     && file_id.is_some_and(|key| !lock(&self.hardlinks).insert(key));
                 Measured {
                     size: if duplicate { 0 } else { size },
                     len,
-                    flags: if duplicate { flags::HARDLINK_DUP } else { 0 },
+                    flags: if duplicate { flags::HARDLINK_DUP } else { 0 } | if linked { flags::LINKED } else { 0 },
                     file_id,
                 }
             }
@@ -887,18 +893,8 @@ impl Ctx<'_> {
     }
 }
 
-/// Only files with several links can be counted more than once.
-#[cfg(unix)]
-fn may_have_aliases(md: &EntryMetadata) -> bool {
-    #[cfg(not(target_os = "macos"))]
-    use std::os::unix::fs::MetadataExt;
-    md.nlink() > 1
-}
-
-#[cfg(not(unix))]
-fn may_have_aliases(_md: &EntryMetadata) -> bool {
-    true
-}
+/// Allocated (or apparent) bytes, length, optional identity, and several hard links.
+pub(crate) type Measurement = (u64, u64, Option<FileId>, bool);
 
 /// Per-file size accounting. Volume geometry is resolved once per scan, not
 /// once per file.
@@ -925,20 +921,16 @@ impl FileAccounting {
         self.exact
     }
 
-    /// Allocated/estimated (or apparent) bytes, length, and optional identity.
-    pub(crate) fn measure(
-        &self,
-        path: &Path,
-        md: &fs::Metadata,
-        apparent: bool,
-    ) -> io::Result<(u64, u64, Option<FileId>)> {
+    /// Allocated/estimated (or apparent) bytes, length, optional identity, and whether the
+    /// file has several hard links.
+    pub(crate) fn measure(&self, path: &Path, md: &fs::Metadata, apparent: bool) -> io::Result<Measurement> {
         if self.exact {
             let info = crate::windows::metadata(path, apparent, self.ntfs_cluster)?;
-            return Ok((info.size, info.len, Some(info.id)));
+            return Ok((info.size, info.len, Some(info.id), info.linked));
         }
         let len = md.len();
         let size = if apparent { len } else { len.div_ceil(self.cluster).saturating_mul(self.cluster) };
-        Ok((size, len, None))
+        Ok((size, len, None, false))
     }
 }
 
@@ -953,23 +945,19 @@ impl FileAccounting {
         false
     }
 
-    /// Allocated (or apparent) bytes, length, and optional identity.
+    /// Allocated (or apparent) bytes, length, optional identity, and whether the file has
+    /// several hard links.
     #[allow(clippy::unnecessary_wraps)]
-    pub(crate) fn measure(
-        &self,
-        _path: &Path,
-        md: &fs::Metadata,
-        apparent: bool,
-    ) -> io::Result<(u64, u64, Option<FileId>)> {
+    pub(crate) fn measure(&self, _path: &Path, md: &fs::Metadata, apparent: bool) -> io::Result<Measurement> {
         #[cfg(unix)]
         {
             use std::os::unix::fs::MetadataExt;
-            Ok((if apparent { md.len() } else { md.blocks() * 512 }, md.len(), file_id(md)))
+            Ok((if apparent { md.len() } else { md.blocks() * 512 }, md.len(), file_id(md), md.nlink() > 1))
         }
         #[cfg(not(unix))]
         {
             let _ = apparent;
-            Ok((md.len(), md.len(), None))
+            Ok((md.len(), md.len(), None, false))
         }
     }
 }

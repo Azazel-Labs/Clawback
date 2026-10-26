@@ -8,7 +8,7 @@ use crate::profiling::Phase;
 use crate::scan::{MftPhase, Shared, lock};
 use crate::tree::{Kind, NewEntry, NodeId, ROOT, Tree, flags};
 use crate::windows;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::ffi::OsString;
 use std::fs::File;
 use std::io::{self, Read, Seek, SeekFrom};
@@ -246,22 +246,208 @@ pub(crate) fn scan(shared: &Shared) -> io::Result<bool> {
 }
 
 fn ingest(shared: &Shared, serial: u64, volume: &mut Volume, mapping: &[Run]) -> io::Result<()> {
-    let (mut records, extensions) = read_records(shared, volume, mapping)?;
+    let mut records = read_records(shared, volume, mapping)?;
     lock(&shared.mft_progress).phase = MftPhase::Resolving;
-    merge_extensions(shared, &mut records, extensions)?;
+    records.merge_extensions(shared)?;
     let tree = build_tree(shared, serial, records).map_err(|e| context(&e, "Assembling the MFT directory tree"))?;
     publish(shared, tree)
 }
 
-/// Parse every in-use record: base records by id, then extension records.
-fn read_records(
-    shared: &Shared,
-    volume: &mut Volume,
-    mapping: &[Run],
-) -> io::Result<(HashMap<u64, Record>, Vec<Record>)> {
+/// What assembly needs from one base record. A whole-volume ingest holds one per MFT
+/// slot, so this stays small; names live in [`Records::text`].
+#[derive(Clone, Copy, Default)]
+struct Slot {
+    allocated: u64,
+    len: u64,
+    mtime: i64,
+    sequence: u16,
+    flags: u8,
+    /// Distinct names, up to `u8::MAX`.
+    links: u8,
+}
+
+impl Slot {
+    const IN_USE: u8 = 1;
+    const DIRECTORY: u8 = 2;
+    const SURROGATE: u8 = 4;
+    const SIZED: u8 = 8;
+
+    fn has(self, flag: u8) -> bool {
+        self.flags & flag != 0
+    }
+}
+
+/// One hard link: `child`'s name inside the directory `parent`.
+#[derive(Clone, Copy)]
+struct Link {
+    /// The parent directory's full file reference, sequence number included.
+    parent: u64,
+    /// The named record's index.
+    child: u32,
+    /// Offset of the name in [`Records::text`], stored there after its length.
+    start: u32,
+}
+
+/// The fields an extension record contributes to its base.
+struct Extension {
+    base: u64,
+    surrogate: bool,
+    size: Option<(u64, u64)>,
+}
+
+/// Base records by MFT index, with every link name in one buffer.
+#[derive(Default)]
+struct Records {
+    slots: Vec<Slot>,
+    text: Vec<u16>,
+    links: Vec<Link>,
+    extensions: Vec<Extension>,
+    count: u64,
+}
+
+impl Records {
+    fn with_capacity(slots: usize) -> Self {
+        Self { slots: Vec::with_capacity(slots), ..Self::default() }
+    }
+
+    #[cfg(test)]
+    fn from_parsed(records: impl IntoIterator<Item = Record>) -> io::Result<Self> {
+        let mut result = Self::default();
+        for record in records {
+            result.insert(record)?;
+        }
+        Ok(result)
+    }
+
+    fn insert(&mut self, record: Record) -> io::Result<()> {
+        let owner = if record.base == 0 { record.id } else { record.base };
+        let index = u32::try_from(owner & INDEX_MASK).map_err(|_| invalid())?;
+        for name in record.names {
+            let start = u32::try_from(self.text.len()).map_err(|_| invalid())?;
+            self.text.push(u16::try_from(name.text.len()).map_err(|_| invalid())?);
+            self.text.extend_from_slice(&name.text);
+            self.links.push(Link { parent: name.parent, child: index, start });
+        }
+        if record.base != 0 {
+            self.extensions.push(Extension { base: record.base, surrogate: record.surrogate, size: record.size });
+            return Ok(());
+        }
+        let index = index as usize;
+        if self.slots.len() <= index {
+            self.slots.resize(index + 1, Slot::default());
+        }
+        let slot = &mut self.slots[index];
+        if slot.has(Slot::IN_USE) {
+            return Err(invalid());
+        }
+        let (allocated, len) = record.size.unwrap_or_default();
+        *slot = Slot {
+            allocated,
+            len,
+            mtime: record.mtime,
+            sequence: (record.id >> 48) as u16,
+            flags: Slot::IN_USE
+                | if record.directory { Slot::DIRECTORY } else { 0 }
+                | if record.surrogate { Slot::SURROGATE } else { 0 }
+                | if record.size.is_some() { Slot::SIZED } else { 0 },
+            links: 0,
+        };
+        self.count += 1;
+        Ok(())
+    }
+
+    /// The in-use base record `reference` names, if its sequence number still matches.
+    fn get(&self, reference: u64) -> Option<Slot> {
+        let slot = *self.slots.get(usize::try_from(reference & INDEX_MASK).ok()?)?;
+        (slot.has(Slot::IN_USE) && u64::from(slot.sequence) == reference >> 48).then_some(slot)
+    }
+
+    fn reference(&self, index: u32) -> u64 {
+        u64::from(index) | u64::from(self.slots[index as usize].sequence) << 48
+    }
+
+    fn name(&self, link: Link) -> &[u16] {
+        let start = link.start as usize + 1;
+        &self.text[start..start + usize::from(self.text[start - 1])]
+    }
+
+    /// Fold extension records' reparse state and sizes into their bases. Their names were
+    /// already recorded under the base.
+    fn merge_extensions(&mut self, shared: &Shared) -> io::Result<()> {
+        let _phase = shared.profile.timer(Phase::Merge);
+        for extension in std::mem::take(&mut self.extensions) {
+            shared.progress.checkpoint()?;
+            self.get(extension.base).ok_or_else(invalid)?;
+            let base = &mut self.slots[(extension.base & INDEX_MASK) as usize];
+            if extension.surrogate {
+                base.flags |= Slot::SURROGATE;
+            }
+            if let Some((allocated, len)) = extension.size {
+                if base.has(Slot::SIZED) {
+                    return Err(invalid());
+                }
+                (base.allocated, base.len) = (allocated, len);
+                base.flags |= Slot::SIZED;
+            }
+        }
+        Ok(())
+    }
+
+    /// Group links by parent, dropping links repeated by base and extension records.
+    fn index_links(&mut self, shared: &Shared, root: u32) -> io::Result<()> {
+        let text = &self.text;
+        let name = |link: &Link| {
+            let start = link.start as usize + 1;
+            &text[start..start + usize::from(text[start - 1])]
+        };
+        self.links.retain(|link| link.child != root);
+        self.links.sort_unstable_by(|a, b| {
+            (a.parent, a.child).cmp(&(b.parent, b.child)).then_with(|| name(a).cmp(name(b)))
+        });
+        self.links.dedup_by(|a, b| a.parent == b.parent && a.child == b.child && name(a) == name(b));
+        shared.progress.checkpoint()?;
+        if self.links.iter().any(|link| name(link) == [u16::from(b'.')]) {
+            return Err(invalid());
+        }
+        for link in &self.links {
+            let slot = &mut self.slots[link.child as usize];
+            slot.links = slot.links.saturating_add(1);
+        }
+        Ok(())
+    }
+
+    /// Indexes into `links` of `parent`'s entries.
+    fn children(&self, parent: u64) -> std::ops::Range<usize> {
+        self.links.partition_point(|link| link.parent < parent)..self.links.partition_point(|link| link.parent <= parent)
+    }
+}
+
+/// A set of MFT record indexes.
+struct Bits(Vec<u64>);
+
+impl Bits {
+    fn new(len: usize) -> Self {
+        Self(vec![0; len.div_ceil(64)])
+    }
+
+    /// Add `index`, returning whether it was absent.
+    fn insert(&mut self, index: u32) -> bool {
+        let (word, bit) = ((index / 64) as usize, 1u64 << (index % 64));
+        let absent = self.0[word] & bit == 0;
+        self.0[word] |= bit;
+        absent
+    }
+
+    fn contains(&self, index: u32) -> bool {
+        self.0[(index / 64) as usize] & (1 << (index % 64)) != 0
+    }
+}
+
+/// Parse every in-use record: base records by index, extension records for later merging.
+fn read_records(shared: &Shared, volume: &mut Volume, mapping: &[Run]) -> io::Result<Records> {
     let mut buffer = vec![0u8; BATCH];
-    let mut records = HashMap::new();
-    let mut extensions = Vec::new();
+    let slots = usize::try_from(volume.valid_len / volume.record_size as u64).map_err(|_| invalid())?;
+    let mut records = Records::with_capacity(slots);
     let mut offset = 0;
     lock(&shared.mft_progress).total = volume.valid_len;
     while offset < volume.valid_len {
@@ -292,36 +478,15 @@ fn read_records(
                 {
                     return Err(invalid());
                 }
-                if record.base == 0 {
-                    records.insert(record.id, record);
-                } else {
-                    extensions.push(record);
-                }
+                records.insert(record)?;
             }
         }
         offset += count as u64;
         let mut progress = lock(&shared.mft_progress);
         progress.read = offset;
-        progress.records = records.len() as u64;
+        progress.records = records.count;
     }
-    Ok((records, extensions))
-}
-
-/// Fold extension records' names, reparse state and sizes into their bases.
-fn merge_extensions(shared: &Shared, records: &mut HashMap<u64, Record>, extensions: Vec<Record>) -> io::Result<()> {
-    let _phase = shared.profile.timer(Phase::Merge);
-    for extension in extensions {
-        shared.progress.checkpoint()?;
-        let base = records.get_mut(&extension.base).ok_or_else(invalid)?;
-        base.names.extend(extension.names);
-        base.surrogate |= extension.surrogate;
-        if let Some(size) = extension.size
-            && base.size.replace(size).is_some()
-        {
-            return Err(invalid());
-        }
-    }
-    Ok(())
+    Ok(records)
 }
 
 /// Publish a validated tree and its totals.
@@ -335,100 +500,76 @@ fn publish(shared: &Shared, tree: Tree) -> io::Result<()> {
     Ok(())
 }
 
-type Children = HashMap<u64, Vec<(u64, OsString)>>;
-
-fn build_tree(shared: &Shared, serial: u64, mut records: HashMap<u64, Record>) -> io::Result<Tree> {
-    let (root, mut children) = {
+fn build_tree(shared: &Shared, serial: u64, mut records: Records) -> io::Result<Tree> {
+    let root = ROOT_RECORD as u32;
+    let slot = records.slots.get(root as usize).copied().unwrap_or_default();
+    if !slot.has(Slot::IN_USE) || !slot.has(Slot::DIRECTORY) {
+        return Err(invalid());
+    }
+    let excluded = {
         let _phase = shared.profile.timer(Phase::Index);
-        let root = records.keys().copied().find(|id| id & INDEX_MASK == ROOT_RECORD).ok_or_else(invalid)?;
-        if !records[&root].directory {
-            return Err(invalid());
-        }
-        let mut children = index_children(shared, &mut records, root)?;
-        exclude_reserved(shared, &records, root, &mut children)?;
-        (root, children)
+        records.index_links(shared, root)?;
+        exclude_reserved(shared, &records, root)?
     };
     let mut tree = Tree::new(&shared.root);
-    tree.node_mut(ROOT).mtime = records[&root].mtime;
+    tree.node_mut(ROOT).mtime = records.slots[root as usize].mtime;
     // Also identifies MFT accounting to incremental reconciliation. Directory
     // traversal deliberately uses listing-only estimates on Windows.
-    tree.node_mut(ROOT).file_id = Some((serial, root));
+    tree.node_mut(ROOT).file_id = Some((serial, records.reference(root)));
     {
         let _phase = shared.profile.timer(Phase::Assemble);
-        assemble(shared, serial, &records, root, &mut children, &mut tree)?;
+        assemble(shared, serial, &records, root, &excluded, &mut tree)?;
     }
+    // Sorting allocates too; release the records first.
+    drop(records);
     let _phase = shared.profile.timer(Phase::Sort);
     lock(&shared.mft_progress).phase = MftPhase::Sorting;
     tree.sort_all();
     Ok(tree)
 }
 
-/// Each directory's named children. Takes every record's names.
-fn index_children(shared: &Shared, records: &mut HashMap<u64, Record>, root: u64) -> io::Result<Children> {
-    let mut children: Children = HashMap::new();
-    for record in records.values_mut() {
-        shared.progress.checkpoint()?;
-        if record.id == root {
-            continue;
-        }
-        // Base and extension records may repeat a link.
-        let mut names = std::mem::take(&mut record.names);
-        names.sort_unstable();
-        names.dedup();
-        for name in names {
-            if name.text == [u16::from(b'.')] {
-                return Err(invalid());
-            }
-            children.entry(name.parent).or_default().push((record.id, OsString::from_wide(&name.text)));
-        }
-    }
-    Ok(children)
-}
-
 /// Keep the same user-file scope as directory traversal. Reserved NTFS
 /// records ($MFT, $Bitmap, $Extend, etc.) and their descendants account for
 /// filesystem overhead, not ordinary directory contents. Including them
 /// would also make live directory reconciliation remove invisible entries.
-fn exclude_reserved(
-    shared: &Shared,
-    records: &HashMap<u64, Record>,
-    root: u64,
-    children: &mut Children,
-) -> io::Result<()> {
-    let mut excluded: Vec<_> =
-        records.keys().copied().filter(|id| id & INDEX_MASK < FIRST_USER_RECORD && *id != root).collect();
-    let mut seen = HashSet::new();
-    while let Some(id) = excluded.pop() {
+fn exclude_reserved(shared: &Shared, records: &Records, root: u32) -> io::Result<Bits> {
+    let mut excluded = Bits::new(records.slots.len());
+    let mut pending: Vec<u32> = (0..FIRST_USER_RECORD as u32)
+        .filter(|&index| index != root && records.slots.get(index as usize).is_some_and(|slot| slot.has(Slot::IN_USE)))
+        .collect();
+    while let Some(index) = pending.pop() {
         shared.progress.checkpoint()?;
-        if seen.insert(id)
-            && let Some(entries) = children.remove(&id)
-        {
-            excluded.extend(entries.into_iter().map(|(id, _)| id));
+        if excluded.insert(index) {
+            pending.extend(records.links[records.children(records.reference(index))].iter().map(|link| link.child));
         }
     }
-    for entries in children.values_mut() {
-        entries.retain(|(id, _)| !seen.contains(id));
-    }
-    Ok(())
+    Ok(excluded)
 }
 
 /// Add every entry reachable from `root` to `tree`.
 fn assemble(
     shared: &Shared,
     serial: u64,
-    records: &HashMap<u64, Record>,
-    root: u64,
-    children: &mut Children,
+    records: &Records,
+    root: u32,
+    excluded: &Bits,
     tree: &mut Tree,
 ) -> io::Result<()> {
-    let mut pending = vec![(root, ROOT)];
-    let mut visited_dirs = HashSet::from([root]);
-    let mut counted = HashSet::new();
+    let mut pending = vec![(records.reference(root), ROOT)];
+    let mut visited_dirs = Bits::new(records.slots.len());
+    visited_dirs.insert(root);
+    let mut counted = Bits::new(records.slots.len());
+    // Parents whose entries were placed, by index of their first link.
+    let mut placed = Bits::new(records.links.len());
     let mut total_bytes = 0u64;
     lock(&shared.mft_progress).phase = MftPhase::Assembling;
     while let Some((reference, node)) = pending.pop() {
         shared.progress.checkpoint()?;
-        let Some(entries) = children.remove(&reference) else { continue };
+        let entries = records.children(reference);
+        if entries.is_empty() {
+            continue;
+        }
+        placed.insert(entries.start as u32);
         let mut batch = Vec::with_capacity(ASSEMBLE_BATCH);
         // Subdirectories to visit, by index into `batch`.
         let mut dirs = Vec::new();
@@ -437,39 +578,43 @@ fn assemble(
             pending.extend(dirs.drain(..).map(|(id, i)| (id, range.start + i as NodeId)));
             report_assembled(shared, tree);
         };
-        for (reference, name) in entries {
+        for &link in &records.links[entries] {
             shared.progress.checkpoint()?;
-            let record = &records[&reference];
-            let kind = if record.surrogate {
+            if excluded.contains(link.child) {
+                continue;
+            }
+            let record = records.slots[link.child as usize];
+            let reference = records.reference(link.child);
+            let kind = if record.has(Slot::SURROGATE) {
                 Kind::Symlink
-            } else if record.directory {
+            } else if record.has(Slot::DIRECTORY) {
                 Kind::Dir
             } else {
                 Kind::File
             };
             if kind == Kind::Dir {
-                if !visited_dirs.insert(reference) {
+                if !visited_dirs.insert(link.child) {
                     return Err(invalid());
                 }
                 dirs.push((reference, batch.len()));
             }
-            let (allocated, len) = record.size.unwrap_or((0, 0));
-            let duplicate = kind != Kind::Dir && shared.options.dedupe_hardlinks && !counted.insert(reference);
+            let duplicate = kind != Kind::Dir && shared.options.dedupe_hardlinks && !counted.insert(link.child);
             let size = if duplicate || kind == Kind::Dir {
                 0
             } else if shared.options.apparent_size {
-                len
+                record.len
             } else {
-                allocated
+                record.allocated
             };
             total_bytes = total_bytes.checked_add(size).ok_or_else(invalid)?;
             batch.push(NewEntry {
-                name,
+                name: OsString::from_wide(records.name(link)),
                 kind,
                 size,
-                len,
+                len: record.len,
                 mtime: record.mtime,
-                flags: if duplicate { flags::HARDLINK_DUP } else { 0 },
+                flags: if duplicate { flags::HARDLINK_DUP } else { 0 }
+                    | if kind != Kind::Dir && record.links > 1 { flags::LINKED } else { 0 },
                 file_id: (kind != Kind::Dir).then_some((serial, reference)),
             });
             if batch.len() == ASSEMBLE_BATCH {
@@ -479,9 +624,18 @@ fn assemble(
         add(tree, batch, &mut dirs);
     }
     // A missing parent or a cycle means the live MFT was not coherent. Children
-    // of name-surrogate directories are intentionally not traversed.
-    if children.keys().any(|id| !records.get(id).is_some_and(|r| r.surrogate)) {
-        return Err(invalid());
+    // of name-surrogate directories, and reserved metadata, are intentionally not
+    // traversed.
+    let mut start = 0;
+    while start < records.links.len() {
+        let parent = records.links[start].parent;
+        let group = records.children(parent);
+        let skipped = records.get(parent).is_some_and(|slot| slot.has(Slot::SURROGATE))
+            || excluded.contains((parent & INDEX_MASK) as u32);
+        if !placed.contains(start as u32) && !skipped {
+            return Err(invalid());
+        }
+        start = group.end;
     }
     Ok(())
 }
@@ -653,10 +807,10 @@ mod tests {
         let shared = state();
         let root = parse(&record(&[], true, 0), 5).unwrap().unwrap();
         let orphan = parse(&record(&[filename(reference(5) + (1 << 48), "stale", 1)], false, 0), 20).unwrap().unwrap();
-        assert!(build_tree(&shared, 1, HashMap::from([(root.id, root), (orphan.id, orphan)])).is_err());
+        assert!(build_tree(&shared, 1, Records::from_parsed([root, orphan]).unwrap()).is_err());
         let root = parse(&record(&[], true, 0), 5).unwrap().unwrap();
         let cycle = parse(&record(&[filename(reference(20), "cycle", 1)], true, 0), 20).unwrap().unwrap();
-        assert!(build_tree(&shared, 1, HashMap::from([(root.id, root), (cycle.id, cycle)])).is_err());
+        assert!(build_tree(&shared, 1, Records::from_parsed([root, cycle]).unwrap()).is_err());
     }
 
     #[test]
@@ -720,7 +874,7 @@ mod tests {
             parse(&record(&[filename(reference(5), "$ordinary", 1), nonresident(0, 4096, 2048, 4096)], false, 0), 25)
                 .unwrap()
                 .unwrap();
-        let records = [root, extend, metadata, ordinary].into_iter().map(|record| (record.id, record)).collect();
+        let records = Records::from_parsed([root, extend, metadata, ordinary]).unwrap();
         let tree = build_tree(&shared, 1, records).unwrap();
         assert_eq!(tree.root().size, 4096);
         assert_eq!(tree.root().files, 1);
@@ -765,7 +919,8 @@ mod tests {
             output.flush().unwrap();
         }
         println!("{}", crate::profiling::header());
-        for _ in 0..3 {
+        let runs: usize = std::env::var("CLAWBACK_PROFILE_RUNS").map_or(3, |s| s.parse().unwrap());
+        for _ in 0..runs {
             let shared = state();
             let mut volume = Volume::new(File::open(&image.0).unwrap(), 512, 512, len / 512, 1024, len);
             let mapping = [Run { vcn: 0, lcn: Some(0), clusters: len / 512 }];
@@ -781,6 +936,35 @@ mod tests {
                 shared.profile.fields()
             );
         }
+        println!("peak_commit_mib,{}", peak_commit() >> 20);
+    }
+
+    /// The process's peak committed private memory, which includes every transient ingest table.
+    #[cfg(feature = "profiling")]
+    fn peak_commit() -> usize {
+        #[repr(C)]
+        #[derive(Default)]
+        struct Counters {
+            cb: u32,
+            page_faults: u32,
+            peak_working_set: usize,
+            working_set: usize,
+            quota: [usize; 4],
+            pagefile: usize,
+            peak_pagefile: usize,
+        }
+        #[link(name = "kernel32")]
+        unsafe extern "system" {
+            fn GetCurrentProcess() -> *mut std::ffi::c_void;
+            fn K32GetProcessMemoryInfo(process: *mut std::ffi::c_void, counters: *mut Counters, size: u32) -> i32;
+        }
+        let mut counters = Counters { cb: size_of::<Counters>() as u32, ..Counters::default() };
+        // SAFETY: no arguments; the pseudo-handle needs no closing.
+        let process = unsafe { GetCurrentProcess() };
+        // SAFETY: a writable structure of the declared size.
+        let ok = unsafe { K32GetProcessMemoryInfo(process, &raw mut counters, counters.cb) };
+        assert_ne!(ok, 0);
+        counters.peak_pagefile
     }
 
     #[test]

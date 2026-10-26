@@ -16,13 +16,14 @@ use std::{
     time::Duration,
 };
 
-pub const MAGIC: &[u8; 8] = b"CLAWMFT2";
+pub const MAGIC: &[u8; 8] = b"CLAWMFT3";
 /// Longest string on the wire, in UTF-16 units: the Windows path limit.
 const MAX_UNITS: u64 = 32767;
 const OPTION_APPARENT_SIZE: u8 = 1;
 const OPTION_DEDUPE_HARDLINKS: u8 = 2;
 /// Node flags a fresh scan can produce; `REMOVED` is UI-only.
-const SCAN_FLAGS: u8 = flags::DENIED | flags::PARTIAL | flags::OTHER_FS | flags::VIRTUAL | flags::HARDLINK_DUP;
+const SCAN_FLAGS: u8 =
+    flags::DENIED | flags::PARTIAL | flags::OTHER_FS | flags::VIRTUAL | flags::HARDLINK_DUP | flags::LINKED;
 /// Error kinds that survive the trip, by wire code; anything else is `Other` (code 0).
 const ERROR_KINDS: [io::ErrorKind; 3] =
     [io::ErrorKind::Other, io::ErrorKind::Unsupported, io::ErrorKind::PermissionDenied];
