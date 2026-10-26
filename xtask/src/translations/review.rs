@@ -59,12 +59,18 @@ fn current(root: &Path, locale: &str) -> Result<Review> {
     Ok(Review {
         messages,
         readme: Record {
-            source: format!("{:x}", Sha256::digest(text(&root.join("README.md"))?.as_bytes())),
-            translation: format!(
-                "{:x}",
-                Sha256::digest(text(&root.join(format!("docs/i18n/README.{locale}.md")))?.as_bytes())
-            ),
+            source: sha256(&text(&root.join("README.md"))?),
+            translation: sha256(&text(&root.join(format!("docs/i18n/README.{locale}.md")))?),
         },
+    })
+}
+
+/// Lowercase hex SHA-256, the fingerprint format stored in review records.
+fn sha256(text: &str) -> String {
+    use std::fmt::Write;
+    Sha256::digest(text.as_bytes()).iter().fold(String::with_capacity(64), |mut hex, byte| {
+        let _ = write!(hex, "{byte:02x}");
+        hex
     })
 }
 
