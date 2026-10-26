@@ -351,8 +351,7 @@ impl MapView {
             self.layout_rx = Some(Job::spawn(key, ctx, move || {
                 let _span = crate::perf::span("worker.map_layout");
                 let grouped = key.special.grouped();
-                let mut boxes =
-                    layout::build_grouped(&tree, key.view, key.w, key.h, &key.layout, key.free, &grouped);
+                let mut boxes = layout::build_grouped(&tree, key.view, key.w, key.h, &key.layout, key.free, &grouped);
                 key.special.collapse_layout(&mut boxes);
                 special::collapse_games(&tree, &mut boxes);
                 crate::perf::counter("map.boxes", boxes.len() as f64);

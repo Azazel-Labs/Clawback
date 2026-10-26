@@ -157,7 +157,8 @@ pub fn deleted(bytes: u64) {
     unlock(platform);
     // Achievements belong to the Steam account, so the others may come from other computers.
     #[cfg(feature = "steam")]
-    if [Achievement::DeleteWindows, Achievement::DeleteLinux, Achievement::DeleteMacos].into_iter().all(steam::achieved) {
+    if [Achievement::DeleteWindows, Achievement::DeleteLinux, Achievement::DeleteMacos].into_iter().all(steam::achieved)
+    {
         unlock(Achievement::WorldTour);
     }
 }
@@ -238,7 +239,9 @@ mod tests {
         tree.add_children(ids.start, vec![NewEntry::file("left-pad.js", 2 * GB)]);
         tree.sort_all();
         let earned = from_scan(&tree, true, false);
-        for wanted in [Achievement::FirstScan, Achievement::WholeDrive, Achievement::AbsoluteUnit, Achievement::NodeModules] {
+        for wanted in
+            [Achievement::FirstScan, Achievement::WholeDrive, Achievement::AbsoluteUnit, Achievement::NodeModules]
+        {
             assert!(earned.contains(&wanted), "{wanted:?}");
         }
         assert!(!earned.contains(&Achievement::Terabyte));
