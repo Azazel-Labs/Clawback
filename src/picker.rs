@@ -18,6 +18,9 @@ struct PickerDrive {
     disk: DiskInfo,
     #[cfg(windows)]
     turbo: bool,
+    /// Scans use Turbo automatically through the installed service; no separate option.
+    #[cfg(windows)]
+    automatic: bool,
 }
 
 pub struct OpenDialog {
@@ -30,12 +33,20 @@ impl OpenDialog {
     /// Open the picker; drives are listed on a worker, since probing them can stall.
     pub fn start(ctx: &egui::Context) -> Self {
         let loading = Job::spawn((), ctx, || {
+            #[cfg(windows)]
+            let service = crate::turbo::service_ready();
             platform::drive_list()
                 .into_iter()
-                .map(|disk| PickerDrive {
+                .map(|disk| {
                     #[cfg(windows)]
-                    turbo: crate::turbo::eligible(Some(&disk), true),
-                    disk,
+                    let turbo = crate::turbo::eligible(Some(&disk), true);
+                    PickerDrive {
+                        #[cfg(windows)]
+                        turbo,
+                        #[cfg(windows)]
+                        automatic: turbo && service,
+                        disk,
+                    }
                 })
                 .collect()
         });
@@ -158,8 +169,13 @@ pub fn show(
                 browse = true;
             }
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                let open =
-                    theme::primary_button(tr!("ok").trim(), theme::ACCENT).min_size(vec2(96.0, theme::BUTTON_HEIGHT));
+                // A drive that scans with Turbo says so on its ordinary action.
+                #[cfg(windows)]
+                let automatic = matches!(dlg.choice, Some(Choice::Drive(i)) if dlg.drives[i].automatic);
+                #[cfg(not(windows))]
+                let automatic = false;
+                let label = if automatic { format!("⚡  {}", tr!("ok").trim()) } else { tr!("ok").trim().to_owned() };
+                let open = theme::primary_button(label, theme::ACCENT).min_size(vec2(96.0, theme::BUTTON_HEIGHT));
                 if ui.add_enabled(dlg.choice.is_some(), open).clicked()
                     && let Some(c) = dlg.choice
                 {
@@ -168,6 +184,7 @@ pub fn show(
                 #[cfg(windows)]
                 if let Some(Choice::Drive(i)) = dlg.choice
                     && dlg.drives[i].turbo
+                    && !dlg.drives[i].automatic
                     && ui
                         .add(turbo_button())
                         .on_hover_text(tr!("try-a-faster-ntfs-scan-with-administrator-permission"))

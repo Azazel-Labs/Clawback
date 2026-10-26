@@ -125,9 +125,14 @@ impl Running {
                     None
                 }
             };
-            let Some(scan) = start_walk() else { return };
-            // The directory walk; dropped once Turbo is transferring its finished tree.
-            let mut walk = Some(scan);
+            // The directory walk; dropped once Turbo is transferring its finished tree. With
+            // the Turbo service a whole drive skips it, unless the service turns out unusable.
+            let mut walk = if race.start_automatic(&path, &options, &pause_requested) {
+                None
+            } else {
+                let Some(scan) = start_walk() else { return };
+                Some(scan)
+            };
             let volume = Update::Volume {
                 disk: disk.clone(),
                 is_mount,
@@ -299,6 +304,27 @@ impl TurboRace {
     fn running(&self) -> bool {
         self.attempt.is_some()
     }
+    /// Start Turbo through the installed service without asking; false when it cannot.
+    fn start_automatic(&mut self, root: &Path, options: &ScanOptions, paused: &Arc<AtomicBool>) -> bool {
+        if !self.available || !crate::turbo::service_ready() {
+            return false;
+        }
+        match crate::turbo::Attempt::start_automatic(
+            root.to_owned(),
+            options.clone(),
+            paused.clone(),
+            self.control.clone(),
+        ) {
+            Ok(started) => {
+                self.attempt = Some(started);
+                true
+            }
+            Err(error) => {
+                self.control.failed(&error);
+                false
+            }
+        }
+    }
     /// The helper has built and validated its tree and is sending it.
     fn transferring(&self) -> bool {
         self.control.progress().is_some_and(|p| p.phase == clawback_core::scan::MftPhase::Transferring)
@@ -340,6 +366,9 @@ impl TurboRace {
     }
     fn cancel(&mut self) {}
     fn running(&self) -> bool {
+        false
+    }
+    fn start_automatic(&mut self, _: &Path, _: &ScanOptions, _: &Arc<AtomicBool>) -> bool {
         false
     }
     fn transferring(&self) -> bool {

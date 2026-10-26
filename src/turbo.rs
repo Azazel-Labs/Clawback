@@ -61,6 +61,8 @@ struct State {
     status: Status,
     /// Provisional telemetry, shown only while `Reading`.
     progress: MftProgress,
+    /// Started through the installed service without asking: Turbo is simply how this scan runs.
+    automatic: bool,
 }
 
 /// Consent and telemetry shared by the UI, the scan coordinator and the launcher.
@@ -80,8 +82,14 @@ impl Control {
     pub fn request(&self) {
         let mut state = self.state();
         if matches!(state.status, Status::Idle | Status::Declined | Status::Failed(_)) {
-            *state = State { status: Status::Requested, progress: MftProgress::default() };
+            *state = State { status: Status::Requested, progress: MftProgress::default(), automatic: false };
         }
+    }
+    pub fn automatic(&self) -> bool {
+        self.state().automatic
+    }
+    fn start_automatic(&self) {
+        *self.state() = State { status: Status::AwaitingConsent, progress: MftProgress::default(), automatic: true };
     }
     pub fn take_request(&self) -> bool {
         let mut state = self.state();
@@ -116,12 +124,35 @@ pub struct Attempt {
     control: Control,
 }
 impl Attempt {
+    /// Ask for Turbo, through the service when it is available or else with consent.
     pub fn start(root: PathBuf, options: ScanOptions, paused: Arc<AtomicBool>, control: Control) -> io::Result<Self> {
+        Self::launch(root, options, paused, control, Launch::Elevated)
+    }
+
+    /// Scan with Turbo through the installed service, never asking for consent. A
+    /// failure leaves the regular scan to run instead.
+    pub fn start_automatic(
+        root: PathBuf,
+        options: ScanOptions,
+        paused: Arc<AtomicBool>,
+        control: Control,
+    ) -> io::Result<Self> {
+        control.start_automatic();
+        Self::launch(root, options, paused, control, Launch::Service)
+    }
+
+    fn launch(
+        root: PathBuf,
+        options: ScanOptions,
+        paused: Arc<AtomicBool>,
+        control: Control,
+        mode: Launch,
+    ) -> io::Result<Self> {
         let stop = Arc::new(AtomicBool::new(false));
         let cancelled = stop.clone();
         let reporter = control.clone();
         let thread = std::thread::Builder::new().name("clawback-turbo".into()).spawn(move || {
-            let result = launch(&root, &options, cancelled, paused, &reporter, Launch::Elevated);
+            let result = launch(&root, &options, cancelled, paused, &reporter, mode);
             if let Err(error) = &result {
                 reporter.failed(error);
             }
@@ -146,6 +177,17 @@ impl Drop for Attempt {
     fn drop(&mut self) {
         self.stop.store(true, Ordering::Relaxed);
     }
+}
+
+/// The service refused this user once (it serves only the account that installed it), so
+/// scans stop trying it until the app restarts.
+static SERVICE_REFUSED: AtomicBool = AtomicBool::new(false);
+
+/// Whether the Turbo service is installed and running, so whole-drive scans can use it
+/// from the start. Only the service's status is queried: probing its single-client pipe
+/// could make a real request wait.
+pub fn service_ready() -> bool {
+    !SERVICE_REFUSED.load(Ordering::Relaxed) && service::running()
 }
 
 /// Only offer Turbo after disk discovery identifies a whole drive the MFT
@@ -230,6 +272,7 @@ fn spawn_helper(name: &str, mode: Launch) -> io::Result<OwnedHandle> {
         return Ok(process);
     }
     if mode == Launch::Service {
+        SERVICE_REFUSED.store(true, Ordering::Relaxed);
         return Err(io::Error::new(
             io::ErrorKind::PermissionDenied,
             "Turbo service unavailable or this user is not authorized",
