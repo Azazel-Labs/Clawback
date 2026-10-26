@@ -12,6 +12,34 @@ translation = "Ένας γρήγορος, cross-platform χάρτης χώρου
 source = "About Clawback"
 translation = "Σχετικά Με Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Άδεια χρήσης MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Πηγαίος κώδικας στο GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Έκδοση Steam"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Προβολή στο Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Περιλαμβάνει τις γραμματοσειρές Noto Sans (SIL Open Font License 1.1) και τα εικονίδια Phosphor (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Έκδοση { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Παρέχεται ως έχει, χωρίς καμία εγγύηση."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Αφρικάανς"
@@ -545,10 +573,6 @@ translation = "Κορεάτικα"
 [messages.language]
 source = "Language"
 translation = "Γλώσσα"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Αδειοδοτείται στο πλαίσιο MIT-0 (MIT No Attribution). Καμία εγγύηση οποιουδήποτε είδους."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

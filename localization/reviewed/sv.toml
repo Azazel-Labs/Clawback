@@ -12,6 +12,34 @@ translation = "En snabb, plattformsoberoende karta över diskutrymmet."
 source = "About Clawback"
 translation = "Om Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Licensierad under MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Källkod på GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam-utgåva"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Visa på Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Innehåller typsnitten Noto Sans (SIL Open Font License 1.1) och Phosphor-ikoner (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Version { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Tillhandahålls i befintligt skick, utan någon form av garanti."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -545,10 +573,6 @@ translation = "Koreanska"
 [messages.language]
 source = "Language"
 translation = "Språk"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Licensierad under MIT-0 (MIT No Attribution). Utan någon som helst garanti."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

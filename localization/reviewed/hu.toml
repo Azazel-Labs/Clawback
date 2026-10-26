@@ -12,6 +12,34 @@ translation = "Gyors, többplatformos lemezterület-térkép."
 source = "About Clawback"
 translation = "A Clawback névjegye"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "MIT-0 (MIT No Attribution) licenc alatt."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Forráskód a GitHubon"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam-kiadás"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Megtekintés a Steamen"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Tartalmazza a Noto Sans betűtípusokat (SIL Open Font License 1.1) és a Phosphor ikonokat (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "{ $version } verzió"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Jelen állapotában, mindenféle garancia nélkül biztosítva."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -538,10 +566,6 @@ translation = "Koreai"
 [messages.language]
 source = "Language"
 translation = "Nyelv"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "MIT-0 (MIT No Attribution) licenc alatt. Mindenféle garancia nélkül."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

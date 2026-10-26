@@ -328,6 +328,7 @@ impl ClawbackApp {
             if let Ok(mode) = std::env::var("CLAWBACK_DEMO_SCAN") {
                 app.scan = Some(Running::demo(mode == "paused"));
             }
+            app.about = std::env::var_os("CLAWBACK_DEMO_ABOUT").is_some();
             if let Ok(page) = std::env::var("CLAWBACK_DEMO_SETTINGS") {
                 app.setup = Some(app.settings.clone());
                 cc.egui_ctx
@@ -1436,34 +1437,55 @@ impl ClawbackApp {
             return;
         }
         let mut close = false;
+        let mut failed = None;
+        // The Steam build points to its store page; others to the source code.
+        let (link, url) = match crate::achievements::steam_app_id() {
+            Some(id) => (tr!("about-store-page"), format!("https://store.steampowered.com/app/{id}/")),
+            None => (tr!("about-source-code"), env!("CARGO_PKG_REPOSITORY").to_owned()),
+        };
         let modal = egui::Modal::new(Id::new("clawback-about")).show(ctx, |ui| {
-            ui.set_width(320.0);
+            ui.set_width(440.0);
             ui.vertical_centered(|ui| {
-                ui.add_space(8.0);
-                let (rect, _) = ui.allocate_exact_size(vec2(72.0, 72.0), egui::Sense::hover());
-                icon::paint(ui.painter(), rect);
-                ui.add_space(10.0);
-                ui.label(RichText::new("Clawback").size(24.0).strong().color(theme::TEXT));
-                ui.label(RichText::new(env!("CARGO_PKG_VERSION")).color(theme::MUTED));
                 ui.add_space(12.0);
-                ui.label(tr!("a-fast-cross-platform-disk-space-map"));
+                let (rect, _) = ui.allocate_exact_size(vec2(80.0, 80.0), egui::Sense::hover());
+                icon::paint(ui.painter(), rect);
+                ui.add_space(12.0);
+                ui.label(RichText::new("Clawback").size(26.0).strong().color(theme::TEXT));
+                let version = tr!("about-version", version = env!("CARGO_PKG_VERSION"));
+                let version = if cfg!(feature = "steam") {
+                    format!("{version} · {}", tr!("about-steam-edition"))
+                } else {
+                    version
+                };
+                ui.label(RichText::new(version).color(theme::MUTED));
+                ui.add_space(16.0);
+                ui.label(RichText::new(tr!("a-fast-cross-platform-disk-space-map")).color(theme::TEXT));
                 ui.label(RichText::new(tr!("claw-back-your-disk-space")).color(theme::ACCENT));
-                ui.add_space(8.0);
-                let repository = env!("CARGO_PKG_REPOSITORY");
-                ui.hyperlink_to(repository.trim_start_matches("https://"), repository);
-                ui.add_space(14.0);
-                ui.separator();
-                ui.add_space(6.0);
-                ui.label(RichText::new(tr!("copyright-2026-azazel-labs")).size(11.0).color(theme::MUTED));
-                ui.label(
-                    RichText::new(tr!("licensed-under-mit-0-mit-no-attribution-no")).size(11.0).color(theme::MUTED),
-                );
-                ui.add_space(10.0);
-                if ui.button(tr!("ok")).clicked() {
-                    close = true;
+                ui.add_space(12.0);
+                if widgets::external_link(ui, &link).on_hover_text(&url).clicked()
+                    && let Err(error) = platform::open(std::path::Path::new(&url))
+                {
+                    failed = Some(error);
                 }
+                ui.add_space(16.0);
+                ui.separator();
+                ui.add_space(8.0);
+                // Each legal statement on its own line, quiet but readable.
+                for line in [tr!("copyright-2026-azazel-labs"), tr!("about-license"), tr!("about-warranty")] {
+                    ui.label(RichText::new(line).size(11.0).color(theme::MUTED));
+                }
+                ui.add_space(6.0);
+                ui.add(egui::Label::new(RichText::new(tr!("about-third-party")).size(11.0).color(theme::MUTED)).wrap());
+                ui.add_space(16.0);
+                let ok =
+                    theme::primary_button(tr!("ok").trim(), theme::ACCENT).min_size(vec2(96.0, theme::BUTTON_HEIGHT));
+                close = ui.add(ok).clicked();
+                ui.add_space(4.0);
             });
         });
+        if let Some(error) = failed {
+            self.error = Some(error);
+        }
         if close || modal.should_close() {
             self.about = false;
         }

@@ -12,6 +12,34 @@ translation = "快速、跨平台的磁碟空間視覺化工具。"
 source = "About Clawback"
 translation = "關於 Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "依據 MIT-0 (MIT No Attribution) 授權。"
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "GitHub 上的原始碼"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam 版"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "在 Steam 上檢視"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "包含 Noto Sans 字型 (SIL Open Font License 1.1) 與 Phosphor 圖示 (MIT)。"
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "版本 { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "按原樣提供，不附帶任何形式的保證。"
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "南非荷蘭文"
@@ -538,10 +566,6 @@ translation = "韓文"
 [messages.language]
 source = "Language"
 translation = "語言"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "採用 MIT-0（MIT No Attribution）授權條款。不提供任何形式的擔保。"
 
 [messages.live-catching-up]
 source = "Live · Catching up"

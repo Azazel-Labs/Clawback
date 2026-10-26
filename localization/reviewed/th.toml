@@ -12,6 +12,34 @@ translation = "แผนผังพื้นที่ดิสก์ที่�
 source = "About Clawback"
 translation = "เกี่ยวกับ Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "ใช้สัญญาอนุญาต MIT-0 (MIT No Attribution)"
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "ซอร์สโค้ดบน GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "รุ่นสำหรับ Steam"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "ดูบน Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "มีฟอนต์ Noto Sans (SIL Open Font License 1.1) และไอคอน Phosphor (MIT)"
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "เวอร์ชัน { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "จัดให้ตามสภาพ โดยไม่มีการรับประกันใดๆ"
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "แอฟริกานส์"
@@ -538,10 +566,6 @@ translation = "เกาหลี"
 [messages.language]
 source = "Language"
 translation = "ภาษา"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "อนุญาตให้ใช้ภายใต้ MIT-0 (MIT แบบไม่ต้องระบุที่มา) ไม่มีการรับประกันใด ๆ"
 
 [messages.live-catching-up]
 source = "Live · Catching up"

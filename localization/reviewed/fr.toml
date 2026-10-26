@@ -12,6 +12,34 @@ translation = "Une carte rapide et multiplateforme de votre espace disque."
 source = "About Clawback"
 translation = "À propos de Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Sous licence MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Code source sur GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Édition Steam"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Voir sur Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Comprend les polices Noto Sans (SIL Open Font License 1.1) et les icônes Phosphor (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Version { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Fourni tel quel, sans garantie d’aucune sorte."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -553,10 +581,6 @@ translation = "Coréen"
 [messages.language]
 source = "Language"
 translation = "Langue"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Distribué sous licence MIT-0 (MIT No Attribution). Aucune garantie d’aucune sorte."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

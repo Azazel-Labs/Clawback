@@ -93,6 +93,15 @@ pub fn pump() {
     steam::pump();
 }
 
+/// The Steam app ID in Steam builds: compiled in by the depot script, or else the one Steam
+/// reports for this launch.
+pub fn steam_app_id() -> Option<u32> {
+    #[cfg(feature = "steam")]
+    return option_env!("CLAWBACK_STEAM_APP_ID").and_then(|id| id.parse().ok()).or_else(steam::app_id);
+    #[cfg(not(feature = "steam"))]
+    None
+}
+
 pub fn unlock(achievement: Achievement) {
     #[cfg(feature = "steam")]
     steam::unlock(achievement);
@@ -186,6 +195,10 @@ mod steam {
             }
             steamworks::Client::init().ok()
         });
+    }
+
+    pub fn app_id() -> Option<u32> {
+        CLIENT.get()?.as_ref().map(|client| client.utils().app_id().0)
     }
 
     pub fn connected() -> bool {

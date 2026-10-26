@@ -12,6 +12,34 @@ translation = "Nopea, poikittaissuuntainen levyn välilyöntikartta."
 source = "About Clawback"
 translation = "Tietoja Clawbactista"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Lisensoitu MIT-0-lisenssillä (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Lähdekoodi GitHubissa"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam-versio"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Näytä Steamissa"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Sisältää Noto Sans -fontit (SIL Open Font License 1.1) ja Phosphor-kuvakkeet (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Versio { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Toimitetaan sellaisenaan ilman minkäänlaista takuuta."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -545,10 +573,6 @@ translation = "Korealainen"
 [messages.language]
 source = "Language"
 translation = "Kieli"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Lisensoitu MIT-0 (MIT No Attribution). Ei minkäänlaista takuuta."
 
 [messages.live-catching-up]
 source = "Live · Catching up"
