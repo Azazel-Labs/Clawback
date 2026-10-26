@@ -5,12 +5,8 @@ use std::path::{Path, PathBuf};
 
 /// Paging, swap and hibernation files, and the restore points and shadow copies in System
 /// Volume Information. Windows sizes and removes these itself. Each is (name, directory).
-pub const RESERVED: [(&str, bool); 4] = [
-    ("pagefile.sys", false),
-    ("swapfile.sys", false),
-    ("hiberfil.sys", false),
-    ("System Volume Information", true),
-];
+pub const RESERVED: [(&str, bool); 4] =
+    [("pagefile.sys", false), ("swapfile.sys", false), ("hiberfil.sys", false), ("System Volume Information", true)];
 
 /// Settings page where Windows offers its own cleanup of system files.
 pub const STORAGE_SETTINGS: &str = "ms-settings:storagesense";
@@ -50,9 +46,8 @@ pub fn protected(path: &Path) -> bool {
 fn reserved_path(path: &Path) -> bool {
     // The ancestor directly below the drive root.
     let top = path.ancestors().find(|ancestor| ancestor.parent().is_some_and(|parent| parent.parent().is_none()));
-    top.and_then(Path::file_name).is_some_and(|name| {
-        RESERVED.iter().any(|(reserved, _)| name.to_string_lossy().eq_ignore_ascii_case(reserved))
-    })
+    top.and_then(Path::file_name)
+        .is_some_and(|name| RESERVED.iter().any(|(reserved, _)| name.to_string_lossy().eq_ignore_ascii_case(reserved)))
 }
 
 #[cfg(test)]

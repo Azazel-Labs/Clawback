@@ -401,9 +401,8 @@ impl Records {
             &text[start..start + usize::from(text[start - 1])]
         };
         self.links.retain(|link| link.child != root);
-        self.links.sort_unstable_by(|a, b| {
-            (a.parent, a.child).cmp(&(b.parent, b.child)).then_with(|| name(a).cmp(name(b)))
-        });
+        self.links
+            .sort_unstable_by(|a, b| (a.parent, a.child).cmp(&(b.parent, b.child)).then_with(|| name(a).cmp(name(b))));
         self.links.dedup_by(|a, b| a.parent == b.parent && a.child == b.child && name(a) == name(b));
         shared.progress.checkpoint()?;
         if self.links.iter().any(|link| name(link) == [u16::from(b'.')]) {
@@ -418,7 +417,8 @@ impl Records {
 
     /// Indexes into `links` of `parent`'s entries.
     fn children(&self, parent: u64) -> std::ops::Range<usize> {
-        self.links.partition_point(|link| link.parent < parent)..self.links.partition_point(|link| link.parent <= parent)
+        self.links.partition_point(|link| link.parent < parent)
+            ..self.links.partition_point(|link| link.parent <= parent)
     }
 }
 

@@ -1,10 +1,7 @@
 //! Special-location visuals, action labels and hints. The treemap only supplies geometry.
 use super::{Inventory, Kind};
 use crate::{i18n::tr, maprender, theme};
-use clawback_core::{
-    NodeId, Tree, format,
-    layout::DisplayBox,
-};
+use clawback_core::{NodeId, Tree, format, layout::DisplayBox};
 use std::borrow::Cow;
 
 const DISK_BADGE_HEIGHT: i32 = 96;
@@ -209,17 +206,23 @@ impl Inventory {
         match self.cells.iter().flatten().find(|cell| cell.node == node).map(|cell| cell.kind) {
             Some(Kind::TempFolder) => return Cow::Borrowed("Temp"),
             Some(Kind::WindowsOs) => {
-                return Cow::Owned(if tree.node(node).is_dir() && tree.node(node).name_lossy() != "System Volume Information" {
-                    tr!("windows-os")
-                } else {
-                    tr!("windows-system-files")
-                });
+                return Cow::Owned(
+                    if tree.node(node).is_dir() && tree.node(node).name_lossy() != "System Volume Information" {
+                        tr!("windows-os")
+                    } else {
+                        tr!("windows-system-files")
+                    },
+                );
             }
             _ => {}
         }
         let entry = tree.node(node);
         // Discovery needs the scan's mount state; the name alone is enough to drop the `$`.
-        if cfg!(windows) && entry.parent == clawback_core::ROOT && entry.is_dir() && entry.name_lossy().eq_ignore_ascii_case("$Recycle.Bin") {
+        if cfg!(windows)
+            && entry.parent == clawback_core::ROOT
+            && entry.is_dir()
+            && entry.name_lossy().eq_ignore_ascii_case("$Recycle.Bin")
+        {
             return Cow::Owned(tr!("recycle-bin"));
         }
         #[cfg(windows)]

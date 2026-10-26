@@ -223,8 +223,8 @@ fn catalog() -> Arc<[Game]> {
 /// refresh them in the background when they are more than 30 seconds old.
 pub fn games() -> Arc<[Game]> {
     static CATALOG: OnceLock<Mutex<Catalog>> = OnceLock::new();
-    let cell = CATALOG
-        .get_or_init(|| Mutex::new(Catalog { read_at: Instant::now(), refreshing: false, games: catalog() }));
+    let cell =
+        CATALOG.get_or_init(|| Mutex::new(Catalog { read_at: Instant::now(), refreshing: false, games: catalog() }));
     let mut current = clawback_core::scan::lock(cell);
     if !current.refreshing && current.read_at.elapsed() > Duration::from_secs(30) {
         current.refreshing = true;
@@ -271,13 +271,14 @@ pub fn art_path(id: u32, art: Art) -> Option<PathBuf> {
         Art::Capsule => vec![folder.join("library_600x900.jpg"), cache.join(format!("{id}_library_600x900.jpg"))],
         Art::Icon => {
             // The current client names the icon by its content hash.
-            let hashed = std::fs::read_dir(&folder).into_iter().flatten().flatten().map(|entry| entry.path()).find(|path| {
-                path.extension().is_some_and(|ext| ext.eq_ignore_ascii_case("jpg"))
-                    && path
-                        .file_stem()
-                        .and_then(|stem| stem.to_str())
-                        .is_some_and(|stem| stem.len() == 40 && stem.bytes().all(|b| b.is_ascii_hexdigit()))
-            });
+            let hashed =
+                std::fs::read_dir(&folder).into_iter().flatten().flatten().map(|entry| entry.path()).find(|path| {
+                    path.extension().is_some_and(|ext| ext.eq_ignore_ascii_case("jpg"))
+                        && path
+                            .file_stem()
+                            .and_then(|stem| stem.to_str())
+                            .is_some_and(|stem| stem.len() == 40 && stem.bytes().all(|b| b.is_ascii_hexdigit()))
+                });
             hashed.into_iter().chain([cache.join(format!("{id}_icon.jpg"))]).collect()
         }
     };

@@ -835,9 +835,8 @@ impl Ctx<'_> {
             Ok((size, len, file_id, linked)) => {
                 // Only files with several links can be counted more than once.
                 let linked = linked && file_id.is_some();
-                let duplicate = options.dedupe_hardlinks
-                    && linked
-                    && file_id.is_some_and(|key| !lock(&self.hardlinks).insert(key));
+                let duplicate =
+                    options.dedupe_hardlinks && linked && file_id.is_some_and(|key| !lock(&self.hardlinks).insert(key));
                 Measured {
                     size: if duplicate { 0 } else { size },
                     len,
