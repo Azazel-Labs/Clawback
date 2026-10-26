@@ -211,6 +211,23 @@ pub struct Game {
     location: String,
 }
 
+impl Game {
+    /// A runtime or tool Steam installs for games, rather than something to play. App
+    /// manifests do not say which, so the common ones are known by ID and name.
+    pub fn is_tool(&self) -> bool {
+        const TOOLS: [u32; 4] = [
+            228_980,   // Steamworks Common Redistributables
+            250_820,   // SteamVR
+            1_161_040, // Proton BattlEye Runtime
+            1_826_330, // Proton EasyAntiCheat Runtime
+        ];
+        TOOLS.contains(&self.id)
+            || self.name.starts_with("Proton ")
+            || self.name.starts_with("Steam Linux Runtime")
+            || self.name.starts_with("Steamworks ")
+    }
+}
+
 struct Catalog {
     read_at: Instant,
     refreshing: bool,
@@ -338,6 +355,15 @@ mod tests {
         assert_eq!(app.action, Some(Action::Steam(42)));
         assert!(game(Path::new(r"E:\Games"), 43, &manifest).is_none());
     }
+    #[test]
+    fn steam_runtimes_and_tools_are_not_games() {
+        let game = |id, name: &str| Game { id, name: name.into(), last_played: None, location: String::new() };
+        assert!(game(228_980, "Steamworks Common Redistributables").is_tool());
+        assert!(game(2_805_730, "Proton 9.0").is_tool());
+        assert!(game(1_628_350, "Steam Linux Runtime 3.0 (sniper)").is_tool());
+        assert!(!game(1_794_680, "Vampire Survivors").is_tool());
+    }
+
     #[test]
     fn malformed_manifests_cannot_choose_paths_outside_the_game_library() {
         for directory in ["..", "../Other", r"C:\Windows", "", "Game.", "Game "] {

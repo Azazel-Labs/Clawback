@@ -440,7 +440,7 @@ fn tagged_cache(tree: &Tree, id: NodeId) -> Option<Item> {
 /// An installed Steam game, with when it was last played.
 #[cfg(windows)]
 fn game(tree: &Tree, id: NodeId) -> Option<Item> {
-    let game = special::windows::programs::steam::game_at(tree, id)?;
+    let game = special::windows::programs::steam::game_at(tree, id).filter(|game| !game.is_tool())?;
     let detail = game.last_played.map_or_else(
         || tr!("reclaim-never-played"),
         |seconds| tr!("reclaim-last-played", date = format::date(seconds)),
