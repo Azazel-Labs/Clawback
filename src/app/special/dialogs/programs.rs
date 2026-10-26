@@ -150,6 +150,8 @@ impl ClawbackApp {
         if let Some(action) = launch {
             if let Err(error) = programs::launch(&action) {
                 self.error = Some(error);
+            } else if matches!(action, programs::Action::Steam(_)) {
+                crate::achievements::unlock(crate::achievements::Achievement::GameOver);
             }
             close = true;
         }

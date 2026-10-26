@@ -27,6 +27,11 @@ try {
     $payload = Join-Path $out 'helper-payload'
     New-Item -ItemType Directory -Path $redist, $payload | Out-Null
     Copy-Item -LiteralPath (Join-Path $repo "target/steam/$target/release/clawback.exe") -Destination $content
+    # The Steamworks redistributable, delay-loaded only by the desktop app for achievements.
+    $steamApi = Get-ChildItem -Path (Join-Path $repo "target/steam/$target/release/build") -Filter steam_api64.dll -Recurse |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if (!$steamApi) { throw 'Missing steam_api64.dll from the steamworks-sys build' }
+    Copy-Item -LiteralPath $steamApi.FullName -Destination $content
     foreach ($file in @('README.md', 'LICENSE')) {
         Copy-Item -LiteralPath (Join-Path $repo $file) -Destination $content
     }

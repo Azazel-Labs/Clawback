@@ -90,8 +90,8 @@ include = [
 ]
 
 [features]
-## Isolated Windows Turbo service for the Steam distribution.
-steam = []
+## Isolated Windows Turbo service and achievements for the Steam distribution.
+steam = ["dep:steamworks"]
 screenshots = []
 turbo-probe = []
 startup-probe = []
@@ -118,6 +118,9 @@ ratatui = "0.30"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
 egui-phosphor = "0.14"
 ttf-parser = "0.25" # Validate system fonts and select regional faces in collections.
+# Steam build only (achievements). Its runtime library ships beside the executable; on
+# Windows it is delay-loaded (see build.rs).
+steamworks = { version = "0.13.1", optional = true }
 
 [target.'cfg(not(windows))'.dependencies]
 notify = "8.2"

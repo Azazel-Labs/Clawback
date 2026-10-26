@@ -62,6 +62,47 @@ installation is independent. Reinstalling through Steam runs setup again.
 Describe the privileged helper and its ability to read protected file names and
 sizes on the store page. The app does not need to run as administrator.
 
+## Achievements
+
+Builds with the `steam` Cargo feature, on any OS, report achievements through
+the Steamworks API (`src/achievements.rs`). The portable GitHub builds never
+include it. Achievements connect only when Steam launched the app, and only
+from the desktop app; on Windows `steam_api64.dll` is delay-loaded and must sit
+beside `clawback.exe`. The depot script copies it there, but not into the Turbo
+helper payload. Linux and macOS Steam builds must ship `libsteam_api.so` or
+`libsteam_api.dylib` beside the executable; the build adds an rpath for it.
+
+Create these in Steamworks under **Stats & Achievements** with exactly these
+API names, then publish the changes:
+
+| API name | Name | Description |
+| --- | --- | --- |
+| `FIRST_SCAN` | Is This Thing On? | Finish your first scan. |
+| `WHOLE_DRIVE` | The Whole Enchilada | Scan an entire drive. |
+| `TERABYTE` | Digital Hoarder | Scan a terabyte of stuff. |
+| `MILLION_FILES` | A Million Little Files | Scan a million files at once. |
+| `ABSOLUTE_UNIT` | Absolute Unit | Find a single file of 50 GB or more. |
+| `NODE_MODULES` | Event Horizon | Find a `node_modules` folder over 1 GB. |
+| `FIRST_DELETE` | Snip Snip | Delete something. |
+| `SPARK_JOY` | Does It Spark Joy? | Delete 10 GB or more at once. |
+| `TRASH_DAY` | Trash Day | Empty the Recycle Bin. |
+| `TEMP_CLEAN` | Temporary Insanity | Clean out your Temp folder. |
+| `WSL_DIET` | Penguin Diet | Compact a WSL disk. |
+| `DONT_TOUCH` | Please Don't Touch the OS | Poke the Windows OS tile. |
+| `SPELUNKER` | Spelunker | Zoom ten folders deep. |
+| `GOTTA_GO_FAST` | Gotta Go Fast | Finish a Turbo scan. |
+| `GAME_OVER` | Game Over | Uninstall a Steam game from the map. |
+| `DRIP_CHECK` | Drip Check | Change the map's color palette. |
+| `DELETE_WINDOWS` | Ctrl+Alt+Delete | Delete something on Windows. |
+| `DELETE_LINUX` | rm -rf Enthusiast | Delete something on Linux. |
+| `DELETE_MACOS` | Command+Delete | Delete something on macOS. |
+| `WORLD_TOUR` | Platform Agnostic | Delete something on Windows, Linux and macOS. |
+
+To test locally, run a Steam build with Steam open and a `steam_appid.txt`
+holding the app ID in the working directory. On Windows, first copy
+`steam_api64.dll` from `target/<profile>/build/steamworks-sys-*/out` beside the
+built executable; without it, achievements stay off.
+
 ## Release validation
 
 Before publishing, test the signed depot on a Windows VM through Steam:

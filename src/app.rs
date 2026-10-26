@@ -117,6 +117,15 @@ impl DeleteKind {
     }
 }
 
+fn earned_by_delete(kind: DeleteKind, size: u64) {
+    use crate::achievements::{Achievement, unlock};
+    match kind.cleanup() {
+        Some(special::Cleanup::RecycleBin) => unlock(Achievement::TrashDay),
+        Some(special::Cleanup::TempFolder) => unlock(Achievement::TempClean),
+        None => crate::achievements::deleted(size),
+    }
+}
+
 enum DeleteDone {
     /// Everything went; free space is re-read.
     Removed(Option<DiskInfo>),
@@ -401,6 +410,11 @@ impl ClawbackApp {
             }
             Some(Ok(Update::Finished { result: r, started })) => {
                 let mut run = self.scan.take().expect("active scan");
+                #[cfg(windows)]
+                let turbo = run.turbo.status() == crate::turbo::Status::Reading;
+                #[cfg(not(windows))]
+                let turbo = false;
+                crate::achievements::scanned(&r.tree, run.is_mount, turbo);
                 self.live = started.live;
                 self.live_status = Some(started.status);
                 self.set_doc(Doc {
@@ -446,6 +460,7 @@ impl ClawbackApp {
         match result {
             Ok(DeleteDone::Removed(disk)) => {
                 self.forget_removed(&del.targets, disk);
+                earned_by_delete(del.job.kind, del.job.size);
                 if del.job.kind.cleanup().is_some()
                     && let Some(live) = &self.live
                 {
@@ -472,6 +487,10 @@ impl ClawbackApp {
                 }
             }
             Ok(DeleteDone::Partial { error, disk }) => {
+                // Locked temporary files rarely all go; a cleanup that ran still counts.
+                if del.job.kind.cleanup().is_some() {
+                    earned_by_delete(del.job.kind, 0);
+                }
                 // Some of it is gone: the watcher (or a rescan) reconciles what remains.
                 if let Some(live) = &self.live {
                     if del.job.kind.cleanup().is_some() {
@@ -576,6 +595,9 @@ impl ClawbackApp {
                 {
                     self.history.push(d.tree.path(d.view));
                     d.view = n;
+                    if d.tree.depth(n) >= 10 {
+                        crate::achievements::unlock(crate::achievements::Achievement::Spelunker);
+                    }
                     self.map.clear_selection();
                     ctx.request_repaint();
                 }
@@ -1334,6 +1356,9 @@ impl ClawbackApp {
                     // Cached map galleys reference the previous font atlas.
                     self.map = MapView::default();
                 }
+                if [s.file_color, s.folder_color] != [self.settings.file_color, self.settings.folder_color] {
+                    crate::achievements::unlock(crate::achievements::Achievement::DripCheck);
+                }
                 self.settings = s;
                 self.file_types = crate::filetypes::FileTypes::default();
                 self.props = None;
@@ -1536,6 +1561,7 @@ impl eframe::App for ClawbackApp {
         crate::demo::capture(&ctx);
         self.poll(&ctx);
         self.keys(&ctx);
+        crate::achievements::pump();
 
         // Scan progress floats over the map instead of reserving a permanent band,
         // so the menu bar only needs its 24 px items plus the frame margins.

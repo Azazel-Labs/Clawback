@@ -17,6 +17,20 @@ fn main() {
     if cjk.iter().all(|path| std::path::Path::new(path).is_file()) {
         println!("cargo:rustc-cfg=bundled_cjk_fonts");
     }
+    // Steam builds load the Steam API library shipped beside the executable. On Windows the
+    // Turbo service runs the same executable and must start without it, so it is delay-loaded
+    // until achievements connect.
+    if std::env::var_os("CARGO_FEATURE_STEAM").is_some() {
+        match std::env::var("CARGO_CFG_TARGET_OS").as_deref() {
+            Ok("windows") if std::env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc") => {
+                println!("cargo:rustc-link-arg=/DELAYLOAD:steam_api64.dll");
+                println!("cargo:rustc-link-arg=delayimp.lib");
+            }
+            Ok("macos") => println!("cargo:rustc-link-arg=-Wl,-rpath,@executable_path"),
+            Ok("linux") => println!("cargo:rustc-link-arg=-Wl,-rpath,$ORIGIN"),
+            _ => {}
+        }
+    }
     println!("cargo:rerun-if-changed=assets/icons/clawback.ico");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
         winresource::WindowsResource::new()
