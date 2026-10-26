@@ -250,6 +250,21 @@ fn catalog() -> Arc<[Game]> {
 /// Every library's games. The first call reads the manifests; later calls return at once and
 /// refresh them in the background when they are more than 30 seconds old.
 pub fn games() -> Arc<[Game]> {
+    // Captures use the demo drive's fictional games, never the computer's own.
+    #[cfg(feature = "screenshots")]
+    if crate::demo::capturing() {
+        static DEMO: OnceLock<Arc<[Game]>> = OnceLock::new();
+        let library = Path::new(crate::demo::DRIVE).join(crate::demo::STEAM_LIBRARY);
+        return Arc::clone(DEMO.get_or_init(|| {
+            let game = |&(id, name, last_played): &(u32, &str, Option<i64>)| Game {
+                id,
+                name: name.to_owned(),
+                last_played,
+                location: super::normalized(&library.join(name)),
+            };
+            crate::demo::GAMES.iter().map(game).collect()
+        }));
+    }
     static CATALOG: OnceLock<Mutex<Catalog>> = OnceLock::new();
     let cell =
         CATALOG.get_or_init(|| Mutex::new(Catalog { read_at: Instant::now(), refreshing: false, games: catalog() }));

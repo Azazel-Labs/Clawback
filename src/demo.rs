@@ -5,6 +5,95 @@ use std::path::Path;
 /// The fictional drive's name and mount point.
 pub(crate) const DRIVE: &str = "Demo Drive";
 
+/// Where the fictional games are installed, below the drive.
+#[cfg_attr(not(windows), allow(dead_code))] // Steam games are shown on Windows.
+pub(crate) const STEAM_LIBRARY: &str = "Steam Library/steamapps/common";
+
+/// Fictional installed games: (Steam app ID, name and folder, last played).
+#[cfg_attr(not(windows), allow(dead_code))] // Steam games are shown on Windows.
+pub(crate) const GAMES: [(u32, &str, Option<i64>); 4] = [
+    (4_200_010, "Starfall", Some(1_779_800_000)),
+    (4_200_020, "Neon Circuit", Some(1_771_000_000)),
+    (4_200_030, "Lantern Keep", None),
+    (4_200_040, "Tiny Orchard", Some(1_756_000_000)),
+];
+
+/// The pattern drawn over a fictional game's art.
+#[cfg_attr(not(windows), allow(dead_code))] // Steam games are shown on Windows.
+#[derive(Clone, Copy)]
+enum Motif {
+    Stars,
+    Grid,
+    Lantern,
+    Orchard,
+}
+
+#[cfg_attr(not(windows), allow(dead_code))]
+const STYLES: [Style; 4] = [
+    Style { top: [12, 18, 52], bottom: [72, 28, 104], glow: [120, 170, 255], motif: Motif::Stars },
+    Style { top: [24, 6, 44], bottom: [210, 40, 140], glow: [255, 170, 60], motif: Motif::Grid },
+    Style { top: [30, 18, 10], bottom: [96, 52, 20], glow: [255, 196, 96], motif: Motif::Lantern },
+    Style { top: [150, 214, 240], bottom: [70, 150, 70], glow: [255, 244, 190], motif: Motif::Orchard },
+];
+
+/// A fictional game's art: a gradient from `top` to `bottom`, a `glow`, and a motif.
+#[cfg_attr(not(windows), allow(dead_code))]
+struct Style {
+    top: [u8; 3],
+    bottom: [u8; 3],
+    glow: [u8; 3],
+    motif: Motif,
+}
+
+/// Generated library art of `size` for a fictional game, so captures never show a real
+/// game's artwork. Square images are icons.
+#[cfg_attr(not(windows), allow(dead_code))]
+pub fn game_art(id: u32, size: [usize; 2]) -> Option<eframe::egui::ColorImage> {
+    let index = GAMES.iter().position(|game| game.0 == id)?;
+    let Style { top, bottom, glow, motif } = STYLES[index];
+    let [width, height] = size;
+    let mix =
+        |a: [f32; 3], b: [u8; 3], t: f32| std::array::from_fn::<f32, 3, _>(|i| a[i] + (f32::from(b[i]) - a[i]) * t);
+    let mut rgba = Vec::with_capacity(width * height * 4);
+    for y in 0..height {
+        for x in 0..width {
+            let (u, v) = (x as f32 / width as f32, y as f32 / height as f32);
+            let mut color = mix(top.map(f32::from), bottom, v);
+            // A soft glow, such as a planet, sun or lantern.
+            let radius = width.min(height) as f32 * if width == height { 0.42 } else { 0.3 };
+            let (dx, dy) = ((u - 0.66) * width as f32, (v - 0.42) * height as f32);
+            let distance = (dx * dx + dy * dy).sqrt() / radius;
+            if distance < 1.0 {
+                color = mix(color, glow, (1.0 - distance).powf(0.7));
+            }
+            let hash = (x as u32).wrapping_mul(73_856_093) ^ (y as u32).wrapping_mul(19_349_663) ^ id;
+            let hash = hash.wrapping_mul(2_654_435_761);
+            match motif {
+                Motif::Stars if hash.is_multiple_of(613) && distance > 1.0 => color = [235.0, 240.0, 255.0],
+                Motif::Grid if v > 0.62 => {
+                    let depth = (v - 0.62) / 0.38;
+                    let across = ((u - 0.5) / (depth + 0.08) * 4.0).fract().abs();
+                    let along = (1.0 / (depth + 0.06) * 2.0).fract();
+                    if across < 0.04 || along < 0.06 {
+                        color = mix(color, [255, 90, 220], 0.85);
+                    }
+                }
+                Motif::Lantern => color = mix(color, [8, 4, 2], ((u - 0.5).abs() + (v - 0.5).abs()).min(1.0) * 0.6),
+                Motif::Orchard if v > 0.55 => {
+                    let (cell_x, cell_y) = ((u * 9.0).fract() - 0.5, ((v - 0.55) * 7.0).fract() - 0.5);
+                    if cell_x * cell_x + cell_y * cell_y < 0.09 {
+                        color = if hash.is_multiple_of(5) { [220.0, 50.0, 40.0] } else { [40.0, 110.0, 40.0] };
+                    }
+                }
+                _ => {}
+            }
+            rgba.extend(color.map(|c| c.clamp(0.0, 255.0) as u8));
+            rgba.push(255);
+        }
+    }
+    Some(eframe::egui::ColorImage::from_rgba_unmultiplied(size, &rgba))
+}
+
 /// A capture run: fictional data, no saved state, and a screenshot written on exit.
 pub fn capturing() -> bool {
     std::env::var_os("CLAWBACK_DEMO_CAPTURE").is_some()
@@ -15,11 +104,17 @@ pub fn tree() -> Tree {
     // Deep, realistic paths: the map colours boxes by nesting depth, so files reach seven
     // folders down and every step of a palette (Blackbody Radiation's included) appears.
     let groups: &[(&str, &[(&str, u64)])] = &[
-        ("Games/Starfall/Content/Paks/Windows", &[("worlds.pak", 24000), ("textures.pak", 16000)]),
-        ("Games/Starfall/Content/Audio", &[("audio.pak", 6000)]),
-        ("Games/Neon Circuit/Content/Tracks/City/Night", &[("tracks.pak", 18000)]),
-        ("Games/Neon Circuit/Content/Vehicles", &[("cars.pak", 9000)]),
-        ("Games/Neon Circuit/Soundtrack", &[("soundtrack.ogg", 3000)]),
+        // The fictional games in `GAMES`, installed where Steam puts them.
+        (
+            "Steam Library/steamapps/common/Starfall/Content/Paks/Windows",
+            &[("worlds.pak", 24000), ("textures.pak", 16000)],
+        ),
+        ("Steam Library/steamapps/common/Starfall/Content/Audio", &[("audio.pak", 6000)]),
+        ("Steam Library/steamapps/common/Neon Circuit/Content/Tracks/City/Night", &[("tracks.pak", 18000)]),
+        ("Steam Library/steamapps/common/Neon Circuit/Content/Vehicles", &[("cars.pak", 9000)]),
+        ("Steam Library/steamapps/common/Neon Circuit/Soundtrack", &[("soundtrack.ogg", 3000)]),
+        ("Steam Library/steamapps/common/Lantern Keep/Data", &[("keep.pak", 7400), ("music.pak", 1100)]),
+        ("Steam Library/steamapps/common/Tiny Orchard", &[("orchard.pak", 2600)]),
         ("Movies/Documentaries/Nature", &[("Ocean Expedition.mkv", 22000)]),
         ("Movies/Documentaries/Space", &[("Night Sky.mkv", 14000)]),
         ("Movies/Road Trips", &[("Desert Roads.mkv", 11000)]),
@@ -104,7 +199,7 @@ pub fn baseline(tree: &Tree) -> clawback_core::snapshot::Snapshot {
         let size = megabytes * 1024 * 1024;
         tree.update_file(node, NewEntry::file(tree.node(node).name.clone(), size));
     };
-    resize(&mut earlier, "Games/Starfall/Content/Paks/Windows/worlds.pak", 15000);
+    resize(&mut earlier, "Steam Library/steamapps/common/Starfall/Content/Paks/Windows/worlds.pak", 15000);
     resize(&mut earlier, "Downloads/texture-library.zip", 14000);
     resize(&mut earlier, "Movies/Road Trips/Desert Roads.mkv", 17000);
     let may = find(&earlier, "Backups/Workstation/2026/May");
