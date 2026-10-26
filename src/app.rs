@@ -3,6 +3,7 @@
 pub(crate) mod special;
 
 use crate::i18n::tr;
+mod widgets;
 
 use crate::directoryview::DirectoryView;
 use crate::mapview::{Command, MapInput, MapView};
@@ -267,7 +268,12 @@ impl ClawbackApp {
         let mut app = Self::with_settings(settings);
         #[cfg(feature = "screenshots")]
         if crate::demo::capturing() {
-            let tree = crate::demo::tree();
+            // A real folder instead of the fictional drive, for checking presentation on real data.
+            let tree = std::env::var_os("CLAWBACK_DEMO_ROOT")
+                .and_then(|root| {
+                    clawback_core::scan::scan(PathBuf::from(root), Settings::default().scan_options()).ok()
+                })
+                .map_or_else(crate::demo::tree, |result| result.tree);
             let view = crate::demo::view(&tree);
             app.settings = Settings {
                 show_free: true,

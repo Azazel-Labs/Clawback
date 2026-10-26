@@ -580,6 +580,10 @@ impl MapView {
         input: &MapInput<'_>,
     ) {
         let Some(node) = tile.node() else { return };
+        // Collapsed folders, such as games, draw their own names.
+        if maprender::is_collapsed_folder(input.tree, tile) {
+            return;
+        }
         let text_color = if self.selected == Some(index) { theme::ACCENT } else { theme::TEXT };
         let galley = tips.layout_no_wrap(
             input.special.label(input.tree, node, tile).into_owned(),

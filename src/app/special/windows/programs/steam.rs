@@ -252,10 +252,12 @@ pub fn game_at(tree: &Tree, node: NodeId) -> Option<Game> {
     games().iter().find(|game| game.location == path).cloned()
 }
 
-/// Steam's cached library images for a game; newer clients keep each game's in a folder.
+/// Steam's cached library images for a game.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Art {
-    /// The 460x215 store header, for wide tiles.
+    /// The wide library banner (up to 3840x1240), cropped to fill large tiles.
+    Hero,
+    /// The store header (460x215, or 920x430 in newer caches), for wide tiles.
     Header,
     /// The 600x900 library capsule, for tall tiles.
     Capsule,
@@ -263,24 +265,37 @@ pub enum Art {
     Icon,
 }
 
+/// Whether `path` is named by a 40-digit content hash, as newer Steam caches name things.
+fn hashed(path: &Path) -> bool {
+    path.file_stem()
+        .and_then(|stem| stem.to_str())
+        .is_some_and(|stem| stem.len() == 40 && stem.bytes().all(|b| b.is_ascii_hexdigit()))
+}
+
 pub fn art_path(id: u32, art: Art) -> Option<PathBuf> {
     let cache = super::registry::steam_path()?.join("appcache").join("librarycache");
     let folder = cache.join(id.to_string());
-    let candidates = match art {
-        Art::Header => vec![folder.join("header.jpg"), cache.join(format!("{id}_header.jpg"))],
-        Art::Capsule => vec![folder.join("library_600x900.jpg"), cache.join(format!("{id}_library_600x900.jpg"))],
-        Art::Icon => {
-            // The current client names the icon by its content hash.
-            let hashed =
-                std::fs::read_dir(&folder).into_iter().flatten().flatten().map(|entry| entry.path()).find(|path| {
-                    path.extension().is_some_and(|ext| ext.eq_ignore_ascii_case("jpg"))
-                        && path
-                            .file_stem()
-                            .and_then(|stem| stem.to_str())
-                            .is_some_and(|stem| stem.len() == 40 && stem.bytes().all(|b| b.is_ascii_hexdigit()))
-                });
-            hashed.into_iter().chain([cache.join(format!("{id}_icon.jpg"))]).collect()
-        }
+    let entries = || std::fs::read_dir(&folder).into_iter().flatten().flatten().map(|entry| entry.path());
+    // Newer clients keep each image in a subfolder named by its hash, under a new name.
+    let in_subfolder = |name: &str| -> Vec<PathBuf> {
+        entries().filter(|path| path.is_dir() && hashed(path)).map(|dir| dir.join(name)).collect()
+    };
+    let candidates: Vec<PathBuf> = match art {
+        Art::Hero => vec![folder.join("library_hero.jpg"), cache.join(format!("{id}_library_hero.jpg"))],
+        Art::Header => std::iter::once(folder.join("header.jpg"))
+            .chain(in_subfolder("library_header.jpg"))
+            .chain([cache.join(format!("{id}_header.jpg"))])
+            .collect(),
+        Art::Capsule => std::iter::once(folder.join("library_600x900.jpg"))
+            .chain(in_subfolder("library_capsule.jpg"))
+            .chain([cache.join(format!("{id}_library_600x900.jpg"))])
+            .collect(),
+        Art::Icon => entries()
+            .filter(|path| {
+                path.is_file() && hashed(path) && path.extension().is_some_and(|e| e.eq_ignore_ascii_case("jpg"))
+            })
+            .chain([cache.join(format!("{id}_icon.jpg"))])
+            .collect(),
     };
     candidates.into_iter().find(|path| path.is_file())
 }
