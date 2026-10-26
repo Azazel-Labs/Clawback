@@ -8,7 +8,7 @@ use crate::profiling::Phase;
 use crate::scan::{MftPhase, Shared, lock};
 use crate::tree::{Kind, NewEntry, NodeId, ROOT, Tree, flags};
 use crate::windows;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::ffi::OsString;
 use std::fs::File;
 use std::io::{self, Read, Seek, SeekFrom};
@@ -32,6 +32,11 @@ const MAX_ATTRIBUTE_LIST: u64 = 16 * 1024 * 1024;
 /// <https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-createfilew>
 #[repr(C, align(65536))]
 struct ReadBuffer([u8; BATCH]);
+
+/// [`invalid`], saying which check failed, so a report from a real volume points at it.
+fn inconsistent(detail: impl std::fmt::Display) -> io::Error {
+    io::Error::new(io::ErrorKind::InvalidData, format!("Unsupported or inconsistent NTFS metadata: {detail}"))
+}
 
 fn context(error: &io::Error, phase: impl std::fmt::Display) -> io::Error {
     io::Error::new(error.kind(), format!("{phase}: {error}"))
@@ -405,8 +410,8 @@ impl Records {
             .sort_unstable_by(|a, b| (a.parent, a.child).cmp(&(b.parent, b.child)).then_with(|| name(a).cmp(name(b))));
         self.links.dedup_by(|a, b| a.parent == b.parent && a.child == b.child && name(a) == name(b));
         shared.progress.checkpoint()?;
-        if self.links.iter().any(|link| name(link) == [u16::from(b'.')]) {
-            return Err(invalid());
+        if let Some(link) = self.links.iter().find(|link| name(link) == [u16::from(b'.')]) {
+            return Err(inconsistent(format_args!("record {} is named \".\"", link.child)));
         }
         for link in &self.links {
             let slot = &mut self.slots[link.child as usize];
@@ -504,7 +509,7 @@ fn build_tree(shared: &Shared, serial: u64, mut records: Records) -> io::Result<
     let root = ROOT_RECORD as u32;
     let slot = records.slots.get(root as usize).copied().unwrap_or_default();
     if !slot.has(Slot::IN_USE) || !slot.has(Slot::DIRECTORY) {
-        return Err(invalid());
+        return Err(inconsistent("the root folder's record is missing"));
     }
     let excluded = {
         let _phase = shared.profile.timer(Phase::Index);
@@ -594,7 +599,7 @@ fn assemble(
             };
             if kind == Kind::Dir {
                 if !visited_dirs.insert(link.child) {
-                    return Err(invalid());
+                    return Err(inconsistent(format_args!("folder record {} is in more than one place", link.child)));
                 }
                 dirs.push((reference, batch.len()));
             }
@@ -623,17 +628,43 @@ fn assemble(
         }
         add(tree, batch, &mut dirs);
     }
-    // A missing parent or a cycle means the live MFT was not coherent. Children
-    // of name-surrogate directories, and reserved metadata, are intentionally not
-    // traversed.
+    unreachable_entries(records, excluded, &placed)
+}
+
+/// Check the entries assembly did not reach. Children of name-surrogate directories and
+/// reserved metadata are intentionally not traversed. Entries whose folder was deleted
+/// while the volume was read are left out: on a live volume that race is normal, and the
+/// rest of the tree is sound. Folders that only lead back to themselves mean the MFT is
+/// corrupt, and fail the scan.
+fn unreachable_entries(records: &Records, excluded: &Bits, placed: &Bits) -> io::Result<()> {
+    let mut folder_parents: Option<HashMap<u32, u64>> = None;
     let mut start = 0;
     while start < records.links.len() {
         let parent = records.links[start].parent;
         let group = records.children(parent);
-        let skipped = records.get(parent).is_some_and(|slot| slot.has(Slot::SURROGATE))
-            || excluded.contains((parent & INDEX_MASK) as u32);
-        if !placed.contains(start as u32) && !skipped {
-            return Err(invalid());
+        if !placed.contains(start as u32) {
+            // Each folder's own parent, built only when something was unreachable.
+            let parents = folder_parents.get_or_insert_with(|| {
+                records
+                    .links
+                    .iter()
+                    .filter(|link| records.slots[link.child as usize].has(Slot::DIRECTORY))
+                    .map(|link| (link.child, link.parent))
+                    .collect()
+            });
+            let mut folder = parent;
+            for depth in 0.. {
+                let index = (folder & INDEX_MASK) as u32;
+                let Some(slot) = records.get(folder) else { break }; // Deleted during the read.
+                if slot.has(Slot::SURROGATE) || excluded.contains(index) {
+                    break;
+                }
+                let Some(&above) = parents.get(&index) else { break }; // A folder with no name left.
+                if above == folder || depth > 65_536 {
+                    return Err(inconsistent(format_args!("folder record {index} is inside itself")));
+                }
+                folder = above;
+            }
         }
         start = group.end;
     }
@@ -803,14 +834,20 @@ mod tests {
     }
 
     #[test]
-    fn stale_parent_references_and_cycles_are_rejected() {
+    fn entries_orphaned_during_the_read_are_left_out_but_cycles_are_rejected() {
         let shared = state();
         let root = parse(&record(&[], true, 0), 5).unwrap().unwrap();
+        let kept = parse(&record(&[filename(reference(5), "kept", 1)], false, 0), 21).unwrap().unwrap();
         let orphan = parse(&record(&[filename(reference(5) + (1 << 48), "stale", 1)], false, 0), 20).unwrap().unwrap();
-        assert!(build_tree(&shared, 1, Records::from_parsed([root, orphan]).unwrap()).is_err());
+        // A folder deleted mid-read: its child names a record that is no longer in use.
+        let gone = parse(&record(&[filename(reference(30), "inside", 1)], false, 0), 22).unwrap().unwrap();
+        let tree = build_tree(&shared, 1, Records::from_parsed([root, kept, orphan, gone]).unwrap()).unwrap();
+        assert_eq!(tree.root().files, 1);
+        assert!(tree.find_path(&shared.root.join("kept")).is_some());
         let root = parse(&record(&[], true, 0), 5).unwrap().unwrap();
         let cycle = parse(&record(&[filename(reference(20), "cycle", 1)], true, 0), 20).unwrap().unwrap();
-        assert!(build_tree(&shared, 1, Records::from_parsed([root, cycle]).unwrap()).is_err());
+        let error = build_tree(&shared, 1, Records::from_parsed([root, cycle]).unwrap()).unwrap_err();
+        assert!(error.to_string().contains("inside itself"), "{error}");
     }
 
     #[test]
