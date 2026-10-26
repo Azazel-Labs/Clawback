@@ -30,6 +30,7 @@ enum Section {
     /// The Recycle Bin, Temp and WSL disks.
     Cleanup,
     /// Installed games.
+    #[cfg_attr(not(windows), allow(dead_code))] // Steam games are found on Windows.
     Games,
     Developer,
     Caches,
