@@ -12,6 +12,34 @@ translation = "Eine schnelle, plattformübergreifende Übersicht über Ihren Spe
 source = "About Clawback"
 translation = "Über Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Lizenziert unter MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Quellcode auf GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam-Edition"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Auf Steam ansehen"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Enthält die Schriften Noto Sans (SIL Open Font License 1.1) und die Phosphor-Symbole (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Version { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Bereitgestellt ohne Mängelgewähr und ohne jegliche Garantie."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -553,10 +581,6 @@ translation = "Koreanisch"
 [messages.language]
 source = "Language"
 translation = "Sprache"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Lizenziert unter MIT-0 (MIT No Attribution). Ohne Gewährleistung jeglicher Art."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

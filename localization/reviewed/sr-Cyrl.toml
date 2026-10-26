@@ -12,6 +12,34 @@ translation = "Брза мапа простора на диску за више 
 source = "About Clawback"
 translation = "О програму Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Лиценцирано под MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Изворни код на GitHub-у"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam издање"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Погледај на Steam-у"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Садржи фонтове Noto Sans (SIL Open Font License 1.1) и иконе Phosphor (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Верзија { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Пружа се онакво какво јесте, без икакве гаранције."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Африканс"
@@ -547,10 +575,6 @@ translation = "Корејски"
 [messages.language]
 source = "Language"
 translation = "Језик"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Лиценцирано под MIT-0 (MIT No Attribution). Без икакве гаранције."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

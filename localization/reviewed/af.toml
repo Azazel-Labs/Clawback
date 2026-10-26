@@ -12,6 +12,34 @@ translation = "'n Vinnige, kruisplatform-kaart van skyfspasie."
 source = "About Clawback"
 translation = "Oor Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Gelisensieer onder MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Bronkode op GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam-uitgawe"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Bekyk op Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Bevat Noto Sans-lettertipes (SIL Open Font License 1.1) en Phosphor-ikone (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Weergawe { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Verskaf soos dit is, sonder enige waarborg."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -545,10 +573,6 @@ translation = "Koreaans"
 [messages.language]
 source = "Language"
 translation = "Taal"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Gelisensieer onder MIT-0 (MIT No Attribution). Geen waarborg van enige aard nie."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

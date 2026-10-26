@@ -12,6 +12,34 @@ translation = "O hartă rapidă a spațiului pe disc, pentru mai multe platforme
 source = "About Clawback"
 translation = "Despre Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Licențiat sub MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Codul sursă pe GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Ediția Steam"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Vezi pe Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Include fonturile Noto Sans (SIL Open Font License 1.1) și pictogramele Phosphor (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Versiunea { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Oferit ca atare, fără niciun fel de garanție."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -538,10 +566,6 @@ translation = "Coreeană"
 [messages.language]
 source = "Language"
 translation = "Limbă"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Licențiat sub MIT-0 (MIT fără atribuire). Fără niciun fel de garanție."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

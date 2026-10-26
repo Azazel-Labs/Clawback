@@ -12,6 +12,34 @@ translation = "Hızlı, çok platformlu bir disk alanı haritası."
 source = "About Clawback"
 translation = "Clawback hakkında"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "MIT-0 (MIT No Attribution) lisansıyla lisanslanmıştır."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "GitHub’daki kaynak kodu"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam sürümü"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Steam’de görüntüle"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Noto Sans yazı tiplerini (SIL Open Font License 1.1) ve Phosphor simgelerini (MIT) içerir."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Sürüm { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Olduğu gibi, hiçbir garanti olmaksızın sunulur."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaanca"
@@ -538,10 +566,6 @@ translation = "Korece"
 [messages.language]
 source = "Language"
 translation = "Dil"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "MIT-0 (MIT No Attribution) lisansı ile sunulur. Hiçbir garanti verilmez."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

@@ -20,6 +20,8 @@ $target = 'x86_64-pc-windows-msvc'
 Push-Location $repo
 try {
     # A separate target directory prevents Steam and standalone payloads being mixed.
+    # The app ID lets the About dialog link to the store page.
+    $env:CLAWBACK_STEAM_APP_ID = "$AppId"
     & cargo build --release --locked --target $target --target-dir target/steam --features steam --bin clawback
     if ($LASTEXITCODE -ne 0) { throw 'Steam build failed' }
     $content = Join-Path $out 'content'

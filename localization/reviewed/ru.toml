@@ -12,6 +12,34 @@ translation = "Быстрая кроссплатформенная карта и
 source = "About Clawback"
 translation = "О программе Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Распространяется по лицензии MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Исходный код на GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Издание для Steam"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Открыть в Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Содержит шрифты Noto Sans (SIL Open Font License 1.1) и значки Phosphor (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Версия { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Предоставляется «как есть», без каких-либо гарантий."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Африкаанс"
@@ -549,10 +577,6 @@ translation = "Корейский"
 [messages.language]
 source = "Language"
 translation = "Язык"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Лицензия MIT-0 (MIT No Attribution). Без каких-либо гарантий."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

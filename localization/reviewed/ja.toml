@@ -12,6 +12,34 @@ translation = "高速なクロスプラットフォームのディスク使用�
 source = "About Clawback"
 translation = "Clawback について"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "MIT-0 (MIT No Attribution) ライセンスで提供されています。"
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "GitHub のソース コード"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam 版"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Steam で見る"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Noto Sans フォント (SIL Open Font License 1.1) と Phosphor アイコン (MIT) を含みます。"
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "バージョン { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "現状のまま提供され、いかなる保証もありません。"
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "アフリカーンス語"
@@ -538,10 +566,6 @@ translation = "韓国語"
 [messages.language]
 source = "Language"
 translation = "言語"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "MIT-0（MIT No Attribution）ライセンスで提供されます。いかなる保証もありません。"
 
 [messages.live-catching-up]
 source = "Live · Catching up"

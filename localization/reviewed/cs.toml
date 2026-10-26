@@ -12,6 +12,34 @@ translation = "Rychlá multiplatformní mapa využití disku."
 source = "About Clawback"
 translation = "O aplikaci Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Licencováno pod MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Zdrojový kód na GitHubu"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Edice pro Steam"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Zobrazit ve službě Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Obsahuje písma Noto Sans (SIL Open Font License 1.1) a ikony Phosphor (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Verze { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Poskytováno tak, jak je, bez jakékoli záruky."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikánština"
@@ -549,10 +577,6 @@ translation = "Korejština"
 [messages.language]
 source = "Language"
 translation = "Jazyk"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Licence MIT-0 (MIT No Attribution). Bez jakékoli záruky."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

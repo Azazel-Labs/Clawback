@@ -12,6 +12,34 @@ translation = "빠른 크로스 플랫폼 디스크 공간 시각화 도구입�
 source = "About Clawback"
 translation = "Clawback 정보"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "MIT-0 (MIT No Attribution) 라이선스로 제공됩니다."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "GitHub의 소스 코드"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam 에디션"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Steam에서 보기"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Noto Sans 글꼴(SIL Open Font License 1.1)과 Phosphor 아이콘(MIT)이 포함되어 있습니다."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "버전 { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "있는 그대로 제공되며 어떠한 보증도 하지 않습니다."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "아프리칸스어"
@@ -538,10 +566,6 @@ translation = "한국어"
 [messages.language]
 source = "Language"
 translation = "언어"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "MIT-0(MIT No Attribution) 라이선스가 적용됩니다. 어떠한 보증도 제공하지 않습니다."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

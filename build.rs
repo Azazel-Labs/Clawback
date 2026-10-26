@@ -20,6 +20,8 @@ fn main() {
     // Steam builds load the Steam API library shipped beside the executable. On Windows the
     // Turbo service runs the same executable and must start without it, so it is delay-loaded
     // until achievements connect.
+    // The About dialog links to this app's store page.
+    println!("cargo:rerun-if-env-changed=CLAWBACK_STEAM_APP_ID");
     if std::env::var_os("CARGO_FEATURE_STEAM").is_some() {
         match std::env::var("CARGO_CFG_TARGET_OS").as_deref() {
             Ok("windows") if std::env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc") => {

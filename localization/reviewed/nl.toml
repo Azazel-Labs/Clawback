@@ -12,6 +12,34 @@ translation = "Een snelle, platformonafhankelijke kaart van de schijfruimte."
 source = "About Clawback"
 translation = "Over Clawback"
 
+[messages.about-license]
+source = "Licensed under MIT-0 (MIT No Attribution)."
+translation = "Gelicentieerd onder MIT-0 (MIT No Attribution)."
+
+[messages.about-source-code]
+source = "Source code on GitHub"
+translation = "Broncode op GitHub"
+
+[messages.about-steam-edition]
+source = "Steam edition"
+translation = "Steam-editie"
+
+[messages.about-store-page]
+source = "View on Steam"
+translation = "Bekijken op Steam"
+
+[messages.about-third-party]
+source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
+translation = "Bevat de Noto Sans-lettertypen (SIL Open Font License 1.1) en Phosphor-pictogrammen (MIT)."
+
+[messages.about-version]
+source = "Version { $version }"
+translation = "Versie { $version }"
+
+[messages.about-warranty]
+source = "Provided as is, without warranty of any kind."
+translation = "Geleverd zoals het is, zonder enige garantie."
+
 [messages.afrikaans]
 source = "Afrikaans"
 translation = "Afrikaans"
@@ -545,10 +573,6 @@ translation = "Koreaans"
 [messages.language]
 source = "Language"
 translation = "Taal"
-
-[messages.licensed-under-mit-0-mit-no-attribution-no]
-source = "Licensed under MIT-0 (MIT No Attribution). No warranty of any kind."
-translation = "Gelicentieerd onder MIT-0 (MIT No Attribution). Zonder enige garantie."
 
 [messages.live-catching-up]
 source = "Live · Catching up"

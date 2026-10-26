@@ -32,7 +32,7 @@ pub(super) fn external_link(ui: &mut eframe::egui::Ui, label: &str) -> eframe::e
     let lit = response.hovered() || response.has_focus();
     let color = if lit { crate::theme::ACCENT.lerp_to_gamma(egui::Color32::WHITE, 0.35) } else { crate::theme::ACCENT };
     let painter = ui.painter();
-    painter.galley(rect.min, galley, color);
+    painter.galley_with_override_text_color(rect.min, galley, color);
     if lit {
         painter.hline(rect.x_range(), rect.bottom(), Stroke::new(1.0, color));
     }
