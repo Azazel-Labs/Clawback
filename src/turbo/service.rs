@@ -142,6 +142,12 @@ fn query(handle: &ServiceHandle) -> io::Result<SERVICE_STATUS_PROCESS> {
     Ok(status)
 }
 
+/// The service is installed and running. Whether it serves this user is known only when
+/// it is asked.
+pub(super) fn running() -> bool {
+    service(SERVICE_QUERY_STATUS).and_then(|service| query(&service)).is_ok_and(|s| s.dwCurrentState == SERVICE_RUNNING)
+}
+
 /// None means unavailable/unauthorized; retain the portable UAC path in that case.
 pub(super) fn request(name: &str) -> io::Result<Option<OwnedHandle>> {
     let Ok(service) = service(SERVICE_QUERY_STATUS) else {

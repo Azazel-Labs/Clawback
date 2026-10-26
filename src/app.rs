@@ -1274,11 +1274,17 @@ impl ClawbackApp {
         let paused = run.is_paused();
         let progress = run.display_progress();
         let turbo_leads = progress != run.progress;
+        // With the Turbo service, Turbo is how the scan runs rather than an extra option.
+        #[cfg(windows)]
+        let automatic = run.turbo.automatic();
+        #[cfg(not(windows))]
+        let automatic = false;
         ui.horizontal(|ui| {
             if !paused {
                 ui.add(egui::Spinner::new().size(14.0));
             }
-            ui.strong(if paused { tr!("scan-paused") } else { tr!("scanning") });
+            let title = if paused { tr!("scan-paused") } else { tr!("scanning") };
+            ui.strong(if automatic { format!("⚡ {title}") } else { title });
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 if ui.button(if paused { tr!("resume-scan") } else { tr!("pause-scan") }).clicked() {
                     run.toggle_pause();
@@ -1286,7 +1292,18 @@ impl ClawbackApp {
             });
         });
         scan_summary(ui, progress.bytes, progress.files, progress.dirs);
-        let path = if turbo_leads { tr!("turbo-main-progress") } else { run.current.display().to_string() };
+        #[cfg(windows)]
+        let turbo_status = run.turbo.status();
+        // Until the service fails, its phases stand in for the walk's current folder.
+        #[cfg(windows)]
+        let reading_automatically = automatic && !matches!(turbo_status, crate::turbo::Status::Failed(_));
+        #[cfg(windows)]
+        let automatic_message = reading_automatically.then(|| turbo_message(run, &turbo_status).0);
+        #[cfg(not(windows))]
+        let automatic_message: Option<String> = None;
+        let path = automatic_message.unwrap_or_else(|| {
+            if turbo_leads { tr!("turbo-main-progress") } else { run.current.display().to_string() }
+        });
         ui.add(egui::Label::new(RichText::new(&path).size(11.0).color(theme::MUTED)).truncate()).on_hover_text(path);
         let fraction = run
             .disk
@@ -1305,39 +1322,19 @@ impl ClawbackApp {
         if progress.workers > 0 {
             ui.small(tr!("workers", count = progress.workers)).on_hover_text(tr!("workers-help"));
         }
+        // The Turbo option, for drives scanned without the service, or after the service
+        // could not be used.
         #[cfg(windows)]
-        if run.turbo_available {
+        if run.turbo_available && !reading_automatically {
             use crate::turbo::Status;
-            use clawback_core::scan::MftPhase;
-            let status = run.turbo.status();
-            let busy = matches!(status, Status::Requested | Status::AwaitingConsent | Status::Reading);
+            let busy = matches!(turbo_status, Status::Requested | Status::AwaitingConsent | Status::Reading);
             egui::Frame::new().fill(theme::SURFACE).inner_margin(8.0).show(ui, |ui| {
                 ui.set_width(ui.available_width());
                 ui.horizontal(|ui| {
                     if ui.add_enabled(!busy, crate::picker::turbo_button()).clicked() {
                         run.turbo.request();
                     }
-                    let (message, detail) = match status {
-                        Status::Requested | Status::AwaitingConsent => (tr!("waiting-for-windows-permission"), None),
-                        Status::Reading => {
-                            let p = run.turbo.progress().unwrap_or_default();
-                            let message = match p.phase {
-                                MftPhase::Reading => tr!(
-                                    "turbo-read-progress",
-                                    percent = p.read.saturating_mul(100).checked_div(p.total).unwrap_or(0),
-                                    records = crate::i18n::count(p.records)
-                                ),
-                                MftPhase::Resolving => tr!("turbo-resolving"),
-                                MftPhase::Assembling => tr!("turbo-assembling", files = crate::i18n::count(p.files)),
-                                MftPhase::Sorting => tr!("turbo-sorting"),
-                                MftPhase::Transferring => tr!("turbo-transferring"),
-                            };
-                            (message, Some(tr!("turbo-progress-help")))
-                        }
-                        Status::Declined => (tr!("turbo-cancelled-normal-scan-continues"), None),
-                        Status::Failed(error) => (tr!("turbo-unavailable-normal-scan-continues"), Some(error)),
-                        Status::Idle => (tr!("try-a-faster-ntfs-scan-with-administrator-permission"), None),
-                    };
+                    let (message, detail) = turbo_message(run, &turbo_status);
                     let response = ui.add(egui::Label::new(RichText::new(&message).color(theme::TEXT)).truncate());
                     response.on_hover_text(detail.unwrap_or(message));
                 });
@@ -1685,6 +1682,35 @@ fn previous_view(history: &mut Vec<PathBuf>, tree: &Tree, current: NodeId) -> Op
         }
     }
     None
+}
+
+/// What Turbo is doing, and an optional detail for its tooltip.
+#[cfg(windows)]
+fn turbo_message(run: &Running, status: &crate::turbo::Status) -> (String, Option<String>) {
+    use crate::turbo::Status;
+    use clawback_core::scan::MftPhase;
+    match status {
+        Status::Requested | Status::AwaitingConsent if run.turbo.automatic() => (tr!("turbo-reading-mft"), None),
+        Status::Requested | Status::AwaitingConsent => (tr!("waiting-for-windows-permission"), None),
+        Status::Reading => {
+            let p = run.turbo.progress().unwrap_or_default();
+            let message = match p.phase {
+                MftPhase::Reading => tr!(
+                    "turbo-read-progress",
+                    percent = p.read.saturating_mul(100).checked_div(p.total).unwrap_or(0),
+                    records = crate::i18n::count(p.records)
+                ),
+                MftPhase::Resolving => tr!("turbo-resolving"),
+                MftPhase::Assembling => tr!("turbo-assembling", files = crate::i18n::count(p.files)),
+                MftPhase::Sorting => tr!("turbo-sorting"),
+                MftPhase::Transferring => tr!("turbo-transferring"),
+            };
+            (message, (!run.turbo.automatic()).then(|| tr!("turbo-progress-help")))
+        }
+        Status::Declined => (tr!("turbo-cancelled-normal-scan-continues"), None),
+        Status::Failed(error) => (tr!("turbo-unavailable-normal-scan-continues"), Some(error.clone())),
+        Status::Idle => (tr!("try-a-faster-ntfs-scan-with-administrator-permission"), None),
+    }
 }
 
 /// Settings store the directory split in thousandths of the height below the toolbar.
