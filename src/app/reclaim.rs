@@ -29,7 +29,7 @@ const MIN_DEVELOPER: u64 = 500 * 1024 * 1024;
 enum Section {
     /// The Recycle Bin, Temp and WSL disks.
     Cleanup,
-    /// Installed games, least recently played first.
+    /// Installed games.
     Games,
     Developer,
     Caches,
@@ -70,8 +70,6 @@ struct Item {
     /// Steam app ID, for its library icon.
     #[cfg_attr(not(windows), allow(dead_code))] // Steam games are found on Windows.
     game: Option<u32>,
-    /// Seconds since the Unix epoch, for ordering games; 0 when never played.
-    last_played: i64,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -292,7 +290,7 @@ fn action_label(action: Action, deletion_disabled: bool) -> (&'static str, Strin
     }
 }
 
-/// Every reclaimable item in `tree`, by section, largest first (games oldest-played first).
+/// Every reclaimable item in `tree`, by section, largest first.
 fn find(tree: &Tree, is_mount: bool, cancel: &AtomicBool) -> Option<Vec<Item>> {
     let _span = crate::perf::span("worker.reclaim");
     let mut items = Vec::new();
@@ -330,11 +328,7 @@ fn find(tree: &Tree, is_mount: bool, cancel: &AtomicBool) -> Option<Vec<Item>> {
                 Section::Caches => MIN_CACHE,
             }
     });
-    items.sort_by(|a, b| {
-        let order =
-            if a.section == Section::Games { a.last_played.cmp(&b.last_played) } else { std::cmp::Ordering::Equal };
-        a.section.cmp(&b.section).then(order).then(b.size.cmp(&a.size))
-    });
+    items.sort_by(|a, b| a.section.cmp(&b.section).then(b.size.cmp(&a.size)));
     Some(items)
 }
 
@@ -349,7 +343,6 @@ fn item(tree: &Tree, node: NodeId, section: Section, icon: &'static str, title: 
         size: tree.node(node).size,
         action: Action::Delete,
         game: None,
-        last_played: 0,
     }
 }
 
@@ -448,7 +441,6 @@ fn game(tree: &Tree, id: NodeId) -> Option<Item> {
     Some(Item {
         action: Action::Uninstall,
         game: Some(game.id),
-        last_played: game.last_played.unwrap_or(0),
         ..item(tree, id, Section::Games, icon::GAME_CONTROLLER, game.name, detail)
     })
 }
