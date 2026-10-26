@@ -117,14 +117,17 @@ impl Running {
                 repaint();
                 return;
             }
-            let scan = match Scan::start(&path, options.clone(), None) {
-                Ok(scan) => scan,
+            let start_walk = || match Scan::start(&path, options.clone(), None) {
+                Ok(scan) => Some(scan),
                 Err(error) => {
                     let _ = tx.send(Update::Failed(error.to_string()));
                     repaint();
-                    return;
+                    None
                 }
             };
+            let Some(scan) = start_walk() else { return };
+            // The directory walk; dropped once Turbo is transferring its finished tree.
+            let mut walk = Some(scan);
             let volume = Update::Volume {
                 disk: disk.clone(),
                 is_mount,
@@ -137,17 +140,42 @@ impl Running {
             repaint();
             let mut published = None;
             loop {
+                let stopping = stop.load(Ordering::Relaxed);
+                if stopping {
+                    race.cancel();
+                }
+                let Some(scan) = &walk else {
+                    if stopping {
+                        let _ = tx.send(Update::Cancelled);
+                        repaint();
+                        return;
+                    }
+                    if race.poll(&path, &options, &pause_requested) {
+                        break;
+                    }
+                    // Turbo failed after the walk was released; walk again from the start.
+                    if !race.running() {
+                        let Some(scan) = start_walk() else { return };
+                        walk = Some(scan);
+                    }
+                    std::thread::sleep(Duration::from_millis(100));
+                    continue;
+                };
                 // Once Turbo leads, park traversal workers to avoid competing
                 // for CPU/disk. Retain their tree so a failed helper can resume.
                 let turbo_leads = race.leads(scan.shared().progress.snapshot());
                 scan.set_paused(pause_requested.load(Ordering::Relaxed) || turbo_leads);
-                let stopping = stop.load(Ordering::Relaxed);
                 if stopping {
                     scan.cancel();
-                    race.cancel();
                 }
                 if scan.is_finished() || (!stopping && race.poll(&path, &options, &pause_requested)) {
                     break;
+                }
+                // Turbo's tree is complete and validated once it is transferring, so a
+                // fallback is unlikely. Free the walk's tree rather than hold two trees.
+                if race.transferring() {
+                    walk = None; // cooperatively cancels; the last worker frees the tree
+                    continue;
                 }
                 let shared = scan.shared();
                 let progress = shared.progress.snapshot();
@@ -175,10 +203,10 @@ impl Running {
             // Final sorting, joining and ownership transfer all happen here.
             let result = match race.finish() {
                 Some(result) => {
-                    drop(scan); // cooperatively cancel directory workers, never join them on the UI
+                    drop(walk); // cooperatively cancel directory workers, never join them on the UI
                     result
                 }
-                None => scan.wait(),
+                None => walk.expect("the walk finished").wait(),
             };
             let started = if result.cancelled || stop.load(Ordering::Relaxed) {
                 Started::cancelled()
@@ -268,6 +296,13 @@ impl TurboRace {
     fn cancel(&mut self) {
         self.attempt = None;
     }
+    fn running(&self) -> bool {
+        self.attempt.is_some()
+    }
+    /// The helper has built and validated its tree and is sending it.
+    fn transferring(&self) -> bool {
+        self.control.progress().is_some_and(|p| p.phase == clawback_core::scan::MftPhase::Transferring)
+    }
     /// Starts a requested helper and collects a finished one; true once Turbo won.
     fn poll(&mut self, root: &Path, options: &ScanOptions, paused: &Arc<AtomicBool>) -> bool {
         if self.available && self.attempt.is_none() && self.control.take_request() {
@@ -304,6 +339,12 @@ impl TurboRace {
         false
     }
     fn cancel(&mut self) {}
+    fn running(&self) -> bool {
+        false
+    }
+    fn transferring(&self) -> bool {
+        false
+    }
     fn poll(&mut self, _: &Path, _: &ScanOptions, _: &Arc<AtomicBool>) -> bool {
         false
     }
