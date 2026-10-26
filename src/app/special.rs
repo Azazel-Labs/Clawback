@@ -104,7 +104,7 @@ impl Inventory {
     }
 
     /// The Windows OS cell, then the reserved entries drawn inside it.
-    pub fn grouped(&self) -> Vec<NodeId> {
+    pub fn grouped(self) -> Vec<NodeId> {
         let Some(os) = self.cells.iter().flatten().find(|cell| cell.kind == Kind::WindowsOs).map(|cell| cell.node)
         else {
             return Vec::new();
@@ -113,7 +113,7 @@ impl Inventory {
     }
 
     /// Bytes shown for `node`: for the Windows OS cell, everything drawn inside it.
-    pub fn size(&self, tree: &Tree, node: NodeId) -> u64 {
+    pub fn size(self, tree: &Tree, node: NodeId) -> u64 {
         let grouped = self.grouped();
         if grouped.first() == Some(&node) {
             grouped.iter().map(|&member| tree.node(member).len).sum()

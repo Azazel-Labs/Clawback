@@ -1363,13 +1363,11 @@ impl ClawbackApp {
         // Until the service fails, its phases stand in for the walk's current folder.
         #[cfg(windows)]
         let reading_automatically = automatic && !matches!(turbo_status, crate::turbo::Status::Failed(_));
+        let walk_path = || if turbo_leads { tr!("turbo-main-progress") } else { run.current.display().to_string() };
         #[cfg(windows)]
-        let automatic_message = reading_automatically.then(|| turbo_message(run, &turbo_status).0);
+        let path = if reading_automatically { turbo_message(run, &turbo_status).0 } else { walk_path() };
         #[cfg(not(windows))]
-        let automatic_message: Option<String> = None;
-        let path = automatic_message.unwrap_or_else(|| {
-            if turbo_leads { tr!("turbo-main-progress") } else { run.current.display().to_string() }
-        });
+        let path = walk_path();
         ui.add(egui::Label::new(RichText::new(&path).size(11.0).color(theme::MUTED)).truncate()).on_hover_text(path);
         let fraction = run
             .disk
