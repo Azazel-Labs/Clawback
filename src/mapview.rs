@@ -350,8 +350,11 @@ impl MapView {
             let free = [input.disk_free, input.disk_total];
             self.layout_rx = Some(Job::spawn(key, ctx, move || {
                 let _span = crate::perf::span("worker.map_layout");
-                let mut boxes = layout::build(&tree, key.view, key.w, key.h, &key.layout, key.free);
+                let grouped = key.special.grouped();
+                let mut boxes =
+                    layout::build_grouped(&tree, key.view, key.w, key.h, &key.layout, key.free, &grouped);
                 key.special.collapse_layout(&mut boxes);
+                special::collapse_games(&tree, &mut boxes);
                 crate::perf::counter("map.boxes", boxes.len() as f64);
                 let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, key.muted, free);
                 (tree, boxes, prepared)
@@ -548,8 +551,10 @@ impl MapView {
                 let tree = input.tree.clone();
                 let settings = s.clone();
                 let special = input.special.classify(&tree, node);
+                let inventory = input.special;
                 self.info_rx = Some(Job::spawn((), ctx, move || {
                     let mut tip = info_tip(&tree, node, &settings);
+                    tip.lines.extend(inventory.group_tip(&tree, node));
                     if let Some(kind) = special
                         && let Some(hint) = kind.hint(settings.disable_delete)
                     {
@@ -578,7 +583,7 @@ impl MapView {
         let Some(node) = tile.node() else { return };
         let text_color = if self.selected == Some(index) { theme::ACCENT } else { theme::TEXT };
         let galley = tips.layout_no_wrap(
-            input.tree.node(node).name_lossy().into_owned(),
+            input.special.label(input.tree, node, tile).into_owned(),
             maprender::label_font(tile.folder),
             text_color,
         );

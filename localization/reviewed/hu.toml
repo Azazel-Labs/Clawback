@@ -120,6 +120,10 @@ translation = "Kattintson ide az ideiglenes fájlok törléséhez"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Kattintson a meghajtó Lomtárának kiürítéséhez"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "A Windows kezeli. Kattints a tárolási beállítások megnyitásához és a hely biztonságos felszabadításához."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL virtuális lemez. Kattintson a lemez részleteinek megtekintéséhez, a fájlok böngészéséhez vagy a tárhely visszanyeréséhez."
@@ -547,6 +551,10 @@ translation = "Sok fájl"
 source = "Make room for what matters."
 translation = "Csináljon helyet annak, ami fontos."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Ezeket a fájlokat a Windows hozza létre, és maga határozza meg a méretüket. Törlés helyett a virtuális memóriát vagy a hibernálást a Windows beállításaiban módosítsd."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "A számba vett bájtok aránya a foglalt lemezterülethez képest; becslés, nem a fájlok számának százaléka."
@@ -643,6 +651,10 @@ translation = "Megnyitás a Finderben"
 source = "Open selected item"
 translation = "Kijelölt elem megnyitása"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Tárolási beállítások megnyitása"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Másik mappa…"
@@ -730,6 +742,10 @@ translation = "WSL lemezterület visszaszerzése"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "A tömörítés előtt mentse el munkáját, lépjen ki a Docker Desktopból, és zárja be a WSL-munkameneteket. Futtassa ezt a parancsot a PowerShellben az összes WSL-terjesztés leállításához. Tartsa leállítva a Dockert és a WSL-t a tömörítés befejezéséig. A Windows rendszergazdai engedélyt kér."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Lomtár"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "Várakozás a Windows engedélyére…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  Összesen { $total }  -  Szabad { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows operációs rendszer"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows rendszerfájlok"
 
 [messages.workers]
 source = """

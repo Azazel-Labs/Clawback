@@ -120,6 +120,10 @@ translation = "Klik om uw tijdelijke bestanden op te schonen"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Klik om de Prullenbak van deze schijf te legen"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Beheerd door Windows. Klik om Opslaginstellingen te openen en veilig ruimte vrij te maken."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL virtuele schijf. Klik voor schijfgegevens, blader door bestanden of maak ruimte vrij."
@@ -554,6 +558,10 @@ translation = "Veel bestanden"
 source = "Make room for what matters."
 translation = "Maak ruimte voor wat belangrijk is."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows maakt deze bestanden zelf aan en bepaalt hun grootte. Wijzig virtueel geheugen of de slaapstand in de Windows-instellingen in plaats van ze te verwijderen."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Getelde bytes ten opzichte van de gebruikte schijfruimte; een schatting, geen percentage van het aantal bestanden."
@@ -650,6 +658,10 @@ translation = "Openen in Finder"
 source = "Open selected item"
 translation = "Geselecteerd item openen"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Opslaginstellingen openen"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Andere map…"
@@ -737,6 +749,10 @@ translation = "WSL-schijfruimte vrijmaken"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Voordat u gaat comprimeren, slaat u uw werk op, sluit u Docker Desktop af en sluit u WSL-sessies. Voer deze opdracht uit in PowerShell om alle WSL-distributies te stoppen. Houd Docker en WSL gestopt totdat het verdichten is voltooid. Windows zal om beheerderstoestemming vragen."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Prullenbak"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1181,6 +1197,14 @@ translation = "Wachten op toestemming van Windows…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  Totaal { $total }  -  Vrij { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows-besturingssysteem"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows-systeembestanden"
 
 [messages.workers]
 source = """

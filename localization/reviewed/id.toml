@@ -120,6 +120,10 @@ translation = "Klik untuk membersihkan file-file sementara Anda"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Klik untuk mengosongkan Recycle Bin drive ini"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Dikelola oleh Windows. Klik untuk membuka pengaturan Penyimpanan dan mengosongkan ruang dengan aman."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · disk virtual WSL. Klik untuk detail disk, jelajahi file, atau dapatkan kembali ruang."
@@ -547,6 +551,10 @@ translation = "Banyak berkas"
 source = "Make room for what matters."
 translation = "Sediakan ruang untuk hal yang penting."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows membuat file ini dan menentukan ukurannya sendiri. Ubah memori virtual atau hibernasi di pengaturan Windows alih-alih menghapusnya."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Jumlah bita yang dipetakan dibandingkan ruang drive yang terpakai; perkiraan, bukan persentase jumlah berkas."
@@ -643,6 +651,10 @@ translation = "Buka di Finder"
 source = "Open selected item"
 translation = "Buka item yang dipilih"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Buka pengaturan Penyimpanan"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Folder lain..."
@@ -730,6 +742,10 @@ translation = "Mendapatkan kembali ruang disk WSL"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Sebelum memadatkan, simpan pekerjaan Anda, keluar dari Docker Desktop dan tutup sesi WSL. Jalankan perintah ini di PowerShell untuk menghentikan semua distribusi WSL. Biarkan Docker dan WSL dihentikan hingga pemadatan selesai. Windows akan meminta izin administrator."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Tempat Sampah"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "Menunggu izin Windows…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  { $total } Total  -  { $free } Kosong  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Sistem operasi Windows"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "File sistem Windows"
 
 [messages.workers]
 source = """

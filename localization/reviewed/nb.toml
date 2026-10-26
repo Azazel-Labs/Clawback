@@ -120,6 +120,10 @@ translation = "Klikk for å rense de midlertidige filene dine"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Klikk for å tømme denne stasjonens papirkurv"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Administreres av Windows. Klikk for å åpne lagringsinnstillinger og frigjøre plass trygt."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL virtuell disk. Klikk for diskdetaljer, bla gjennom filer eller gjenvinn plass."
@@ -554,6 +558,10 @@ translation = "Masse av filer"
 source = "Make room for what matters."
 translation = "Gjør plass til det som er viktig."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows oppretter disse filene og bestemmer størrelsen selv. Endre virtuelt minne eller dvalemodus i Windows-innstillingene i stedet for å slette dem."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Tilordnede bytes i forhold til brukt kjøreplass; et estimat, ikke en prosentandel av filtall."
@@ -650,6 +658,10 @@ translation = "Åpne i Finder"
 source = "Open selected item"
 translation = "Åpne valgte element"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Åpne lagringsinnstillinger"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Annet mappe..."
@@ -737,6 +749,10 @@ translation = "Gjenvinn WSL-diskplass"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Før du komprimerer, lagre arbeidet ditt, avslutt Docker Desktop og lukk WSL-økter. Kjør denne kommandoen i PowerShell for å stoppe alle WSL-distribusjoner. Hold Docker og WSL stoppet til komprimeringen er ferdig. Windows vil be om administratortillatelse."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Papirkurv"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1181,6 +1197,14 @@ translation = "Venter på Windows-tillatelse…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path } - { $total } Sum - { $free } Gratis - Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows-operativsystem"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows-systemfiler"
 
 [messages.workers]
 source = """

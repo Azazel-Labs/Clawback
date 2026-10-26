@@ -120,6 +120,10 @@ translation = "Nhấp để xóa các tệp tạm thời của bạn"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Nhấp để dọn sạch Thùng rác của ổ đĩa này"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Do Windows quản lý. Bấm để mở cài đặt Lưu trữ và giải phóng dung lượng một cách an toàn."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · Đĩa ảo WSL. Nhấp để biết chi tiết về ổ đĩa, duyệt tệp hoặc lấy lại dung lượng."
@@ -547,6 +551,10 @@ translation = "Nhiều tệp"
 source = "Make room for what matters."
 translation = "Dành chỗ cho những điều quan trọng."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows tự tạo các tệp này và tự quyết định kích thước. Hãy thay đổi bộ nhớ ảo hoặc chế độ ngủ đông trong cài đặt Windows thay vì xóa chúng."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Số byte đã lập bản đồ so với dung lượng ổ đĩa đã dùng; đây là ước tính, không phải phần trăm số tệp."
@@ -643,6 +651,10 @@ translation = "Mở trong Finder"
 source = "Open selected item"
 translation = "Mở mục đã chọn"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Mở cài đặt Lưu trữ"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Thư mục khác..."
@@ -730,6 +742,10 @@ translation = "Lấy lại dung lượng ổ đĩa WSL"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Trước khi nén, hãy lưu công việc của bạn, thoát khỏi Docker Desktop và đóng các phiên WSL. Chạy lệnh này trong PowerShell để dừng tất cả các bản phân phối WSL. Giữ Docker và WSL dừng lại cho đến khi quá trình nén kết thúc. Windows sẽ yêu cầu quyền quản trị viên."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Thùng rác"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "Đang chờ Windows cấp quyền…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  Tổng { $total }  -  Trống { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Hệ điều hành Windows"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Tệp hệ thống Windows"
 
 [messages.workers]
 source = """

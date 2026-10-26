@@ -120,6 +120,10 @@ translation = "คลิกเพื่อล้างไฟล์ชั่ว�
 source = "Click to empty this drive’s Recycle Bin"
 translation = "คลิกเพื่อล้างถังรีไซเคิลของไดรฟ์นี้"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "จัดการโดย Windows คลิกเพื่อเปิดการตั้งค่าที่เก็บข้อมูลและเพิ่มพื้นที่ว่างอย่างปลอดภัย"
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · ดิสก์เสมือน WSL คลิกเพื่อดูรายละเอียดดิสก์ เรียกดูไฟล์ หรือเรียกคืนพื้นที่"
@@ -547,6 +551,10 @@ translation = "ไฟล์จำนวนมาก"
 source = "Make room for what matters."
 translation = "เพิ่มพื้นที่ให้สิ่งสำคัญ"
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows สร้างไฟล์เหล่านี้และกำหนดขนาดเอง ให้เปลี่ยนหน่วยความจำเสมือนหรือโหมดไฮเบอร์เนตในการตั้งค่า Windows แทนการลบไฟล์"
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "จำนวนไบต์ที่แสดงในแผนผังเทียบกับพื้นที่ไดรฟ์ที่ใช้ เป็นค่าประมาณ ไม่ใช่เปอร์เซ็นต์ของจำนวนไฟล์"
@@ -643,6 +651,10 @@ translation = "เปิดใน Finder"
 source = "Open selected item"
 translation = "เปิดรายการที่เลือก"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "เปิดการตั้งค่าที่เก็บข้อมูล"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "โฟลเดอร์อื่น..."
@@ -730,6 +742,10 @@ translation = "เรียกคืนพื้นที่ดิสก์ WSL"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "ก่อนลดขนาดดิสก์ ให้บันทึกงาน ออกจาก Docker Desktop และปิดเซสชัน WSL เรียกใช้คำสั่งนี้ใน PowerShell เพื่อหยุดดิสทริบิวชัน WSL ทั้งหมด อย่าเปิด Docker และ WSL จนกว่าการลดขนาดดิสก์จะเสร็จสิ้น Windows จะขอสิทธิ์ผู้ดูแลระบบ"
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "ถังรีไซเคิล"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "กำลังรอการอนุญาตจาก Windows
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  ทั้งหมด { $total }  -  ว่าง { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "ระบบปฏิบัติการ Windows"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "ไฟล์ระบบ Windows"
 
 [messages.workers]
 source = """

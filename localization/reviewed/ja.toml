@@ -120,6 +120,10 @@ translation = "クリックして一時ファイルをクリーンアップし�
 source = "Click to empty this drive’s Recycle Bin"
 translation = "クリックしてこのドライブのごみ箱を空にします"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Windows によって管理されています。クリックするとストレージ設定が開き、安全に空き領域を増やせます。"
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL 仮想ディスク。クリックしてディスクの詳細を表示したり、ファイルを参照したり、スペースを再利用したりできます。"
@@ -547,6 +551,10 @@ translation = "ファイルが多い"
 source = "Make room for what matters."
 translation = "大切なもののために空き容量を確保しましょう。"
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "これらのファイルは Windows が自動的に作成し、サイズを決めています。削除する代わりに、Windows の設定で仮想メモリや休止状態を変更してください。"
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "ドライブの使用済み容量に対する集計済みバイト数の割合です。推定値であり、ファイル数の割合ではありません。"
@@ -643,6 +651,10 @@ translation = "Finder で開く"
 source = "Open selected item"
 translation = "選択した項目を開く"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "ストレージ設定を開く"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "その他のフォルダー…"
@@ -730,6 +742,10 @@ translation = "WSL ディスク領域を再利用する"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "圧縮する前に、作業内容を保存し、Docker Desktop を終了して、WSL セッションを閉じます。 PowerShell でこのコマンドを実行して、すべての WSL ディストリビューションを停止します。圧縮が完了するまで、Docker と WSL を停止したままにします。 Windows は管理者の許可を求めます。"
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "ごみ箱"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "Windows の許可を待機中…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  合計 { $total }  -  空き { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows OS"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows システム ファイル"
 
 [messages.workers]
 source = """

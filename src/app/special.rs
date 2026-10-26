@@ -19,7 +19,7 @@ pub(in crate::app) use state::Compacted;
 #[cfg(windows)]
 pub use state::State;
 use std::path::{Path, PathBuf};
-pub use visuals::Visuals;
+pub use visuals::{Visuals, collapse_games};
 #[cfg(windows)]
 pub use windows::wsl_disks::worker_entry;
 
@@ -30,6 +30,7 @@ pub struct State;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(not(windows), allow(dead_code))] // Native providers are selected by the target registry.
 pub enum Kind {
+    WindowsOs,
     RecycleBin,
     TempFolder,
     WslDisk,
@@ -54,6 +55,12 @@ const PROVIDERS: &[Provider] = windows::PROVIDERS;
 #[cfg(not(windows))]
 const PROVIDERS: &[Provider] = &[];
 
+/// Entries the OS reserves at a drive root, drawn inside the Windows OS cell.
+#[cfg(windows)]
+const RESERVED: &[(&str, bool)] = &windows::system::RESERVED;
+#[cfg(not(windows))]
+const RESERVED: &[(&str, bool)] = &[];
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct Cell {
     node: NodeId,
@@ -65,24 +72,52 @@ struct Cell {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Inventory {
     cells: [Option<Cell>; PROVIDERS.len()],
+    reserved: [Option<NodeId>; RESERVED.len()],
 }
 
 impl Default for Inventory {
     fn default() -> Self {
-        Self { cells: [None; PROVIDERS.len()] }
+        Self { cells: [None; PROVIDERS.len()], reserved: [None; RESERVED.len()] }
     }
 }
 
 impl Inventory {
     pub fn allows_zoom(self, node: NodeId) -> bool {
-        self.cells.iter().flatten().find(|cell| cell.node == node).is_none_or(|cell| cell.kind != Kind::RecycleBin)
+        self.cells
+            .iter()
+            .flatten()
+            .find(|cell| cell.node == node)
+            .is_none_or(|cell| !matches!(cell.kind, Kind::RecycleBin | Kind::WindowsOs))
     }
     pub fn discover(tree: &Tree, is_mount: bool) -> Self {
         let mut inventory = Self::default();
         for (slot, provider) in inventory.cells.iter_mut().zip(PROVIDERS) {
             *slot = provider.cell.and_then(|find| find(tree, is_mount)).map(|node| Cell { node, kind: provider.kind });
         }
+        #[cfg(windows)]
+        {
+            inventory.reserved = windows::system::reserved(tree);
+        }
         inventory
+    }
+
+    /// The Windows OS cell, then the reserved entries drawn inside it.
+    pub fn grouped(&self) -> Vec<NodeId> {
+        let Some(os) = self.cells.iter().flatten().find(|cell| cell.kind == Kind::WindowsOs).map(|cell| cell.node)
+        else {
+            return Vec::new();
+        };
+        std::iter::once(os).chain(self.reserved.iter().flatten().copied().filter(|&node| node != os)).collect()
+    }
+
+    /// Bytes shown for `node`: for the Windows OS cell, everything drawn inside it.
+    pub fn size(&self, tree: &Tree, node: NodeId) -> u64 {
+        let grouped = self.grouped();
+        if grouped.first() == Some(&node) {
+            grouped.iter().map(|&member| tree.node(member).len).sum()
+        } else {
+            tree.node(node).len
+        }
     }
 
     pub fn collapsed(&self) -> impl Iterator<Item = NodeId> + '_ {
@@ -118,7 +153,18 @@ pub fn recognize(path: &Path) -> Option<Kind> {
 
 pub fn protects_from_raw_delete(path: &Path) -> bool {
     #[cfg(windows)]
-    return windows::programs::protected(path);
+    return is_system(path) || windows::programs::protected(path);
+    #[cfg(not(windows))]
+    {
+        let _ = path;
+        false
+    }
+}
+
+/// Operating system files that must never be deleted from the map, even through a special action.
+pub fn is_system(path: &Path) -> bool {
+    #[cfg(windows)]
+    return windows::system::protected(path);
     #[cfg(not(windows))]
     {
         let _ = path;

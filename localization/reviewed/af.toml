@@ -120,6 +120,10 @@ translation = "Klik om jou tydelike lêers skoon te maak"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Klik om hierdie aandrywer se asblik leeg te maak"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Bestuur deur Windows. Klik om Berging-instellings oop te maak en spasie veilig vry te maak."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL virtuele skyf. Klik vir skyfbesonderhede, blaai deur lêers of herwin spasie."
@@ -554,6 +558,10 @@ translation = "Baie lêers"
 source = "Make room for what matters."
 translation = "Maak plek vir wat saak maak."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows skep hierdie lêers self en bepaal hul grootte. Verander virtuele geheue of hibernasie in Windows-instellings in plaas daarvan om hulle te skrap."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Gekarteerde grepe relatief tot gebruikte dryfspasie; 'n skatting, nie 'n persentasie van lêers nie."
@@ -650,6 +658,10 @@ translation = "Maak oop in Finder"
 source = "Open selected item"
 translation = "Maak gekose item oop"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Maak Berging-instellings oop"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Ander vouer..."
@@ -737,6 +749,10 @@ translation = "Herwin WSL-skyfspasie"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Voordat jy verdig, stoor jou werk, verlaat Docker Desktop en maak WSL-sessies toe. Voer hierdie opdrag in PowerShell uit om alle WSL-verspreidings te stop. Hou Docker en WSL gestop totdat verdigting klaar is. Windows sal vir administrateur toestemming vra."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Asblik"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1181,6 +1197,14 @@ translation = "Wag tans vir Windows-toestemming…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  { $total } totaal  -  { $free } vry  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows-bedryfstelsel"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows-stelsellêers"
 
 [messages.workers]
 source = """

@@ -115,7 +115,7 @@ sysinfo = { version = "0.39", default-features = false, features = ["disk"] }
 # Recycle Bin / Trash.
 trash = "5.2"
 ratatui = "0.30"
-image = { version = "0.25", default-features = false, features = ["png"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
 egui-phosphor = "0.14"
 ttf-parser = "0.25" # Validate system fonts and select regional faces in collections.
 

@@ -174,7 +174,7 @@ impl PreparedMap {
                     }
                     lines.push(short);
                     if shows_details(b) {
-                        lines.push(format::size(node.len));
+                        lines.push(format::size(special.size(tree, id)));
                         lines.push(format::date(node.mtime));
                     }
                 }

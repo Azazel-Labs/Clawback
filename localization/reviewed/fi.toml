@@ -120,6 +120,10 @@ translation = "Napsauta puhdistaaksesi väliaikaiset tiedostosi"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Napsauta tyhjentääksesi tämän aseman roskakorin"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Windowsin hallinnoima. Avaa tallennustilan asetukset napsauttamalla ja vapauta tilaa turvallisesti."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL-virtuaalilevy. Napsauta nähdäksesi levyn tiedot, selaa tiedostoja tai vapauta tilaa."
@@ -554,6 +558,10 @@ translation = "Paljon tiedostoja"
 source = "Make room for what matters."
 translation = "Tee tilaa sille, mikä on tärkeää."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows luo nämä tiedostot ja määrittää niiden koon itse. Muuta näennäismuistia tai lepotilaa Windowsin asetuksissa sen sijaan, että poistaisit ne."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Kartoitetut tavut suhteessa käytettyyn asematilaan; arvio, ei tiedostojen lukuprosenttiosuus."
@@ -650,6 +658,10 @@ translation = "Avaa Finderissa"
 source = "Open selected item"
 translation = "Avaa valittu kohde"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Avaa tallennustilan asetukset"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Muu Kansio..."
@@ -737,6 +749,10 @@ translation = "Vapauta WSL-levytilaa"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Tallenna työsi ennen tiivistämistä, sulje Docker Desktop ja sulje WSL-istunnot. Suorita tämä komento PowerShellissä lopettaaksesi kaikki WSL-jakelut. Pidä Docker ja WSL pysäytettyinä, kunnes tiivistys on valmis. Windows pyytää järjestelmänvalvojan lupaa."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Roskakori"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1181,6 +1197,14 @@ translation = "Odotetaan Windows-lupaa…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  { $total } yhteensä  -  { $free } vapaana  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows-käyttöjärjestelmä"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windowsin järjestelmätiedostot"
 
 [messages.workers]
 source = """

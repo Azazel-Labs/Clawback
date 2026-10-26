@@ -120,6 +120,10 @@ translation = "임시 파일을 정리하려면 클릭하세요."
 source = "Click to empty this drive’s Recycle Bin"
 translation = "이 드라이브의 휴지통을 비우려면 클릭하세요."
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Windows에서 관리합니다. 클릭하면 저장소 설정을 열어 안전하게 공간을 확보할 수 있습니다."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · WSL 가상 디스크. 디스크 세부정보를 확인하거나, 파일을 찾아보거나, 공간을 확보하려면 클릭하세요."
@@ -547,6 +551,10 @@ translation = "파일 많음"
 source = "Make room for what matters."
 translation = "소중한 것을 위한 공간을 확보하세요."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "이 파일은 Windows가 직접 만들고 크기를 정합니다. 삭제하지 말고 Windows 설정에서 가상 메모리나 최대 절전 모드를 변경하세요."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "드라이브의 사용 공간 대비 집계된 바이트 수입니다. 추정치이며 파일 개수의 비율이 아닙니다."
@@ -643,6 +651,10 @@ translation = "Finder에서 열기"
 source = "Open selected item"
 translation = "선택한 항목 열기"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "저장소 설정 열기"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "다른 폴더…"
@@ -730,6 +742,10 @@ translation = "WSL 디스크 공간 회수"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "압축하기 전에 작업 내용을 저장하고 Docker Desktop을 종료하고 WSL 세션을 닫습니다. 모든 WSL 배포를 중지하려면 PowerShell에서 이 명령을 실행하세요. 압축이 완료될 때까지 Docker와 WSL을 중지된 상태로 유지합니다. Windows에서는 관리자 권한을 요청합니다."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "휴지통"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "Windows 권한 승인 대기 중…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  전체 { $total }  -  여유 { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows OS"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows 시스템 파일"
 
 [messages.workers]
 source = """

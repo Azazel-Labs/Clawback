@@ -241,6 +241,7 @@ delete-size-files =
     }
 delete-permanently-button = Endgültig löschen
 empty-recycle-bin-button = Papierkorb leeren
+recycle-bin = Papierkorb
 delete-progress-files = { $done } von { $total } Dateien
 purge-failed =
     { $count ->
@@ -259,6 +260,11 @@ empty-temp-body = Den Inhalt von { $path } endgültig löschen? Der Temp-Ordner 
 empty-temp-button = Temp-Ordner bereinigen
 cleaning-temp-folder = Temp-Ordner wird bereinigt…
 temp-cleanup-skipped = Bei der Bereinigung blieben { $count } Elemente übrig, die nicht entfernt werden konnten. Erster Grund: { $error }
+windows-os = Windows-Betriebssystem
+windows-system-files = Windows-Systemdateien
+open-storage-settings = Speichereinstellungen öffnen
+click-to-open-storage-settings = Wird von Windows verwaltet. Klicken, um die Speichereinstellungen zu öffnen und sicher Platz freizugeben.
+managed-by-windows = Windows erstellt diese Dateien und legt ihre Größe selbst fest. Ändere virtuellen Arbeitsspeicher oder Ruhezustand in den Windows-Einstellungen, statt sie zu löschen.
 reclaim-wsl-space = WSL-Speicherplatz zurückgewinnen
 click-to-reclaim-wsl-space = VHDX · Virtueller WSL-Datenträger. Klicken, um Datenträgerdetails anzuzeigen, Dateien zu durchsuchen oder Platz zurückzugewinnen.
 reclaim-wsl-body = Die Komprimierung erhält den Inhalt des Datenträgers und verkleinert seine Windows-Datei, indem sie mit Nullen gefüllte Blöcke freigibt. Möglicherweise wird wenig oder kein Platz frei. Bereinige zuerst nicht benötigte Daten in Docker oder Linux.
