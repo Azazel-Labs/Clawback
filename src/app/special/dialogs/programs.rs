@@ -139,7 +139,7 @@ impl ClawbackApp {
                 } else {
                     (tr!("uninstall-open-apps"), "ms-settings:appsfeatures")
                 };
-                if ui.add(egui::Button::new(label).frame(false)).clicked() {
+                if super::external_link(ui, &label).clicked() {
                     open = Some(uri);
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
