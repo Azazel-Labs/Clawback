@@ -799,6 +799,10 @@ translation = "Felszabadítható hely keresése…"
 source = "{ $size } found"
 translation = "{ $size } található"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Játékok"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Gradle projekt-gyorsítótár; a következő fordításkor újraépül"

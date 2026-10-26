@@ -247,6 +247,7 @@ reclaim-finding = 正在查找可回收的空间…
 reclaim-found = 找到 { $size }
 reclaim-nothing = 这里没有明显可回收的内容。
 reclaim-cleanup = 清理
+reclaim-games = 游戏
 reclaim-developer = 开发残留
 reclaim-caches = 缓存
 reclaim-recycle-bin = 等待清空的已删除项目

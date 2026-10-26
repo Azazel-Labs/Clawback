@@ -247,6 +247,7 @@ reclaim-finding = 회수할 공간을 찾는 중…
 reclaim-found = { $size } 찾음
 reclaim-nothing = 여기에는 회수할 만한 것이 없습니다.
 reclaim-cleanup = 정리
+reclaim-games = 게임
 reclaim-developer = 개발 잔여물
 reclaim-caches = 캐시
 reclaim-recycle-bin = 비우기를 기다리는 삭제된 항목

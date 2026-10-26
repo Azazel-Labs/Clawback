@@ -247,6 +247,7 @@ reclaim-finding = Đang tìm dung lượng có thể lấy lại…
 reclaim-found = Tìm thấy { $size }
 reclaim-nothing = Không có gì rõ ràng để lấy lại ở đây.
 reclaim-cleanup = Dọn dẹp
+reclaim-games = Trò chơi
 reclaim-developer = Phần còn lại khi phát triển
 reclaim-caches = Bộ nhớ đệm
 reclaim-recycle-bin = Các mục đã xóa đang chờ dọn sạch

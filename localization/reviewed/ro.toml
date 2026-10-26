@@ -799,6 +799,10 @@ translation = "Se caută spațiu de recuperat…"
 source = "{ $size } found"
 translation = "S-au găsit { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Jocuri"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Cache-ul proiectului Gradle; se reconstruiește la următoarea compilare"

@@ -258,6 +258,7 @@ reclaim-finding = Letar efter utrymme att frigöra…
 reclaim-found = { $size } hittades
 reclaim-nothing = Inget uppenbart att frigöra här.
 reclaim-cleanup = Rensning
+reclaim-games = Spel
 reclaim-developer = Utvecklarrester
 reclaim-caches = Cacheminnen
 reclaim-recycle-bin = Borttagna objekt som väntar på att tömmas

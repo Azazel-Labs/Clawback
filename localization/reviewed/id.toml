@@ -799,6 +799,10 @@ translation = "Mencari ruang yang bisa diklaim kembali…"
 source = "{ $size } found"
 translation = "{ $size } ditemukan"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Game"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Cache proyek Gradle; dibangun ulang pada build berikutnya"

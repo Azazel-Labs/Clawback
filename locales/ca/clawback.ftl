@@ -258,6 +258,7 @@ reclaim-finding = S’està cercant espai per recuperar…
 reclaim-found = { $size } trobats
 reclaim-nothing = No hi ha res evident per recuperar aquí.
 reclaim-cleanup = Neteja
+reclaim-games = Jocs
 reclaim-developer = Restes de desenvolupament
 reclaim-caches = Memòries cau
 reclaim-recycle-bin = Elements suprimits pendents de buidar

@@ -261,6 +261,7 @@ reclaim-finding = Тражи се простор за враћање…
 reclaim-found = Пронађено { $size }
 reclaim-nothing = Овде нема ничег очигледног за враћање.
 reclaim-cleanup = Чишћење
+reclaim-games = Игре
 reclaim-developer = Остаци развоја
 reclaim-caches = Кешеви
 reclaim-recycle-bin = Обрисане ставке које чекају пражњење

@@ -799,6 +799,10 @@ translation = "回収できる容量を探しています…"
 source = "{ $size } found"
 translation = "{ $size } 見つかりました"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "ゲーム"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Gradle プロジェクト キャッシュ。次のビルドで再構築されます"

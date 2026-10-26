@@ -264,6 +264,7 @@ reclaim-finding = Szukanie miejsca do odzyskania…
 reclaim-found = Znaleziono { $size }
 reclaim-nothing = Nie ma tu nic oczywistego do odzyskania.
 reclaim-cleanup = Porządki
+reclaim-games = Gry
 reclaim-developer = Pozostałości programistyczne
 reclaim-caches = Pamięci podręczne
 reclaim-recycle-bin = Usunięte elementy czekające na opróżnienie

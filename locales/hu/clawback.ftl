@@ -247,6 +247,7 @@ reclaim-finding = Felszabadítható hely keresése…
 reclaim-found = { $size } található
 reclaim-nothing = Itt nincs semmi nyilvánvalóan felszabadítható.
 reclaim-cleanup = Takarítás
+reclaim-games = Játékok
 reclaim-developer = Fejlesztési maradványok
 reclaim-caches = Gyorsítótárak
 reclaim-recycle-bin = Ürítésre váró törölt elemek

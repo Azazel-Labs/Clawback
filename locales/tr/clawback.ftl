@@ -247,6 +247,7 @@ reclaim-finding = Geri kazanılacak alan aranıyor…
 reclaim-found = { $size } bulundu
 reclaim-nothing = Burada geri kazanılacak belirgin bir şey yok.
 reclaim-cleanup = Temizlik
+reclaim-games = Oyunlar
 reclaim-developer = Geliştirme artıkları
 reclaim-caches = Önbellekler
 reclaim-recycle-bin = Boşaltılmayı bekleyen silinmiş öğeler

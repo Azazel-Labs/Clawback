@@ -258,6 +258,7 @@ reclaim-finding = Soek ruimte om te herwin…
 reclaim-found = { $size } gevind
 reclaim-nothing = Niks voor die hand liggend om hier te herwin nie.
 reclaim-cleanup = Opruiming
+reclaim-games = Speletjies
 reclaim-developer = Ontwikkelaar-oorblyfsels
 reclaim-caches = Kasgeheues
 reclaim-recycle-bin = Geskrapte items wat wag om leeggemaak te word

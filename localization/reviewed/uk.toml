@@ -810,6 +810,10 @@ translation = "Пошук місця, яке можна звільнити…"
 source = "{ $size } found"
 translation = "Знайдено { $size }"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Ігри"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Кеш проєкту Gradle; перебудовується під час наступної збірки"

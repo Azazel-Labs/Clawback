@@ -806,6 +806,10 @@ translation = "Leter etter plass å frigjøre…"
 source = "{ $size } found"
 translation = "{ $size } funnet"
 
+[messages.reclaim-games]
+source = "Games"
+translation = "Spill"
+
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
 translation = "Gradle-prosjekthurtigbuffer; bygges på nytt ved neste bygg"

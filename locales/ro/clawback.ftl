@@ -247,6 +247,7 @@ reclaim-finding = Se caută spațiu de recuperat…
 reclaim-found = S-au găsit { $size }
 reclaim-nothing = Nimic evident de recuperat aici.
 reclaim-cleanup = Curățenie
+reclaim-games = Jocuri
 reclaim-developer = Resturi de dezvoltare
 reclaim-caches = Memorii cache
 reclaim-recycle-bin = Elemente șterse care așteaptă golirea

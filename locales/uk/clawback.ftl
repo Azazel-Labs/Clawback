@@ -264,6 +264,7 @@ reclaim-finding = Пошук місця, яке можна звільнити…
 reclaim-found = Знайдено { $size }
 reclaim-nothing = Тут немає нічого очевидного, що можна звільнити.
 reclaim-cleanup = Очищення
+reclaim-games = Ігри
 reclaim-developer = Залишки розробки
 reclaim-caches = Кеші
 reclaim-recycle-bin = Видалені об’єкти, що чекають на очищення
