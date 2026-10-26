@@ -14,6 +14,7 @@ pub(super) const PROVIDERS: &[Provider] = &[
         cell: Some(|tree, _| system::find(tree).or_else(|| system::reserved(tree).into_iter().flatten().next())),
         recognizes: None,
         activate: Some(|app, _, _| {
+            crate::achievements::unlock(crate::achievements::Achievement::DontTouch);
             if let Err(error) = crate::platform::open(std::path::Path::new(system::STORAGE_SETTINGS)) {
                 app.error = Some(error);
             }

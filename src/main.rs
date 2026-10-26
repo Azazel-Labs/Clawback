@@ -4,6 +4,7 @@
 
 //! Clawback: a fast, cross-platform disk space map in the spirit of SpaceMonger.
 
+mod achievements;
 mod app;
 mod background;
 mod deletion;
@@ -174,7 +175,10 @@ fn main() -> ExitCode {
                 }
             }
         }
-        Some(_) => run_gui(args.path.as_deref()),
+        Some(_) => {
+            achievements::init();
+            run_gui(args.path.as_deref())
+        }
     }
 }
 

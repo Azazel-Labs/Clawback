@@ -19,6 +19,7 @@ impl ClawbackApp {
     }
 
     pub(in crate::app) fn finish_compaction(&mut self, doc_id: u64, updated: Compacted) {
+        crate::achievements::unlock(crate::achievements::Achievement::WslDiet);
         let Some(doc) = self.doc.as_mut().filter(|doc| doc.id == doc_id) else { return };
         if let Some(live) = &self.live {
             live.invalidate(updated.path.clone());
