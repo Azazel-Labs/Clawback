@@ -539,9 +539,10 @@ impl ClawbackApp {
                 });
                 if let Some(doc) = &mut self.doc {
                     if snapshot.reset {
+                        // Node ids were reassigned; keep the view by path.
                         doc.id = self.next_doc_id;
                         self.next_doc_id += 1;
-                        doc.view = ROOT;
+                        doc.view = snapshot.tree.find_path(&doc.tree.path(doc.view)).unwrap_or(ROOT);
                     } else {
                         while !snapshot.tree.is_live(doc.view) {
                             doc.view = doc.tree.parent(doc.view).unwrap_or(ROOT);

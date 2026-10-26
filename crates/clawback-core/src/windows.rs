@@ -141,6 +141,7 @@ pub(crate) struct Metadata {
     pub size: u64,
     pub len: u64,
     pub id: FileId,
+    pub linked: bool,
 }
 
 fn metadata_handle(path: &Path) -> io::Result<File> {
@@ -191,7 +192,7 @@ pub(crate) fn metadata(path: &Path, apparent: bool, ntfs_cluster: Option<u64>) -
     } else {
         standard.allocation_size
     };
-    Ok(Metadata { size, len, id: info.id() })
+    Ok(Metadata { size, len, id: info.id(), linked: info.links > 1 })
 }
 
 fn resident_allocation(file: &File, allocated: u64, ntfs_cluster: Option<u64>) -> io::Result<bool> {
@@ -519,8 +520,8 @@ mod tests {
         let accounting = scan::FileAccounting::new(&dir.0, false);
         std::fs::remove_file(&path).unwrap();
         // Metadata from the listing remains sufficient after the name is gone.
-        assert_eq!(accounting.measure(&path, &md, false).unwrap(), (clusters(&dir.0).0, 100, None));
-        assert_eq!(accounting.measure(&path, &md, true).unwrap(), (100, 100, None));
+        assert_eq!(accounting.measure(&path, &md, false).unwrap(), (clusters(&dir.0).0, 100, None, false));
+        assert_eq!(accounting.measure(&path, &md, true).unwrap(), (100, 100, None, false));
     }
 
     #[test]

@@ -197,14 +197,14 @@ impl Refresh {
             }
             return Ok(true);
         }
-        let (size, len, file_id) = self.accounting.measure(path, &md, self.options.apparent_size)?;
+        let (size, len, file_id, linked) = self.accounting.measure(path, &md, self.options.apparent_size)?;
         let entry = NewEntry {
             name: path.file_name().unwrap_or_default().into(),
             kind,
             size,
             len,
             mtime: mtime_secs(&md),
-            flags: 0,
+            flags: if linked && file_id.is_some() { flags::LINKED } else { 0 },
             file_id,
         };
         if let Some(links) = &mut self.links {

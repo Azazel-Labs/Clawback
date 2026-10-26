@@ -259,6 +259,9 @@ impl Watch {
                 }
                 pending.paths.clear();
                 pending.rescan = false;
+                // The app's snapshot keeps what it shows; release this copy during the scan.
+                tree = Tree::new(&root);
+                drop(std::mem::replace(&mut refresh, Refresh::new(&tree, options.clone())));
                 let mut opts = options.clone();
                 opts.threads = 1;
                 let result = Scan::start(&root, opts, None).map(|scan| scan.wait_or_stop(stop));
@@ -298,6 +301,13 @@ impl Watch {
                     }
                 }
             }
+            // Edits leave replaced nodes detached; drop them once they are a fifth of the tree.
+            if tree.len() as u64 > (tree.root().files + refresh.dirs).max(4096) * 5 / 4 {
+                tree = std::mem::replace(&mut tree, Tree::new(&root)).compacted();
+                refresh = Refresh::new(&tree, options.clone());
+                changed = true;
+                reset = true;
+            }
             if changed {
                 if let Some(disk) = &mut disk {
                     platform::refresh_disk_space(disk);
@@ -312,10 +322,6 @@ impl Watch {
                 })) {
                     return;
                 }
-            }
-            // Bound detached arena storage after sustained create/delete churn.
-            if tree.len() as u64 > (tree.root().files + refresh.dirs).max(4096) * 2 {
-                pending.rescan = true;
             }
             if changed || pending.rescan {
                 let status = if pending.is_empty() { LiveStatus::Watching } else { LiveStatus::CatchingUp };

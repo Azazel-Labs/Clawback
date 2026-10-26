@@ -115,6 +115,9 @@ pub mod flags {
     pub const HARDLINK_DUP: u8 = 1 << 4;
     /// The node was deleted by the user and is no longer part of the tree.
     pub const REMOVED: u8 = 1 << 5;
+    /// A file with several hard links, whose other names may share its data. Only these
+    /// are indexed for live link accounting.
+    pub const LINKED: u8 = 1 << 6;
 }
 
 #[derive(Clone, Debug)]
@@ -471,6 +474,38 @@ impl Tree {
         true
     }
 
+    /// The same tree without the detached nodes that edits and grafts leave behind.
+    /// Node ids change; children keep their order.
+    #[must_use]
+    pub fn compacted(self) -> Self {
+        let mut old: Vec<Option<Node>> = self.nodes.into_nodes().map(Some).collect();
+        // New ids in breadth-first order, so each directory's children stay contiguous.
+        let mut remap = vec![NO_NODE; old.len()];
+        let mut order = vec![ROOT];
+        remap[ROOT as usize] = ROOT;
+        let mut next = 0;
+        while let Some(&id) = order.get(next) {
+            next += 1;
+            for &child in &old[id as usize].as_ref().expect("reachable node").children {
+                remap[child as usize] = order.len() as NodeId;
+                order.push(child);
+            }
+        }
+        let mut nodes = Nodes::default();
+        nodes.reserve(order.len());
+        for id in order {
+            let mut node = old[id as usize].take().expect("each node is reached once");
+            if node.parent != NO_NODE {
+                node.parent = remap[node.parent as usize];
+            }
+            for child in &mut node.children {
+                *child = remap[*child as usize];
+            }
+            nodes.push(node);
+        }
+        Self { nodes }
+    }
+
     /// Replace the contents of directory `at` with a freshly scanned tree of
     /// the same directory. `at` keeps its id; its old descendants are detached.
     pub fn graft(&mut self, at: NodeId, sub: Tree) {
@@ -694,6 +729,30 @@ mod tests {
         let n = t.find_path(Path::new("/r/a/new")).unwrap();
         assert_eq!(t.path(n), PathBuf::from("/r/a/new"));
         assert!(t.is_live(n));
+    }
+
+    #[test]
+    fn compaction_drops_detached_nodes_and_keeps_paths() {
+        let mut t = sample();
+        let a = t.find_path(Path::new("/r/a")).unwrap();
+        let mut sub = Tree::new(Path::new("/r/a"));
+        sub.add_children(ROOT, vec![entry("new", Kind::File, 1000)]);
+        t.graft(a, sub);
+        let removed = t.root().children[1];
+        t.remove(removed);
+        let (size, files, before) = (t.root().size, t.root().files, t.len());
+        let compact = t.compacted();
+        assert!(compact.len() < before);
+        assert_eq!(compact.descendants(ROOT).count(), compact.len());
+        assert_eq!((compact.root().size, compact.root().files), (size, files));
+        let n = compact.find_path(Path::new("/r/a/new")).unwrap();
+        assert_eq!(compact.path(n), PathBuf::from("/r/a/new"));
+        assert!(
+            compact
+                .descendants(ROOT)
+                .skip(1)
+                .all(|id| compact.parent(id).is_some_and(|p| compact.node(p).children.contains(&id)))
+        );
     }
 
     #[test]
