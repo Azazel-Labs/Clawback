@@ -1,7 +1,7 @@
 //! Resolve removal requests through installed applications and Steam's own metadata.
 //! Discovery is read-only and runs on a worker; launching requires a separate UI action.
 mod registry;
-mod steam;
+pub(in crate::app) mod steam;
 
 use std::path::{Path, PathBuf};
 
@@ -54,7 +54,7 @@ fn normalized(path: &Path) -> String {
     normalized.to_string_lossy().trim_end_matches('\\').to_lowercase()
 }
 
-fn within(path: &Path, root: &Path) -> bool {
+pub(super) fn within(path: &Path, root: &Path) -> bool {
     let (path, root) = (normalized(path), normalized(root));
     !root.is_empty() && (path == root || path.strip_prefix(&root).is_some_and(|tail| tail.starts_with('\\')))
 }

@@ -637,6 +637,9 @@ impl ClawbackApp {
             return;
         }
         let Some(doc) = &self.doc else { return };
+        if special::is_system(&doc.tree.path(node)) {
+            return;
+        }
         if node == ROOT && doc.special().classify(&doc.tree, node) != Some(special::Kind::InstalledSoftware) {
             return;
         }

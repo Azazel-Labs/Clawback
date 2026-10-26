@@ -120,6 +120,10 @@ translation = "Κάντε κλικ για να καθαρίσετε τα προ�
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Κάντε κλικ για να αδειάσετε τον Κάδο Ανακύκλωσης αυτής της μονάδας"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Διαχειρίζεται από τα Windows. Κάντε κλικ για να ανοίξετε τις ρυθμίσεις αποθήκευσης και να ελευθερώσετε χώρο με ασφάλεια."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · Εικονικός δίσκος WSL. Κάντε κλικ για λεπτομέρειες δίσκου, περιήγηση αρχείων ή ανάκτηση χώρου."
@@ -554,6 +558,10 @@ translation = "Πολλά αρχεία"
 source = "Make room for what matters."
 translation = "Κάντε χώρο για αυτό που έχει σημασία."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Τα Windows δημιουργούν αυτά τα αρχεία και ορίζουν μόνα τους το μέγεθός τους. Αλλάξτε την εικονική μνήμη ή την αδρανοποίηση στις ρυθμίσεις των Windows αντί να τα διαγράψετε."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Αντιστοιχισμένη bytes σε σχέση με το χρησιμοποιούμενο διάστημα κίνησης. μια εκτίμηση, όχι ένα ποσοστό αρχείου-καταμέτρησης."
@@ -650,6 +658,10 @@ translation = "Άνοιγμα στο Finder"
 source = "Open selected item"
 translation = "Άνοιγμα επιλεγμένου αντικειμένου"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Άνοιγμα ρυθμίσεων αποθήκευσης"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Άλλος Φάκελος..."
@@ -737,6 +749,10 @@ translation = "Ανάκτηση χώρου στο δίσκο WSL"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Πριν από τη συμπύκνωση, αποθηκεύστε την εργασία σας, κλείστε το Docker Desktop και κλείστε τις συνεδρίες WSL. Εκτελέστε αυτήν την εντολή στο PowerShell για να σταματήσετε όλες τις διανομές WSL. Διατηρήστε το Docker και το WSL σταματημένα μέχρι να ολοκληρωθεί η συμπύκνωση. Τα Windows θα ζητήσουν άδεια διαχειριστή."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Κάδος Ανακύκλωσης"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1181,6 +1197,14 @@ translation = "Αναμονή για δικαιώματα των Windows…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  { $total } σύνολο  -  { $free } ελεύθερα  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Λειτουργικό σύστημα Windows"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Αρχεία συστήματος Windows"
 
 [messages.workers]
 source = """

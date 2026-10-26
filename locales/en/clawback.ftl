@@ -49,6 +49,7 @@ delete-size-files =
     }
 delete-permanently-button = Delete permanently
 empty-recycle-bin-button = Empty Recycle Bin
+recycle-bin = Recycle Bin
 delete-progress-files = { $done } of { $total } files
 purge-failed =
     { $count ->
@@ -89,6 +90,11 @@ empty-temp-body = Permanently delete the contents of { $path }? The Temp folder 
 empty-temp-button = Clean Temp folder
 cleaning-temp-folder = Cleaning Temp folder…
 temp-cleanup-skipped = Cleanup left { $count } items that could not be removed. First reason: { $error }
+windows-os = Windows OS
+windows-system-files = Windows system files
+open-storage-settings = Open Storage settings
+click-to-open-storage-settings = Managed by Windows. Click to open Storage settings and free space safely.
+managed-by-windows = Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them.
 reclaim-wsl-space = Reclaim WSL disk space
 click-to-reclaim-wsl-space = VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space.
 reclaim-wsl-body = Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first.

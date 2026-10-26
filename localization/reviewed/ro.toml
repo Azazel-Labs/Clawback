@@ -120,6 +120,10 @@ translation = "Faceți clic pentru a vă curăța fișierele temporare"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Faceți clic pentru a goli Coșul de reciclare al acestei unități"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Gestionat de Windows. Fă clic pentru a deschide setările de stocare și a elibera spațiu în siguranță."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · disc virtual WSL. Faceți clic pentru detalii despre disc, răsfoiți fișiere sau recuperați spațiu."
@@ -547,6 +551,10 @@ translation = "Multe fișiere"
 source = "Make room for what matters."
 translation = "Fă loc pentru ceea ce contează."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows creează aceste fișiere și le stabilește singur dimensiunea. Modifică memoria virtuală sau hibernarea în setările Windows în loc să le ștergi."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Octeți reprezentați în raport cu spațiul utilizat al unității; o estimare, nu un procent din numărul de fișiere."
@@ -643,6 +651,10 @@ translation = "Deschideți în Finder"
 source = "Open selected item"
 translation = "Deschide elementul selectat"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Deschide setările de stocare"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Alt dosar..."
@@ -730,6 +742,10 @@ translation = "Recuperați spațiu pe disc WSL"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Înainte de compactare, salvați-vă munca, părăsiți Docker Desktop și închideți sesiunile WSL. Rulați această comandă în PowerShell pentru a opri toate distribuțiile WSL. Țineți Docker și WSL oprite până la terminarea compactării. Windows va cere permisiunea de administrator."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Coș de reciclare"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "Se așteaptă permisiunea Windows…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  { $total } Total  -  { $free } Liber  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Sistemul de operare Windows"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Fișiere de sistem Windows"
 
 [messages.workers]
 source = """

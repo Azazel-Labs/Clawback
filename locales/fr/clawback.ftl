@@ -241,6 +241,7 @@ delete-size-files =
     }
 delete-permanently-button = Supprimer définitivement
 empty-recycle-bin-button = Vider la corbeille
+recycle-bin = Corbeille
 delete-progress-files = { $done } fichiers sur { $total }
 purge-failed =
     { $count ->
@@ -259,6 +260,11 @@ empty-temp-body = Supprimer définitivement le contenu de { $path } ? Le dossier
 empty-temp-button = Nettoyer le dossier Temp
 cleaning-temp-folder = Nettoyage du dossier Temp…
 temp-cleanup-skipped = Le nettoyage a laissé { $count } éléments impossibles à supprimer. Première raison : { $error }
+windows-os = Système d’exploitation Windows
+windows-system-files = Fichiers système Windows
+open-storage-settings = Ouvrir les paramètres de stockage
+click-to-open-storage-settings = Géré par Windows. Cliquez pour ouvrir les paramètres de stockage et libérer de l’espace en toute sécurité.
+managed-by-windows = Windows crée ces fichiers et gère leur taille lui-même. Modifiez la mémoire virtuelle ou la mise en veille prolongée dans les paramètres de Windows au lieu de les supprimer.
 reclaim-wsl-space = Récupérer de l'espace disque WSL
 click-to-reclaim-wsl-space = VHDX · Disque virtuel WSL. Cliquez pour voir les détails du disque, parcourir les fichiers ou récupérer de l'espace.
 reclaim-wsl-body = Le compactage préserve le contenu du disque et réduit la taille de son fichier Windows en récupérant les blocs remplis de zéros. Il peut libérer peu ou pas d'espace. Nettoyez d'abord les données inutiles dans Docker ou Linux.

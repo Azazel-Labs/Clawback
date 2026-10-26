@@ -120,6 +120,10 @@ translation = "Kliknij, aby wyczyścić pliki tymczasowe"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "Kliknij, aby opróżnić Kosz tego dysku"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "Zarządzane przez system Windows. Kliknij, aby otworzyć ustawienia magazynu i bezpiecznie zwolnić miejsce."
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX · Dysk wirtualny WSL. Kliknij, aby wyświetlić szczegóły dysku, przeglądać pliki lub odzyskać miejsce."
@@ -558,6 +562,10 @@ translation = "Dużo plików"
 source = "Make room for what matters."
 translation = "Zrób miejsce na to, co ważne."
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "Windows sam tworzy te pliki i określa ich rozmiar. Zamiast je usuwać, zmień pamięć wirtualną lub hibernację w ustawieniach systemu Windows."
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "Zliczone bajty w stosunku do zajętego miejsca na dysku; jest to oszacowanie, a nie procent liczby plików."
@@ -654,6 +662,10 @@ translation = "Otwórz w Finderze"
 source = "Open selected item"
 translation = "Otwórz wybrany element"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "Otwórz ustawienia magazynu"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "Inny folder…"
@@ -741,6 +753,10 @@ translation = "Odzyskaj miejsce na dysku WSL"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "Przed kompaktowaniem zapisz swoją pracę, zamknij Docker Desktop i zamknij sesje WSL. Uruchom to polecenie w programie PowerShell, aby zatrzymać wszystkie dystrybucje WSL. Zatrzymaj Docker i WSL aż do zakończenia kompaktowania. System Windows poprosi o pozwolenie administratora."
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "Kosz"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1189,6 +1205,14 @@ translation = "Oczekiwanie na zgodę w systemie Windows…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  Łącznie { $total }  -  Wolne { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "System operacyjny Windows"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Pliki systemowe Windows"
 
 [messages.workers]
 source = """

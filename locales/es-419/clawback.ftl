@@ -241,6 +241,7 @@ delete-size-files =
     }
 delete-permanently-button = Eliminar permanentemente
 empty-recycle-bin-button = Vaciar la papelera
+recycle-bin = Papelera de reciclaje
 delete-progress-files = { $done } de { $total } archivos
 purge-failed =
     { $count ->
@@ -259,6 +260,11 @@ empty-temp-body = ¿Eliminar permanentemente el contenido de { $path }? Se conse
 empty-temp-button = Limpiar la carpeta Temp
 cleaning-temp-folder = Limpiando la carpeta Temp…
 temp-cleanup-skipped = La limpieza dejó { $count } elementos que no se pudieron eliminar. Primer motivo: { $error }
+windows-os = Sistema operativo Windows
+windows-system-files = Archivos del sistema de Windows
+open-storage-settings = Abrir configuración de almacenamiento
+click-to-open-storage-settings = Administrado por Windows. Haz clic para abrir la configuración de almacenamiento y liberar espacio de forma segura.
+managed-by-windows = Windows crea estos archivos y define su tamaño por sí mismo. Cambia la memoria virtual o la hibernación en la configuración de Windows en lugar de eliminarlos.
 reclaim-wsl-space = Recuperar espacio de disco de WSL
 click-to-reclaim-wsl-space = VHDX · Disco virtual de WSL. Haz clic para ver los detalles del disco, explorar archivos o recuperar espacio.
 reclaim-wsl-body = La compactación conserva el contenido del disco y reduce el tamaño de su archivo en Windows recuperando bloques llenos de ceros. Puede liberar poco o ningún espacio. Limpia primero los datos innecesarios dentro de Docker o Linux.

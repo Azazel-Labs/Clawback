@@ -1,8 +1,11 @@
 //! Steam library and app manifests; no folder-name guessing or game-name matching.
 use super::{Action, Application, Inventory};
+use clawback_core::{NO_NODE, NodeId, ROOT, Tree};
 use std::{
     io::Read,
     path::{Path, PathBuf},
+    sync::{Arc, Mutex, OnceLock},
+    time::{Duration, Instant},
 };
 
 #[derive(Debug)]
@@ -154,35 +157,131 @@ pub(super) fn library_for(path: &Path) -> Option<PathBuf> {
     })
 }
 
-pub(super) fn extend(inventory: &mut Inventory, path: &Path) {
-    if let Some(root) = super::registry::steam_path() {
+fn known_libraries() -> Vec<PathBuf> {
+    super::registry::steam_path().map_or_else(Vec::new, |root| {
         let folders = read(&root.join("steamapps").join("libraryfolders.vdf"));
-        inventory.steam_roots = libraries(&root, folders.as_ref());
-    }
+        libraries(&root, folders.as_ref())
+    })
+}
+
+/// Games installed in `library`, from its app manifests.
+fn installed(library: &Path) -> impl Iterator<Item = Application> + '_ {
+    let entries = std::fs::read_dir(library.join("steamapps")).into_iter().flatten().flatten();
+    entries.filter_map(move |entry| {
+        let name = entry.file_name();
+        let id = name
+            .to_str()
+            .and_then(|s| s.strip_prefix("appmanifest_"))
+            .and_then(|s| s.strip_suffix(".acf"))
+            .and_then(|s| s.parse().ok())?;
+        read(&entry.path()).as_ref().and_then(|v| game(library, id, v))
+    })
+}
+
+pub(super) fn extend(inventory: &mut Inventory, path: &Path) {
+    inventory.steam_roots = known_libraries();
     if let Some(root) = library_for(path)
         && !inventory.steam_roots.iter().any(|known| super::normalized(known) == super::normalized(&root))
     {
         inventory.steam_roots.push(root);
     }
     for library in &inventory.steam_roots {
-        let Ok(entries) = std::fs::read_dir(library.join("steamapps")) else { continue };
-        for entry in entries.flatten() {
-            let name = entry.file_name();
-            let Some(id) = name
-                .to_str()
-                .and_then(|s| s.strip_prefix("appmanifest_"))
-                .and_then(|s| s.strip_suffix(".acf"))
-                .and_then(|s| s.parse().ok())
-            else {
-                continue;
-            };
-            if let Some(app) = read(&entry.path()).as_ref().and_then(|v| game(library, id, v)) {
-                // Prefer the current manifest to a possibly stale uninstall registration.
-                inventory.applications.retain(|registered| registered.action != app.action);
-                inventory.applications.push(app);
-            }
+        for app in installed(library) {
+            // Prefer the current manifest to a possibly stale uninstall registration.
+            inventory.applications.retain(|registered| registered.action != app.action);
+            inventory.applications.push(app);
         }
     }
+}
+
+/// An installed game, drawn on the map as one tile with its name and library art.
+#[derive(Clone, Debug)]
+pub struct Game {
+    pub id: u32,
+    pub name: String,
+    location: String,
+}
+
+struct Catalog {
+    read_at: Instant,
+    refreshing: bool,
+    games: Arc<[Game]>,
+}
+
+fn catalog() -> Arc<[Game]> {
+    known_libraries()
+        .iter()
+        .flat_map(|library| installed(library).collect::<Vec<_>>())
+        .filter_map(|app| match app.action {
+            Some(Action::Steam(id)) => Some(Game { id, name: app.name, location: super::normalized(&app.location) }),
+            _ => None,
+        })
+        .collect()
+}
+
+/// Every library's games. The first call reads the manifests; later calls return at once and
+/// refresh them in the background when they are more than 30 seconds old.
+pub fn games() -> Arc<[Game]> {
+    static CATALOG: OnceLock<Mutex<Catalog>> = OnceLock::new();
+    let cell = CATALOG
+        .get_or_init(|| Mutex::new(Catalog { read_at: Instant::now(), refreshing: false, games: catalog() }));
+    let mut current = clawback_core::scan::lock(cell);
+    if !current.refreshing && current.read_at.elapsed() > Duration::from_secs(30) {
+        current.refreshing = true;
+        std::thread::spawn(move || {
+            let games = catalog();
+            let mut current = clawback_core::scan::lock(cell);
+            *current = Catalog { read_at: Instant::now(), refreshing: false, games };
+        });
+    }
+    Arc::clone(&current.games)
+}
+
+/// The game installed at `node`, a folder directly inside a `steamapps/common` folder.
+pub fn game_at(tree: &Tree, node: NodeId) -> Option<Game> {
+    let named = |node: NodeId, name: &str| node != NO_NODE && tree.node(node).name_lossy().eq_ignore_ascii_case(name);
+    let entry = tree.node(node);
+    if node == ROOT || !entry.is_dir() || !named(entry.parent, "common") {
+        return None;
+    }
+    let common = tree.node(entry.parent);
+    if entry.parent == ROOT || !named(common.parent, "steamapps") {
+        return None;
+    }
+    let path = super::normalized(&tree.path(node));
+    games().iter().find(|game| game.location == path).cloned()
+}
+
+/// Steam's cached library images for a game; newer clients keep each game's in a folder.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Art {
+    /// The 460x215 store header, for wide tiles.
+    Header,
+    /// The 600x900 library capsule, for tall tiles.
+    Capsule,
+    /// The small square icon, for tiles too small for either.
+    Icon,
+}
+
+pub fn art_path(id: u32, art: Art) -> Option<PathBuf> {
+    let cache = super::registry::steam_path()?.join("appcache").join("librarycache");
+    let folder = cache.join(id.to_string());
+    let candidates = match art {
+        Art::Header => vec![folder.join("header.jpg"), cache.join(format!("{id}_header.jpg"))],
+        Art::Capsule => vec![folder.join("library_600x900.jpg"), cache.join(format!("{id}_library_600x900.jpg"))],
+        Art::Icon => {
+            // The current client names the icon by its content hash.
+            let hashed = std::fs::read_dir(&folder).into_iter().flatten().flatten().map(|entry| entry.path()).find(|path| {
+                path.extension().is_some_and(|ext| ext.eq_ignore_ascii_case("jpg"))
+                    && path
+                        .file_stem()
+                        .and_then(|stem| stem.to_str())
+                        .is_some_and(|stem| stem.len() == 40 && stem.bytes().all(|b| b.is_ascii_hexdigit()))
+            });
+            hashed.into_iter().chain([cache.join(format!("{id}_icon.jpg"))]).collect()
+        }
+    };
+    candidates.into_iter().find(|path| path.is_file())
 }
 
 #[cfg(test)]

@@ -18,7 +18,7 @@ fn normalized(path: &Path) -> String {
 }
 
 /// Match Windows paths case-insensitively, including scans rooted inside `AppData`.
-fn find_path(tree: &Tree, path: &Path) -> Option<NodeId> {
+pub(super) fn find_path(tree: &Tree, path: &Path) -> Option<NodeId> {
     let wanted = normalized(path);
     let root = normalized(tree.root_path());
     let mut node = ROOT;

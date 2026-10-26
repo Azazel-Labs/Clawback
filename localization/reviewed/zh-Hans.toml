@@ -120,6 +120,10 @@ translation = "单击以清理临时文件"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "单击以清空该驱动器的回收站"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "由 Windows 管理。点击打开存储设置，安全地释放空间。"
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX·WSL 虚拟磁盘。单击可查看磁盘详细信息、浏览文件或回收空间。"
@@ -547,6 +551,10 @@ translation = "文件较多"
 source = "Make room for what matters."
 translation = "为重要的事物腾出空间。"
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "这些文件由 Windows 自行创建并决定大小。请在 Windows 设置中更改虚拟内存或休眠，而不要删除它们。"
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "已统计字节数占驱动器已用空间的比例；这是估算值，并非文件数量的百分比。"
@@ -643,6 +651,10 @@ translation = "在 Finder 中打开"
 source = "Open selected item"
 translation = "打开所选项目"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "打开存储设置"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "其他文件夹…"
@@ -730,6 +742,10 @@ translation = "回收 WSL 磁盘空间"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "压缩之前，保存您的工作，退出 Docker Desktop 并关闭 WSL 会话。在 PowerShell 中运行此命令以停止所有 WSL 发行版。保持 Docker 和 WSL 停止，直到压缩完成。 Windows 将请求管理员权限。"
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "回收站"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "正在等待 Windows 授权…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  总计 { $total }  -  可用 { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows 操作系统"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows 系统文件"
 
 [messages.workers]
 source = """

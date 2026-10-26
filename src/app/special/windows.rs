@@ -1,12 +1,25 @@
 //! Providers compiled into Windows builds, in discovery priority order.
 pub(in crate::app) mod programs;
 pub(in crate::app) mod recycle_bin;
+pub(in crate::app) mod system;
 pub(in crate::app) mod temp_folder;
 pub(in crate::app) mod wsl_disks;
 
 use super::{Kind, Provider};
 
 pub(super) const PROVIDERS: &[Provider] = &[
+    Provider {
+        kind: Kind::WindowsOs,
+        // Drives without the Windows folder still group their reserved entries.
+        cell: Some(|tree, _| system::find(tree).or_else(|| system::reserved(tree).into_iter().flatten().next())),
+        recognizes: None,
+        activate: Some(|app, _, _| {
+            if let Err(error) = crate::platform::open(std::path::Path::new(system::STORAGE_SETTINGS)) {
+                app.error = Some(error);
+            }
+        }),
+        removal: None,
+    },
     Provider {
         kind: Kind::RecycleBin,
         cell: Some(recycle_bin::find),

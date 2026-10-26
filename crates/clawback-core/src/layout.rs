@@ -112,6 +112,21 @@ pub fn build(
     settings: &LayoutSettings,
     free: Option<u64>,
 ) -> Vec<DisplayBox> {
+    build_grouped(tree, view, width, height, settings, free, &[])
+}
+
+/// [`build`], drawing the entries in `group` as one box: the first member's, sized to
+/// hold them all, such as an operating system's folder with the files it reserves. The
+/// members should share a parent; the others get no boxes of their own.
+pub fn build_grouped(
+    tree: &Tree,
+    view: NodeId,
+    width: i32,
+    height: i32,
+    settings: &LayoutSettings,
+    free: Option<u64>,
+    group: &[NodeId],
+) -> Vec<DisplayBox> {
     let mut out = Vec::new();
     if width < 2 || height < 2 {
         return out;
@@ -129,15 +144,28 @@ pub fn build(
     while let Some(task) = stack.pop() {
         match task {
             Task::Folder { x, y, w, h, node, depth } => {
+                let mut grouped = 0;
                 let mut list: Vec<Entry> = tree
                     .node(node)
                     .children
                     .iter()
                     .filter_map(|&c| {
                         let n = tree.node(c);
-                        (!n.has(flags::REMOVED)).then_some((n.size, Item::Node(c)))
+                        if n.has(flags::REMOVED) {
+                            return None;
+                        }
+                        if group.contains(&c) {
+                            grouped += n.size;
+                            return None;
+                        }
+                        Some((n.size, Item::Node(c)))
                     })
                     .collect();
+                if grouped > 0
+                    && let Some(&first) = group.iter().find(|&&member| tree.node(member).parent == node)
+                {
+                    list.push((grouped, Item::Node(first)));
+                }
                 if first {
                     if let Some(f) = free {
                         list.push((f, Item::Free));
@@ -303,6 +331,20 @@ mod tests {
         assert_eq!(b[hit_test(&b, 100, 100).unwrap()].item, Item::Node(a));
         // Exact edges are outside (strict comparison).
         assert!(hit_test(&b, 0, 0).is_none());
+    }
+
+    #[test]
+    fn grouped_entries_share_the_first_members_box() {
+        let t = tree();
+        let f1 = t.find_path(Path::new("/r/f1")).unwrap();
+        let f2 = t.find_path(Path::new("/r/f2")).unwrap();
+        let b = build_grouped(&t, ROOT, 800, 600, &LayoutSettings::default(), None, &[f1, f2]);
+        assert!(b.iter().all(|x| x.item != Item::Node(f2)));
+        let group: Vec<_> = b.iter().filter(|x| x.item == Item::Node(f1)).collect();
+        assert_eq!(group.len(), 1);
+        // Same geometry as the right half when f1 and f2 were drawn separately.
+        assert_eq!((group[0].x, group[0].y, group[0].w, group[0].h), (479, 0, 320, 599));
+        assert_eq!(b[hit_test(&b, 600, 300).unwrap()].item, Item::Node(f1));
     }
 
     #[test]

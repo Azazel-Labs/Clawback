@@ -120,6 +120,10 @@ translation = "按一下以清理暫存檔案"
 source = "Click to empty this drive’s Recycle Bin"
 translation = "按一下以清空該磁碟機的資源回收筒"
 
+[messages.click-to-open-storage-settings]
+source = "Managed by Windows. Click to open Storage settings and free space safely."
+translation = "由 Windows 管理。按一下以開啟儲存體設定，安全地釋放空間。"
+
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
 translation = "VHDX·WSL 虛擬磁碟。按一下可查看磁碟詳細資料、瀏覽檔案或回收空間。"
@@ -547,6 +551,10 @@ translation = "檔案較多"
 source = "Make room for what matters."
 translation = "為重要的事物騰出空間。"
 
+[messages.managed-by-windows]
+source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
+translation = "這些檔案由 Windows 自行建立並決定大小。請在 Windows 設定中變更虛擬記憶體或休眠，而不要刪除它們。"
+
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
 translation = "已統計位元組數占磁碟機已用空間的比例；這是估計值，並非檔案數量的百分比。"
@@ -643,6 +651,10 @@ translation = "在 Finder 中開啟"
 source = "Open selected item"
 translation = "開啟選取的項目"
 
+[messages.open-storage-settings]
+source = "Open Storage settings"
+translation = "開啟儲存體設定"
+
 [messages.other-folder]
 source = "Other Folder..."
 translation = "其他資料夾…"
@@ -730,6 +742,10 @@ translation = "回收 WSL 磁碟空間"
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
 translation = "壓縮之前，請儲存您的工作，退出 Docker Desktop 並關閉 WSL 工作階段。在 PowerShell 中執行此命令以停止所有 WSL 發行版本。保持 Docker 和 WSL 停止，直到壓縮完成。 Windows 將請求系統管理員權限。"
+
+[messages.recycle-bin]
+source = "Recycle Bin"
+translation = "資源回收筒"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
@@ -1168,6 +1184,14 @@ translation = "正在等待 Windows 授權…"
 [messages.window-title]
 source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
 translation = "{ $path }  -  總計 { $total }  -  可用 { $free }  -  Clawback"
+
+[messages.windows-os]
+source = "Windows OS"
+translation = "Windows 作業系統"
+
+[messages.windows-system-files]
+source = "Windows system files"
+translation = "Windows 系統檔案"
 
 [messages.workers]
 source = """
