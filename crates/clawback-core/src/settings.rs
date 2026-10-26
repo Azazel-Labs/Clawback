@@ -234,8 +234,8 @@ fields! {
     "dedupe_hardlinks" => dedupe_hardlinks,
 }
 
-/// Platform configuration directory for Clawback.
-fn config_dir() -> Option<PathBuf> {
+/// Platform configuration directory for Clawback, which also holds saved snapshots.
+pub fn config_dir() -> Option<PathBuf> {
     let env = |k: &str| std::env::var_os(k).filter(|v| !v.is_empty()).map(PathBuf::from);
     if cfg!(windows) {
         env("APPDATA").map(|p| p.join("Clawback"))

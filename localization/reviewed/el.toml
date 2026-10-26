@@ -92,6 +92,42 @@ translation = "Ακύρωση"
 source = "Catalan"
 translation = "Καταλανικά"
 
+[messages.changes]
+source = "Changes"
+translation = "Αλλαγές"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "από { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Όλα"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Σύγκριση…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } ελευθερώθηκαν"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Μεγάλωσαν"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } περισσότερα"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Τίποτα δεν άλλαξε από αυτό το στιγμιότυπο."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Μίκρυναν"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Απλοποιημένα Κινέζικα"
@@ -738,6 +774,90 @@ translation = "Έτοιμο"
 source = "Recent"
 translation = "Πρόσφατα"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Ανάκτηση"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Κρυφή μνήμη του { $browser }· κλείστε πρώτα το { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Σημειωμένη από το πρόγραμμά της ως κρυφή μνήμη που ξαναδημιουργεί"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Κρυφές μνήμες"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Εκκαθάριση"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Υπολείμματα ανάπτυξης"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Αναζήτηση χώρου για ανάκτηση…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Βρέθηκαν { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Κρυφή μνήμη έργου Gradle· ξαναδημιουργείται στην επόμενη μεταγλώττιση"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Τελευταίο παιχνίδι: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Δεν έχει παιχτεί ποτέ"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Πακέτα npm· το npm install τα επαναφέρει"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Δεν υπάρχει κάτι προφανές για ανάκτηση εδώ."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Κρυφή μνήμη λήψεων του { $tool }· γεμίζει ξανά όταν χρειάζεται"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Πακέτα CocoaPods· το pod install τα επαναφέρει"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Εικονικό περιβάλλον Python· δημιουργήστε το ξανά από τις απαιτήσεις σας"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Διαγραμμένα στοιχεία που περιμένουν άδειασμα"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Έξοδος μεταγλώττισης Rust· το cargo build τη δημιουργεί ξανά"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Κάντε κλικ για να εμφανιστεί στον χάρτη."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Προσωρινά αρχεία που άφησαν οι εφαρμογές"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Εικονικός δίσκος WSL· δεν μικραίνει μόνος του"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Η συμπύκνωση διατηρεί τα περιεχόμενα του δίσκου και μειώνει το μέγεθος του αρχείου του στα Windows ανακτώντας μπλοκ γεμάτα μηδενικά. Μπορεί να ανακτήσει λίγο ή καθόλου χώρο. Καθαρίστε πρώτα τα ανεπιθύμητα δεδομένα μέσα στο Docker ή το Linux."
@@ -921,6 +1041,102 @@ translation = "Μέγεθος:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Μέγεθος στο δίσκο:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Άνοιγμα αρχείου στιγμιότυπου"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Σύγκριση με στιγμιότυπο…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Σύγκριση"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Διαγραφή αυτού του στιγμιότυπου"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Όλα τα αρχεία (μεγαλύτερο· ακριβείς αλλαγές αρχείων)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Μόνο φάκελοι (μικρότερο)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Φάκελοι και αρχεία τουλάχιστον"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Όλα τα αρχεία"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Στιγμιότυπο Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Αρχεία { $size } ή μεγαλύτερα"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Μόνο φάκελοι"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Όνομα (προαιρετικό)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Φόρτωση στιγμιότυπων…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Δεν υπάρχει φάκελος ρυθμίσεων για τη φύλαξη στιγμιότυπων."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Δεν υπάρχουν ακόμα αποθηκευμένα στιγμιότυπα του { $path }. Αποθηκεύστε ένα από Αρχείο › Αποθήκευση στιγμιότυπου."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Αυτό το στιγμιότυπο είναι του { $path }, όχι του φακέλου που βλέπετε."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Σύγκριση με στιγμιότυπο"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Αποθήκευση στιγμιότυπου…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Ένα στιγμιότυπο καταγράφει αυτή τη σάρωση, ώστε αργότερα να δείτε τι μεγάλωσε, τι μίκρυνε, τι εμφανίστηκε ή τι εξαφανίστηκε."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Αποθήκευση στιγμιότυπου"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Δεν ήταν δυνατή η αποθήκευση του στιγμιότυπου: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Αποθήκευση στιγμιότυπου"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Αποθήκευση…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Διακοπή σύγκρισης"
 
 [messages.source-code]
 source = "Source code"

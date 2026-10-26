@@ -57,6 +57,8 @@ pub enum Command {
     Rescan,
     ToggleFree,
     Properties(NodeId),
+    /// Bring an entry into view on the map and select it.
+    Show(NodeId),
 }
 
 /// Everything the map needs to draw one frame.
@@ -74,6 +76,8 @@ pub struct MapInput<'a> {
     /// Items queued for the Recycle Bin; `true` marks the one in progress.
     pub deleting: &'a [(NodeId, bool)],
     pub special: special::Inventory,
+    /// Colors from a snapshot comparison, with an id that changes whenever they do.
+    pub tint: Option<(u64, &'a Arc<maprender::Tint>)>,
 }
 
 impl MapInput<'_> {
@@ -95,6 +99,7 @@ struct LayoutKey {
     schemes: [usize; 2],
     muted: bool,
     special: special::Inventory,
+    tint: u64,
 }
 
 // Generations may advance while labels prepare. A complete older snapshot is
@@ -120,6 +125,8 @@ pub struct MapView {
     boxes: Vec<DisplayBox>,
     key: Option<LayoutKey>,
     selected: Option<usize>,
+    /// An entry to select once a layout showing it is ready.
+    pending_select: Option<NodeId>,
     /// Time of the last mouse or keyboard input; tips wait for it to settle.
     last_input: f64,
     staging: Option<(LayoutKey, LayoutResult)>,
@@ -143,6 +150,7 @@ impl Default for MapView {
             boxes: Vec::new(),
             key: None,
             selected: None,
+            pending_select: None,
             last_input: 0.0,
             staging: None,
             label_cache: LabelCache::default(),
@@ -191,6 +199,20 @@ impl MapView {
 
     pub fn clear_selection(&mut self) {
         self.selected = None;
+    }
+
+    /// Select `node`'s box now, or as soon as a layout that shows it is ready.
+    pub fn select(&mut self, node: NodeId) {
+        self.pending_select = Some(node);
+        self.apply_pending_select();
+    }
+
+    fn apply_pending_select(&mut self) {
+        let Some(node) = self.pending_select else { return };
+        if let Some(index) = self.boxes.iter().position(|b| b.node() == Some(node)) {
+            self.selected = Some(index);
+            self.pending_select = None;
+        }
     }
 
     pub fn zoom_in(&mut self) {
@@ -316,6 +338,7 @@ impl MapView {
             schemes: [input.settings.file_color, input.settings.folder_color],
             muted: input.settings.mute_palette,
             special: input.special,
+            tint: input.tint.map_or(0, |(id, _)| id),
         };
         if let Some((pending_key, result)) = Job::poll(&mut self.layout_rx) {
             if same_view(pending_key, key) {
@@ -341,6 +364,7 @@ impl MapView {
             self.boxes = boxes;
             self.key = Some(ready_key);
             self.clear_transient();
+            self.apply_pending_select();
         }
         if self.key != Some(key) && self.layout_rx.is_none() && self.staging.is_none() {
             self.layout_started = crate::perf::enabled().then(std::time::Instant::now);
@@ -348,6 +372,7 @@ impl MapView {
             let tree = Arc::clone(input.tree);
             let origin = rect.min;
             let free = [input.disk_free, input.disk_total];
+            let tint = input.tint.map(|(_, tint)| Arc::clone(tint));
             self.layout_rx = Some(Job::spawn(key, ctx, move || {
                 let _span = crate::perf::span("worker.map_layout");
                 let grouped = key.special.grouped();
@@ -355,7 +380,7 @@ impl MapView {
                 key.special.collapse_layout(&mut boxes);
                 special::collapse_games(&tree, &mut boxes);
                 crate::perf::counter("map.boxes", boxes.len() as f64);
-                let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, key.muted, free);
+                let prepared = PreparedMap::build(&tree, &boxes, origin, key.schemes, key.muted, free, tint.as_deref());
                 (tree, boxes, prepared)
             }));
         }
@@ -754,6 +779,7 @@ mod tests {
             disk_total: 100,
             deleting: &[],
             special: special::Inventory::default(),
+            tint: None,
         };
         let ctx = egui::Context::default();
         let mut map = MapView::default();
@@ -819,6 +845,7 @@ mod tests {
                             disk_total: tree.root().size,
                             deleting: &[],
                             special: special::Inventory::default(),
+                            tint: None,
                         }),
                     );
                 },
@@ -844,7 +871,7 @@ mod tests {
                 folder: false,
             })
             .collect();
-        let prepared = PreparedMap::build(&replacement, &boxes, map.rect.min, [0, 0], false, [0, 0]);
+        let prepared = PreparedMap::build(&replacement, &boxes, map.rect.min, [0, 0], false, [0, 0], None);
         map.staging = Some((key, (replacement.clone(), boxes, prepared)));
         frame(&mut map, &replacement, 1);
         assert!(Arc::ptr_eq(map.display_tree.as_ref().unwrap(), &old));
@@ -919,6 +946,7 @@ mod tests {
             disk_total: tree.root().size,
             deleting: &[],
             special: special::Inventory::default(),
+            tint: None,
         };
         let ctx = egui::Context::default();
         theme::apply(&ctx, "en");

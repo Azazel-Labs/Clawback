@@ -92,6 +92,42 @@ translation = "キャンセル"
 source = "Catalan"
 translation = "カタロニア語"
 
+[messages.changes]
+source = "Changes"
+translation = "変更"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "{ $snapshot } 以降"
+
+[messages.changes-all]
+source = "All"
+translation = "すべて"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "比較しています…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } 解放"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "増加"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } 増加"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "このスナップショット以降、変更はありません。"
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "減少"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "中国語（簡体字）"
@@ -731,6 +767,90 @@ translation = "準備完了"
 source = "Recent"
 translation = "最近使った項目"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "空き容量の回収"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "{ $browser } のキャッシュ。先に { $browser } を閉じてください"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "作成元のプログラムが再作成できるキャッシュとして指定しています"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "キャッシュ"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "クリーンアップ"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "開発の残り"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "回収できる容量を探しています…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } 見つかりました"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle プロジェクト キャッシュ。次のビルドで再構築されます"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "最終プレイ: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "未プレイ"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm パッケージ。npm install で復元できます"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "ここには明らかに回収できるものはありません。"
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "{ $tool } のダウンロード キャッシュ。必要に応じて再取得されます"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods パッケージ。pod install で復元できます"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python 仮想環境。要件から作り直せます"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "空にするのを待っている削除済みの項目"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust のビルド出力。cargo build で再作成されます"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "クリックするとマップに表示します。"
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "アプリが残した一時ファイル"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL 仮想ディスク。自動では縮小しません"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "圧縮はディスクの内容を保存し、ゼロで埋められたブロックを再利用することで Windows ファイル サイズを削減します。スペースがほとんど、またはまったく再利用されない場合があります。まず、Docker または Linux 内の不要なデータをクリーンアップします。"
@@ -908,6 +1028,102 @@ translation = "サイズ:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "ディスク上のサイズ:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "スナップショット ファイルを開く"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "スナップショットと比較…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "比較"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "このスナップショットを削除"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "すべてのファイル (最大、ファイルの変更を正確に把握)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "フォルダーのみ (最小)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "フォルダーと次のサイズ以上のファイル"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "すべてのファイル"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback スナップショット"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "{ $size } 以上のファイル"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "フォルダーのみ"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "名前 (省略可)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "スナップショットを読み込んでいます…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "スナップショットを保存する設定フォルダーがありません。"
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "{ $path } の保存済みスナップショットはまだありません。[ファイル] › [スナップショットを保存] で保存してください。"
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "このスナップショットは表示中のフォルダーではなく { $path } のものです。"
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "スナップショットと比較"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "スナップショットを保存…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "スナップショットはこのスキャンを記録します。後で何が増え、減り、追加され、消えたかを確認できます。"
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "スナップショットを保存"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "スナップショットを保存できませんでした: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "スナップショットの保存"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "保存しています…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "比較を終了"
 
 [messages.source-code]
 source = "Source code"

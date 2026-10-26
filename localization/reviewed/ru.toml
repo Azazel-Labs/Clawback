@@ -92,6 +92,42 @@ translation = "Отмена"
 source = "Catalan"
 translation = "Каталанский"
 
+[messages.changes]
+source = "Changes"
+translation = "Изменения"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "с { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Все"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Сравнение…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } освобождено"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Выросло"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } прибавилось"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "С этого снимка ничего не изменилось."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Уменьшилось"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Китайский (упрощённый)"
@@ -742,6 +778,90 @@ translation = "Готово"
 source = "Recent"
 translation = "Недавние"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Освободить"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Кэш { $browser }; сначала закройте { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Программа пометила его как кэш, который она создаст заново"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Кэши"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Очистка"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Остатки разработки"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Поиск места, которое можно освободить…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Найдено { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Кэш проекта Gradle; пересоздаётся при следующей сборке"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Последний запуск: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Ни разу не запускалась"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Пакеты npm; npm install восстановит их"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Здесь нет ничего очевидного для освобождения."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Кэш загрузок { $tool }; заполняется заново при необходимости"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Пакеты CocoaPods; pod install восстановит их"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Виртуальное окружение Python; создайте его заново по зависимостям"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Удалённые объекты, ожидающие очистки"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Результат сборки Rust; cargo build создаст его заново"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Нажмите, чтобы показать на карте."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Временные файлы, оставленные приложениями"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Виртуальный диск WSL; сам он не уменьшается"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Сжатие сохраняет содержимое диска и уменьшает размер его файла в Windows за счёт освобождения блоков, заполненных нулями. Оно может освободить мало места или не освободить его вовсе. Сначала удалите ненужные данные внутри Docker или Linux."
@@ -929,6 +1049,102 @@ translation = "Размер:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "На диске:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Открыть файл снимка"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Сравнить со снимком…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Сравнить"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Удалить этот снимок"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Все файлы (больше всего; точные изменения файлов)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Только папки (меньше всего)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Папки и файлы размером от"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Все файлы"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Снимок Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Файлы от { $size }"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Только папки"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Имя (необязательно)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Загрузка снимков…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Нет папки настроек, где можно хранить снимки."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Сохранённых снимков { $path } пока нет. Сохраните снимок через Файл › Сохранить снимок."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Этот снимок сделан для { $path }, а не для просматриваемой папки."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Сравнить со снимком"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Сохранить снимок…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Снимок записывает это сканирование, чтобы позже увидеть, что выросло, уменьшилось, появилось или исчезло."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Сохранить снимок"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Не удалось сохранить снимок: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Сохранить снимок"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Сохранение…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Прекратить сравнение"
 
 [messages.source-code]
 source = "Source code"

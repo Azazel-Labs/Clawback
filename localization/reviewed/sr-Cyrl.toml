@@ -92,6 +92,42 @@ translation = "Откажи"
 source = "Catalan"
 translation = "Каталонски"
 
+[messages.changes]
+source = "Changes"
+translation = "Промене"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "од { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Све"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Пореди се…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } ослобођено"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Порасло"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } више"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Ништа се није променило од овог снимка."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Смањено"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Поједностављени кинески"
@@ -740,6 +776,90 @@ translation = "Спремно"
 source = "Recent"
 translation = "Недавно"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Поврати"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Кеш за { $browser }; прво затворите { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Програм га је означио као кеш који поново прави"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Кешеви"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Чишћење"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Остаци развоја"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Тражи се простор за враћање…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Пронађено { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Кеш Gradle пројекта; поново се гради при следећем превођењу"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Последњи пут играно { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Никад играно"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm пакети; npm install их враћа"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Овде нема ничег очигледног за враћање."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Кеш преузимања за { $tool }; поново се попуњава по потреби"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods пакети; pod install их враћа"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python виртуелно окружење; поново га направите из захтева"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Обрисане ставке које чекају пражњење"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust излаз превођења; cargo build га поново прави"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Кликните да бисте га приказали на мапи."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Привремене датотеке које су апликације оставиле"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL виртуелни диск; не смањује се сам"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Сажимање чува садржај диска и смањује величину његове Виндовс датотеке враћањем блокова испуњених нулама. Може повратити мало или нимало простора. Прво очистите нежељене податке унутар Docker-а или Линук-а."
@@ -925,6 +1045,102 @@ translation = "Величина:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Величина на диску:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Отвори датотеку снимка"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Упореди са снимком…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Упореди"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Обриши овај снимак"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Све датотеке (највећи; тачне промене датотека)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Само фасцикле (најмањи)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Фасцикле и датотеке од најмање"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Све датотеке"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback снимак"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Датотеке од { $size } или веће"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Само фасцикле"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Назив (опционо)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Учитавају се снимци…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Не постоји фасцикла подешавања у којој би се чували снимци."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Још нема сачуваних снимака за { $path }. Сачувајте један преко Датотека › Сачувај снимак."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Тај снимак је за { $path }, а не за фасциклу коју прегледате."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Упореди са снимком"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Сачувај снимак…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Снимак бележи ово скенирање, па касније можете видети шта је порасло, смањило се, појавило се или нестало."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Сачувај снимак"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Снимак није могуће сачувати: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Сачувај снимак"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Чува се…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Заустави поређење"
 
 [messages.source-code]
 source = "Source code"

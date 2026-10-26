@@ -92,6 +92,42 @@ translation = "Kanselleer"
 source = "Catalan"
 translation = "Katalaans"
 
+[messages.changes]
+source = "Changes"
+translation = "Veranderinge"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "sedert { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Alles"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Vergelyk tans…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } vrygemaak"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Gegroei"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } gegroei"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Niks het sedert hierdie momentopname verander nie."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Gekrimp"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Vereenvoudigde Sjinees"
@@ -738,6 +774,90 @@ translation = "Gereed"
 source = "Recent"
 translation = "Onlangs"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Herwin"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "{ $browser }-kas; maak eers { $browser } toe"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Deur sy program gemerk as ’n kas wat dit weer skep"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Kasgeheues"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Opruiming"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Ontwikkelaar-oorblyfsels"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Soek ruimte om te herwin…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } gevind"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle-projekkas; herbou met die volgende bou"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Laas gespeel { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Nog nooit gespeel nie"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm-pakkette; npm install herstel hulle"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Niks voor die hand liggend om hier te herwin nie."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "{ $tool }-aflaaikas; word weer gevul wanneer nodig"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods-pakkette; pod install herstel hulle"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python virtuele omgewing; skep dit weer uit jou vereistes"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Geskrapte items wat wag om leeggemaak te word"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust-bou-uitvoer; cargo build skep dit weer"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Klik om dit op die kaart te wys."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Tydelike lêers wat programme agtergelaat het"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL virtuele skyf; dit krimp nie vanself nie"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Verdigting bewaar die inhoud van die skyf en verklein sy lêer in Windows deur blokke wat met nulle gevul is, terug te eis. Dit kan min of geen spasie herwin nie. Maak eers ongewenste data binne Docker of Linux skoon."
@@ -921,6 +1041,102 @@ translation = "Grootte:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Grootte op skyf:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Maak ’n momentopname-lêer oop"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Vergelyk met momentopname…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Vergelyk"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Skrap hierdie momentopname"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Elke lêer (grootste; presiese lêerveranderinge)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Slegs vouers (kleinste)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Vouers en lêers van minstens"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Elke lêer"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback-momentopname"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Lêers van { $size } of meer"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Slegs vouers"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Naam (opsioneel)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Laai momentopnames…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Daar is geen instellingsvouer om momentopnames in te hou nie."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Nog geen gestoorde momentopnames van { $path } nie. Stoor een met Lêer › Stoor momentopname."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Daardie momentopname is van { $path }, nie die vouer wat jy bekyk nie."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Vergelyk met ’n momentopname"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Stoor momentopname…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "’n Momentopname teken hierdie skandering aan, sodat jy later kan sien wat gegroei, gekrimp, verskyn of verdwyn het."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Stoor momentopname"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Kon nie die momentopname stoor nie: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Stoor ’n momentopname"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Stoor tans…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Hou op vergelyk"
 
 [messages.source-code]
 source = "Source code"

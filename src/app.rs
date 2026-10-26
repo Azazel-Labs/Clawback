@@ -1,9 +1,11 @@
 //! The application window: SpaceMonger's toolbar, commands and dialogs
 //! around the folder map.
+mod reclaim;
+mod snapshots;
 pub(crate) mod special;
+mod widgets;
 
 use crate::i18n::tr;
-mod widgets;
 
 use crate::directoryview::DirectoryView;
 use crate::mapview::{Command, MapInput, MapView};
@@ -179,6 +181,25 @@ enum Tool {
     Setup,
     About,
     Unreadable,
+    SaveSnapshot,
+    CompareSnapshot,
+    StopComparing,
+}
+
+/// What the directory panel asks for: a folder to view, or its side tab's commands.
+enum PanelOutput {
+    View(NodeId),
+    Commands(Vec<Command>),
+}
+
+/// The panel beside the directory tree.
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
+enum SideTab {
+    Types,
+    #[default]
+    Reclaim,
+    /// Differences from a snapshot, while comparing with one.
+    Changes,
 }
 
 #[derive(Default)]
@@ -195,6 +216,10 @@ pub struct ClawbackApp {
     map: MapView,
     directories: DirectoryView,
     file_types: crate::filetypes::FileTypes,
+    reclaim: reclaim::Reclaim,
+    snapshots: snapshots::Snapshots,
+    side_tab: SideTab,
+    /// In a narrow window, whether the side tab replaces the directory tree.
     narrow_types: bool,
     open: Option<OpenDialog>,
     setup: Option<Settings>,
@@ -291,6 +316,15 @@ impl ClawbackApp {
                 app.history.push(tree.root_path().to_path_buf());
             }
             app.doc = Some(Doc { view, disk: Some(crate::demo::disk()), is_mount: true, ..Doc::counted(1, tree) });
+            match std::env::var("CLAWBACK_DEMO_TAB").as_deref() {
+                Ok("reclaim") => app.side_tab = SideTab::Reclaim,
+                Ok("changes") => {
+                    let baseline = app.doc.as_ref().map(|doc| crate::demo::baseline(&doc.tree));
+                    app.snapshots.compare_with(baseline.expect("demo document"));
+                    app.side_tab = SideTab::Changes;
+                }
+                _ => {}
+            }
             if let Ok(mode) = std::env::var("CLAWBACK_DEMO_SCAN") {
                 app.scan = Some(Running::demo(mode == "paused"));
             }
@@ -651,6 +685,15 @@ impl ClawbackApp {
                 self.settings.show_free = !self.settings.show_free;
                 self.save_settings();
             }
+            Command::Show(n) => {
+                if let Some(d) = &self.doc
+                    && d.tree.is_live(n)
+                {
+                    let parent = d.tree.parent(n).unwrap_or(ROOT);
+                    self.apply(Command::ZoomTo(parent), ctx);
+                    self.map.select(n);
+                }
+            }
             Command::Properties(n) => {
                 if let Some(d) = &self.doc {
                     self.props = Some(Props::request(d.tree.clone(), n, ctx));
@@ -892,6 +935,13 @@ impl ClawbackApp {
                 }
             }
             Tool::Setup => self.setup = Some(self.settings.clone()),
+            Tool::SaveSnapshot => self.snapshots.open_save(),
+            Tool::CompareSnapshot => {
+                if let Some(doc) = &self.doc {
+                    self.snapshots.open_picker(&doc.root(), ctx);
+                }
+            }
+            Tool::StopComparing => self.snapshots.stop(),
             Tool::About => self.about = true,
             Tool::Unreadable => self.show_unreadable = true,
             Tool::ZoomFull | Tool::ZoomOut => {}
@@ -918,6 +968,16 @@ impl ClawbackApp {
                 }
                 if menu_item(ui, tr!("rescan"), ready, "F5") {
                     action = Some(Tool::Rescan);
+                }
+                ui.separator();
+                if menu_item(ui, tr!("snapshot-save"), ready, "") {
+                    action = Some(Tool::SaveSnapshot);
+                }
+                if menu_item(ui, tr!("snapshot-compare"), ready, "") {
+                    action = Some(Tool::CompareSnapshot);
+                }
+                if self.snapshots.comparing() && menu_item(ui, tr!("snapshot-stop"), true, "") {
+                    action = Some(Tool::StopComparing);
                 }
                 ui.separator();
                 if menu_item(ui, tr!("open-selected-item"), ready && selected, "") {
@@ -1470,24 +1530,67 @@ impl ClawbackApp {
             .show(ui, |ui| {
                 let doc = self.doc.as_ref()?;
                 let scope = doc.selected_folder(self.map.selected_node());
+                let disable_delete = self.settings.disable_delete;
+                let comparing = self.snapshots.comparing();
+                if !comparing && self.side_tab == SideTab::Changes {
+                    self.side_tab = SideTab::Types;
+                }
+                let mut side = |ui: &mut Ui, tab: SideTab| match tab {
+                    SideTab::Types => {
+                        self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope);
+                        Vec::new()
+                    }
+                    SideTab::Reclaim => {
+                        self.reclaim.ui(ui, &doc.tree, doc.id, doc.generation, doc.is_mount, disable_delete)
+                    }
+                    SideTab::Changes => self.snapshots.changes_ui(ui),
+                };
                 if ui.available_width() >= 760.0 {
-                    egui::Panel::right("file-types-panel-v2")
+                    let tab = &mut self.side_tab;
+                    let commands = egui::Panel::right("file-types-panel-v2")
                         .resizable(true)
                         .default_size(ui.available_width() * 0.32)
                         .size_range(300.0..=ui.available_width() * 0.6)
                         .frame(egui::Frame::new().inner_margin(egui::Margin::symmetric(8, 0)))
-                        .show(ui, |ui| self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope));
+                        .show(ui, |ui| {
+                            let mut list =
+                                vec![(SideTab::Reclaim, tr!("reclaim")), (SideTab::Types, tr!("file-types"))];
+                            if comparing {
+                                list.push((SideTab::Changes, tr!("changes")));
+                            }
+                            widgets::tabs(ui, tab, &list);
+                            side(ui, *tab)
+                        })
+                        .inner;
+                    if !commands.is_empty() {
+                        return Some(PanelOutput::Commands(commands));
+                    }
                 } else {
-                    ui.horizontal(|ui| {
-                        ui.selectable_value(&mut self.narrow_types, false, tr!("directories"));
-                        ui.selectable_value(&mut self.narrow_types, true, tr!("file-types"));
-                    });
-                    if self.narrow_types {
-                        self.file_types.ui(ui, &doc.tree, doc.id, doc.generation, scope);
-                        return None;
+                    let tab = &mut self.side_tab;
+                    let narrow = &mut self.narrow_types;
+                    // One strip: the directory tree, or one of the side tabs in its place.
+                    let mut list = vec![
+                        (None, tr!("directories")),
+                        (Some(SideTab::Reclaim), tr!("reclaim")),
+                        (Some(SideTab::Types), tr!("file-types")),
+                    ];
+                    if comparing {
+                        list.push((Some(SideTab::Changes), tr!("changes")));
+                    }
+                    let mut shown = narrow.then_some(*tab);
+                    widgets::tabs(ui, &mut shown, &list);
+                    *narrow = shown.is_some();
+                    if let Some(chosen) = shown {
+                        *tab = chosen;
+                    }
+                    if *narrow {
+                        let commands = side(ui, *tab);
+                        return (!commands.is_empty()).then_some(PanelOutput::Commands(commands));
                     }
                 }
-                self.directories.ui(ui, &doc.tree, doc.id, doc.generation, scope, self.scan.is_some())
+                self.directories
+                    .ui(ui, &doc.tree, doc.id, doc.generation, scope, self.scan.is_some())
+                    .map(PanelOutput::View)
             });
         if dragging && below_toolbar > 0.0 {
             let split = to_permille(folder.response.rect.height(), below_toolbar);
@@ -1496,8 +1599,14 @@ impl ClawbackApp {
         } else if std::mem::take(&mut self.split_dragging) {
             self.save_settings();
         }
-        if let Some(node) = folder.inner {
-            self.apply(Command::ZoomTo(node), ctx);
+        match folder.inner {
+            Some(PanelOutput::View(node)) => self.apply(Command::ZoomTo(node), ctx),
+            Some(PanelOutput::Commands(commands)) => {
+                for command in commands {
+                    self.apply(command, ctx);
+                }
+            }
+            None => {}
         }
     }
 
@@ -1541,6 +1650,8 @@ impl Drop for ClawbackApp {
             let _span = crate::perf::span("shutdown.panels_drop");
             drop(std::mem::take(&mut self.directories));
             drop(std::mem::take(&mut self.file_types));
+            drop(std::mem::take(&mut self.reclaim));
+            drop(std::mem::take(&mut self.snapshots));
         }
     }
 }
@@ -1583,6 +1694,9 @@ impl eframe::App for ClawbackApp {
             self.directory_panel(ui, &ctx);
         }
 
+        if let Some(doc) = &self.doc {
+            self.snapshots.sync(&ctx, &doc.tree, doc.id, doc.generation);
+        }
         let commands = egui::CentralPanel::default()
             .frame(egui::Frame::new().fill(theme::BG).inner_margin(8))
             .show(ui, |ui| {
@@ -1607,6 +1721,7 @@ impl eframe::App for ClawbackApp {
                     disk_total: d.total_space(),
                     deleting: &pending_delete,
                     special: d.special(),
+                    tint: self.snapshots.tint(),
                 });
                 let mut out = self.map.ui(ui, input.as_ref());
                 if self.doc.is_none() && self.scan.is_none() {
@@ -1651,6 +1766,14 @@ impl eframe::App for ClawbackApp {
         self.confirm_dialog(&ctx);
         self.setup_dialog(&ctx);
         self.about_dialog(&ctx);
+        match self.snapshots.dialogs(&ctx, self.doc.as_ref().map(|d| &d.tree)) {
+            Some(snapshots::Event::Comparing) => {
+                self.side_tab = SideTab::Changes;
+                self.narrow_types = true;
+            }
+            Some(snapshots::Event::Error(error)) => self.error = Some(error),
+            None => {}
+        }
         crate::properties::show(&ctx, &mut self.props);
         self.unreadable_window(&ctx);
         self.error_dialog(&ctx);

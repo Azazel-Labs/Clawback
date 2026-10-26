@@ -92,6 +92,42 @@ translation = "Annuler"
 source = "Catalan"
 translation = "Catalan"
 
+[messages.changes]
+source = "Changes"
+translation = "Changements"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "depuis { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Tout"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Comparaison…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } libérés"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Augmenté"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } de plus"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Rien n’a changé depuis cet instantané."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Diminué"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Chinois simplifié"
@@ -750,6 +786,90 @@ translation = "Prêt"
 source = "Recent"
 translation = "Récents"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Récupérer"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Cache de { $browser } ; fermez d’abord { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Marqué par son programme comme un cache qu’il recrée"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Caches"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Nettoyage"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Restes de développement"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Recherche d’espace à récupérer…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } trouvés"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Cache du projet Gradle ; reconstruit à la prochaine compilation"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Dernière partie le { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Jamais joué"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "Paquets npm ; npm install les restaure"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Rien d’évident à récupérer ici."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Cache de téléchargement de { $tool } ; rempli à nouveau au besoin"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "Paquets CocoaPods ; pod install les restaure"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Environnement virtuel Python ; recréez-le à partir de vos dépendances"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Éléments supprimés en attente de vidage"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Sortie de compilation Rust ; cargo build la recrée"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Cliquez pour l’afficher sur la carte."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Fichiers temporaires laissés par les applications"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Disque virtuel WSL ; il ne rétrécit pas tout seul"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Le compactage préserve le contenu du disque et réduit la taille de son fichier Windows en récupérant les blocs remplis de zéros. Il peut libérer peu ou pas d'espace. Nettoyez d'abord les données inutiles dans Docker ou Linux."
@@ -933,6 +1053,102 @@ translation = "Taille :"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Taille sur le disque :"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Ouvrir un fichier d’instantané"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Comparer avec un instantané…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Comparer"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Supprimer cet instantané"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Tous les fichiers (le plus grand ; changements exacts des fichiers)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Dossiers seulement (le plus petit)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Dossiers et fichiers d’au moins"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Tous les fichiers"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Instantané Clawback"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Fichiers de { $size } ou plus"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Dossiers seulement"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Nom (facultatif)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Chargement des instantanés…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Aucun dossier de paramètres où conserver les instantanés."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Aucun instantané de { $path } n’est encore enregistré. Enregistrez-en un avec Fichier › Enregistrer un instantané."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Cet instantané concerne { $path }, pas le dossier que vous consultez."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Comparer avec un instantané"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Enregistrer un instantané…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Un instantané enregistre cette analyse, pour voir plus tard ce qui a grossi, diminué, est apparu ou a disparu."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Enregistrer l’instantané"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Impossible d’enregistrer l’instantané : { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Enregistrer un instantané"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Enregistrement…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Arrêter la comparaison"
 
 [messages.source-code]
 source = "Source code"

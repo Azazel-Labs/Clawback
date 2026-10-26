@@ -92,6 +92,42 @@ translation = "Annuller"
 source = "Catalan"
 translation = "Catalansk"
 
+[messages.changes]
+source = "Changes"
+translation = "Ændringer"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "siden { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Alle"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Sammenligner…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } frigjort"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Voksede"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } mere"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Intet er ændret siden dette øjebliksbillede."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Skrumpede"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Forenklet Kinesisk"
@@ -738,6 +774,90 @@ translation = "Klar"
 source = "Recent"
 translation = "Seneste"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Frigør"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Cache for { $browser }; luk { $browser } først"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Markeret af sit program som en cache, det genskaber"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Caches"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Oprydning"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Udviklerrester"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Leder efter plads at frigøre…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } fundet"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle-projektcache; genopbygges ved næste build"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Sidst spillet { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Aldrig spillet"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm-pakker; npm install gendanner dem"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Intet oplagt at frigøre her."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Download-cache for { $tool }; fyldes igen efter behov"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods-pakker; pod install gendanner dem"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python virtuelt miljø; genskab det ud fra dine krav"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Slettede elementer, der venter på at blive tømt"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust-buildoutput; cargo build genskaber det"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Klik for at vise det på kortet."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Midlertidige filer, som apps har efterladt"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL-virtuel disk; den skrumper ikke af sig selv"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Komprimering bevarer diskens indhold og reducerer dens Windows-filstørrelse ved at genvinde blokke fyldt med nuller. Det kan genvinde lidt eller ingen plads. Ryd først op i uønskede data inde i Docker eller Linux."
@@ -921,6 +1041,102 @@ translation = "Størrelse:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Størrelse på disk:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Åbn en øjebliksbilledfil"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Sammenlign med øjebliksbillede…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Sammenlign"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Slet dette øjebliksbillede"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Alle filer (størst; præcise filændringer)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Kun mapper (mindst)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Mapper og filer på mindst"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Alle filer"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback-øjebliksbillede"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Filer på { $size } eller mere"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Kun mapper"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Navn (valgfrit)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Indlæser øjebliksbilleder…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Der er ingen indstillingsmappe at gemme øjebliksbilleder i."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Der er endnu ingen gemte øjebliksbilleder af { $path }. Gem et med Filer › Gem øjebliksbillede."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Det øjebliksbillede er af { $path }, ikke af den mappe, du ser."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Sammenlign med et øjebliksbillede"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Gem øjebliksbillede…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Et øjebliksbillede gemmer denne scanning, så du senere kan se, hvad der er vokset, skrumpet, kommet til eller forsvundet."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Gem øjebliksbillede"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Øjebliksbilledet kunne ikke gemmes: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Gem et øjebliksbillede"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Gemmer…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Stop sammenligning"
 
 [messages.source-code]
 source = "Source code"

@@ -92,6 +92,42 @@ translation = "Mégse"
 source = "Catalan"
 translation = "Katalán"
 
+[messages.changes]
+source = "Changes"
+translation = "Változások"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "ehhez képest: { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Mind"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Összehasonlítás…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } felszabadult"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Nőtt"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } növekedés"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Ennek a pillanatképnek az óta semmi sem változott."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Csökkent"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Egyszerűsített kínai"
@@ -731,6 +767,90 @@ translation = "Kész"
 source = "Recent"
 translation = "Legutóbbiak"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Felszabadítás"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "{ $browser } gyorsítótár; előbb zárd be: { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "A programja újra létrehozható gyorsítótárként jelölte meg"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Gyorsítótárak"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Takarítás"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Fejlesztési maradványok"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Felszabadítható hely keresése…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } található"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle projekt-gyorsítótár; a következő fordításkor újraépül"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Utoljára játszva: { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Soha nem játszott"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm-csomagok; az npm install visszaállítja őket"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Itt nincs semmi nyilvánvalóan felszabadítható."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "{ $tool } letöltési gyorsítótár; szükség esetén újratöltődik"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods-csomagok; a pod install visszaállítja őket"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python virtuális környezet; hozd létre újra a követelményekből"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Ürítésre váró törölt elemek"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust fordítási kimenet; a cargo build újra létrehozza"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Kattints, hogy megjelenjen a térképen."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Alkalmazások által hátrahagyott ideiglenes fájlok"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL virtuális lemez; magától nem zsugorodik"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "A tömörítés megőrzi a lemez tartalmát, és a nullákkal töltött blokkok felszabadításával csökkenti a Windowsban tárolt lemezfájl méretét. Előfordulhat, hogy csak kevés helyet vagy egyáltalán nem szabadít fel. Először törölje a szükségtelen adatokat a Dockeren vagy a Linuxon belül."
@@ -908,6 +1028,102 @@ translation = "Méret:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Lemezen elfoglalt méret:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Pillanatképfájl megnyitása"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Összehasonlítás pillanatképpel…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Összehasonlítás"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Pillanatkép törlése"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Minden fájl (legnagyobb; pontos fájlváltozások)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Csak mappák (legkisebb)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Mappák és legalább ekkora fájlok:"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Minden fájl"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback-pillanatkép"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "{ $size } vagy nagyobb fájlok"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Csak mappák"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Név (nem kötelező)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Pillanatképek betöltése…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Nincs beállításmappa a pillanatképek tárolásához."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Még nincs mentett pillanatkép erről: { $path }. Ments egyet a Fájl › Pillanatkép mentése paranccsal."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Ez a pillanatkép erről készült: { $path }, nem a megtekintett mappáról."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Összehasonlítás pillanatképpel"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Pillanatkép mentése…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "A pillanatkép rögzíti ezt a vizsgálatot, így később láthatod, mi nőtt, mi csökkent, mi jelent meg vagy tűnt el."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Pillanatkép mentése"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Nem sikerült menteni a pillanatképet: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Pillanatkép mentése"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Mentés…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Összehasonlítás befejezése"
 
 [messages.source-code]
 source = "Source code"

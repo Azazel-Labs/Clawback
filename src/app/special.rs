@@ -19,6 +19,8 @@ pub(in crate::app) use state::Compacted;
 #[cfg(windows)]
 pub use state::State;
 use std::path::{Path, PathBuf};
+#[cfg(windows)]
+pub use visuals::GameArt;
 pub use visuals::{Visuals, collapse_games};
 #[cfg(windows)]
 pub use windows::wsl_disks::worker_entry;

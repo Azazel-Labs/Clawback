@@ -92,6 +92,42 @@ translation = "取消"
 source = "Catalan"
 translation = "加泰罗尼亚语"
 
+[messages.changes]
+source = "Changes"
+translation = "变化"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "自 { $snapshot } 以来"
+
+[messages.changes-all]
+source = "All"
+translation = "全部"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "正在比较…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "释放 { $size }"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "变大"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "增加 { $size }"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "自此快照以来没有任何变化。"
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "变小"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "简体中文"
@@ -731,6 +767,90 @@ translation = "就绪"
 source = "Recent"
 translation = "最近使用"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "回收空间"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "{ $browser } 缓存，请先关闭 { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "其程序已将其标记为可重新生成的缓存"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "缓存"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "清理"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "开发残留"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "正在查找可回收的空间…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "找到 { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle 项目缓存，下次构建时重建"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "上次游玩：{ $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "从未玩过"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm 包，npm install 可恢复"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "这里没有明显可回收的内容。"
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "{ $tool } 下载缓存，需要时会重新下载"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods 包，pod install 可恢复"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Python 虚拟环境，可根据依赖重新创建"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "等待清空的已删除项目"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust 构建输出，cargo build 会重新生成"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "点击即可在地图上显示。"
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "应用留下的临时文件"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL 虚拟磁盘，不会自行缩小"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "压缩保留磁盘内容并通过回收填充零的块来减小其 Windows 文件大小。它可能会回收很少的空间或根本不回收空间。首先清理 Docker 或 Linux 内部不需要的数据。"
@@ -908,6 +1028,102 @@ translation = "大小："
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "占用空间："
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "打开快照文件"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "与快照比较…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "比较"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "删除此快照"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "所有文件（最大；精确的文件变化）"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "仅文件夹（最小）"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "文件夹和至少此大小的文件"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "所有文件"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback 快照"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "{ $size } 及以上的文件"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "仅文件夹"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "名称（可选）"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "正在加载快照…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "没有可存放快照的设置文件夹。"
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "还没有保存 { $path } 的快照。请使用“文件 › 保存快照”保存一个。"
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "该快照属于 { $path }，而不是你正在查看的文件夹。"
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "与快照比较"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "保存快照…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "快照会记录这次扫描，以后可以查看哪些内容变大、变小、出现或消失。"
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "保存快照"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "无法保存快照：{ $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "保存快照"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "正在保存…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "停止比较"
 
 [messages.source-code]
 source = "Source code"

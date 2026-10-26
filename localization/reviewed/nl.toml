@@ -92,6 +92,42 @@ translation = "Annuleren"
 source = "Catalan"
 translation = "Catalaans"
 
+[messages.changes]
+source = "Changes"
+translation = "Wijzigingen"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "sinds { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Alle"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Vergelijken…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } vrijgekomen"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Gegroeid"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } meer"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Er is niets veranderd sinds deze momentopname."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Gekrompen"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Vereenvoudigd Chinees"
@@ -738,6 +774,90 @@ translation = "Gereed"
 source = "Recent"
 translation = "Recentelijk"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Terugwinnen"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Cache van { $browser }; sluit eerst { $browser }"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Door het programma gemarkeerd als cache die het opnieuw aanmaakt"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Caches"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Opruimen"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Ontwikkelresten"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Zoeken naar ruimte om terug te winnen…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "{ $size } gevonden"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle-projectcache; wordt bij de volgende build opnieuw opgebouwd"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Laatst gespeeld op { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Nooit gespeeld"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm-pakketten; npm install zet ze terug"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Hier valt niets voor de hand liggends terug te winnen."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Downloadcache van { $tool }; wordt zo nodig opnieuw gevuld"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods-pakketten; pod install zet ze terug"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Virtuele Python-omgeving; maak die opnieuw aan vanuit je vereisten"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Verwijderde items die wachten om geleegd te worden"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rust-build-uitvoer; cargo build maakt die opnieuw"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Klik om het op de kaart te tonen."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Tijdelijke bestanden die apps hebben achtergelaten"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "Virtuele WSL-schijf; die krimpt niet vanzelf"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Compactie behoudt de inhoud van de schijf en verkleint de Windows-bestandsgrootte door blokken terug te winnen die gevuld zijn met nullen. Het kan weinig of geen ruimte terugwinnen. Ruim eerst ongewenste gegevens op in Docker of Linux."
@@ -921,6 +1041,102 @@ translation = "Grootte:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Grootte op schijf:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Een momentopnamebestand openen"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Vergelijken met momentopname…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Vergelijken"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Deze momentopname verwijderen"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Alle bestanden (grootst; exacte bestandswijzigingen)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Alleen mappen (kleinst)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Mappen en bestanden van minstens"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Alle bestanden"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback-momentopname"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Bestanden van { $size } of meer"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Alleen mappen"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Naam (optioneel)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Momentopnamen laden…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Er is geen instellingenmap om momentopnamen in te bewaren."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Nog geen opgeslagen momentopnamen van { $path }. Sla er een op via Bestand › Momentopname opslaan."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Die momentopname is van { $path }, niet van de map die je bekijkt."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Vergelijken met een momentopname"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Momentopname opslaan…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Een momentopname legt deze scan vast, zodat je later ziet wat er gegroeid, gekrompen, bijgekomen of verdwenen is."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Momentopname opslaan"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Kan de momentopname niet opslaan: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Een momentopname opslaan"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Opslaan…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Vergelijken stoppen"
 
 [messages.source-code]
 source = "Source code"

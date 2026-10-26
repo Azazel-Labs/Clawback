@@ -164,8 +164,8 @@ fn known_libraries() -> Vec<PathBuf> {
     })
 }
 
-/// Games installed in `library`, from its app manifests.
-fn installed(library: &Path) -> impl Iterator<Item = Application> + '_ {
+/// Games installed in `library`, from its app manifests, with when each was last played.
+fn installed(library: &Path) -> impl Iterator<Item = (Application, Option<i64>)> + '_ {
     let entries = std::fs::read_dir(library.join("steamapps")).into_iter().flatten().flatten();
     entries.filter_map(move |entry| {
         let name = entry.file_name();
@@ -174,8 +174,15 @@ fn installed(library: &Path) -> impl Iterator<Item = Application> + '_ {
             .and_then(|s| s.strip_prefix("appmanifest_"))
             .and_then(|s| s.strip_suffix(".acf"))
             .and_then(|s| s.parse().ok())?;
-        read(&entry.path()).as_ref().and_then(|v| game(library, id, v))
+        let manifest = read(&entry.path())?;
+        Some((game(library, id, &manifest)?, last_played(&manifest)))
     })
+}
+
+/// Seconds since the Unix epoch; Steam writes 0 for a game that was never started.
+fn last_played(manifest: &Value) -> Option<i64> {
+    let seconds = manifest.get("AppState")?.get("LastPlayed")?.text()?.parse::<i64>().ok()?;
+    (seconds > 0).then_some(seconds)
 }
 
 pub(super) fn extend(inventory: &mut Inventory, path: &Path) {
@@ -186,7 +193,7 @@ pub(super) fn extend(inventory: &mut Inventory, path: &Path) {
         inventory.steam_roots.push(root);
     }
     for library in &inventory.steam_roots {
-        for app in installed(library) {
+        for (app, _) in installed(library) {
             // Prefer the current manifest to a possibly stale uninstall registration.
             inventory.applications.retain(|registered| registered.action != app.action);
             inventory.applications.push(app);
@@ -199,6 +206,8 @@ pub(super) fn extend(inventory: &mut Inventory, path: &Path) {
 pub struct Game {
     pub id: u32,
     pub name: String,
+    /// Seconds since the Unix epoch; `None` if it was never played.
+    pub last_played: Option<i64>,
     location: String,
 }
 
@@ -212,8 +221,10 @@ fn catalog() -> Arc<[Game]> {
     known_libraries()
         .iter()
         .flat_map(|library| installed(library).collect::<Vec<_>>())
-        .filter_map(|app| match app.action {
-            Some(Action::Steam(id)) => Some(Game { id, name: app.name, location: super::normalized(&app.location) }),
+        .filter_map(|(app, last_played)| match app.action {
+            Some(Action::Steam(id)) => {
+                Some(Game { id, name: app.name, last_played, location: super::normalized(&app.location) })
+            }
             _ => None,
         })
         .collect()
@@ -317,7 +328,11 @@ mod tests {
             libraries(Path::new(r"C:\Steam"), Some(&data)),
             [PathBuf::from(r"C:\Steam"), r"E:\Games".into(), r"F:\Old Library".into()]
         );
-        let manifest = parse(r#""AppState" { "appid" "42" "name" "A game" "installdir" "Game Folder" }"#);
+        let manifest = parse(
+            r#""AppState" { "appid" "42" "name" "A game" "installdir" "Game Folder" "LastPlayed" "1700000000" }"#,
+        );
+        assert_eq!(last_played(&manifest), Some(1_700_000_000));
+        assert_eq!(last_played(&parse(r#""AppState" { "LastPlayed" "0" }"#)), None);
         let app = game(Path::new(r"E:\Games"), 42, &manifest).unwrap();
         assert_eq!(app.location, Path::new(r"E:\Games\steamapps\common\Game Folder"));
         assert_eq!(app.action, Some(Action::Steam(42)));

@@ -92,6 +92,42 @@ translation = "Peruuta"
 source = "Catalan"
 translation = "Katalaani"
 
+[messages.changes]
+source = "Changes"
+translation = "Muutokset"
+
+[messages.changes-against]
+source = "since { $snapshot }"
+translation = "alkaen { $snapshot }"
+
+[messages.changes-all]
+source = "All"
+translation = "Kaikki"
+
+[messages.changes-comparing]
+source = "Comparing…"
+translation = "Verrataan…"
+
+[messages.changes-freed-total]
+source = "{ $size } freed"
+translation = "{ $size } vapautui"
+
+[messages.changes-grew]
+source = "Grew"
+translation = "Kasvoi"
+
+[messages.changes-grew-total]
+source = "{ $size } grew"
+translation = "{ $size } lisää"
+
+[messages.changes-none]
+source = "Nothing changed since this snapshot."
+translation = "Mikään ei ole muuttunut tämän tilannekuvan jälkeen."
+
+[messages.changes-shrank]
+source = "Shrank"
+translation = "Pieneni"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Yksinkertaistettu Kiina"
@@ -738,6 +774,90 @@ translation = "Valmis"
 source = "Recent"
 translation = "Viimeisimmät"
 
+[messages.reclaim]
+source = "Reclaim"
+translation = "Vapauta"
+
+[messages.reclaim-browser-cache]
+source = "{ $browser } cache; close { $browser } first"
+translation = "Selaimen { $browser } välimuisti; sulje { $browser } ensin"
+
+[messages.reclaim-cache-tag]
+source = "Marked by its program as a cache it recreates"
+translation = "Ohjelma on merkinnyt sen välimuistiksi, jonka se luo uudelleen"
+
+[messages.reclaim-caches]
+source = "Caches"
+translation = "Välimuistit"
+
+[messages.reclaim-cleanup]
+source = "Cleanup"
+translation = "Siivous"
+
+[messages.reclaim-developer]
+source = "Developer leftovers"
+translation = "Kehityksen jäänteet"
+
+[messages.reclaim-finding]
+source = "Looking for space to reclaim…"
+translation = "Etsitään vapautettavaa tilaa…"
+
+[messages.reclaim-found]
+source = "{ $size } found"
+translation = "Löytyi { $size }"
+
+[messages.reclaim-gradle]
+source = "Gradle project cache; rebuilt on the next build"
+translation = "Gradle-projektin välimuisti; rakennetaan uudelleen seuraavassa käännöksessä"
+
+[messages.reclaim-last-played]
+source = "Last played { $date }"
+translation = "Viimeksi pelattu { $date }"
+
+[messages.reclaim-never-played]
+source = "Never played"
+translation = "Ei koskaan pelattu"
+
+[messages.reclaim-node-modules]
+source = "npm packages; npm install restores them"
+translation = "npm-paketit; npm install palauttaa ne"
+
+[messages.reclaim-nothing]
+source = "Nothing obvious to reclaim here."
+translation = "Täällä ei ole mitään selvästi vapautettavaa."
+
+[messages.reclaim-package-cache]
+source = "{ $tool } download cache; refilled when needed"
+translation = "Työkalun { $tool } latausvälimuisti; täytetään tarvittaessa uudelleen"
+
+[messages.reclaim-pods]
+source = "CocoaPods packages; pod install restores them"
+translation = "CocoaPods-paketit; pod install palauttaa ne"
+
+[messages.reclaim-python-venv]
+source = "Python virtual environment; recreate it from your requirements"
+translation = "Pythonin virtuaaliympäristö; luo se uudelleen vaatimuksistasi"
+
+[messages.reclaim-recycle-bin]
+source = "Deleted items waiting to be emptied"
+translation = "Poistetut kohteet odottavat tyhjentämistä"
+
+[messages.reclaim-rust-target]
+source = "Rust build output; cargo build recreates it"
+translation = "Rustin käännöstulos; cargo build luo sen uudelleen"
+
+[messages.reclaim-show]
+source = "Click to show it on the map."
+translation = "Näytä se kartalla napsauttamalla."
+
+[messages.reclaim-temp]
+source = "Temporary files apps left behind"
+translation = "Sovellusten jättämät väliaikaiset tiedostot"
+
+[messages.reclaim-wsl]
+source = "WSL virtual disk; it does not shrink by itself"
+translation = "WSL:n virtuaalilevy; se ei pienene itsestään"
+
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
 translation = "Tiivistäminen säilyttää levyn sisällön ja pienentää sen tiedoston kokoa Windowsissa vapauttamalla nollilla täytettyjä lohkoja. Tilaa voi vapautua vain vähän tai ei lainkaan. Poista ensin tarpeettomat tiedot Dockerista tai Linuxista."
@@ -921,6 +1041,102 @@ translation = "Koko:"
 [messages.size-on-disk]
 source = "Size on disk:"
 translation = "Koko levyllä:"
+
+[messages.snapshot-browse]
+source = "Open a snapshot file"
+translation = "Avaa tilannekuvatiedosto"
+
+[messages.snapshot-compare]
+source = "Compare with snapshot…"
+translation = "Vertaa tilannekuvaan…"
+
+[messages.snapshot-compare-button]
+source = "Compare"
+translation = "Vertaa"
+
+[messages.snapshot-delete]
+source = "Delete this snapshot"
+translation = "Poista tämä tilannekuva"
+
+[messages.snapshot-detail-all-files]
+source = "Every file (largest; exact file changes)"
+translation = "Kaikki tiedostot (suurin; tarkat tiedostomuutokset)"
+
+[messages.snapshot-detail-folders]
+source = "Folders only (smallest)"
+translation = "Vain kansiot (pienin)"
+
+[messages.snapshot-detail-large-files]
+source = "Folders and files of at least"
+translation = "Kansiot ja tiedostot, joiden koko on vähintään"
+
+[messages.snapshot-every-file]
+source = "Every file"
+translation = "Kaikki tiedostot"
+
+[messages.snapshot-file-type]
+source = "Clawback snapshot"
+translation = "Clawback-tilannekuva"
+
+[messages.snapshot-files-over]
+source = "Files of { $size } or more"
+translation = "Tiedostot { $size } tai enemmän"
+
+[messages.snapshot-folders-only]
+source = "Folders only"
+translation = "Vain kansiot"
+
+[messages.snapshot-label]
+source = "Name (optional)"
+translation = "Nimi (valinnainen)"
+
+[messages.snapshot-loading]
+source = "Loading snapshots…"
+translation = "Ladataan tilannekuvia…"
+
+[messages.snapshot-no-folder]
+source = "There is no settings folder to keep snapshots in."
+translation = "Tilannekuville ei ole asetuskansiota."
+
+[messages.snapshot-none]
+source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
+translation = "Kohteesta { $path } ei ole vielä tallennettuja tilannekuvia. Tallenna sellainen kohdasta Tiedosto › Tallenna tilannekuva."
+
+[messages.snapshot-other-root]
+source = "That snapshot is of { $path }, not the folder you are viewing."
+translation = "Tuo tilannekuva on kohteesta { $path }, ei katselemastasi kansiosta."
+
+[messages.snapshot-pick-title]
+source = "Compare with a snapshot"
+translation = "Vertaa tilannekuvaan"
+
+[messages.snapshot-save]
+source = "Save snapshot…"
+translation = "Tallenna tilannekuva…"
+
+[messages.snapshot-save-body]
+source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
+translation = "Tilannekuva tallentaa tämän tarkistuksen, jotta näet myöhemmin, mikä kasvoi, pieneni, ilmestyi tai katosi."
+
+[messages.snapshot-save-button]
+source = "Save snapshot"
+translation = "Tallenna tilannekuva"
+
+[messages.snapshot-save-error]
+source = "Could not save the snapshot: { $error }"
+translation = "Tilannekuvaa ei voitu tallentaa: { $error }"
+
+[messages.snapshot-save-title]
+source = "Save a snapshot"
+translation = "Tallenna tilannekuva"
+
+[messages.snapshot-saving]
+source = "Saving…"
+translation = "Tallennetaan…"
+
+[messages.snapshot-stop]
+source = "Stop comparing"
+translation = "Lopeta vertailu"
 
 [messages.source-code]
 source = "Source code"
