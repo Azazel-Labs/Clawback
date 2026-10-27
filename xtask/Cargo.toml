@@ -18,7 +18,7 @@ toml_edit = "0.25.15"
 png = "0.18.1"
 ab_glyph = "0.2.32"
 epaint_default_fonts = "0.36.2"
-sha2 = "0.10"
+sha2 = "0.11"
 
 [lints]
 workspace = true
