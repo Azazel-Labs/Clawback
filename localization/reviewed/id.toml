@@ -156,6 +156,14 @@ translation = "Tidak ada yang berubah sejak snapshot ini."
 source = "Shrank"
 translation = "Berkurang"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Periksa pembaruan"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Saat dimulai, menanyakan ke GitHub apakah ada versi yang lebih baru. Tidak ada informasi tentang Anda atau file Anda yang dikirim."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Bahasa Tionghoa Sederhana"
@@ -1017,6 +1025,10 @@ translation = "Simpan perubahan"
 source = "Scan boundaries"
 translation = "Batas pemindaian"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Pembaruan"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Jendela dan interaksi"
@@ -1388,6 +1400,14 @@ translation = "Folder yang tidak dapat dibaca"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Naik satu tingkat"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Versi { $version } tersedia"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Untuk memperbarui, jalankan: { $command } (klik untuk menyalin)"
 
 [messages.updating]
 source = "Updating…"

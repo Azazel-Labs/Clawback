@@ -156,6 +156,14 @@ translation = "Od tej migawki nic się nie zmieniło."
 source = "Shrank"
 translation = "Zmalało"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Sprawdzaj aktualizacje"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Przy uruchomieniu pyta GitHub, czy dostępna jest nowsza wersja. Nie są wysyłane żadne informacje o Tobie ani o Twoich plikach."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Chiński uproszczony"
@@ -1038,6 +1046,10 @@ translation = "Zapisz zmiany"
 source = "Scan boundaries"
 translation = "Zeskanuj granice"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Aktualizacje"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Okno i interakcja"
@@ -1409,6 +1421,14 @@ translation = "Foldery, których nie można odczytać"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Poziom wyżej"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Dostępna wersja { $version }"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Aby zaktualizować, uruchom: { $command } (kliknij, aby skopiować)"
 
 [messages.updating]
 source = "Updating…"

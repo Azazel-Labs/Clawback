@@ -455,7 +455,9 @@ impl MapView {
                     out.push(Command::Special(kind, n));
                 }
             }
-            if item(ui, icon::FOLDER_OPEN, crate::platform::file_manager_label(), true, false) {
+            if !crate::container::enabled()
+                && item(ui, icon::FOLDER_OPEN, crate::platform::file_manager_label(), true, false)
+            {
                 out.push(Command::Reveal(n));
             }
             if item(ui, icon::INFO, tr!("properties-2"), true, false) {
@@ -464,6 +466,7 @@ impl MapView {
             if special.is_none()
                 && !s.disable_delete
                 && !special::protects_from_raw_delete(&input.tree.path(n))
+                && crate::container::can_delete(&input.tree.path(n))
                 && item(ui, icon::TRASH, tr!("delete"), true, false)
             {
                 out.push(Command::Delete(n));

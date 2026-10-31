@@ -45,6 +45,8 @@ pub struct Settings {
     pub directory_split: u32,
     pub rollover_box: bool,
     pub show_free: bool,
+    /// Ask for a newer version at startup (release builds only).
+    pub check_updates: bool,
     // Scanning (not in SpaceMonger; needed off Windows)
     pub one_filesystem: bool,
     pub apparent_size: bool,
@@ -79,6 +81,7 @@ impl Default for Settings {
             directory_split: 300,
             rollover_box: false,
             show_free: true,
+            check_updates: true,
             one_filesystem: true,
             apparent_size: false,
             dedupe_hardlinks: true,
@@ -229,6 +232,7 @@ fields! {
     "directory_split" => directory_split,
     "rollover_box" => rollover_box,
     "show_free" => show_free,
+    "check_updates" => check_updates,
     "one_filesystem" => one_filesystem,
     "apparent_size" => apparent_size,
     "dedupe_hardlinks" => dedupe_hardlinks,
@@ -343,6 +347,7 @@ save_pos = false
 directory_split = 300
 rollover_box = false
 show_free = true
+check_updates = true
 one_filesystem = true
 apparent_size = false
 dedupe_hardlinks = true

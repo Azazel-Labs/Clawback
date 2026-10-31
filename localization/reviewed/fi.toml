@@ -156,6 +156,14 @@ translation = "Mikään ei ole muuttunut tämän tilannekuvan jälkeen."
 source = "Shrank"
 translation = "Pieneni"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Tarkista päivitykset"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Kysyy käynnistyksen yhteydessä GitHubilta, onko uudempi versio saatavilla. Sinusta tai tiedostoistasi ei lähetetä mitään."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Yksinkertaistettu Kiina"
@@ -1030,6 +1038,10 @@ translation = "Tallenna muutokset"
 source = "Scan boundaries"
 translation = "Skannaa rajoja"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Päivitykset"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Ikkunan ja vuorovaikutus"
@@ -1401,6 +1413,14 @@ translation = "Lukukelvottomat kansiot"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Ylös taso"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Versio { $version } saatavilla"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Päivitä suorittamalla: { $command } (kopioi napsauttamalla)"
 
 [messages.updating]
 source = "Updating…"

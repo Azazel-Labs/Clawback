@@ -156,6 +156,14 @@ translation = "Bu anlık görüntüden beri hiçbir şey değişmedi."
 source = "Shrank"
 translation = "Küçülen"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Güncellemeleri denetle"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Başlangıçta GitHub’a daha yeni bir sürüm olup olmadığını sorar. Siz veya dosyalarınız hakkında hiçbir şey gönderilmez."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Basitleştirilmiş Çince"
@@ -1017,6 +1025,10 @@ translation = "Değişiklikleri kaydet"
 source = "Scan boundaries"
 translation = "Tarama sınırları"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Güncellemeler"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Pencere ve etkileşim"
@@ -1388,6 +1400,14 @@ translation = "Okunamayan klasörler"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Bir üst düzey"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "{ $version } sürümü mevcut"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Güncellemek için çalıştırın: { $command } (kopyalamak için tıklayın)"
 
 [messages.updating]
 source = "Updating…"

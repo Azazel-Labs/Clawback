@@ -326,12 +326,25 @@ fn behavior(ui: &mut Ui, d: &mut Settings) {
     ui.separator();
     section(ui, tr!("settings-deletion"));
     toggle(ui, &mut d.auto_rescan, &tr!("auto-rescan-on-delete"));
-    toggle(ui, &mut d.disable_delete, &tr!("disable-delete-command"));
+    ui.add_enabled_ui(!crate::container::delete_forbidden(), |ui| {
+        toggle(ui, &mut d.disable_delete, &tr!("disable-delete-command"));
+    });
+    // Steam and source builds never check, so they have nothing to switch off.
+    if crate::updates::supported() {
+        ui.add_space(8.0);
+        ui.separator();
+        section(ui, tr!("settings-updates"));
+        toggle(ui, &mut d.check_updates, &tr!("check-for-updates"));
+        ui.label(RichText::new(tr!("check-for-updates-hint")).small().color(theme::MUTED));
+    }
 }
 
 fn scanning(ui: &mut Ui, d: &mut Settings) {
     section(ui, tr!("settings-scan-scope"));
-    toggle(ui, &mut d.one_filesystem, &tr!("stay-on-one-filesystem"));
+    // Container volumes are each their own filesystem, so scans always cross into them.
+    ui.add_enabled_ui(!crate::container::enabled(), |ui| {
+        toggle(ui, &mut d.one_filesystem, &tr!("stay-on-one-filesystem"));
+    });
     ui.label(RichText::new(tr!("don-t-descend-into-other-drives-or-network")).small().color(theme::MUTED));
     ui.add_space(8.0);
     ui.separator();

@@ -156,6 +156,14 @@ translation = "Ништа се није променило од овог сни�
 source = "Shrank"
 translation = "Смањено"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Провери ажурирања"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "При покретању пита GitHub да ли постоји новија верзија. Ништа о вама или вашим датотекама се не шаље."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Поједностављени кинески"
@@ -1034,6 +1042,10 @@ translation = "Сачувај измене"
 source = "Scan boundaries"
 translation = "Границе скенирања"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Ажурирања"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Прозор и интеракција"
@@ -1405,6 +1417,14 @@ translation = "Нечитљиве фасцикле"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Један ниво горе"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Доступна је верзија { $version }"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "За ажурирање покрените: { $command } (кликните да копирате)"
 
 [messages.updating]
 source = "Updating…"

@@ -156,6 +156,14 @@ translation = "自此快照以來沒有任何變更。"
 source = "Shrank"
 translation = "變小"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "檢查更新"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "啟動時向 GitHub 查詢是否有新版本。不會傳送任何關於你或你的檔案的資訊。"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "簡體中文"
@@ -1017,6 +1025,10 @@ translation = "儲存變更"
 source = "Scan boundaries"
 translation = "掃描範圍"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "更新"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "視窗與互動"
@@ -1388,6 +1400,14 @@ translation = "無法讀取的資料夾"
 [messages.up-a-level]
 source = "Up a level"
 translation = "返回上一層"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "版本 { $version } 可供使用"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "若要更新，請執行：{ $command }（按一下即可複製）"
 
 [messages.updating]
 source = "Updating…"

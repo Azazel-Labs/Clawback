@@ -136,6 +136,10 @@ Live previews, scan counts, unreadable-entry counts, and a progress spinner upda
 
 File-type icons in the right-hand list come from Windows Shell, Finder, or the Linux desktop icon theme. Their saturation and brightness are reduced to match the dark UI. Only visible rows request icons; native lookups run on one background worker and are cached by extension and display size. If the OS cannot supply an icon, the row keeps its text label.
 
+## Running on a server
+
+To look at a NAS or home server's disks from a browser, run Clawback in Docker; see [Running Clawback in Docker](docker.md).
+
 ## Native application icons
 
 Release downloads include native desktop integration:

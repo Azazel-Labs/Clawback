@@ -7,6 +7,7 @@
 mod achievements;
 mod app;
 mod background;
+mod container;
 mod deletion;
 #[cfg(feature = "screenshots")]
 mod demo;
@@ -31,6 +32,7 @@ mod theme;
 mod tui;
 #[cfg(windows)]
 mod turbo;
+mod updates;
 #[cfg(windows)]
 mod watch_windows;
 mod watching;
@@ -177,7 +179,7 @@ fn main() -> ExitCode {
         }
         Some(_) => {
             achievements::init();
-            run_gui(args.path.as_deref())
+            run_gui(args.path.as_deref().or_else(|| container::root()))
         }
     }
 }
@@ -211,7 +213,8 @@ fn run_report(args: &Cli) -> ExitCode {
 }
 
 fn run_gui(path: Option<&std::path::Path>) -> ExitCode {
-    let settings = Settings::load();
+    let mut settings = Settings::load();
+    settings.disable_delete |= container::delete_forbidden();
     startup::mark("settings_loaded");
     let mut options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -219,7 +222,9 @@ fn run_gui(path: Option<&std::path::Path>) -> ExitCode {
             .with_app_id("clawback")
             .with_inner_size([1280.0, 860.0])
             .with_min_inner_size([420.0, 300.0])
-            .with_icon(icon::icon()),
+            .with_icon(icon::icon())
+            // A container's compositor fills the browser tab with the one window; no title bar.
+            .with_decorations(!container::enabled()),
         persist_window: settings.save_pos,
         ..Default::default()
     };

@@ -156,6 +156,14 @@ translation = "Niks het sedert hierdie momentopname verander nie."
 source = "Shrank"
 translation = "Gekrimp"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Kyk vir opdaterings"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Vra GitHub by opstart of ’n nuwer weergawe beskikbaar is. Niks oor jou of jou lêers word gestuur nie."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Vereenvoudigde Sjinees"
@@ -1030,6 +1038,10 @@ translation = "Stoor veranderinge"
 source = "Scan boundaries"
 translation = "Skanderingsgrense"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Opdaterings"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Venster en interaksie"
@@ -1401,6 +1413,14 @@ translation = "Onleesbare vouers"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Een vlak op"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Weergawe { $version } beskikbaar"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Om op te dateer, voer uit: { $command } (klik om te kopieer)"
 
 [messages.updating]
 source = "Updating…"

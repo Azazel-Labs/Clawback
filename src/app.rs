@@ -240,6 +240,9 @@ pub struct ClawbackApp {
     split_dragging: bool,
     /// Loaded the first time the picker opens.
     picker_icons: Option<PickerIcons>,
+    /// The startup check for a newer release, while it runs.
+    update_check: Option<crate::background::Job<(), Option<crate::updates::Update>>>,
+    update: Option<crate::updates::Update>,
 }
 
 impl ClawbackApp {
@@ -336,6 +339,9 @@ impl ClawbackApp {
             }
             return app;
         }
+        if app.settings.check_updates && app.persistent() {
+            app.update_check = crate::updates::check(&cc.egui_ctx);
+        }
         if let Some(p) = path {
             app.start_scan(p, &cc.egui_ctx);
         }
@@ -373,7 +379,10 @@ impl ClawbackApp {
             retire(run);
         }
         let root = std::path::absolute(&root).unwrap_or(root);
-        match Running::start(root.clone(), self.settings.scan_options(), ctx.clone()) {
+        let mut options = self.settings.scan_options();
+        // Every mapped volume is its own filesystem under the container's data folder.
+        options.one_filesystem &= !crate::container::enabled();
+        match Running::start(root.clone(), options, ctx.clone()) {
             Ok(scan) => {
                 // An abandoned scan may never reach Finished. Give its replacement
                 // a fresh identity so cached panels cannot reuse the old root's data.
@@ -417,6 +426,9 @@ impl ClawbackApp {
     fn poll(&mut self, ctx: &egui::Context) {
         let _span = crate::perf::span("ui.poll");
         crate::properties::poll(&mut self.props);
+        if let Some(((), update)) = crate::background::Job::poll(&mut self.update_check) {
+            self.update = update;
+        }
         self.poll_scan(ctx);
         self.poll_delete(ctx);
         self.poll_special(ctx);
@@ -659,6 +671,8 @@ impl ClawbackApp {
                 }
             }
             Command::ZoomFull => self.apply(Command::ZoomTo(ROOT), ctx),
+            // A container has no desktop to show files on.
+            Command::Reveal(_) | Command::Open(_) if crate::container::enabled() => {}
             Command::Reveal(n) => {
                 if let Some(d) = &self.doc
                     && let Err(e) = platform::reveal(&d.tree.path(n))
@@ -727,9 +741,19 @@ impl ClawbackApp {
         if self.pending_paths().any(|pending| path.starts_with(pending)) {
             return;
         }
+        // Menus already leave it out; Reclaim's list offers it anyway, so say why nothing happens.
+        if !crate::container::can_delete(&path) {
+            self.error = Some(tr!("delete-error", path = path.display().to_string(), error = tr!("read-only")));
+            return;
+        }
         let n = doc.tree.node(node);
         let (size, files) = (n.size, n.files);
         let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: DeleteKind::Recycle };
+        // A container has no Trash to recover from: every delete is permanent, so confirm it.
+        if crate::container::enabled() {
+            self.confirm.push_back(QueuedDelete { kind: DeleteKind::Permanent, ..request });
+            return;
+        }
         if let Some(request) = self.special.check_removal(request, ctx) {
             self.queue_delete(request, ctx);
         }
@@ -981,16 +1005,22 @@ impl ClawbackApp {
                     action = Some(Tool::StopComparing);
                 }
                 ui.separator();
-                if menu_item(ui, tr!("open-selected-item"), ready && selected, "") {
+                let container = crate::container::enabled();
+                if !container && menu_item(ui, tr!("open-selected-item"), ready && selected, "") {
                     action = Some(Tool::OpenItem);
                 }
-                if menu_item(ui, platform::file_manager_label(), ready && selected, "") {
+                if !container && menu_item(ui, platform::file_manager_label(), ready && selected, "") {
                     action = Some(Tool::Reveal);
                 }
+                let deletable = self
+                    .doc
+                    .as_ref()
+                    .zip(self.map.selected_node())
+                    .is_some_and(|(doc, node)| crate::container::can_delete(&doc.tree.path(node)));
                 if menu_item(
                     ui,
-                    tr!("move-selected-item-to-trash"),
-                    ready && selected && !self.settings.disable_delete,
+                    if container { tr!("delete") } else { tr!("move-selected-item-to-trash") },
+                    ready && deletable && !self.settings.disable_delete,
                     "Delete",
                 ) {
                     action = Some(Tool::Delete);
@@ -1071,6 +1101,27 @@ impl ClawbackApp {
                 }
             });
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                if let Some(update) = &self.update {
+                    let label = format!(
+                        "{}  {}",
+                        egui_phosphor::regular::ARROW_CIRCLE_UP,
+                        tr!("update-available", version = update.version.clone())
+                    );
+                    let notice = ui.add(egui::Button::new(RichText::new(label).color(theme::ACCENT)).frame(false));
+                    // A container can't open a browser page; it offers the command that updates it.
+                    if crate::container::enabled() {
+                        let command = crate::updates::PULL_COMMAND;
+                        if notice.on_hover_text(tr!("update-available-docker", command = command)).clicked() {
+                            ui.ctx().copy_text(command.to_owned());
+                        }
+                    } else if notice.on_hover_text(&update.url).clicked() {
+                        let url = update.url.clone();
+                        if let Err(error) = platform::open(std::path::Path::new(&url)) {
+                            self.error = Some(error);
+                        }
+                    }
+                    ui.separator();
+                }
                 let counts = self
                     .scan
                     .as_ref()
@@ -1118,6 +1169,10 @@ impl ClawbackApp {
             )
         } else {
             let size = if doc.view == ROOT { doc.total_space() } else { doc.tree.node(doc.view).size };
+            // Without a volume (a container's data folder spans several) there's no free space to show.
+            if doc.disk.is_none() {
+                return format!("{}  -  {}  -  Clawback", dir_display(&doc.tree.path(doc.view)), format::size(size));
+            }
             tr!(
                 "window-title",
                 path = dir_display(&doc.tree.path(doc.view)),
@@ -1222,7 +1277,11 @@ impl ClawbackApp {
         let special::Confirmation { title, body, button } = job.kind.cleanup().map_or_else(
             || special::Confirmation {
                 title: tr!("delete-permanently-title"),
-                body: tr!("delete-too-big-for-recycle-bin", name = display_name(&job.path)),
+                body: if crate::container::enabled() {
+                    display_name(&job.path)
+                } else {
+                    tr!("delete-too-big-for-recycle-bin", name = display_name(&job.path))
+                },
                 button: tr!("delete-permanently-button"),
             },
             |cleanup| cleanup.confirmation(&job.path, &drive),

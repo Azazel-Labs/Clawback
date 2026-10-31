@@ -156,6 +156,14 @@ translation = "Ennek a pillanatképnek az óta semmi sem változott."
 source = "Shrank"
 translation = "Csökkent"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Frissítések keresése"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Indításkor megkérdezi a GitHubot, hogy elérhető-e újabb verzió. Rólad és a fájljaidról semmit sem küld el."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Egyszerűsített kínai"
@@ -1017,6 +1025,10 @@ translation = "Módosítások mentése"
 source = "Scan boundaries"
 translation = "Vizsgálati határok"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Frissítések"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Ablak és kezelés"
@@ -1388,6 +1400,14 @@ translation = "Nem olvasható mappák"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Egy szinttel feljebb"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Elérhető a(z) { $version } verzió"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "A frissítéshez futtasd: { $command } (kattints a másoláshoz)"
 
 [messages.updating]
 source = "Updating…"

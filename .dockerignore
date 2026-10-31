@@ -1,0 +1,5 @@
+target/*
+!target/docker
+dist
+.git
+packaging/docker/config

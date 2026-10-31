@@ -156,6 +156,14 @@ translation = "Od tohoto snímku se nic nezměnilo."
 source = "Shrank"
 translation = "Zmenšilo se"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Kontrolovat aktualizace"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Při spuštění se zeptá GitHubu, zda je k dispozici novější verze. Nic o vás ani o vašich souborech se neodesílá."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Zjednodušená čínština"
@@ -1038,6 +1046,10 @@ translation = "Uložit změny"
 source = "Scan boundaries"
 translation = "Hranice skenování"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Aktualizace"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Okno & interakce"
@@ -1409,6 +1421,14 @@ translation = "Nečitelné složky"
 [messages.up-a-level]
 source = "Up a level"
 translation = "O úroveň výše"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "K dispozici je verze { $version }"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Pro aktualizaci spusťte: { $command } (kliknutím zkopírujete)"
 
 [messages.updating]
 source = "Updating…"

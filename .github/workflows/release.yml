@@ -120,6 +120,10 @@ jobs:
         with:
           key: ${{ matrix.target }}
       - name: Build
+        env:
+          # Lets the app check GitHub for a newer release or nightly (see src/updates.rs).
+          CLAWBACK_UPDATE_CHANNEL: ${{ needs.plan.outputs.nightly == 'true' && 'nightly' || 'release' }}
+          CLAWBACK_BUILD_COMMIT: ${{ needs.plan.outputs.sha }}
         run: cargo build --release --locked --target ${{ matrix.target }}
       - name: Package
         shell: bash
@@ -245,3 +249,13 @@ jobs:
     with:
       tag: ${{ needs.plan.outputs.tag }}
     secrets: inherit
+
+  docker:
+    name: Docker image
+    needs: [plan, publish]
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/docker.yml
+    with:
+      tag: ${{ needs.plan.outputs.tag }}
