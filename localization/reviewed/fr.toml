@@ -156,6 +156,14 @@ translation = "Rien n’a changé depuis cet instantané."
 source = "Shrank"
 translation = "Diminué"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Rechercher des mises à jour"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Au démarrage, demande à GitHub si une version plus récente est disponible. Aucune information sur vous ou vos fichiers n’est envoyée."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Chinois simplifié"
@@ -1042,6 +1050,10 @@ translation = "Enregistrer les modifications"
 source = "Scan boundaries"
 translation = "Scanner les limites"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Mises à jour"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Fenêtre et interaction"
@@ -1413,6 +1425,14 @@ translation = "Dossiers inaccessibles"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Dossier parent"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Version { $version } disponible"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Pour mettre à jour, exécutez : { $command } (cliquez pour copier)"
 
 [messages.updating]
 source = "Updating…"

@@ -165,7 +165,10 @@ pub fn show(
             });
         ui.add_space(6.0);
         ui.horizontal(|ui| {
-            if ui.add(egui::Button::new(tr!("other-folder")).min_size(vec2(0.0, 34.0))).clicked() {
+            // A container has no native folder browser; its volumes are listed above.
+            if !crate::container::enabled()
+                && ui.add(egui::Button::new(tr!("other-folder")).min_size(vec2(0.0, 34.0))).clicked()
+            {
                 browse = true;
             }
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
@@ -282,7 +285,11 @@ fn drive_card(
     p.text(
         egui::pos2(right, rect.bottom() - 14.0),
         Align2::RIGHT_CENTER,
-        format!("{}  ·  {}", format::percent(used, disk.total), disk.fs),
+        if crate::container::read_only(&disk.mount) {
+            format!("{}  ·  {}  ·  {}", format::percent(used, disk.total), disk.fs, tr!("read-only"))
+        } else {
+            format!("{}  ·  {}", format::percent(used, disk.total), disk.fs)
+        },
         egui::FontId::proportional(12.0),
         theme::MUTED,
     );

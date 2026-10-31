@@ -156,6 +156,14 @@ translation = "Intet er ændret siden dette øjebliksbillede."
 source = "Shrank"
 translation = "Skrumpede"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Søg efter opdateringer"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Spørger GitHub ved opstart, om der er en nyere version. Intet om dig eller dine filer sendes."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Forenklet Kinesisk"
@@ -1030,6 +1038,10 @@ translation = "Gem ændringer"
 source = "Scan boundaries"
 translation = "Skan grænser"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Opdateringer"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Vindue & interaktion"
@@ -1401,6 +1413,14 @@ translation = "Ulæselige mapper"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Op et niveau"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Version { $version } er tilgængelig"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Opdater ved at køre: { $command } (klik for at kopiere)"
 
 [messages.updating]
 source = "Updating…"

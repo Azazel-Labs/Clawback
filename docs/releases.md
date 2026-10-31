@@ -56,6 +56,20 @@ Published versions cannot be overwritten; source changes require a new version.
 
 After publication, users can install with `cargo install clawback --locked`.
 
+## Docker image
+
+After each release is published, the **Docker image** workflow packages its Linux
+x86-64 and ARM64 builds into `ghcr.io/azazel-labs/clawback` (see
+[Running Clawback in Docker](docker.md)). It reuses the release executables and
+compiles nothing. Stable versions are tagged `0.3.0` and `0.3`, plus `latest` when
+the version is GitHub's Latest release. Previews get their version tag only, and
+nightlies replace `nightly`. No secret is needed: the workflow pushes with the
+repository's own token.
+
+After the first push, open the package under the organization's **Packages** tab
+and set its visibility to **Public**; GitHub creates new packages as private. To
+retry, run **Actions → Docker image → Run workflow** with a published tag.
+
 ## Stable, previews, and nightly
 
 | Version or trigger | Result | GitHub Latest |

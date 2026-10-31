@@ -822,6 +822,7 @@ dependencies = [
  "i18n-embed",
  "i18n-embed-fl",
  "image",
+ "libc",
  "libloading 0.9.0",
  "notify",
  "num-format",

@@ -156,6 +156,14 @@ translation = "ไม่มีอะไรเปลี่ยนแปลงต�
 source = "Shrank"
 translation = "เล็กลง"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "ตรวจหาการอัปเดต"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "เมื่อเริ่มโปรแกรม จะสอบถาม GitHub ว่ามีเวอร์ชันใหม่หรือไม่ โดยไม่ส่งข้อมูลใดเกี่ยวกับคุณหรือไฟล์ของคุณ"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "จีนตัวย่อ"
@@ -1017,6 +1025,10 @@ translation = "บันทึกการเปลี่ยนแปลง"
 source = "Scan boundaries"
 translation = "ขอบเขตการสแกน"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "การอัปเดต"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "หน้าต่างและการโต้ตอบ"
@@ -1388,6 +1400,14 @@ translation = "โฟลเดอร์ที่อ่านไม่ได้"
 [messages.up-a-level]
 source = "Up a level"
 translation = "ขึ้นหนึ่งระดับ"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "มีเวอร์ชัน { $version } แล้ว"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "หากต้องการอัปเดต ให้เรียกใช้: { $command } (คลิกเพื่อคัดลอก)"
 
 [messages.updating]
 source = "Updating…"

@@ -58,8 +58,12 @@ fn hidden_mount(m: &Path) -> bool {
         || s.starts_with("/run/")
 }
 
-/// Every mounted volume, including ones hidden from the drive list.
+/// Every mounted volume, including ones hidden from the drive list. In a container,
+/// only the mapped volumes: the container's own filesystem says nothing useful.
 pub fn all_disks() -> Vec<DiskInfo> {
+    if crate::container::enabled() {
+        return crate::container::drives();
+    }
     let disks = sysinfo::Disks::new_with_refreshed_list();
     let mut v: Vec<DiskInfo> = disks
         .list()
@@ -105,6 +109,9 @@ pub fn refresh_disk_space(disk: &mut DiskInfo) {
 
 /// Volumes worth offering in the "Select Drive to View" dialog.
 pub fn drive_list() -> Vec<DiskInfo> {
+    if crate::container::enabled() {
+        return crate::container::drives();
+    }
     all_disks()
         .into_iter()
         .filter(|d| d.total > 0 && !HIDDEN_FS.contains(&d.fs.as_str()) && !hidden_mount(&d.mount))

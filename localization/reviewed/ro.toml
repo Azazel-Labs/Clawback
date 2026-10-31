@@ -156,6 +156,14 @@ translation = "Nimic nu s-a schimbat de la acest instantaneu."
 source = "Shrank"
 translation = "S-a micșorat"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Caută actualizări"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "La pornire, întreabă GitHub dacă există o versiune mai nouă. Nu se trimite nimic despre tine sau fișierele tale."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Chineză simplificată"
@@ -1017,6 +1025,10 @@ translation = "Salvează modificările"
 source = "Scan boundaries"
 translation = "Scanare limite"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Actualizări"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Fereastră și interacțiune"
@@ -1388,6 +1400,14 @@ translation = "Dosare care nu pot fi citite"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Un nivel mai sus"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Versiunea { $version } este disponibilă"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Pentru actualizare, rulează: { $command } (clic pentru a copia)"
 
 [messages.updating]
 source = "Updating…"

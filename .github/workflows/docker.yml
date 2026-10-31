@@ -1,0 +1,92 @@
+name: Docker image
+
+# Packages a published release's Linux builds as ghcr.io/azazel-labs/clawback.
+# The Release workflow calls this after publishing; run it by hand to retry a tag.
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Published release tag to package (for example v0.1.0 or nightly)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: docker-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  image:
+    name: Publish ${{ inputs.tag }} image
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+      - name: Fetch the Linux release builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          for pair in amd64:x86_64-unknown-linux-gnu arm64:aarch64-unknown-linux-gnu; do
+            arch="${pair%%:*}"
+            name="clawback-$RELEASE_TAG-${pair#*:}"
+            gh release download "$RELEASE_TAG" --pattern "$name.tar.gz" --dir target/downloads
+            tar -xzf "target/downloads/$name.tar.gz" -C target/downloads
+            install -D -m 755 "target/downloads/$name/clawback" "target/docker/$arch/clawback"
+          done
+      - name: Choose image tags
+        id: tags
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          if [[ "$RELEASE_TAG" == nightly ]]; then
+            tags="$image:nightly"
+          elif [[ "$RELEASE_TAG" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
+            tags="$image:${RELEASE_TAG#v},$image:${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+            # Like the GitHub release, latest follows the Latest stable version only.
+            latest="$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)"
+            if [[ "$latest" == "$RELEASE_TAG" ]]; then
+              tags="$tags,$image:latest"
+            fi
+          else
+            tags="$image:${RELEASE_TAG#v}"
+          fi
+          echo "tags=$tags" >> "$GITHUB_OUTPUT"
+          echo "Image tags: $tags" >> "$GITHUB_STEP_SUMMARY"
+      # Only the package installs run under emulation for arm64; nothing is compiled.
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: packaging/docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          build-args: BINARY=prebuilt
+          pull: true
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=Clawback
+            org.opencontainers.image.description=See where your disk space went, from a browser.
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ inputs.tag }}
+            org.opencontainers.image.licenses=MIT-0

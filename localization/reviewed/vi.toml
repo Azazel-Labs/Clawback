@@ -156,6 +156,14 @@ translation = "Không có gì thay đổi kể từ ảnh chụp này."
 source = "Shrank"
 translation = "Giảm"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Kiểm tra cập nhật"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Khi khởi động, hỏi GitHub xem có phiên bản mới hơn không. Không gửi bất kỳ thông tin nào về bạn hoặc tệp của bạn."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Tiếng Trung giản thể"
@@ -1017,6 +1025,10 @@ translation = "Lưu thay đổi"
 source = "Scan boundaries"
 translation = "Phạm vi quét"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Cập nhật"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Cửa sổ và tương tác"
@@ -1388,6 +1400,14 @@ translation = "Thư mục không đọc được"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Lên một cấp"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Đã có phiên bản { $version }"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Để cập nhật, hãy chạy: { $command } (nhấp để sao chép)"
 
 [messages.updating]
 source = "Updating…"

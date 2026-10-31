@@ -4,3 +4,4 @@
 *.ppm
 /debug.log
 __pycache__/
+/packaging/docker/config

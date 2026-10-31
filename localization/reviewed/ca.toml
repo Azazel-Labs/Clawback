@@ -156,6 +156,14 @@ translation = "No ha canviat res des d’aquesta instantània."
 source = "Shrank"
 translation = "S’ha reduït"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Comprova si hi ha actualitzacions"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "En iniciar, pregunta a GitHub si hi ha una versió més nova. No s’envia res sobre tu ni sobre els teus fitxers."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Xinès simplificat"
@@ -1030,6 +1038,10 @@ translation = "Desa els canvis"
 source = "Scan boundaries"
 translation = "Límits de l’anàlisi"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Actualitzacions"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Finestra i interacció"
@@ -1401,6 +1413,14 @@ translation = "Carpetes il·legibles"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Puja un nivell"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Versió { $version } disponible"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Per actualitzar, executa: { $command } (fes clic per copiar)"
 
 [messages.updating]
 source = "Updating…"

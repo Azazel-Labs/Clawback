@@ -156,6 +156,14 @@ translation = "Inget har ändrats sedan den här ögonblicksbilden."
 source = "Shrank"
 translation = "Krympte"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Sök efter uppdateringar"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Frågar GitHub vid start om det finns en nyare version. Inget om dig eller dina filer skickas."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Förenklad kinesiska"
@@ -1030,6 +1038,10 @@ translation = "Spara ändringar"
 source = "Scan boundaries"
 translation = "Skanna gränser"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Uppdateringar"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Fönster & interaktion"
@@ -1401,6 +1413,14 @@ translation = "Oläsbara mappar"
 [messages.up-a-level]
 source = "Up a level"
 translation = "En nivå upp"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Version { $version } finns"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Uppdatera genom att köra: { $command } (klicka för att kopiera)"
 
 [messages.updating]
 source = "Updating…"

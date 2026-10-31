@@ -156,6 +156,14 @@ translation = "Τίποτα δεν άλλαξε από αυτό το στιγμ�
 source = "Shrank"
 translation = "Μίκρυναν"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Έλεγχος για ενημερώσεις"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "Κατά την εκκίνηση, ρωτά το GitHub αν υπάρχει νεότερη έκδοση. Δεν αποστέλλεται τίποτα για εσάς ή τα αρχεία σας."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Απλοποιημένα Κινέζικα"
@@ -1030,6 +1038,10 @@ translation = "Αποθήκευση αλλαγών"
 source = "Scan boundaries"
 translation = "Όρια σάρωσης"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Ενημερώσεις"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Παράθυρο και αλληλεπίδραση"
@@ -1401,6 +1413,14 @@ translation = "Μη αναγνώσιμοι φάκελοι"
 [messages.up-a-level]
 source = "Up a level"
 translation = "Πάνω ένα επίπεδο"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Διαθέσιμη η έκδοση { $version }"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Για ενημέρωση, εκτελέστε: { $command } (κάντε κλικ για αντιγραφή)"
 
 [messages.updating]
 source = "Updating…"

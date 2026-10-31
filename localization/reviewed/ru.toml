@@ -156,6 +156,14 @@ translation = "С этого снимка ничего не изменилось
 source = "Shrank"
 translation = "Уменьшилось"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "Проверять обновления"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "При запуске спрашивает у GitHub, вышла ли новая версия. Никакие сведения о вас или ваших файлах не отправляются."
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "Китайский (упрощённый)"
@@ -1038,6 +1046,10 @@ translation = "Сохранить изменения"
 source = "Scan boundaries"
 translation = "Границы сканирования"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "Обновления"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "Окно и взаимодействие"
@@ -1409,6 +1421,14 @@ translation = "Недоступные для чтения папки"
 [messages.up-a-level]
 source = "Up a level"
 translation = "На уровень выше"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "Доступна версия { $version }"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "Чтобы обновить, выполните: { $command } (нажмите, чтобы скопировать)"
 
 [messages.updating]
 source = "Updating…"

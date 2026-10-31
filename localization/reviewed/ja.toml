@@ -156,6 +156,14 @@ translation = "このスナップショット以降、変更はありません�
 source = "Shrank"
 translation = "減少"
 
+[messages.check-for-updates]
+source = "Check for updates"
+translation = "アップデートを確認"
+
+[messages.check-for-updates-hint]
+source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
+translation = "起動時に、新しいバージョンがあるかを GitHub に問い合わせます。あなたやファイルに関する情報は一切送信されません。"
+
 [messages.chinese-simplified]
 source = "Simplified Chinese"
 translation = "中国語（簡体字）"
@@ -1017,6 +1025,10 @@ translation = "変更を保存"
 source = "Scan boundaries"
 translation = "スキャン範囲"
 
+[messages.settings-updates]
+source = "Updates"
+translation = "アップデート"
+
 [messages.settings-window]
 source = "Window & interaction"
 translation = "ウィンドウと操作"
@@ -1388,6 +1400,14 @@ translation = "読み取れないフォルダー"
 [messages.up-a-level]
 source = "Up a level"
 translation = "一つ上の階層へ"
+
+[messages.update-available]
+source = "Version { $version } available"
+translation = "バージョン { $version } が利用可能"
+
+[messages.update-available-docker]
+source = "To update, run: { $command } (click to copy)"
+translation = "更新するには次を実行: { $command }（クリックでコピー）"
 
 [messages.updating]
 source = "Updating…"

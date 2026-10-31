@@ -1,0 +1,33 @@
+# Clawback in a web browser. Start it with `docker compose up -d`, then open
+# https://localhost:3001 and accept the self-signed certificate.
+# See docs/docker.md for every option.
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    container_name: clawback
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      # Clawback runs as this user and group: they need write access to delete.
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      # Browser login. Without a password anyone who can reach the port can delete files.
+      - CUSTOM_USER=clawback
+      - PASSWORD=change-me
+      # false hides deletion entirely; read-only volumes can't be deleted from either way.
+      - CLAWBACK_ALLOW_DELETE=true
+    volumes:
+      # Settings, recent folders and snapshots.
+      - ./config:/config
+      # Each folder to scan goes under /data. Add :ro to browse a volume without deleting.
+      - /srv/media:/data/media
+      - /srv/downloads:/data/downloads
+      - /mnt/backups:/data/backups:ro
+    # With TSDProxy, remove `ports` above and serve the plain HTTP port on your tailnet:
+    # labels:
+    #   tsdproxy.enable: "true"
+    #   tsdproxy.name: clawback
+    #   tsdproxy.port.1: "443/https:3000/http"
+    restart: unless-stopped

@@ -157,7 +157,7 @@ pub fn show(ctx: &egui::Context, props: &mut Option<Props>) {
                     );
                     ui.add_space(8.0);
                     ui.horizontal(|ui| {
-                        if ui.button(platform::file_manager_label()).clicked() {
+                        if !crate::container::enabled() && ui.button(platform::file_manager_label()).clicked() {
                             p.error = platform::reveal(&p.path).err();
                         }
                         ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
