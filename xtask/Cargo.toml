@@ -17,7 +17,7 @@ clawback-core.workspace = true
 toml_edit = "0.25.17"
 png = "0.18.1"
 ab_glyph = "0.2.32"
-epaint_default_fonts = "0.36.2"
+epaint_default_fonts = "0.37.0"
 sha2 = "0.11"
 
 [lints]

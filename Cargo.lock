@@ -1453,7 +1453,7 @@ dependencies = [
  "bytemuck",
  "ecolor",
  "emath",
- "epaint_default_fonts",
+ "epaint_default_fonts 0.36.2",
  "font-types",
  "harfrust",
  "log",
@@ -1474,6 +1474,12 @@ name = "epaint_default_fonts"
 version = "0.36.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773fa9c96dd0dbef887e39d0ed6177f141cce4d68e6041df77570aa3702dfa13"
+
+[[package]]
+name = "epaint_default_fonts"
+version = "0.37.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cfc1cc505827f4c23eedc297975a0fd038268d41293f389dd8ff3b574aefab19"
 
 [[package]]
 name = "equivalent"
@@ -6227,7 +6233,7 @@ dependencies = [
  "ab_glyph",
  "clap",
  "clawback-core",
- "epaint_default_fonts",
+ "epaint_default_fonts 0.37.0",
  "fluent-syntax",
  "png",
  "proc-macro2",
