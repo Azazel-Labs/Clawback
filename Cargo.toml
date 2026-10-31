@@ -3,7 +3,7 @@ members = ["crates/clawback-core", "xtask"]
 default-members = [".", "crates/clawback-core"]
 
 [workspace.package]
-version = "0.3.0"
+version = "0.4.0"
 edition = "2024"
 rust-version = "1.95"
 license = "MIT-0"
@@ -11,7 +11,7 @@ repository = "https://github.com/Azazel-Labs/Clawback"
 authors = ["Azazel Labs"]
 
 [workspace.dependencies]
-clawback-core = { path = "crates/clawback-core", version = "0.3.0" }
+clawback-core = { path = "crates/clawback-core", version = "0.4.0" }
 
 # ---------------------------------------------------------------------------
 # Lints: pedantic clippy with a short, deliberate allow list. CI runs
