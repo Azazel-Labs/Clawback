@@ -1,7 +1,8 @@
 name: Docker image
 
 # Packages a published release's Linux builds as ghcr.io/azazel-labs/clawback.
-# The Release workflow calls this after publishing; run it by hand to retry a tag.
+# The Release workflow calls this after publishing; run it by hand to retry a tag,
+# or leave the tag blank to build the branch's latest commit as the edge image.
 on:
   workflow_call:
     inputs:
@@ -11,8 +12,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Published release tag to package (for example v0.1.0 or nightly)"
-        required: true
+        description: "Published release to package (v0.4.0, 0.4.0 or nightly). Blank builds the branch head as edge."
+        required: false
+        default: ""
         type: string
 
 permissions:
@@ -20,22 +22,57 @@ permissions:
   packages: write
 
 concurrency:
-  group: docker-${{ inputs.tag }}
+  group: docker-${{ inputs.tag || 'edge' }}
   cancel-in-progress: false
 
 jobs:
-  image:
-    name: Publish ${{ inputs.tag }} image
-    runs-on: ubuntu-24.04
+  # A blank tag has no release to download, so compile the head natively on each CPU.
+  build:
+    name: Build ${{ matrix.arch }}
+    if: inputs.tag == ''
+    strategy:
+      matrix:
+        include:
+          - { os: ubuntu-24.04, arch: amd64 }
+          - { os: ubuntu-24.04-arm, arch: arm64 }
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.tag }}
+          persist-credentials: false
+      - name: Install toolchain (from rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          key: docker-${{ matrix.arch }}
+      # No CLAWBACK_UPDATE_CHANNEL: edge images never check for updates.
+      - name: Build
+        run: cargo build --release --locked
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: clawback-${{ matrix.arch }}
+          path: target/release/clawback
+          if-no-files-found: error
+          retention-days: 1
+
+  image:
+    name: Publish ${{ inputs.tag || 'edge' }} image
+    needs: build
+    # Runs after the build, or without it when packaging a release.
+    if: ${{ !cancelled() && !failure() }}
+    runs-on: ubuntu-24.04
+    env:
+      # Version tags start with v; accept 0.4.0 typed by hand as v0.4.0. Empty for edge.
+      RELEASE_TAG: ${{ inputs.tag != '' && ((inputs.tag == 'nightly' || startsWith(inputs.tag, 'v')) && inputs.tag || format('v{0}', inputs.tag)) || '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG || github.sha }}
           persist-credentials: false
       - name: Fetch the Linux release builds
+        if: env.RELEASE_TAG != ''
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           set -euo pipefail
           for pair in amd64:x86_64-unknown-linux-gnu arm64:aarch64-unknown-linux-gnu; do
@@ -45,15 +82,29 @@ jobs:
             tar -xzf "target/downloads/$name.tar.gz" -C target/downloads
             install -D -m 755 "target/downloads/$name/clawback" "target/docker/$arch/clawback"
           done
+      - name: Fetch the edge builds
+        if: env.RELEASE_TAG == ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: clawback-*
+          path: target/downloads
+      - name: Place the edge builds
+        if: env.RELEASE_TAG == ''
+        run: |
+          set -euo pipefail
+          for arch in amd64 arm64; do
+            install -D -m 755 "target/downloads/clawback-$arch/clawback" "target/docker/$arch/clawback"
+          done
       - name: Choose image tags
         id: tags
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           set -euo pipefail
           image="ghcr.io/${GITHUB_REPOSITORY,,}"
-          if [[ "$RELEASE_TAG" == nightly ]]; then
+          if [[ -z "$RELEASE_TAG" ]]; then
+            tags="$image:edge,$image:sha-${GITHUB_SHA::7}"
+          elif [[ "$RELEASE_TAG" == nightly ]]; then
             tags="$image:nightly"
           elif [[ "$RELEASE_TAG" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
             tags="$image:${RELEASE_TAG#v},$image:${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
@@ -88,5 +139,5 @@ jobs:
             org.opencontainers.image.title=Clawback
             org.opencontainers.image.description=See where your disk space went, from a browser.
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
-            org.opencontainers.image.version=${{ inputs.tag }}
+            org.opencontainers.image.version=${{ env.RELEASE_TAG || github.sha }}
             org.opencontainers.image.licenses=MIT-0

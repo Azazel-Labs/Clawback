@@ -43,6 +43,7 @@ Images are published for x86-64 and ARM64:
 | `latest` | The current stable release. |
 | `0.3`, `0.3.0` | A specific release line or version. |
 | `nightly` | The latest commit on `main`, rebuilt nightly when it changes. |
+| `edge`, `sha-<commit>` | A development build, published only when a maintainer asks for one. It never checks for updates. |
 
 To build the image yourself, run `docker build -f packaging/docker/Dockerfile -t clawback-web .` from the repository root.
 

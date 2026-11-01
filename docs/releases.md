@@ -68,7 +68,10 @@ repository's own token.
 
 After the first push, open the package under the organization's **Packages** tab
 and set its visibility to **Public**; GitHub creates new packages as private. To
-retry, run **Actions → Docker image → Run workflow** with a published tag.
+retry, run **Actions → Docker image → Run workflow** with a published tag (`v0.4.0`
+or `0.4.0`). Leave the tag blank to compile the chosen branch's latest commit on
+x86-64 and ARM64 runners and publish it as `edge` and `sha-<commit>`, without
+touching the release tags.
 
 ## Stable, previews, and nightly
 
