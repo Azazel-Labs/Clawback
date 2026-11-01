@@ -335,7 +335,7 @@ impl ClawbackApp {
             if let Ok(page) = std::env::var("CLAWBACK_DEMO_SETTINGS") {
                 app.setup = Some(app.settings.clone());
                 cc.egui_ctx
-                    .data_mut(|data| data.insert_temp(Id::new("settings-page"), page.parse::<usize>().unwrap_or(0)));
+                    .data_mut(|data| data.insert_temp(Id::unique("settings-page"), page.parse::<usize>().unwrap_or(0)));
             }
             return app;
         }
@@ -349,7 +349,7 @@ impl ClawbackApp {
     }
 
     /// Probe and capture runs leave the user's saved settings and window state alone.
-    #[cfg_attr(not(any(feature = "perf-probe", feature = "screenshots")), allow(clippy::unused_self))]
+    #[cfg_attr(not(feature = "perf-probe"), allow(clippy::unused_self))]
     fn persistent(&self) -> bool {
         #[cfg(feature = "perf-probe")]
         if self.probe.is_some() {
@@ -982,7 +982,7 @@ impl ClawbackApp {
         let mut action = None;
         ui.spacing_mut().button_padding = vec2(8.0, 3.0);
         ui.spacing_mut().interact_size.y = 24.0;
-        let bar_key = Id::new("menu_bar_open");
+        let bar_key = Id::unique("menu_bar_open");
         let was_open = ui.data(|d| d.get_temp::<bool>(bar_key).unwrap_or(false));
         let mut open = false;
         egui::MenuBar::new().ui(ui, |ui| {
@@ -1224,7 +1224,7 @@ impl ClawbackApp {
                     add_contents(ui);
                 });
         };
-        egui::Area::new(Id::new("scan-toast"))
+        egui::Area::new(Id::unique("scan-toast"))
             .order(egui::Order::Foreground)
             .anchor(Align2::RIGHT_BOTTOM, [-16.0, -16.0])
             .movable(false)
@@ -1502,7 +1502,7 @@ impl ClawbackApp {
             Some(id) => (tr!("about-store-page"), format!("https://store.steampowered.com/app/{id}/")),
             None => (tr!("about-source-code"), env!("CARGO_PKG_REPOSITORY").to_owned()),
         };
-        let modal = egui::Modal::new(Id::new("clawback-about")).show(ctx, |ui| {
+        let modal = egui::Modal::new(Id::unique("clawback-about")).show(ctx, |ui| {
             ui.set_width(440.0);
             ui.vertical_centered(|ui| {
                 ui.add_space(12.0);
@@ -1586,7 +1586,7 @@ impl ClawbackApp {
         let directory_panel = if crate::demo::capturing() { "demo-directories-v2" } else { directory_panel };
         // The split is a share of the window, so it survives restarts and window resizes.
         // egui's own saved panel size is clamped to whatever height the first frames had.
-        let panel_id = Id::new(directory_panel);
+        let panel_id = Id::unique(directory_panel);
         let below_toolbar = ui.available_height();
         let (min_split, max_split) = clawback_core::settings::DIRECTORY_SPLIT;
         let max_height = from_permille(max_split, below_toolbar).max(100.0);
@@ -1692,7 +1692,7 @@ impl ClawbackApp {
     fn error_dialog(&mut self, ctx: &egui::Context) {
         if let Some(msg) = &self.error {
             let mut close = false;
-            let r = egui::Modal::new(Id::new("clawback-error")).show(ctx, |ui| {
+            let r = egui::Modal::new(Id::unique("clawback-error")).show(ctx, |ui| {
                 ui.set_max_width(460.0);
                 ui.label(msg);
                 ui.add_space(8.0);
@@ -1808,7 +1808,7 @@ impl eframe::App for ClawbackApp {
                     let center = ui.max_rect().center();
                     let icon_rect = egui::Rect::from_center_size(center - vec2(0.0, 92.0), vec2(112.0, 112.0));
                     let response = ui
-                        .interact(icon_rect, Id::new("empty-open-drive"), egui::Sense::click())
+                        .interact(icon_rect, Id::unique("empty-open-drive"), egui::Sense::click())
                         .on_hover_cursor(egui::CursorIcon::PointingHand)
                         .on_hover_text(tr!("select-drive-to-view"));
                     let hover = ui.ctx().animate_bool(response.id, response.hovered());
@@ -1977,7 +1977,7 @@ mod tests {
         let mut frame = |events: Vec<egui::Event>| {
             buttons.clear();
             let mut output = ctx.run_ui(egui::RawInput { events, ..Default::default() }, |ui| {
-                let key = Id::new("menu_bar_open");
+                let key = Id::unique("menu_bar_open");
                 let was_open = ui.data(|d| d.get_temp::<bool>(key).unwrap_or(false));
                 let mut open = false;
                 egui::MenuBar::new().ui(ui, |ui| {

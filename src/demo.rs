@@ -223,7 +223,7 @@ pub fn view(tree: &Tree) -> NodeId {
 /// its window opens relative to the cursor.
 pub fn isolate_input(input: &mut eframe::egui::RawInput) {
     if capturing() {
-        input.events.retain(|event| matches!(event, eframe::egui::Event::Screenshot { .. }));
+        input.events.clear();
     }
 }
 
@@ -242,19 +242,15 @@ pub fn capture(ctx: &eframe::egui::Context) {
             .unwrap_or(vec2(1280.0, 820.0));
         ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(size));
     }
-    let image = ctx.input(|i| {
-        i.events
-            .iter()
-            .find_map(|e| if let egui::Event::Screenshot { image, .. } = e { Some(image.clone()) } else { None })
-    });
-    if let Some(image) = image {
-        let mut file = std::fs::File::create(destination).expect("screenshot destination");
-        write!(file, "P6\n{} {}\n255\n", image.size[0], image.size[1]).expect("screenshot header");
-        let bytes: Vec<_> = image.pixels.iter().flat_map(|p| [p.r(), p.g(), p.b()]).collect();
-        file.write_all(&bytes).expect("screenshot pixels");
-        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-    } else if ctx.cumulative_frame_nr() == 100 {
-        ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(egui::UserData::default()));
+    if ctx.cumulative_frame_nr() == 100 {
+        let ctx = ctx.clone();
+        ctx.clone().request_screenshot(move |image| {
+            let mut file = std::fs::File::create(destination).expect("screenshot destination");
+            write!(file, "P6\n{} {}\n255\n", image.size[0], image.size[1]).expect("screenshot header");
+            let bytes: Vec<_> = image.pixels.iter().flat_map(|p| [p.r(), p.g(), p.b()]).collect();
+            file.write_all(&bytes).expect("screenshot pixels");
+            ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+        });
     }
 }
 

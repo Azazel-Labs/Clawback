@@ -227,7 +227,7 @@ impl Reclaim {
         }
         // Painted by hand: placing a widget inside the row would move the layout cursor.
         let sense = if enabled { Sense::click() } else { Sense::hover() };
-        let action = ui.interact(button, ui.id().with(("reclaim-action", item.node)), sense);
+        let action = ui.interact(button, ui.scope_id().with(("reclaim-action", item.node)), sense);
         let fill = if enabled && action.hovered() { theme::CURRENT_ROW } else { theme::SELECTED_FILL };
         painter.rect(button, 4.0, fill, egui::Stroke::new(1.0, theme::DIALOG_EDGE), egui::StrokeKind::Inside);
         painter.text(

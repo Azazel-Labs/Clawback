@@ -520,7 +520,7 @@ impl MapView {
             }
         }
         let hovered = self.hit(pointer);
-        let fade = painter.ctx().animate_bool(Id::new("map-hover-glow"), hovered.is_some());
+        let fade = painter.ctx().animate_bool(Id::unique("map-hover-glow"), hovered.is_some());
         // Only changed interactive cells need extra drawing, not every box.
         for (index, alpha) in [(self.selected, 1.0), (hovered.filter(|h| Some(*h) != self.selected), fade)] {
             let Some(b) = index.and_then(|i| self.boxes.get(i)) else {
@@ -554,7 +554,7 @@ impl MapView {
         let Some(node) = b.node() else { return };
         let idle = now - self.last_input;
         let s = input.settings;
-        let tips = ctx.layer_painter(LayerId::new(Order::Tooltip, Id::new("clawback-map-tips")));
+        let tips = ctx.layer_painter(LayerId::new(Order::Tooltip, Id::unique("clawback-map-tips")));
         let screen = ctx.content_rect();
 
         let name_delay = f64::from(s.nametip_delay_ms) / 1000.0;

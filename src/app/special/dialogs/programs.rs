@@ -54,7 +54,7 @@ impl ClawbackApp {
         let Some(removal) = self.special.removals.front() else {
             if let Some((request, _)) = self.special.removal_checks.first() {
                 let mut cancel = false;
-                let modal = egui::Modal::new(Id::new("identify-application")).show(ctx, |ui| {
+                let modal = egui::Modal::new(Id::unique("identify-application")).show(ctx, |ui| {
                     ui.set_width(460.0_f32.min((ctx.content_rect().width() - 48.0).max(160.0)));
                     cancel = super::header(ui, &tr!("uninstall-identifying"), egui_phosphor::regular::MAGNIFYING_GLASS);
                     ui.label(request.path.to_string_lossy());
@@ -70,7 +70,7 @@ impl ClawbackApp {
         let mut close = false;
         let mut launch = None;
         let mut open = None;
-        let modal = egui::Modal::new(Id::new("uninstall-application")).show(ctx, |ui| {
+        let modal = egui::Modal::new(Id::unique("uninstall-application")).show(ctx, |ui| {
             ui.set_width(500.0_f32.min((ctx.content_rect().width() - 48.0).max(160.0)));
             ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
             ui.spacing_mut().item_spacing.y = 10.0;

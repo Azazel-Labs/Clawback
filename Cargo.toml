@@ -107,11 +107,11 @@ rust-embed = { version = "8", features = ["debug-embed"] }
 clawback-core.workspace = true
 # GUI (wgpu renderer; winit loads X11/Wayland/GL libraries at runtime, so
 # there are no system -dev packages to install at build time).
-eframe = { version = "0.36", features = ["persistence"] }
+eframe = { version = "0.37", features = ["persistence"] }
 # Native folder picker (XDG portal on Linux, pure Rust).
 rfd = "0.17"
 # Mounted volumes and free space.
-sysinfo = { version = "0.39", default-features = false, features = ["disk"] }
+sysinfo = { version = "0.40", default-features = false, features = ["disk"] }
 # Recycle Bin / Trash.
 trash = "5.2"
 ratatui = "0.30"
@@ -127,6 +127,7 @@ notify = "8.2"
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.62", features = ["Win32_Foundation", "Win32_System_Com", "Win32_UI_Shell"] }
+# Must match the windows crate's own windows-core, so upgrade the two together.
 windows-core = "0.62"
 windows-sys = { version = "0.61", features = ["Win32_Globalization", "Win32_Foundation", "Win32_Storage_FileSystem", "Win32_Storage_Vhd", "Win32_System_IO", "Win32_System_Threading", "Win32_System_StationsAndDesktops", "Win32_Security", "Win32_Security_Authorization", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging", "Win32_Graphics_Gdi", "Win32_System_Com", "Win32_System_Console", "Win32_System_Pipes", "Win32_System_Services", "Win32_System_JobObjects", "Win32_System_Registry", "Win32_System_WindowsProgramming"] }
 

@@ -140,7 +140,7 @@ pub fn modal_frame() -> egui::Frame {
 
 /// A modal dialog over a dimmed window, in [`modal_frame`].
 pub fn modal(id: &str) -> egui::Modal {
-    egui::Modal::new(egui::Id::new(id)).backdrop_color(BACKDROP).frame(modal_frame())
+    egui::Modal::new(egui::Id::unique(id)).backdrop_color(BACKDROP).frame(modal_frame())
 }
 
 /// A dialog's main action: bold dark text on `fill`.
@@ -215,8 +215,7 @@ mod tests {
                 definitions.families[&egui::FontFamily::Proportional].last().map(String::as_str),
                 Some("Phosphor")
             );
-            let mut fonts = egui::epaint::text::Fonts::new(egui::epaint::text::TextOptions::default(), definitions);
-            let characters = fonts.fonts.font(&egui::FontFamily::Proportional).characters().clone();
+            let characters = ui.fonts_mut(|fonts| fonts.characters(&egui::FontFamily::Proportional).clone());
             let icon = egui_phosphor::regular::TRASH.chars().next().expect("icon codepoint");
             assert!(characters.contains_key(&icon));
         });
@@ -245,12 +244,10 @@ mod tests {
                 let first_cjk = definitions.families[&family].iter().find(|name| name.starts_with("CJK "));
                 assert_eq!(first_cjk.map(String::as_str), expected);
             }
-            let mut coverage = egui::epaint::text::Fonts::new(egui::epaint::text::TextOptions::default(), definitions);
             for font in [FontId::proportional(13.0), FontId::monospace(13.0)] {
                 // Inspect the charmaps directly: egui 0.36's has_glyph reports
                 // false for valid characters in the replacement glyph's face.
-                let mut family = coverage.fonts.font(&font.family);
-                let characters = family.characters();
+                let characters = ui.fonts_mut(|fonts| fonts.characters(&font.family).clone());
                 // Bundled builds guarantee coverage. System builds must also run
                 // on machines without optional CJK language fonts installed.
                 #[cfg(bundled_cjk_fonts)]

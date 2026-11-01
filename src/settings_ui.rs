@@ -43,7 +43,7 @@ pub fn show(ctx: &egui::Context, settings: &mut Settings) -> Option<bool> {
     let margin = if compact { 16 } else { 24 };
     let width = (ctx.content_rect().width() - 48.0).clamp(300.0, 680.0);
     // Stored as an index; demo captures preselect a page the same way.
-    let page_id = Id::new("settings-page");
+    let page_id = Id::unique("settings-page");
     let stored = ctx.data_mut(|data| data.get_temp::<usize>(page_id));
     let mut page = stored.and_then(|index| Page::ALL.get(index).copied()).unwrap_or(Page::Appearance);
     let response = theme::modal("clawback-settings")
@@ -185,7 +185,7 @@ fn toggle(ui: &mut Ui, value: &mut bool, label: &str) {
             *value = !*value;
             response.mark_changed();
         }
-        response.widget_info(|| egui::WidgetInfo::selected(egui::WidgetType::Checkbox, ui.is_enabled(), *value, label));
+        response.widget_info(|| egui::WidgetInfo::selected(egui::Role::CheckBox, ui.is_enabled(), *value, label));
         let t = ui.ctx().animate_bool(response.id, *value);
         let fill = if *value { theme::ACCENT } else { theme::TOGGLE_OFF };
         ui.painter().rect_filled(rect.shrink(1.0), 10, if ui.is_enabled() { fill } else { fill.gamma_multiply(0.4) });

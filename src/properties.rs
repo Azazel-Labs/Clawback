@@ -83,16 +83,19 @@ pub fn show(ctx: &egui::Context, props: &mut Option<Props>) {
     match props {
         None => return,
         Some(Props::Loading(_)) => {
-            egui::Window::new(tr!("properties")).id(Id::new("clawback-properties")).open(&mut open).show(ctx, |ui| {
-                ui.horizontal(|ui| {
-                    ui.spinner();
-                    ui.label(tr!("reading-file-details"));
-                });
-            });
+            egui::Window::new(tr!("properties")).id(Id::unique("clawback-properties")).open(&mut open).show(
+                ctx,
+                |ui| {
+                    ui.horizontal(|ui| {
+                        ui.spinner();
+                        ui.label(tr!("reading-file-details"));
+                    });
+                },
+            );
         }
         Some(Props::Shown(p)) => {
             egui::Window::new(tr!("properties"))
-                .id(Id::new("clawback-properties"))
+                .id(Id::unique("clawback-properties"))
                 .open(&mut open)
                 .collapsible(false)
                 .resizable(false)

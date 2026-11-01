@@ -64,9 +64,10 @@ pub fn all_disks() -> Vec<DiskInfo> {
     if crate::container::enabled() {
         return crate::container::drives();
     }
-    let disks = sysinfo::Disks::new_with_refreshed_list();
+    let Ok(disks) = sysinfo::Disks::new_with_refreshed_list() else {
+        return Vec::new();
+    };
     let mut v: Vec<DiskInfo> = disks
-        .list()
         .iter()
         .map(|d| DiskInfo {
             name: d.name().to_string_lossy().into_owned(),

@@ -270,7 +270,7 @@ impl Snapshots {
         let saving = dialog.job.is_some();
         let mut close = false;
         let mut start = false;
-        let modal = egui::Modal::new(Id::new("snapshot-save")).show(ctx, |ui| {
+        let modal = egui::Modal::new(Id::unique("snapshot-save")).show(ctx, |ui| {
             ui.set_width(440.0);
             close = super::widgets::dialog_header(ui, &tr!("snapshot-save-title"), egui_phosphor::regular::CAMERA);
             ui.add(egui::Label::new(RichText::new(tr!("snapshot-save-body")).color(theme::MUTED)).wrap());
@@ -333,7 +333,7 @@ impl Snapshots {
         let mut close = false;
         let mut open = None;
         let mut remove = None;
-        let modal = egui::Modal::new(Id::new("snapshot-pick")).show(ctx, |ui| {
+        let modal = egui::Modal::new(Id::unique("snapshot-pick")).show(ctx, |ui| {
             ui.set_width(520.0);
             close = super::widgets::dialog_header(ui, &tr!("snapshot-pick-title"), egui_phosphor::regular::GIT_DIFF);
             let root = picker.root.clone();

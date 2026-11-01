@@ -83,7 +83,7 @@ pub(super) fn tabs<T: Copy + PartialEq>(ui: &mut eframe::egui::Ui, current: &mut
         let galley = painter.layout_no_wrap(label.clone(), FontId::proportional(13.0), theme::TEXT);
         let tab = Rect::from_min_size(pos2(left, strip.top()), vec2(galley.size().x + 24.0, height));
         let response = ui
-            .interact(tab, ui.id().with(("tab", index)), Sense::click())
+            .interact(tab, ui.scope_id().with(("tab", index)), Sense::click())
             .on_hover_cursor(eframe::egui::CursorIcon::PointingHand);
         if response.clicked() {
             *current = *value;
@@ -120,7 +120,7 @@ mod tests {
                 ..Default::default()
             };
             let mut output = ctx.run_ui(input, |root| {
-                egui::Modal::new(egui::Id::new("header-size-test")).show(root.ctx(), |ui| {
+                egui::Modal::new(egui::Id::unique("header-size-test")).show(root.ctx(), |ui| {
                     ui.set_width(500.0);
                     let top = ui.cursor().top();
                     dialog_header(ui, "Uninstall", egui_phosphor::regular::TRASH);

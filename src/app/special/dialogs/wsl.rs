@@ -75,7 +75,7 @@ impl ClawbackApp {
         let mut browse = None;
         let mut open_docker = false;
         let mut compact = false;
-        let dialog = egui::Modal::new(Id::new("wsl-disk")).show(ctx, |ui| {
+        let dialog = egui::Modal::new(Id::unique("wsl-disk")).show(ctx, |ui| {
             ui.set_width(680.0_f32.min((ctx.content_rect().width() - 48.0).max(160.0)));
             ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
             ui.spacing_mut().item_spacing.y = 8.0;
