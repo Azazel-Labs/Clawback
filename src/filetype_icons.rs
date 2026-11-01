@@ -127,7 +127,7 @@ fn start_worker() -> Worker {
                 for pixel in &mut image.pixels {
                     let [r, g, b, a] = pixel.to_srgba_unmultiplied();
                     let gray = (u32::from(r) * 54 + u32::from(g) * 183 + u32::from(b) * 19) / 256;
-                    let dim = |c| ((u32::from(c) * 2 + gray * 3) * 85 / 500) as u8;
+                    let dim = |c| ((u32::from(c) * 2 + gray * 3) / 5) as u8;
                     *pixel = Color32::from_rgba_unmultiplied(dim(r), dim(g), dim(b), a);
                 }
                 image
