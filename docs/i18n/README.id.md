@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Di Windows, Turbo membaca seluruh volume NTFS lokal dengan lebih cepat melalui proses pembantu terpisah yang hanya membaca dan meminta persetujuan UAC. Pemindaian biasa tetap tersedia. macOS membaca metadata secara berkelompok tanpa hak administrator. Pemindai direktori menyesuaikan jumlah utas secara otomatis. Folder yang tidak dapat dibaca dilaporkan; tautan simbolis dan junction Windows tidak diikuti.
 
+## Docker di browser
+
+Untuk NAS atau server rumah, image Docker menjalankan Clawback di server dan mengalirkannya ke tab browser. Petakan folder yang ingin dilihat di bawah `/data`. Anda dapat menghapus dari folder baca/tulis; folder hanya-baca dapat dijelajahi, tetapi tidak ada yang pernah dihapus darinya.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Jalankan `docker compose up -d`, lalu buka `https://<server>:3001`. Panduan penyiapan (bahasa Inggris): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Kontribusi
 
 Petunjuk kompilasi dan panduan pengguna tersedia dalam bahasa Inggris. Terjemahan dikelola di Git; CI mewajibkan katalog lengkap dan README yang ditinjau berdasarkan sumber bahasa Inggris terbaru.

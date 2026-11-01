@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Windows'ta Turbo, UAC onayı isteyen ayrı ve salt okunur bir yardımcı işlemle yerel NTFS biriminin tamamını daha hızlı okur. Normal tarama kullanılabilir durumda kalır. macOS, yönetici yetkisi olmadan meta verileri toplu okur. Dizin tarayıcısı iş parçacığı sayısını otomatik ayarlar. Okunamayan klasörler bildirilir; sembolik bağlantılar ve Windows birleşim noktaları izlenmez.
 
+## Tarayıcıda Docker
+
+Bir NAS veya ev sunucusu için Docker imajı Clawback’i sunucuda çalıştırır ve bir tarayıcı sekmesine aktarır. Görmek istediğiniz klasörleri `/data` altına bağlayın. Okuma/yazma ile bağlanan klasörlerden silebilirsiniz; salt okunur klasörlere göz atılabilir, ancak onlardan hiçbir şey silinmez.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+`docker compose up -d` komutunu çalıştırın, ardından `https://<server>:3001` adresini açın. Kurulum kılavuzu (İngilizce): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Katkıda bulunma
 
 Derleme yönergeleri ve kullanıcı kılavuzu İngilizcedir. Çeviriler Git'te tutulur; CI, eksiksiz kataloglar ve güncel İngilizce kaynaklarla karşılaştırılarak incelenmiş README dosyaları gerektirir.

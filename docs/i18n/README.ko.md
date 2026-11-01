@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Windows의 Turbo는 UAC 승인을 요청하는 별도의 읽기 전용 도우미 프로세스로 로컬 NTFS 볼륨 전체를 더 빠르게 읽습니다. 일반 검사도 계속 사용할 수 있습니다. macOS는 관리자 권한 없이 메타데이터를 일괄 읽습니다. 디렉터리 검사기는 스레드 수를 자동 조정합니다. 읽을 수 없는 폴더는 보고하며 심볼릭 링크와 Windows 정션은 따라가지 않습니다.
 
+## 브라우저에서 쓰는 Docker
+
+NAS나 홈 서버에서는 Docker 이미지가 서버에서 Clawback을 실행하고 브라우저 탭으로 스트리밍합니다. 보고 싶은 폴더를 `/data` 아래에 매핑하세요. 읽기/쓰기로 매핑한 폴더에서는 삭제할 수 있고, 읽기 전용 폴더는 둘러볼 수만 있으며 삭제되지 않습니다.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+`docker compose up -d`를 실행한 다음 `https://<server>:3001`을 여세요. 설정 안내(영어): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## 기여
 
 빌드 지침과 사용자 가이드는 영어로 제공됩니다. 번역은 Git에서 관리하며, CI는 빠짐없는 카탈로그와 현재 영어 원본에 맞춰 검토된 README를 요구합니다.

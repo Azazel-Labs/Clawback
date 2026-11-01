@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 En Windows, Turbo lee más deprisa un volumen NTFS local completo mediante un proceso auxiliar independiente de solo lectura que solicita autorización UAC. El análisis normal sigue disponible. macOS lee metadatos por lotes sin permisos de administrador. El analizador de directorios ajusta sus hilos automáticamente. Se indican las carpetas que no se pueden leer; no se siguen enlaces simbólicos ni uniones de Windows.
 
+## Docker en el navegador
+
+Para un NAS o un servidor doméstico, la imagen de Docker ejecuta Clawback en el servidor y lo transmite a una pestaña del navegador. Monta las carpetas que quieras ver dentro de `/data`. Puedes eliminar de las carpetas de lectura y escritura; las de solo lectura se pueden explorar, pero nunca se elimina nada de ellas.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Ejecuta `docker compose up -d` y abre `https://<server>:3001`. Guía de configuración (en inglés): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Colaboración
 
 Las instrucciones de compilación y la guía de uso están en inglés. Las traducciones se mantienen en Git; CI exige catálogos completos y README revisados con las fuentes inglesas actuales.

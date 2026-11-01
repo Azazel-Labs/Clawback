@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Windows の Turbo は、UAC の承認を求める独立した読み取り専用ヘルパーを使い、ローカル NTFS ボリューム全体を高速に読み取ります。通常のスキャンも利用できます。macOS は管理者権限なしでメタデータを一括取得します。ディレクトリスキャナーはスレッド数を自動調整します。読み取れないフォルダーは報告され、シンボリックリンクや Windows のジャンクションはたどりません。
 
+## ブラウザーで使う Docker 版
+
+NAS やホームサーバーでは、Docker イメージがサーバー上で Clawback を動かし、ブラウザーのタブに配信します。見たいフォルダーを `/data` の下にマップしてください。読み書き可能なフォルダーからは削除でき、読み取り専用のフォルダーは閲覧のみで削除されることはありません。
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+`docker compose up -d` を実行して、`https://<server>:3001` を開きます。セットアップガイド（英語）: [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## 貢献
 
 ビルド手順とユーザーガイドは英語です。翻訳は Git で管理され、CI はすべての項目を含むカタログと、現在の英語ソースに照らして確認された README を必須とします。

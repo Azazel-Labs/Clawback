@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 在 Windows 上，Turbo 通过独立的只读辅助进程更快地读取整个本地 NTFS 卷，并请求 UAC 授权。普通扫描仍然可用。macOS 无需管理员权限即可批量读取元数据。目录扫描器会自动调整线程数。无法读取的文件夹会被列出；不会跟随符号链接或 Windows 目录联接。
 
+## 在浏览器中使用 Docker 版
+
+在 NAS 或家用服务器上，Docker 镜像会在服务器上运行 Clawback，并将其串流到浏览器标签页。把要查看的文件夹映射到 `/data` 下。读写映射的文件夹可以删除内容；只读映射的文件夹可以浏览，但绝不会从中删除任何内容。
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+运行 `docker compose up -d`，然后打开 `https://<server>:3001`。设置指南（英文）：[docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## 参与贡献
 
 构建说明和用户指南为英文。翻译在 Git 中维护；CI 要求完整的翻译目录，以及根据当前英文源文审核过的 README。

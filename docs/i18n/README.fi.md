@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Windowsissa Turbo lukee kokonaisen paikallisen NTFS-taltion nopeammin erillisellä, vain lukevalla apuprosessilla, joka pyytää UAC-hyväksynnän. Tavallinen skannaus on edelleen käytettävissä. macOS lukee metatietoja erissä ilman ylläpitäjän oikeuksia. Hakemistoskanneri säätää säikeiden määrää automaattisesti. Lukukelvottomat kansiot ilmoitetaan; symbolisia linkkejä tai Windowsin liitoskohtia ei seurata.
 
+## Docker selaimessa
+
+NAS-laitteessa tai kotipalvelimella Docker-kuva ajaa Clawbackia palvelimella ja suoratoistaa sen selaimen välilehteen. Liitä katsottavat kansiot `/data`-kansion alle. Luku- ja kirjoitusoikeuksin liitetyistä kansioista voi poistaa; vain luku -kansioita voi selata, mutta niistä ei koskaan poisteta mitään.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Suorita `docker compose up -d` ja avaa `https://<server>:3001`. Asennusopas (englanniksi): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Osallistuminen
 
 Koontiohje ja käyttöopas ovat englanniksi. Käännöksiä ylläpidetään Gitissä; CI edellyttää täydellisiä luetteloita ja README-tiedostoja, jotka on tarkistettu nykyisiä englanninkielisiä lähteitä vasten.

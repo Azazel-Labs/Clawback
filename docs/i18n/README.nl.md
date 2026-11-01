@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Op Windows leest Turbo een volledig lokaal NTFS-volume sneller via een afzonderlijk hulpproces dat alleen leest en UAC-toestemming vraagt. Normaal scannen blijft beschikbaar. macOS leest metadata in groepen zonder beheerdersrechten. De mappenscanner past het aantal threads automatisch aan. Onleesbare mappen worden gemeld; symbolische koppelingen en Windows-junctions worden niet gevolgd.
 
+## Docker in de browser
+
+Voor een NAS of thuisserver draait de Docker-image Clawback op de server en streamt het naar een browsertabblad. Koppel de mappen die je wilt bekijken onder `/data`. Uit mappen met lees- en schrijfrechten kun je verwijderen; alleen-lezen mappen kun je doorbladeren, maar daaruit wordt nooit iets verwijderd.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Voer `docker compose up -d` uit en open daarna `https://<server>:3001`. Installatiehandleiding (Engels): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Bijdragen
 
 De bouwinstructies en gebruikershandleiding zijn in het Engels. Vertalingen worden beheerd in Git; CI vereist volledige catalogi en README-bestanden die tegen de huidige Engelse bronnen zijn gecontroleerd.

@@ -72,6 +72,30 @@ The terminal interface supports browsing, zooming, and live updates, but not fil
 
 Clawback only counts what your account can read and lists the folders it couldn't. It doesn't follow symlinks or Windows junctions. Permissions and size accounting are covered in the [user guide](docs/usage.md).
 
+## Run it in a browser with Docker
+
+For a NAS or home server, the Docker image runs Clawback on the server and streams it to a browser tab. Map the folders you want to look at under `/data`. You can delete from folders mapped read/write; folders mapped read-only can be browsed but never deleted from.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Run `docker compose up -d`, then open `https://<server>:3001`. [Running Clawback in Docker](docs/docker.md) covers TSDProxy, GPU acceleration, and the other options.
+
+![Clawback running in a browser tab, showing the demo drive's treemap](docs/images/browser.png)
+
 ## Contributing
 
 Build instructions and project layout are in [docs/development.md](docs/development.md).

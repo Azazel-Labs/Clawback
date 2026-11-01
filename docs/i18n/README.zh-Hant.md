@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 在 Windows 上，Turbo 透過獨立的唯讀輔助程序更快地讀取整個本機 NTFS 磁碟區，並要求 UAC 授權。一般掃描仍可使用。macOS 不需管理員權限即可批次讀取中繼資料。目錄掃描器會自動調整執行緒數量。無法讀取的資料夾會列出；不會跟隨符號連結或 Windows 目錄接合點。
 
+## 在瀏覽器中使用 Docker 版
+
+在 NAS 或家用伺服器上，Docker 映像會在伺服器上執行 Clawback，並將其串流到瀏覽器分頁。把要查看的資料夾對應到 `/data` 下。讀寫對應的資料夾可以刪除內容；唯讀對應的資料夾可以瀏覽，但絕不會從中刪除任何內容。
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+執行 `docker compose up -d`，然後開啟 `https://<server>:3001`。設定指南（英文）：[docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## 參與貢獻
 
 建置說明與使用指南為英文。翻譯在 Git 中維護；CI 要求完整的翻譯目錄，以及根據目前英文來源審核過的 README。

@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Windowson a Turbo külön, csak olvasó segédfolyamattal gyorsabban olvassa be a teljes helyi NTFS-kötetet; ehhez UAC-jóváhagyást kér. A normál vizsgálat továbbra is elérhető. A macOS csoportosan olvassa a metaadatokat rendszergazdai jogok nélkül. A mappavizsgáló automatikusan állítja a szálak számát. Jelzi az olvashatatlan mappákat; nem követ szimbolikus hivatkozásokat vagy Windows-csatolási pontokat.
 
+## Docker a böngészőben
+
+NAS-on vagy otthoni szerveren a Docker-lemezkép a szerveren futtatja a Clawbacket, és egy böngészőlapra közvetíti. A megtekinteni kívánt mappákat a `/data` alá csatold. Az írható-olvasható mappákból törölhetsz; a csak olvasható mappák böngészhetők, de soha nem törlődik belőlük semmi.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Futtasd a `docker compose up -d` parancsot, majd nyisd meg a `https://<server>:3001` címet. Telepítési útmutató (angolul): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Közreműködés
 
 A forráskód lefordításának útmutatója és a felhasználói kézikönyv angol nyelvű. A nyelvi fordításokat Gitben kezeljük; a CI teljes katalógusokat és az aktuális angol forrásokkal összevetett README-ket követel meg.

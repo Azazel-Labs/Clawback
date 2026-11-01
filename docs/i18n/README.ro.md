@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Pe Windows, Turbo citește mai rapid un întreg volum NTFS local printr-un proces auxiliar separat, doar pentru citire, care cere aprobarea UAC. Scanarea normală rămâne disponibilă. macOS citește metadatele în loturi fără drepturi de administrator. Scanerul de directoare ajustează automat numărul de fire. Dosarele care nu pot fi citite sunt raportate; legăturile simbolice și joncțiunile Windows nu sunt urmate.
 
+## Docker în browser
+
+Pentru un NAS sau un server de acasă, imaginea Docker rulează Clawback pe server și îl transmite într-o filă a browserului. Mapează folderele pe care vrei să le vezi sub `/data`. Poți șterge din folderele cu citire/scriere; folderele doar în citire pot fi răsfoite, dar din ele nu se șterge niciodată nimic.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Rulează `docker compose up -d`, apoi deschide `https://<server>:3001`. Ghid de configurare (în engleză): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Contribuții
 
 Instrucțiunile de compilare și ghidul utilizatorului sunt în engleză. Traducerile sunt întreținute în Git; CI cere cataloage complete și fișiere README verificate față de sursele englezești actuale.

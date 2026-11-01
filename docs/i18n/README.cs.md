@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Ve Windows umí Turbo rychleji načíst celý místní svazek NTFS pomocí samostatného pomocného procesu pouze pro čtení, který vyžaduje souhlas UAC. Běžné skenování zůstává dostupné. macOS čte metadata dávkově bez práv správce. Procházení adresářů automaticky přizpůsobuje počet vláken. Nečitelné složky jsou uvedeny v přehledu; symbolické odkazy ani spojení Windows se nenásledují.
 
+## Docker v prohlížeči
+
+Pro NAS nebo domácí server spustí obraz Dockeru Clawback na serveru a streamuje ho do karty prohlížeče. Složky, které chcete prohlížet, připojte pod `/data`. Ze složek připojených pro čtení i zápis můžete mazat; složky jen pro čtení lze procházet, ale nikdy se z nich nemaže.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Spusťte `docker compose up -d` a otevřete `https://<server>:3001`. Návod k nastavení (anglicky): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Přispívání
 
 Návod k sestavení a uživatelská příručka jsou v angličtině. Překlady se spravují v Gitu; CI vyžaduje úplné katalogy a README zkontrolované vůči aktuálním anglickým zdrojům.

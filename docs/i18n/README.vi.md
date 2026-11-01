@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Trên Windows, Turbo đọc toàn bộ ổ NTFS cục bộ nhanh hơn qua một tiến trình trợ giúp riêng chỉ đọc và yêu cầu chấp thuận UAC. Chế độ quét thường vẫn khả dụng. macOS đọc siêu dữ liệu theo lô mà không cần quyền quản trị. Bộ quét thư mục tự điều chỉnh số luồng. Các thư mục không đọc được sẽ được báo cáo; không đi theo liên kết tượng trưng hay junction của Windows.
 
+## Docker trong trình duyệt
+
+Với NAS hoặc máy chủ tại nhà, image Docker chạy Clawback trên máy chủ và truyền nó tới một thẻ trình duyệt. Ánh xạ các thư mục bạn muốn xem vào bên dưới `/data`. Bạn có thể xóa khỏi thư mục đọc/ghi; thư mục chỉ đọc có thể duyệt nhưng không bao giờ bị xóa gì.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Chạy `docker compose up -d`, rồi mở `https://<server>:3001`. Hướng dẫn thiết lập (tiếng Anh): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Đóng góp
 
 Hướng dẫn biên dịch và hướng dẫn sử dụng bằng tiếng Anh. Bản dịch được quản lý trong Git; CI yêu cầu danh mục đầy đủ và README đã được kiểm tra theo nguồn tiếng Anh hiện tại.

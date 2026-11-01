@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 Op Windows kan Turbo 'n hele plaaslike NTFS-volume vinniger lees met 'n aparte, leesalleen-hulpproses wat UAC-goedkeuring vereis. Gewone skandering bly beskikbaar. macOS lees metadata in groepe sonder administrateurregte. Die gidskandeerder pas sy draadtelling outomaties aan. Onleesbare vouers word gerapporteer; simboliese skakels en Windows-aansluitings word nie gevolg nie.
 
+## Docker in die blaaier
+
+Vir ’n NAS of tuisbediener laat die Docker-beeld Clawback op die bediener loop en stroom dit na ’n blaaieroortjie. Koppel die vouers wat jy wil sien onder `/data`. Jy kan uit lees/skryf-vouers uitvee; leesalleen-vouers kan net deurblaai word.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Voer `docker compose up -d` uit en maak dan `https://<server>:3001` oop. Opstelgids (Engels): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Bydra
 
 Bou-instruksies en die gebruikersgids is in Engels. Vertalings word in Git onderhou; CI vereis volledige katalogusse en README-lêers wat teen die huidige Engelse bronne nagegaan is.

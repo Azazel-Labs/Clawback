@@ -48,6 +48,30 @@ clawback --report --top 10 .
 
 På Windows läser Turbo en hel lokal NTFS-volym snabbare via en separat hjälpprocess som bara läser och begär UAC-godkännande. Vanlig skanning finns fortfarande tillgänglig. macOS läser metadata i grupper utan administratörsrättigheter. Mappskannern anpassar antalet trådar automatiskt. Oläsbara mappar rapporteras; symboliska länkar och Windows-kopplingspunkter följs inte.
 
+## Docker i webbläsaren
+
+På en NAS eller hemserver kör Docker-avbildningen Clawback på servern och strömmar det till en webbläsarflik. Mappa de mappar du vill titta på under `/data`. Du kan ta bort från mappar med läs- och skrivbehörighet; skrivskyddade mappar kan bläddras i, men inget tas någonsin bort från dem.
+
+```yaml
+services:
+  clawback:
+    image: ghcr.io/azazel-labs/clawback:latest
+    shm_size: 1gb
+    ports:
+      - 3001:3001
+    environment:
+      - PASSWORD=change-me
+    volumes:
+      - ./config:/config
+      - /srv/media:/data/media
+      - /mnt/backups:/data/backups:ro
+    restart: unless-stopped
+```
+
+Kör `docker compose up -d` och öppna sedan `https://<server>:3001`. Installationsguide (på engelska): [docs/docker.md](../docker.md)
+
+![Clawback](../images/browser.png)
+
 ## Bidra
 
 Bygginstruktionerna och användarhandboken är på engelska. Översättningar underhålls i Git; CI kräver fullständiga kataloger och README-filer granskade mot de aktuella engelska källorna.

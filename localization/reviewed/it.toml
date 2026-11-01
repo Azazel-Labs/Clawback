@@ -1,8 +1,8 @@
 version = 2
 
 [readme]
-source = "113c828686aab258329f38f26b6e6e1acb34140d7c127b23c3bb5e5518970761"
-translation = "f2b6682d521b4facc81bb1f2f274f86822a70359142e1d87b8774d0153ed983b"
+source = "f7f5d77c0c68e78f303c8e2e8700ddabc364a699859a31948ff04d8be1b524e5"
+translation = "4de5ae7fbe4cb0d70ab51fedc99309a11ea003dbe50044b8e1c839571e8237dd"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
