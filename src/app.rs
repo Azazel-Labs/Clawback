@@ -1996,35 +1996,49 @@ fn to_permille(part: f32, whole: f32) -> u32 {
     (part / whole * 1000.0).round() as u32
 }
 
-/// Files → where deletes go: recycled, or into the bin for good. Hovering previews the
-/// destination a click would switch to, sliding it in over the current one.
+/// How far hovering starts the swap a click would finish.
+const DESTINATION_PEEK: f32 = 0.35;
+
+/// Files → where deletes go: recycled, or into the bin for good. Hovering starts to swap
+/// in the other destination, and a click carries the swap through.
 fn delete_destination(ui: &mut Ui, recycling: bool) -> egui::Response {
     use egui_phosphor::regular as icon;
     let font = egui::FontId::proportional(15.0);
     let cell = vec2(20.0, ui.spacing().interact_size.y);
     let (rect, response) = ui.allocate_exact_size(vec2(cell.x * 3.0, cell.y), egui::Sense::click());
     // Once clicked, the new destination stays put until the pointer leaves and comes back.
-    // The click's own frame still shows the preview, which is what the next frame shows at rest.
     let settled = response.id.with("settled");
-    let previewing = response.hovered() && !ui.data(|data| data.get_temp::<bool>(settled).unwrap_or(false));
+    let peeking = response.hovered() && !ui.data(|data| data.get_temp::<bool>(settled).unwrap_or(false));
     if response.clicked() {
         ui.data_mut(|data| data.insert_temp(settled, true));
     } else if !response.hovered() {
         ui.data_mut(|data| data.remove::<bool>(settled));
     }
-    // Keyed by the destination, so a switch starts from the new one at rest.
-    let t = ui.ctx().animate_bool_with_time(response.id.with(recycling), previewing, 0.18);
+    // 0 has the recycle symbol in the slot, 1 the bin, and between them both are part way.
+    // The click's frame already heads for the new destination, before the setting changes.
+    let (rest, other) = if recycling { (0.0, 1.0) } else { (1.0, 0.0) };
+    let target = if response.clicked() {
+        other
+    } else if peeking {
+        rest + (other - rest) * DESTINATION_PEEK
+    } else {
+        rest
+    };
+    let swap = ui.ctx().animate_value_with_time(response.id, target, 0.18);
+    let hover = ui.ctx().animate_bool_with_time(response.id.with("hover"), response.hovered(), 0.12);
     let center = |i: f32| egui::pos2(rect.left() + cell.x * (i + 0.5), rect.center().y);
     let lit = if response.hovered() { theme::TEXT } else { theme::MUTED };
     let painter = ui.painter();
     painter.text(center(0.0), Align2::CENTER_CENTER, icon::FILES, font.clone(), lit);
-    painter.text(center(1.0) + vec2(2.0 * t, 0.0), Align2::CENTER_CENTER, icon::ARROW_RIGHT, font.clone(), lit);
+    painter.text(center(1.0) + vec2(2.0 * hover, 0.0), Align2::CENTER_CENTER, icon::ARROW_RIGHT, font.clone(), lit);
     let slot = egui::Rect::from_center_size(center(2.0), cell);
     let clipped = painter.with_clip_rect(slot.intersect(painter.clip_rect()));
-    // The current destination rises out of the slot as the other rises into it.
-    for (recycle, offset, opacity) in [(recycling, -t, 1.0 - t), (!recycling, 1.0 - t, t)] {
-        let (glyph, color) = if recycle { (icon::RECYCLE, theme::TEXT) } else { (icon::TRASH, theme::DANGER) };
-        let at = center(2.0) + vec2(0.0, offset * cell.y * 0.8);
+    // The recycle symbol rises out of the slot as the bin rises in, and the other way back.
+    let shift = cell.y * 0.8;
+    for (glyph, color, offset, opacity) in
+        [(icon::RECYCLE, theme::TEXT, -swap, 1.0 - swap), (icon::TRASH, theme::DANGER, 1.0 - swap, swap)]
+    {
+        let at = center(2.0) + vec2(0.0, offset * shift);
         clipped.text(at, Align2::CENTER_CENTER, glyph, font.clone(), color.gamma_multiply(opacity));
     }
     response.on_hover_cursor(egui::CursorIcon::PointingHand)
@@ -2257,12 +2271,26 @@ mod tests {
     }
 
     #[test]
-    fn delete_destination_previews_the_other_bin_until_clicked() {
+    fn delete_destination_starts_the_swap_on_hover_and_a_click_finishes_it() {
         use egui_phosphor::regular::{RECYCLE, TRASH};
+        /// Each destination glyph drawn in the slot: how far it sits below the slot's middle, and
+        /// its opacity.
+        #[derive(Debug)]
+        struct Slot(Vec<(String, f32, u8)>);
+        impl Slot {
+            fn glyph(&self, glyph: &str) -> (f32, u8) {
+                self.0.iter().find(|(g, ..)| g == glyph).map_or((0.0, 0), |&(_, dy, alpha)| (dy, alpha))
+            }
+            /// `glyph` fills the slot and the other is gone.
+            fn rests(&self, glyph: &str) -> bool {
+                let (dy, alpha) = self.glyph(glyph);
+                dy.abs() < 0.5 && alpha > 250 && self.0.iter().all(|(g, _, a)| g == glyph || *a < 5)
+            }
+        }
         let ctx = egui::Context::default();
         let slot = std::cell::Cell::new(None);
         let time = std::cell::Cell::new(0.0);
-        // One 50 ms frame: the glyph at rest in the destination slot, if any, and whether it was clicked.
+        // One 50 ms frame: the slot's contents, and whether the toggle was clicked.
         let frame = |recycling: bool, events: Vec<egui::Event>| {
             time.set(time.get() + 0.05);
             let input = egui::RawInput { time: Some(time.get()), events, ..Default::default() };
@@ -2273,30 +2301,37 @@ mod tests {
                 slot.set(Some(response.rect.right_center() - vec2(10.0, 0.0)));
             });
             let center = slot.get().expect("laid out");
-            let shown = output.shapes.iter().find_map(|clipped| match &clipped.shape {
-                egui::Shape::Text(text)
-                    if text.fallback_color.a() > 200
-                        && (text.pos + text.galley.size() / 2.0).distance(center) < 2.0 =>
-                {
-                    Some(text.galley.job.text.clone())
+            let drawn = output.shapes.iter().filter_map(|clipped| match &clipped.shape {
+                egui::Shape::Text(text) => {
+                    let at = text.pos + text.galley.size() / 2.0;
+                    let glyph = text.galley.job.text.clone();
+                    ((at.x - center.x).abs() < 1.0 && [RECYCLE, TRASH].contains(&glyph.as_str()))
+                        .then(|| (glyph, at.y - center.y, text.fallback_color.a()))
                 }
                 _ => None,
             });
+            let drawn = Slot(drawn.collect());
             output.textures_delta.clear();
-            (shown, clicked)
+            (drawn, clicked)
         };
         // Enough frames for every animation to finish.
         let settle = |recycling: bool, events: Vec<egui::Event>| {
-            frame(recycling, events);
-            let mut rest = None;
+            let mut last = frame(recycling, events).0;
             for _ in 0..10 {
-                rest = frame(recycling, vec![]).0;
+                last = frame(recycling, vec![]).0;
             }
-            rest.expect("a destination at rest in the slot")
+            last
         };
-        assert_eq!(settle(true, vec![]), RECYCLE);
+        assert!(settle(true, vec![]).rests(RECYCLE));
         let over = slot.get().expect("laid out");
-        assert_eq!(settle(true, vec![egui::Event::PointerMoved(over)]), TRASH, "hover previews the switch");
+
+        // Hovering starts the swap: the recycle symbol on its way out, the bin on its way in.
+        let peek = settle(true, vec![egui::Event::PointerMoved(over)]);
+        let ((leaving, faded), (arriving, shown)) = (peek.glyph(RECYCLE), peek.glyph(TRASH));
+        assert!(leaving < -1.0 && (1..250).contains(&faded), "{peek:?}");
+        assert!(arriving > leaving.abs() && shown > 0, "the bin is only partly in: {peek:?}");
+
+        // The click carries the swap on from there, rather than starting it over.
         let press = |pressed| egui::Event::PointerButton {
             pos: over,
             button: egui::PointerButton::Primary,
@@ -2304,12 +2339,17 @@ mod tests {
             modifiers: Modifiers::NONE,
         };
         frame(true, vec![press(true)]);
-        let (shown, clicked) = frame(true, vec![press(false)]);
-        assert!(clicked);
-        assert_eq!(shown.as_deref(), Some(TRASH), "the click's frame keeps the preview");
-        assert_eq!(settle(false, vec![]), TRASH, "the new destination stays while still hovered");
-        assert_eq!(settle(false, vec![egui::Event::PointerGone]), TRASH);
-        assert_eq!(settle(false, vec![egui::Event::PointerMoved(over)]), RECYCLE, "hovering again previews");
+        assert!(frame(true, vec![press(false)]).1, "clicked");
+        let mut previous = arriving;
+        for _ in 0..10 {
+            let (dy, _) = frame(false, vec![]).0.glyph(TRASH);
+            assert!(dy <= previous, "the bin only moves further in");
+            previous = dy;
+        }
+        assert!(settle(false, vec![]).rests(TRASH), "the new destination stays while still hovered");
+        assert!(settle(false, vec![egui::Event::PointerGone]).rests(TRASH));
+        let back = settle(false, vec![egui::Event::PointerMoved(over)]);
+        assert!(!back.rests(TRASH) && back.glyph(RECYCLE).1 > 0, "hovering again starts the swap back: {back:?}");
     }
 
     #[test]
