@@ -283,6 +283,22 @@ translation = "刪除"
 source = "This can’t be undone."
 translation = "這無法撤銷。"
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "刪除內容"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "「{ $name }」中的所有內容都將被刪除。資料夾本身會保留。"
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "永久刪除內容？"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "「{ $name }」的內容太大，無法放入資源回收筒。資料夾本身會保留。"
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · 已經過 { $seconds } 秒"
@@ -1240,6 +1256,18 @@ translation = "檔案過多"
 [messages.tooltips]
 source = "Tooltips"
 translation = "工具提示"
+
+[messages.trash]
+source = "Trash"
+translation = "垃圾桶"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "刪除的項目會在你確認後永久移除。按一下改為可復原的刪除。"
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "刪除的項目可以復原。按一下改為永久刪除；Clawback 會先詢問。"
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

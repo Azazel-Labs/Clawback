@@ -283,6 +283,22 @@ translation = "삭제"
 source = "This can’t be undone."
 translation = "이 작업은 취소할 수 없습니다."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "내용 삭제"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "“{ $name }” 안의 모든 항목이 삭제됩니다. 폴더 자체는 유지됩니다."
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "내용을 영구적으로 삭제하시겠습니까?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "“{ $name }”의 내용은 휴지통에 넣기에는 너무 큽니다. 폴더 자체는 유지됩니다."
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds }초 경과"
@@ -1240,6 +1256,18 @@ translation = "파일 너무 많음"
 [messages.tooltips]
 source = "Tooltips"
 translation = "툴팁"
+
+[messages.trash]
+source = "Trash"
+translation = "휴지통"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "삭제한 항목은 확인 후 영구적으로 제거됩니다. 클릭하면 복원할 수 있게 됩니다."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "삭제한 항목을 복원할 수 있습니다. 클릭하면 영구 삭제로 바뀌며, Clawback이 먼저 확인합니다."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

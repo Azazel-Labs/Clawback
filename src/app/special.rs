@@ -163,6 +163,23 @@ pub fn protects_from_raw_delete(path: &Path) -> bool {
     }
 }
 
+/// Whether Delete Contents may empty `folder`: a folder below the scan root that a plain
+/// Delete would accept, holding nothing a plain Delete would refuse.
+pub fn contents_deletable(tree: &Tree, inventory: Inventory, folder: NodeId) -> bool {
+    let entry = tree.node(folder);
+    let plain = |node| {
+        let path = tree.path(node);
+        inventory.classify(tree, node).is_none()
+            && !protects_from_raw_delete(&path)
+            && crate::container::can_delete(&path)
+    };
+    folder != clawback_core::ROOT
+        && entry.is_dir()
+        && !entry.children.is_empty()
+        && plain(folder)
+        && entry.children.iter().all(|&child| plain(child))
+}
+
 /// Operating system files that must never be deleted from the map, even through a special action.
 pub fn is_system(path: &Path) -> bool {
     #[cfg(windows)]

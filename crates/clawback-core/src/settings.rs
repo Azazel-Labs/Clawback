@@ -39,6 +39,8 @@ pub struct Settings {
     // Miscellaneous
     pub auto_rescan: bool,
     pub disable_delete: bool,
+    /// Deletes go to the Recycle Bin or Trash; off, they are permanent after a confirmation.
+    pub use_trash: bool,
     pub animated_zoom: bool,
     pub save_pos: bool,
     /// Height of the folder and file-type panels, in thousandths of the window below the menu bar.
@@ -76,6 +78,7 @@ impl Default for Settings {
             tip_attrib: false,
             auto_rescan: false,
             disable_delete: false,
+            use_trash: true,
             animated_zoom: true,
             save_pos: false,
             directory_split: 300,
@@ -227,6 +230,7 @@ fields! {
     "tip_attrib" => tip_attrib,
     "auto_rescan" => auto_rescan,
     "disable_delete" => disable_delete,
+    "use_trash" => use_trash,
     "animated_zoom" => animated_zoom,
     "save_pos" => save_pos,
     "directory_split" => directory_split,
@@ -342,6 +346,7 @@ tip_size = true
 tip_attrib = false
 auto_rescan = false
 disable_delete = false
+use_trash = true
 animated_zoom = true
 save_pos = false
 directory_split = 300

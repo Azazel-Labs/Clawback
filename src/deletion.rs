@@ -1,7 +1,7 @@
 //! Background deletion with bounded, polled progress: recycling, or a fast permanent purge.
 use clawback_core::scan::lock;
 use std::{
-    path::Path,
+    path::{Path, PathBuf},
     sync::{
         Arc, Mutex,
         atomic::{AtomicBool, AtomicU64, Ordering},
@@ -89,16 +89,20 @@ impl Progress {
     }
 }
 
-pub fn trash(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String> {
+/// Recycle `paths` together, as one operation.
+pub fn trash(paths: &[PathBuf], progress: &Arc<Progress>) -> Result<Recycled, String> {
     let _span = crate::perf::span("delete.recycle");
+    if paths.is_empty() {
+        return Ok(Recycled::Done);
+    }
     #[cfg(windows)]
     {
-        windows::recycle(path, progress)
+        windows::recycle(paths, progress)
     }
     #[cfg(not(windows))]
     {
         progress.phase(Phase::Recycling);
-        trash::delete(path).map(|()| Recycled::Done).map_err(|error| error.to_string())
+        trash::delete_all(paths).map(|()| Recycled::Done).map_err(|error| error.to_string())
     }
 }
 

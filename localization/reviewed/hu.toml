@@ -283,6 +283,22 @@ translation = "Törlés"
 source = "This can’t be undone."
 translation = "Ezt nem lehet visszavonni."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Tartalom törlése"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "A(z) „{ $name }” teljes tartalma törlődik. Maga a mappa megmarad."
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Véglegesen törli a tartalmat?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "A(z) „{ $name }” tartalma túl nagy a Lomtárhoz. Maga a mappa megmarad."
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds } mp telt el"
@@ -1240,6 +1256,18 @@ translation = "Túl sok fájl"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Eszköztippek"
+
+[messages.trash]
+source = "Trash"
+translation = "Kuka"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "A törölt elemek megerősítés után véglegesen törlődnek. Kattints, hogy a törlések visszaállíthatók legyenek."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "A törölt elemek visszaállíthatók. Kattints a végleges törléshez; a Clawback előbb rákérdez."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

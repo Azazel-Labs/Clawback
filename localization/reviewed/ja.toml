@@ -283,6 +283,22 @@ translation = "削除"
 source = "This can’t be undone."
 translation = "これは元に戻せません。"
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "中身を削除"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "「{ $name }」の中身がすべて削除されます。フォルダー自体は残ります。"
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "中身を完全に削除しますか?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "「{ $name }」の中身はごみ箱に入れるには大きすぎます。フォルダー自体は残ります。"
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds }s 経過しました"
@@ -1240,6 +1256,18 @@ translation = "ファイルが多すぎる"
 [messages.tooltips]
 source = "Tooltips"
 translation = "ツールチップ"
+
+[messages.trash]
+source = "Trash"
+translation = "ゴミ箱"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "削除した項目は確認後に完全に削除されます。クリックすると元に戻せるようになります。"
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "削除した項目は元に戻せます。クリックすると完全に削除するようになります (Clawback が事前に確認します)。"
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

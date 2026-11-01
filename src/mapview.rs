@@ -52,6 +52,8 @@ pub enum Command {
     Reveal(NodeId),
     Open(NodeId),
     Delete(NodeId),
+    /// Delete everything inside a folder, keeping the folder.
+    DeleteContents(NodeId),
     Special(special::Kind, NodeId),
     OpenDrive,
     Rescan,
@@ -470,6 +472,13 @@ impl MapView {
                 && item(ui, icon::TRASH, tr!("delete"), true, false)
             {
                 out.push(Command::Delete(n));
+            }
+            if folder
+                && !s.disable_delete
+                && special::contents_deletable(input.tree, input.special, n)
+                && item(ui, icon::BROOM, tr!("delete-contents"), true, false)
+            {
+                out.push(Command::DeleteContents(n));
             }
             ui.separator();
         }

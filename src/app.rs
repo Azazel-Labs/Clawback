@@ -161,6 +161,8 @@ struct QueuedDelete {
     size: u64,
     files: u64,
     kind: DeleteKind,
+    /// Delete only what is inside the folder at `path`, keeping the folder.
+    contents: bool,
 }
 
 /// How long a recycled path is hidden from live snapshots that predate its removal.
@@ -321,6 +323,7 @@ impl ClawbackApp {
             app.doc = Some(Doc { view, disk: Some(crate::demo::disk()), is_mount: true, ..Doc::counted(1, tree) });
             match std::env::var("CLAWBACK_DEMO_TAB").as_deref() {
                 Ok("reclaim") => app.side_tab = SideTab::Reclaim,
+                Ok("types") => app.side_tab = SideTab::Types,
                 Ok("changes") => {
                     let baseline = app.doc.as_ref().map(|doc| crate::demo::baseline(&doc.tree));
                     app.snapshots.compare_with(baseline.expect("demo document"));
@@ -689,6 +692,7 @@ impl ClawbackApp {
                 }
             }
             Command::Delete(n) => self.delete(n, ctx),
+            Command::DeleteContents(n) => self.delete_contents(n, ctx),
             Command::Special(kind, node) => self.request_special(kind, node, ctx),
             Command::OpenDrive => self.open = Some(OpenDialog::start(ctx)),
             Command::Rescan => {
@@ -717,7 +721,8 @@ impl ClawbackApp {
         }
     }
 
-    /// Move to the trash with no confirmation, as SpaceMonger did (it is undoable).
+    /// Move to the trash with no confirmation, as SpaceMonger did (it is undoable), or with
+    /// recycling off or unavailable, delete permanently once confirmed.
     /// Deletes queue behind the one in progress so the map stays usable.
     fn delete(&mut self, node: NodeId, ctx: &egui::Context) {
         if self.settings.disable_delete {
@@ -748,10 +753,9 @@ impl ClawbackApp {
         }
         let n = doc.tree.node(node);
         let (size, files) = (n.size, n.files);
-        let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: DeleteKind::Recycle };
-        // A container has no Trash to recover from: every delete is permanent, so confirm it.
+        let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: self.delete_kind(), contents: false };
         if crate::container::enabled() {
-            self.confirm.push_back(QueuedDelete { kind: DeleteKind::Permanent, ..request });
+            self.confirm.push_back(request);
             return;
         }
         if let Some(request) = self.special.check_removal(request, ctx) {
@@ -759,8 +763,42 @@ impl ClawbackApp {
         }
     }
 
+    /// Recycle, or with no Trash to recover from (a container, or the toggle off), delete
+    /// permanently once confirmed.
+    fn delete_kind(&self) -> DeleteKind {
+        if crate::container::enabled() || !self.settings.use_trash {
+            DeleteKind::Permanent
+        } else {
+            DeleteKind::Recycle
+        }
+    }
+
+    /// Empty a folder but keep it, deleting its contents as [`Self::delete`] would.
+    fn delete_contents(&mut self, node: NodeId, ctx: &egui::Context) {
+        if self.settings.disable_delete {
+            return;
+        }
+        let Some(doc) = &self.doc else { return };
+        if !special::contents_deletable(&doc.tree, doc.special(), node) {
+            return;
+        }
+        let path = doc.tree.path(node);
+        if self.pending_paths().any(|pending| path.starts_with(pending)) {
+            return;
+        }
+        let n = doc.tree.node(node);
+        let (size, files) = (n.size, n.files);
+        let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: self.delete_kind(), contents: true };
+        self.queue_delete(request, ctx);
+    }
+
     fn queue_delete(&mut self, request: QueuedDelete, ctx: &egui::Context) {
         if self.settings.disable_delete {
+            return;
+        }
+        // Nothing is deleted permanently without the user's say-so; confirmed jobs skip this.
+        if request.kind == DeleteKind::Permanent {
+            self.confirm.push_back(request);
             return;
         }
         // A queued descendant would fail once this folder is gone.
@@ -809,11 +847,16 @@ impl ClawbackApp {
             self.delete_queue.clear();
             return;
         };
-        let (path, kind) = (&job.path, job.kind);
+        let (path, kind, contents) = (&job.path, job.kind, job.contents);
         // Earlier deletes or a rescan may have replaced the tree since this was queued.
         let node = doc.tree.find_path(path).filter(|&n| n != ROOT || kind.cleanup().is_some());
+        // Emptying a folder that is gone has nothing to do, and must never fall back to the folder.
+        if contents && node.is_none() {
+            return self.start_next_delete(ctx);
+        }
         // Contents-only cleanup preserves its root and any provider-defined exclusions.
         let targets = match (kind, node) {
+            (_, Some(folder)) if contents => doc.tree.node(folder).children.iter().map(|&c| doc.tree.path(c)).collect(),
             (DeleteKind::Cleanup(cleanup), Some(folder)) => doc
                 .tree
                 .node(folder)
@@ -839,6 +882,7 @@ impl ClawbackApp {
         }
         let worker_progress = progress.clone();
         let started = Instant::now();
+        let recycle = if contents { targets.clone() } else { vec![path.clone()] };
         std::thread::spawn(move || {
             use crate::deletion::Recycled;
             let mut refresh = || {
@@ -849,15 +893,17 @@ impl ClawbackApp {
                 disk.take()
             };
             let result = match kind {
-                DeleteKind::Recycle => crate::deletion::trash(&p, &worker_progress).map(|outcome| match outcome {
-                    Recycled::Done => DeleteDone::Removed(refresh()),
-                    Recycled::Declined => DeleteDone::Declined,
-                    Recycled::TooLarge => DeleteDone::TooLarge,
-                }),
+                DeleteKind::Recycle => {
+                    crate::deletion::trash(&recycle, &worker_progress).map(|outcome| match outcome {
+                        Recycled::Done => DeleteDone::Removed(refresh()),
+                        Recycled::Declined => DeleteDone::Declined,
+                        Recycled::TooLarge => DeleteDone::TooLarge,
+                    })
+                }
                 DeleteKind::Permanent | DeleteKind::Cleanup(_) => {
                     let target = crate::deletion::Target {
                         root: &p,
-                        contents_only: kind.cleanup().is_some(),
+                        contents_only: contents || kind.cleanup().is_some(),
                         keep: kind.cleanup().map_or(&[][..], special::Cleanup::keep),
                     };
                     let report = if let Some(cleanup) = kind.cleanup() {
@@ -1019,7 +1065,11 @@ impl ClawbackApp {
                     .is_some_and(|(doc, node)| crate::container::can_delete(&doc.tree.path(node)));
                 if menu_item(
                     ui,
-                    if container { tr!("delete") } else { tr!("move-selected-item-to-trash") },
+                    if self.delete_kind() == DeleteKind::Permanent {
+                        tr!("delete")
+                    } else {
+                        tr!("move-selected-item-to-trash")
+                    },
                     ready && deletable && !self.settings.disable_delete,
                     "Delete",
                 ) {
@@ -1101,6 +1151,18 @@ impl ClawbackApp {
                 }
             });
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                // A container has nowhere to recycle to; its deletes are always permanent.
+                if !crate::container::enabled() && !self.settings.disable_delete {
+                    let bin = if cfg!(windows) { tr!("recycle-bin") } else { tr!("trash") };
+                    let on = self.settings.use_trash;
+                    let state = if on { tr!("trash-toggle-on") } else { tr!("trash-toggle-off") };
+                    let tip = format!("{bin}\n{state}");
+                    if delete_destination(ui, on).on_hover_text(tip).clicked() {
+                        self.settings.use_trash = !on;
+                        self.save_settings();
+                    }
+                    ui.separator();
+                }
                 if let Some(update) = &self.update {
                     let label = format!(
                         "{}  {}",
@@ -1274,13 +1336,17 @@ impl ClawbackApp {
     fn confirm_dialog(&mut self, ctx: &egui::Context) {
         let Some(job) = self.confirm.front() else { return };
         let drive = self.doc.as_ref().map(|d| d.tree.root_path().display().to_string()).unwrap_or_default();
+        let name = display_name(&job.path);
+        // Permanent while recycling is in use only when the Recycle Bin turned the item away.
+        let too_big = self.delete_kind() == DeleteKind::Recycle;
         let special::Confirmation { title, body, button } = job.kind.cleanup().map_or_else(
             || special::Confirmation {
-                title: tr!("delete-permanently-title"),
-                body: if crate::container::enabled() {
-                    display_name(&job.path)
-                } else {
-                    tr!("delete-too-big-for-recycle-bin", name = display_name(&job.path))
+                title: if job.contents { tr!("delete-contents-title") } else { tr!("delete-permanently-title") },
+                body: match (job.contents, too_big) {
+                    (true, true) => tr!("delete-contents-too-big", name = name.clone()),
+                    (true, false) => tr!("delete-contents-body", name = name.clone()),
+                    (false, true) => tr!("delete-too-big-for-recycle-bin", name = name.clone()),
+                    (false, false) => name.clone(),
                 },
                 button: tr!("delete-permanently-button"),
             },
@@ -1930,6 +1996,40 @@ fn to_permille(part: f32, whole: f32) -> u32 {
     (part / whole * 1000.0).round() as u32
 }
 
+/// Files → where deletes go: recycled, or into the bin for good. Hovering previews the
+/// destination a click would switch to, sliding it in over the current one.
+fn delete_destination(ui: &mut Ui, recycling: bool) -> egui::Response {
+    use egui_phosphor::regular as icon;
+    let font = egui::FontId::proportional(15.0);
+    let cell = vec2(20.0, ui.spacing().interact_size.y);
+    let (rect, response) = ui.allocate_exact_size(vec2(cell.x * 3.0, cell.y), egui::Sense::click());
+    // Once clicked, the new destination stays put until the pointer leaves and comes back.
+    // The click's own frame still shows the preview, which is what the next frame shows at rest.
+    let settled = response.id.with("settled");
+    let previewing = response.hovered() && !ui.data(|data| data.get_temp::<bool>(settled).unwrap_or(false));
+    if response.clicked() {
+        ui.data_mut(|data| data.insert_temp(settled, true));
+    } else if !response.hovered() {
+        ui.data_mut(|data| data.remove::<bool>(settled));
+    }
+    // Keyed by the destination, so a switch starts from the new one at rest.
+    let t = ui.ctx().animate_bool_with_time(response.id.with(recycling), previewing, 0.18);
+    let center = |i: f32| egui::pos2(rect.left() + cell.x * (i + 0.5), rect.center().y);
+    let lit = if response.hovered() { theme::TEXT } else { theme::MUTED };
+    let painter = ui.painter();
+    painter.text(center(0.0), Align2::CENTER_CENTER, icon::FILES, font.clone(), lit);
+    painter.text(center(1.0) + vec2(2.0 * t, 0.0), Align2::CENTER_CENTER, icon::ARROW_RIGHT, font.clone(), lit);
+    let slot = egui::Rect::from_center_size(center(2.0), cell);
+    let clipped = painter.with_clip_rect(slot.intersect(painter.clip_rect()));
+    // The current destination rises out of the slot as the other rises into it.
+    for (recycle, offset, opacity) in [(recycling, -t, 1.0 - t), (!recycling, 1.0 - t, t)] {
+        let (glyph, color) = if recycle { (icon::RECYCLE, theme::TEXT) } else { (icon::TRASH, theme::DANGER) };
+        let at = center(2.0) + vec2(0.0, offset * cell.y * 0.8);
+        clipped.text(at, Align2::CENTER_CENTER, glyph, font.clone(), color.gamma_multiply(opacity));
+    }
+    response.on_hover_cursor(egui::CursorIcon::PointingHand)
+}
+
 /// Mapped size and counts, truncated to fit, in full on hover.
 fn scan_summary(ui: &mut Ui, bytes: u64, files: u64, folders: u64) {
     let summary = tr!("scan-summary", size = format::size(bytes), files = files, folders = folders);
@@ -2076,7 +2176,15 @@ mod tests {
             tx.send(Ok(DeleteDone::TooLarge)).unwrap();
             let path = self.root.join(relative);
             self.app.deleting = Some(Deleting {
-                job: QueuedDelete { doc: 1, node, path: path.clone(), size: 8, files: 2, kind: DeleteKind::Recycle },
+                job: QueuedDelete {
+                    doc: 1,
+                    node,
+                    path: path.clone(),
+                    size: 8,
+                    files: 2,
+                    kind: DeleteKind::Recycle,
+                    contents: false,
+                },
                 node: Some(node),
                 targets: vec![path],
                 rx,
@@ -2103,6 +2211,106 @@ mod tests {
     }
 
     const BIG: &[(&str, bool)] = &[("big", true), ("big/a.bin", false), ("big/b.bin", false), ("keep.txt", false)];
+
+    #[test]
+    fn with_recycling_off_deletes_ask_first_and_delete_contents_keeps_the_folder() {
+        let layout =
+            [("big", true), ("big/a.bin", false), ("big/sub", true), ("big/sub/c.bin", false), ("keep.txt", false)];
+        let mut f = DeleteFixture::new("contents", &layout, false);
+        f.app.settings.use_trash = false;
+        let ctx = f.ctx.clone();
+        f.app.apply(Command::DeleteContents(f.node("big")), &ctx);
+        assert!(f.app.deleting.is_none() && f.app.delete_queue.is_empty(), "nothing goes before confirmation");
+        assert_eq!(f.app.confirm.len(), 1);
+        assert!(f.app.confirm[0].kind == DeleteKind::Permanent && f.app.confirm[0].contents);
+        f.app.answer_confirm(true, &ctx);
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        assert!(std::fs::read_dir(f.root.join("big")).unwrap().next().is_none(), "the folder stays, empty");
+        assert!(f.in_tree("big") && !f.in_tree("big/a.bin") && !f.in_tree("big/sub"));
+        assert!(f.root.join("keep.txt").exists() && f.in_tree("keep.txt"));
+
+        // A plain Delete asks as well, once any check for an installed program is done.
+        f.app.apply(Command::Delete(f.node("keep.txt")), &ctx);
+        let deadline = Instant::now() + Duration::from_secs(20);
+        while f.app.confirm.is_empty() {
+            assert!(Instant::now() < deadline, "delete was not offered for confirmation");
+            f.app.poll(&ctx);
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert!(f.app.confirm[0].kind == DeleteKind::Permanent && !f.app.confirm[0].contents);
+        assert!(f.app.deleting.is_none() && f.root.join("keep.txt").exists());
+    }
+
+    #[test]
+    fn delete_contents_needs_a_non_empty_folder_below_the_root() {
+        use clawback_core::tree::NewEntry;
+        let mut tree = Tree::new(Path::new("/contents"));
+        let full =
+            tree.add_children(ROOT, vec![NewEntry::dir("full"), NewEntry::dir("empty"), NewEntry::file("file.txt", 8)]);
+        let (full, empty, file) = (full.start, full.start + 1, full.start + 2);
+        tree.add_children(full, vec![NewEntry::file("inside.txt", 8)]);
+        let doc = Doc::counted(1, tree);
+        let deletable = |node| special::contents_deletable(&doc.tree, doc.special(), node);
+        assert!(deletable(full));
+        assert!(!deletable(empty) && !deletable(file) && !deletable(ROOT));
+    }
+
+    #[test]
+    fn delete_destination_previews_the_other_bin_until_clicked() {
+        use egui_phosphor::regular::{RECYCLE, TRASH};
+        let ctx = egui::Context::default();
+        let slot = std::cell::Cell::new(None);
+        let time = std::cell::Cell::new(0.0);
+        // One 50 ms frame: the glyph at rest in the destination slot, if any, and whether it was clicked.
+        let frame = |recycling: bool, events: Vec<egui::Event>| {
+            time.set(time.get() + 0.05);
+            let input = egui::RawInput { time: Some(time.get()), events, ..Default::default() };
+            let mut clicked = false;
+            let mut output = ctx.run_ui(input, |ui| {
+                let response = delete_destination(ui, recycling);
+                clicked = response.clicked();
+                slot.set(Some(response.rect.right_center() - vec2(10.0, 0.0)));
+            });
+            let center = slot.get().expect("laid out");
+            let shown = output.shapes.iter().find_map(|clipped| match &clipped.shape {
+                egui::Shape::Text(text)
+                    if text.fallback_color.a() > 200
+                        && (text.pos + text.galley.size() / 2.0).distance(center) < 2.0 =>
+                {
+                    Some(text.galley.job.text.clone())
+                }
+                _ => None,
+            });
+            output.textures_delta.clear();
+            (shown, clicked)
+        };
+        // Enough frames for every animation to finish.
+        let settle = |recycling: bool, events: Vec<egui::Event>| {
+            frame(recycling, events);
+            let mut rest = None;
+            for _ in 0..10 {
+                rest = frame(recycling, vec![]).0;
+            }
+            rest.expect("a destination at rest in the slot")
+        };
+        assert_eq!(settle(true, vec![]), RECYCLE);
+        let over = slot.get().expect("laid out");
+        assert_eq!(settle(true, vec![egui::Event::PointerMoved(over)]), TRASH, "hover previews the switch");
+        let press = |pressed| egui::Event::PointerButton {
+            pos: over,
+            button: egui::PointerButton::Primary,
+            pressed,
+            modifiers: Modifiers::NONE,
+        };
+        frame(true, vec![press(true)]);
+        let (shown, clicked) = frame(true, vec![press(false)]);
+        assert!(clicked);
+        assert_eq!(shown.as_deref(), Some(TRASH), "the click's frame keeps the preview");
+        assert_eq!(settle(false, vec![]), TRASH, "the new destination stays while still hovered");
+        assert_eq!(settle(false, vec![egui::Event::PointerGone]), TRASH);
+        assert_eq!(settle(false, vec![egui::Event::PointerMoved(over)]), RECYCLE, "hovering again previews");
+    }
 
     #[test]
     fn map_files_focus_their_parent_and_folders_focus_themselves() {
@@ -2164,6 +2372,7 @@ mod tests {
             size: entry.size,
             files: entry.files,
             kind: DeleteKind::Cleanup(special::Cleanup::TempFolder),
+            contents: false,
         });
         f.app.answer_confirm(true, &f.ctx.clone());
         f.finish();
@@ -2238,6 +2447,7 @@ mod tests {
                 size: 16,
                 files: 2,
                 kind: DeleteKind::Cleanup(special::Cleanup::TempFolder),
+                contents: false,
             },
             &f.ctx.clone(),
         );
@@ -2324,10 +2534,10 @@ mod tests {
                 applications: Vec::new(),
             }))
             .unwrap();
-        f.app
-            .special
-            .removal_checks
-            .push((QueuedDelete { doc: 1, node, path, size: 16, files: 2, kind: DeleteKind::Recycle }, job));
+        f.app.special.removal_checks.push((
+            QueuedDelete { doc: 1, node, path, size: 16, files: 2, kind: DeleteKind::Recycle, contents: false },
+            job,
+        ));
         f.app.poll(&f.ctx);
         assert!(f.app.special.removals.is_empty());
         assert!(f.app.delete_queue.is_empty() && f.app.deleting.is_none());
@@ -2345,7 +2555,15 @@ mod tests {
         let node = f.node("big");
         let (sender, job) = crate::background::Job::manual(());
         f.app.special.removal_checks.push((
-            QueuedDelete { doc: 1, node, path: f.root.join("big"), size: 16, files: 2, kind: DeleteKind::Recycle },
+            QueuedDelete {
+                doc: 1,
+                node,
+                path: f.root.join("big"),
+                size: 16,
+                files: 2,
+                kind: DeleteKind::Recycle,
+                contents: false,
+            },
             job,
         ));
         f.app.doc.as_mut().unwrap().id = 2;

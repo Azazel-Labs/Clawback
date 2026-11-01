@@ -283,6 +283,22 @@ translation = "ลบ"
 source = "This can’t be undone."
 translation = "การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "ลบเนื้อหา"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "ทุกอย่างภายใน “{ $name }” จะถูกลบ แต่จะเก็บโฟลเดอร์ไว้"
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "ลบเนื้อหาอย่างถาวรหรือไม่?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "เนื้อหาของ “{ $name }” ใหญ่เกินไปสำหรับถังรีไซเคิล แต่จะเก็บโฟลเดอร์ไว้"
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · ผ่านไป { $seconds } วินาที"
@@ -1240,6 +1256,18 @@ translation = "ไฟล์มากเกินไป"
 [messages.tooltips]
 source = "Tooltips"
 translation = "คำแนะนำเครื่องมือ"
+
+[messages.trash]
+source = "Trash"
+translation = "ถังขยะ"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "รายการที่ลบจะถูกลบอย่างถาวรหลังจากคุณยืนยัน คลิกเพื่อให้กู้คืนได้"
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "รายการที่ลบสามารถกู้คืนได้ คลิกเพื่อลบอย่างถาวรแทน โดย Clawback จะถามก่อน"
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

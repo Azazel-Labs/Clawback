@@ -290,6 +290,22 @@ translation = "Vee uit"
 source = "This can’t be undone."
 translation = "Dit kan nie ongedaan gemaak word nie."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Vee inhoud uit"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = 'Alles binne "{ $name }" sal uitgevee word. Die vouer self bly behoue.'
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Vee inhoud permanent uit?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = 'Die inhoud van "{ $name }" is te groot vir die asblik. Die vouer self bly behoue.'
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds } s verloop"
@@ -1253,6 +1269,18 @@ translation = "Te veel lêers"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Wenke"
+
+[messages.trash]
+source = "Trash"
+translation = "Asblik"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "Uitgeveede items word permanent verwyder nadat jy bevestig. Klik om uitvee herstelbaar te maak."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "Uitgeveede items kan teruggesit word. Klik om eerder permanent uit te vee; Clawback vra eers."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

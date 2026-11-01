@@ -23,6 +23,7 @@ impl ClawbackApp {
             size: entry.size,
             files: entry.files,
             kind: DeleteKind::Cleanup(Cleanup::TempFolder),
+            contents: false,
         });
     }
 
@@ -50,6 +51,7 @@ impl ClawbackApp {
             size,
             files,
             kind: DeleteKind::Cleanup(Cleanup::RecycleBin),
+            contents: false,
         });
     }
 }

@@ -290,6 +290,22 @@ translation = "Ta bort"
 source = "This can’t be undone."
 translation = "Detta kan inte ångras."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Ta bort innehåll"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = 'Allt i "{ $name }" tas bort. Själva mappen behålls.'
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Ta bort innehållet permanent?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = 'Innehållet i "{ $name }" är för stort för papperskorgen. Själva mappen behålls.'
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds } s har gått"
@@ -1253,6 +1269,18 @@ translation = "För många filer"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Verktygstips"
+
+[messages.trash]
+source = "Trash"
+translation = "Papperskorg"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "Borttagna objekt tas bort permanent när du bekräftar. Klicka för att göra borttagningar återställbara."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "Borttagna objekt kan återställas. Klicka för att ta bort permanent i stället; Clawback frågar först."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

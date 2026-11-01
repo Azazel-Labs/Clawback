@@ -7,7 +7,7 @@ use super::{Phase, Progress, Recycled};
 use crate::platform::{Apartment, strip_verbatim, wide};
 use clawback_core::scan::lock;
 use std::{
-    path::Path,
+    path::PathBuf,
     sync::{Arc, Mutex},
 };
 use windows::{
@@ -222,9 +222,9 @@ fn error_text(error: &Error) -> String {
 }
 
 /// Errors are display text that already carries its code.
-pub fn recycle(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String> {
+pub fn recycle(paths: &[PathBuf], progress: &Arc<Progress>) -> Result<Recycled, String> {
     let sink = Sink::new(progress.clone());
-    let result = perform(path, &sink);
+    let result = perform(paths, &sink);
     match (sink.take_outcome(), result) {
         // Stopped on purpose; the shell's resulting failure is expected.
         (Some(Outcome::TooLarge), _) => Ok(Recycled::TooLarge),
@@ -238,22 +238,29 @@ pub fn recycle(path: &Path, progress: &Arc<Progress>) -> Result<Recycled, String
 }
 
 /// Runs the shell operation; true when any of it was aborted.
-fn perform(path: &Path, sink: &ComObject<Sink>) -> windows::core::Result<bool> {
+fn perform(paths: &[PathBuf], sink: &ComObject<Sink>) -> windows::core::Result<bool> {
     // The caller uses a dedicated background thread with no existing COM apartment.
     let _apartment = Apartment::enter()?;
-    let absolute = std::path::absolute(path).map_err(|error| Error::new(E_ABORT, error.to_string()))?;
-    let wide = wide(strip_verbatim(&absolute).as_os_str());
     let sink: IFileOperationProgressSink = sink.to_interface();
     // SAFETY: COM is initialized on this thread.
     let operation: IFileOperation = unsafe { CoCreateInstance(&FileOperation, None, CLSCTX_INPROC_SERVER) }?;
     // SAFETY: the operation is live and all supplied flags are documented shell flags.
     unsafe { operation.SetOperationFlags(FOF_NO_UI | FOF_ALLOWUNDO | FOFX_RECYCLEONDELETE | FOFX_EARLYFAILURE) }?;
-    // SAFETY: the UTF-16 path is terminated and lives through this call.
-    let item: IShellItem = unsafe { SHCreateItemFromParsingName(PCWSTR(wide.as_ptr()), None) }?;
+    let mut items = Vec::with_capacity(paths.len());
+    for path in paths {
+        let absolute = std::path::absolute(path).map_err(|error| Error::new(E_ABORT, error.to_string()))?;
+        let wide = wide(strip_verbatim(&absolute).as_os_str());
+        // SAFETY: the UTF-16 path is terminated and lives through this call.
+        let item: IShellItem = unsafe { SHCreateItemFromParsingName(PCWSTR(wide.as_ptr()), None) }?;
+        items.push(item);
+    }
     // SAFETY: the locally owned sink remains alive through Unadvise.
     let cookie = unsafe { operation.Advise(&sink) }?;
-    // SAFETY: the item and operation are live interfaces in this apartment.
-    let queued = unsafe { operation.DeleteItem(&item, None) };
+    // One operation for every item, so the shell reports progress and size limits for them together.
+    let queued = items.iter().try_for_each(|item| {
+        // SAFETY: the item and operation are live interfaces in this apartment.
+        unsafe { operation.DeleteItem(item, None) }
+    });
     let result = queued.and_then(|()| {
         // SAFETY: the operation, item and advised sink are live until this synchronous call returns.
         unsafe { operation.PerformOperations() }
@@ -326,7 +333,7 @@ mod tests {
     #[test]
     #[ignore = "Uses the real Windows Recycle Bin with an isolated fixture, then restores it"]
     fn recycle_fixture_and_restore() {
-        let base = Path::new(env!("CARGO_MANIFEST_DIR")).join("target");
+        let base = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("target");
         let path = base.join(format!("delete-fixture-{}", std::process::id()));
         assert!(path.starts_with(&base));
         std::fs::create_dir(&path).unwrap();
@@ -335,7 +342,7 @@ mod tests {
         }
         let progress = Arc::new(Progress::default());
         let start = Instant::now();
-        let result = recycle(&path, &progress);
+        let result = recycle(std::slice::from_ref(&path), &progress);
         let elapsed = start.elapsed();
         let moved = !path.exists();
         let items: Vec<_> =
@@ -358,5 +365,37 @@ mod tests {
             "Recycled and restored 100 files in {elapsed:?}; native progress {}/{}",
             snapshot.done, snapshot.total
         );
+    }
+
+    #[test]
+    #[ignore = "Uses the real Windows Recycle Bin with an isolated fixture, then restores it"]
+    fn recycle_contents_together_and_restore() {
+        let base = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("target");
+        let folder = base.join(format!("delete-contents-fixture-{}", std::process::id()));
+        assert!(folder.starts_with(&base));
+        std::fs::create_dir_all(folder.join("nested")).unwrap();
+        std::fs::write(folder.join("nested/inner.txt"), b"Clawback").unwrap();
+        let contents: Vec<_> = (0..5).map(|n| folder.join(format!("sample-{n}.txt"))).collect();
+        for path in &contents {
+            std::fs::write(path, b"Clawback").unwrap();
+        }
+        let targets: Vec<_> = contents.iter().cloned().chain([folder.join("nested")]).collect();
+        let result = recycle(&targets, &Arc::new(Progress::default()));
+        let emptied = std::fs::read_dir(&folder).unwrap().next().is_none();
+        let items: Vec<_> = trash::os_limited::list()
+            .unwrap()
+            .into_iter()
+            .filter(|item| targets.contains(&item.original_path()))
+            .collect();
+        let recycled = items.len();
+        if !items.is_empty() {
+            trash::os_limited::restore_all(items).unwrap();
+        }
+        assert_eq!(std::fs::read(folder.join("nested/inner.txt")).unwrap(), b"Clawback");
+        // Only remove the exact fixture created by this test, after successful recovery.
+        std::fs::remove_dir_all(&folder).unwrap();
+        assert!(matches!(result, Ok(Recycled::Done)));
+        assert!(emptied, "Every item must leave the folder, and the folder must stay");
+        assert_eq!(recycled, targets.len());
     }
 }

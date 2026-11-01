@@ -290,6 +290,22 @@ translation = "Eliminar"
 source = "This can’t be undone."
 translation = "Esta ação não pode ser desfeita."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Eliminar conteúdo"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "Tudo o que está dentro de “{ $name }” será eliminado. A pasta em si é mantida."
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Eliminar o conteúdo permanentemente?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "O conteúdo de “{ $name }” é demasiado grande para a reciclagem. A pasta em si é mantida."
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds }s decorridos"
@@ -1265,6 +1281,18 @@ translation = "Demasiados ficheiros"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Sugestões"
+
+[messages.trash]
+source = "Trash"
+translation = "Lixo"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "Os itens eliminados são removidos permanentemente após a sua confirmação. Clique para os poder recuperar."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "Os itens eliminados podem ser restaurados. Clique para eliminar permanentemente; o Clawback pergunta primeiro."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

@@ -290,6 +290,22 @@ translation = "Verwijderen"
 source = "This can’t be undone."
 translation = "Dit kan niet ongedaan worden gemaakt."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Inhoud verwijderen"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "Alles in “{ $name }” wordt verwijderd. De map zelf blijft bestaan."
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Inhoud permanent verwijderen?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "De inhoud van “{ $name }” is te groot voor de Prullenbak. De map zelf blijft bestaan."
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds }s is verstreken"
@@ -1253,6 +1269,18 @@ translation = "Te veel bestanden"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Knopinfo"
+
+[messages.trash]
+source = "Trash"
+translation = "Prullenbak"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "Verwijderde items worden na je bevestiging permanent verwijderd. Klik om verwijderingen herstelbaar te maken."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "Verwijderde items kun je terugzetten. Klik om in plaats daarvan permanent te verwijderen; Clawback vraagt het eerst."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

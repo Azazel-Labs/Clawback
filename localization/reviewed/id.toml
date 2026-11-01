@@ -283,6 +283,22 @@ translation = "Hapus"
 source = "This can’t be undone."
 translation = "Ini tidak dapat dibatalkan."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Hapus Isi"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "Semua yang ada di dalam “{ $name }” akan dihapus. Foldernya sendiri tetap ada."
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Hapus isi secara permanen?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "Isi “{ $name }” terlalu besar untuk Recycle Bin. Foldernya sendiri tetap ada."
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · { $seconds } detik berlalu"
@@ -1240,6 +1256,18 @@ translation = "Terlalu banyak berkas"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Petunjuk"
+
+[messages.trash]
+source = "Trash"
+translation = "Tempat Sampah"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "Item yang dihapus akan dihapus permanen setelah Anda konfirmasi. Klik agar penghapusan dapat dipulihkan."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "Item yang dihapus dapat dipulihkan. Klik untuk menghapus permanen; Clawback akan bertanya dulu."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."

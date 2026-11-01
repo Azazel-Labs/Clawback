@@ -283,6 +283,22 @@ translation = "Xóa"
 source = "This can’t be undone."
 translation = "Việc này không thể hoàn tác được."
 
+[messages.delete-contents]
+source = "Delete Contents"
+translation = "Xóa nội dung"
+
+[messages.delete-contents-body]
+source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
+translation = "Mọi thứ bên trong “{ $name }” sẽ bị xóa. Bản thân thư mục được giữ lại."
+
+[messages.delete-contents-title]
+source = "Delete contents permanently?"
+translation = "Xóa vĩnh viễn nội dung?"
+
+[messages.delete-contents-too-big]
+source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
+translation = "Nội dung của “{ $name }” quá lớn đối với Thùng rác. Bản thân thư mục được giữ lại."
+
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
 translation = "{ $size } · Đã qua { $seconds } giây"
@@ -1240,6 +1256,18 @@ translation = "Quá nhiều tệp"
 [messages.tooltips]
 source = "Tooltips"
 translation = "Chú thích"
+
+[messages.trash]
+source = "Trash"
+translation = "Thùng rác"
+
+[messages.trash-toggle-off]
+source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
+translation = "Mục đã xóa bị xóa vĩnh viễn sau khi bạn xác nhận. Nhấp để có thể khôi phục khi xóa."
+
+[messages.trash-toggle-on]
+source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
+translation = "Mục đã xóa có thể khôi phục. Nhấp để xóa vĩnh viễn thay vào đó; Clawback sẽ hỏi trước."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
