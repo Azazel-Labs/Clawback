@@ -223,9 +223,11 @@ fn run_gui(path: Option<&std::path::Path>) -> ExitCode {
             .with_inner_size([1280.0, 860.0])
             .with_min_inner_size([420.0, 300.0])
             .with_icon(icon::icon())
-            // A container's compositor fills the browser tab with the one window; no title bar.
-            .with_decorations(!container::enabled()),
-        persist_window: settings.save_pos,
+            // In a container the browser tab is the screen, sized to the page: the one
+            // window fills it, without a title bar, and follows it when the tab resizes.
+            .with_decorations(!container::enabled())
+            .with_maximized(container::enabled()),
+        persist_window: settings.save_pos && !container::enabled(),
         ..Default::default()
     };
     #[cfg(feature = "screenshots")]
