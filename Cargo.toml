@@ -109,7 +109,7 @@ clawback-core.workspace = true
 # there are no system -dev packages to install at build time).
 eframe = { version = "0.37", features = ["persistence"] }
 # Native folder picker (XDG portal on Linux, pure Rust).
-rfd = "0.17"
+rfd = "0.18"
 # Mounted volumes and free space.
 sysinfo = { version = "0.40", default-features = false, features = ["disk"] }
 # Recycle Bin / Trash.
