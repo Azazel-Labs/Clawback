@@ -185,7 +185,6 @@ permission-hint-macos = macOS melindungi beberapa folder (Mail, Messages, penggu
 msec = mdtk
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } kosong dari { $total }  ·  { $used } terpakai  ·  { $filesystem }
 properties-title = Properti { $name }
-window-title = { $path }  -  { $total } Total  -  { $free } Kosong  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Bahasa Turki
 ukrainian = Bahasa Ukraina

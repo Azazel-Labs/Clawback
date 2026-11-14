@@ -185,7 +185,6 @@ permission-hint-macos = macOS protejează unele dosare (Mail, Messages, alți ut
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } liberi din { $total }  ·  { $used } utilizați  ·  { $filesystem }
 properties-title = Proprietăți pentru { $name }
-window-title = { $path }  -  { $total } Total  -  { $free } Liber  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turcă
 ukrainian = Ucraineană

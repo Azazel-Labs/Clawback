@@ -180,7 +180,6 @@ permission-hint-macos = macOS ปกป้องบางโฟลเดอร�
 msec = มิลลิวินาที
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } ว่างจาก { $total }  ·  ใช้แล้ว { $used }  ·  { $filesystem }
 properties-title = คุณสมบัติของ { $name }
-window-title = { $path }  -  ทั้งหมด { $total }  -  ว่าง { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = ตุรกี
 ukrainian = ยูเครน

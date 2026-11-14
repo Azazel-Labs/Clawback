@@ -196,7 +196,6 @@ permission-hint-macos = macOS beskytter nogle mapper (Mail, Meddelelser, andre b
 msec = msek
 drive-summary = { $icon } { $drive }{ "\u000A        " }{ $free } fri for { $total } · { $used } brugte · { $filesystem }
 properties-title = { $name } Egenskaber
-window-title = { $path } - { $total } Total - { $free } Free - Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Tyrkisk
 ukrainian = Ukrainsk

@@ -196,7 +196,6 @@ permission-hint-macos = O macOS protege algumas pastas (Mail, Mensagens, pastas 
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Livre: { $free } de { $total }  ·  Em uso: { $used }  ·  { $filesystem }
 properties-title = Propriedades de { $name }
-window-title = { $path }  -  Total: { $total }  -  Livre: { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turco
 ukrainian = Ucraniano

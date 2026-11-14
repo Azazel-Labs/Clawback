@@ -1506,10 +1506,6 @@ translation = "Visa"
 source = "Waiting for Windows permission…"
 translation = "Väntar på Windows-behörighet…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Totalt { $total }  -  Ledigt { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows-operativsystem"

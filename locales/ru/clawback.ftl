@@ -202,7 +202,6 @@ permission-hint-macos = macOS защищает некоторые папки (П
 msec = мс
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Свободно { $free } из { $total }  ·  Занято { $used }  ·  { $filesystem }
 properties-title = Свойства: { $name }
-window-title = { $path }  -  Всего { $total }  -  Свободно { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Турецкий
 ukrainian = Украинский

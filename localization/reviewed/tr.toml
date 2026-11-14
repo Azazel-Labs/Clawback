@@ -1493,10 +1493,6 @@ translation = "Görünüm"
 source = "Waiting for Windows permission…"
 translation = "Windows izni bekleniyor…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Toplam: { $total }  -  Boş: { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows işletim sistemi"

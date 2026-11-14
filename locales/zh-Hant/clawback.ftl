@@ -185,7 +185,6 @@ permission-hint-macos = macOS 會保護某些資料夾（郵件、訊息、其�
 msec = 毫秒
 drive-summary = { $icon }  { $drive }{ "\u000A        " }可用 { $free }，共 { $total }  ·  已用 { $used }  ·  { $filesystem }
 properties-title = { $name } 的內容
-window-title = { $path }  -  總計 { $total }  -  可用 { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = 土耳其文
 ukrainian = 烏克蘭文

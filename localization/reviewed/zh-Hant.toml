@@ -1493,10 +1493,6 @@ translation = "檢視"
 source = "Waiting for Windows permission…"
 translation = "正在等待 Windows 授權…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  總計 { $total }  -  可用 { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows 作業系統"

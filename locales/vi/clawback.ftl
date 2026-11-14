@@ -185,7 +185,6 @@ permission-hint-macos = macOS bảo vệ một số thư mục (Mail, Messages, 
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } trống trên { $total }  ·  { $used } đã dùng  ·  { $filesystem }
 properties-title = Thuộc tính của { $name }
-window-title = { $path }  -  Tổng { $total }  -  Trống { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Tiếng Thổ Nhĩ Kỳ
 ukrainian = Tiếng Ukraina

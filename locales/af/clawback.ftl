@@ -196,7 +196,6 @@ permission-hint-macos = macOS beskerm sommige vouers (Mail, Messages, ander gebr
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } vry van { $total }  ·  { $used } gebruik  ·  { $filesystem }
 properties-title = Eienskappe van { $name }
-window-title = { $path }  -  { $total } totaal  -  { $free } vry  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turks
 ukrainian = Oekraïens

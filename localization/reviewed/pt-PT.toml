@@ -1518,10 +1518,6 @@ translation = "Ver"
 source = "Waiting for Windows permission…"
 translation = "A aguardar autorização do Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Total: { $total }  -  Livre: { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Sistema operativo Windows"

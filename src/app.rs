@@ -16,7 +16,7 @@ use crate::scanning::{Running, Update};
 use crate::theme;
 use crate::watching::LiveStatus;
 use crate::{background::retire, icon};
-use clawback_core::format::{self, dir_display, display_name, fraction};
+use clawback_core::format::{self, display_name, fraction};
 use clawback_core::{NodeId, ROOT, Settings, SkipReason, Skipped, Tree};
 use eframe::egui::{self, Align, Align2, Id, Key, Layout, Modifiers, RichText, Ui, vec2};
 use std::collections::VecDeque;
@@ -234,7 +234,6 @@ pub struct ClawbackApp {
     confirm: VecDeque<QueuedDelete>,
     error: Option<String>,
     special: special::State,
-    title: String,
     /// The directory panel splitter is being dragged; its new share is saved on release.
     split_dragging: bool,
     /// Loaded the first time the picker opens.
@@ -1265,32 +1264,6 @@ impl ClawbackApp {
         action
     }
 
-    /// SpaceMonger's window title: the selection, or the current folder.
-    fn compute_title(&self) -> String {
-        let Some(doc) = &self.doc else { return "Clawback".to_owned() };
-        if let Some(n) = self.map.selected_node() {
-            let size = doc.tree.node(n).size;
-            format!(
-                "{}  -  {}  -  {}  -  Clawback",
-                doc.tree.path(n).display(),
-                format::percent(size, doc.total_space()),
-                format::size(size)
-            )
-        } else {
-            let size = if doc.view == ROOT { doc.total_space() } else { doc.tree.node(doc.view).size };
-            // Without a volume (a container's data folder spans several) there's no free space to show.
-            if doc.disk.is_none() {
-                return format!("{}  -  {}  -  Clawback", dir_display(&doc.tree.path(doc.view)), format::size(size));
-            }
-            tr!(
-                "window-title",
-                path = dir_display(&doc.tree.path(doc.view)),
-                total = format::size(size),
-                free = format::size(doc.free_space())
-            )
-        }
-    }
-
     fn open_dialog(&mut self, ctx: &egui::Context) {
         let Some(dlg) = &mut self.open else { return };
         let icons = self.picker_icons.get_or_insert_with(|| PickerIcons::load(ctx));
@@ -1986,12 +1959,6 @@ impl eframe::App for ClawbackApp {
         self.unreadable_window(&ctx);
         self.error_dialog(&ctx);
         self.special_dialogs(&ctx);
-
-        let title = self.compute_title();
-        if title != self.title {
-            ctx.send_viewport_cmd(egui::ViewportCommand::Title(title.clone()));
-            self.title = title;
-        }
         crate::startup::frame_finished();
     }
 

@@ -196,7 +196,6 @@ permission-hint-macos = macOS suojaa joitakin kansioita (sähköposti, viestit, 
 msec = ms
 drive-summary = { $icon } { $drive }{ "\u000A        " }{ $free } vapaa { $total } · { $used } käytetty · { $filesystem }
 properties-title = { $name } Ominaisuudet
-window-title = { $path }  -  { $total } yhteensä  -  { $free } vapaana  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turkki
 ukrainian = Ukraina

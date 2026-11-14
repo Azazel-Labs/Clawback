@@ -1493,10 +1493,6 @@ translation = "Tampilan"
 source = "Waiting for Windows permission…"
 translation = "Menunggu izin Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  { $total } Total  -  { $free } Kosong  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Sistem operasi Windows"

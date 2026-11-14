@@ -185,7 +185,6 @@ permission-hint-macos = macOS는 일부 폴더(Mail, 메시지, 다른 사용자
 msec = 밀리초
 drive-summary = { $icon }  { $drive }{ "\u000A        " }전체 { $total } 중 { $free } 사용 가능  ·  { $used } 사용 중  ·  { $filesystem }
 properties-title = 속성: { $name }
-window-title = { $path }  -  전체 { $total }  -  여유 { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = 튀르키예어
 ukrainian = 우크라이나어

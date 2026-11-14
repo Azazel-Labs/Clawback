@@ -185,7 +185,6 @@ permission-hint-macos = macOS は一部のフォルダー（メール、メッ�
 msec = ミリ秒
 drive-summary = { $icon }  { $drive }{ "\u000A        " }全体 { $total }、空き { $free }  ·  使用済み { $used }  ·  { $filesystem }
 properties-title = { $name } のプロパティ
-window-title = { $path }  -  合計 { $total }  -  空き { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = トルコ語
 ukrainian = ウクライナ語

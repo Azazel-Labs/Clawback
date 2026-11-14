@@ -1493,10 +1493,6 @@ translation = "表示"
 source = "Waiting for Windows permission…"
 translation = "Windows の許可を待機中…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  合計 { $total }  -  空き { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows OS"

@@ -202,7 +202,6 @@ permission-hint-macos = macOS chrání některé složky (Mail, Zprávy, složky
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Volné: { $free } z { $total }  ·  Využité: { $used }  ·  { $filesystem }
 properties-title = Vlastnosti: { $name }
-window-title = { $path }  -  Celkem { $total }  -  Volné { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turečtina
 ukrainian = Ukrajinština

@@ -1510,10 +1510,6 @@ translation = "Приказ"
 source = "Waiting for Windows permission…"
 translation = "Чека се дозвола Windows-а…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  укупно { $total }  -  слободно { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Оперативни систем Windows"

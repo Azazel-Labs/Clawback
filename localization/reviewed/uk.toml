@@ -1514,10 +1514,6 @@ translation = "Вигляд"
 source = "Waiting for Windows permission…"
 translation = "Очікування дозволу Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Усього { $total }  -  Вільно { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "ОС Windows"

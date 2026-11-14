@@ -185,7 +185,6 @@ permission-hint-macos = macOS bazı klasörleri korur (Mail, Mesajlar, diğer ku
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Boş: { $free } / { $total }  ·  Kullanılan: { $used }  ·  { $filesystem }
 properties-title = Özellikler: { $name }
-window-title = { $path }  -  Toplam: { $total }  -  Boş: { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Türkçe
 ukrainian = Ukraynaca

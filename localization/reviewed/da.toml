@@ -1506,10 +1506,6 @@ translation = "Vis"
 source = "Waiting for Windows permission…"
 translation = "Venter på Windows tilladelse…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path } - { $total } Total - { $free } Free - Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows-styresystem"

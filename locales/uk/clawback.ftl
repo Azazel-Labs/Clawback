@@ -202,7 +202,6 @@ permission-hint-macos = macOS захищає деякі теки (Пошта, П
 msec = мс
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Вільно { $free } з { $total }  ·  Зайнято { $used }  ·  { $filesystem }
 properties-title = Властивості: { $name }
-window-title = { $path }  -  Усього { $total }  -  Вільно { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Турецька
 ukrainian = Українська

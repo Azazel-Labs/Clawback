@@ -1506,10 +1506,6 @@ translation = "Προβολή"
 source = "Waiting for Windows permission…"
 translation = "Αναμονή για δικαιώματα των Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  { $total } σύνολο  -  { $free } ελεύθερα  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Λειτουργικό σύστημα Windows"

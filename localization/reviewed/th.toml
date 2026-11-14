@@ -1493,10 +1493,6 @@ translation = "มุมมอง"
 source = "Waiting for Windows permission…"
 translation = "กำลังรอการอนุญาตจาก Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  ทั้งหมด { $total }  -  ว่าง { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "ระบบปฏิบัติการ Windows"

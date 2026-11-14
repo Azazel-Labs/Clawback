@@ -196,7 +196,6 @@ permission-hint-macos = macOS προστατεύει μερικούς φακέλ
 msec = χιλ. δευτ.
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } ελεύθερα από { $total }  ·  { $used } σε χρήση  ·  { $filesystem }
 properties-title = Ιδιότητες του { $name }
-window-title = { $path }  -  { $total } σύνολο  -  { $free } ελεύθερα  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Τουρκικά
 ukrainian = Ουκρανικά

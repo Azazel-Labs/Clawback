@@ -1493,10 +1493,6 @@ translation = "Nézet"
 source = "Waiting for Windows permission…"
 translation = "Várakozás a Windows engedélyére…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Összesen { $total }  -  Szabad { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows operációs rendszer"

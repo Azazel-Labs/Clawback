@@ -199,7 +199,6 @@ permission-hint-macos = macOS штити неке фасцикле (Mail, Messag
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } слободно од { $total }  ·  { $used } заузето  ·  { $filesystem }
 properties-title = Својства: { $name }
-window-title = { $path }  -  укупно { $total }  -  слободно { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Турски
 ukrainian = Украјински

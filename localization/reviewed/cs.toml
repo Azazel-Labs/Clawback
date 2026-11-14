@@ -1514,10 +1514,6 @@ translation = "Zobrazení"
 source = "Waiting for Windows permission…"
 translation = "Čekání na oprávnění Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Celkem { $total }  -  Volné { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Operační systém Windows"

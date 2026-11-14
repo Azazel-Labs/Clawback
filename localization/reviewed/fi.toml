@@ -1506,10 +1506,6 @@ translation = "Näytä"
 source = "Waiting for Windows permission…"
 translation = "Odotetaan Windows-lupaa…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  { $total } yhteensä  -  { $free } vapaana  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows-käyttöjärjestelmä"

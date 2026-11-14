@@ -196,7 +196,6 @@ permission-hint-macos = macOS schützt bestimmte Ordner (Mail, Nachrichten, ande
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } frei von { $total }  ·  { $used } belegt  ·  { $filesystem }
 properties-title = Eigenschaften von { $name }
-window-title = { $path }  -  { $total } gesamt  -  { $free } frei  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Türkisch
 ukrainian = Ukrainisch

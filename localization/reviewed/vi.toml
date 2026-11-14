@@ -1493,10 +1493,6 @@ translation = "Xem"
 source = "Waiting for Windows permission…"
 translation = "Đang chờ Windows cấp quyền…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  Tổng { $total }  -  Trống { $free }  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Hệ điều hành Windows"

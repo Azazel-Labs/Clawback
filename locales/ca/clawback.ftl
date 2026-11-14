@@ -196,7 +196,6 @@ permission-hint-macos = macOS protegeix algunes carpetes (Mail, Messages, altres
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } lliures de { $total }  ·  { $used } utilitzats  ·  { $filesystem }
 properties-title = Propietats de { $name }
-window-title = { $path }  -  { $total } en total  -  { $free } lliures  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turc
 ukrainian = Ucraïnès

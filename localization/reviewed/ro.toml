@@ -1493,10 +1493,6 @@ translation = "Vizualizare"
 source = "Waiting for Windows permission…"
 translation = "Se așteaptă permisiunea Windows…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  { $total } Total  -  { $free } Liber  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Sistemul de operare Windows"

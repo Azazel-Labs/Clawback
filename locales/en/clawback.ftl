@@ -331,7 +331,6 @@ msec = msec
 drive-free-of-total = { $free } free of { $total }
 drive-summary = { $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }
 properties-title = { $name } Properties
-window-title = { $path }  -  { $total } Total  -  { $free } Free  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turkish
 ukrainian = Ukrainian

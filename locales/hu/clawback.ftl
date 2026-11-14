@@ -185,7 +185,6 @@ permission-hint-macos = A macOS véd bizonyos mappákat (Mail, Üzenetek, más f
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Szabad: { $free } / { $total }  ·  Foglalt: { $used }  ·  { $filesystem }
 properties-title = Tulajdonságok: { $name }
-window-title = { $path }  -  Összesen { $total }  -  Szabad { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Török
 ukrainian = Ukrán

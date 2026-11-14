@@ -202,7 +202,6 @@ permission-hint-macos = macOS chroni niektóre foldery (Poczta, Wiadomości, fol
 msec = ms
 drive-summary = { $icon }  { $drive }{ "\u000A        " }Wolne: { $free } z { $total }  ·  Zajęte: { $used }  ·  { $filesystem }
 properties-title = Właściwości: { $name }
-window-title = { $path }  -  Łącznie { $total }  -  Wolne { $free }  -  Clawback
 scan-summary = { $size } | { contents-count }
 turkish = Turecki
 ukrainian = Ukraiński

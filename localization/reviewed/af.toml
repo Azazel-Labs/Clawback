@@ -1506,10 +1506,6 @@ translation = "Aansig"
 source = "Waiting for Windows permission…"
 translation = "Wag tans vir Windows-toestemming…"
 
-[messages.window-title]
-source = "{ $path }  -  { $total } Total  -  { $free } Free  -  Clawback"
-translation = "{ $path }  -  { $total } totaal  -  { $free } vry  -  Clawback"
-
 [messages.windows-os]
 source = "Windows OS"
 translation = "Windows-bedryfstelsel"
