@@ -34,8 +34,7 @@ impl ClawbackApp {
                 continue;
             };
             request.node = node;
-            if let Some(mut removal) = result {
-                programs::retain_confirmed_owners(&mut removal);
+            if let Some(removal) = result {
                 if !removal.applications.is_empty() {
                     self.special.removals.push_back(removal);
                 }

@@ -180,6 +180,26 @@ translation = "Käännä levytilaasi takaisin."
 source = "Clawback Settings"
 translation = "Clawbackin Asetukset"
 
+[messages.clean-up]
+source = "Clean Up"
+translation = "Siivoa"
+
+[messages.clean-up-all]
+source = "Clean up all"
+translation = "Siivoa kaikki"
+
+[messages.clean-up-body]
+source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
+translation = '"{ $name }" poistetaan. Projektin työkalut luovat sen uudelleen tarvittaessa.'
+
+[messages.clean-up-body-many]
+source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
+translation = "{ $count } kansiota poistetaan. Projektien työkalut luovat ne uudelleen tarvittaessa."
+
+[messages.clean-up-title]
+source = "Clean up permanently?"
+translation = "Siivotaanko pysyvästi?"
+
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
 translation = "Siivotaan Temp-kansiota…"
@@ -843,8 +863,8 @@ source = "Cleanup"
 translation = "Siivous"
 
 [messages.reclaim-developer]
-source = "Developer leftovers"
-translation = "Kehityksen jäänteet"
+source = "Rebuildable project files"
+translation = "Uudelleen luotavat projektitiedostot"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -855,8 +875,8 @@ source = "{ $size } found"
 translation = "Löytyi { $size }"
 
 [messages.reclaim-games]
-source = "Games"
-translation = "Pelit"
+source = "Steam Games"
+translation = "Steam-pelit"
 
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"

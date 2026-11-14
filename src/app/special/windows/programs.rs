@@ -26,7 +26,7 @@ pub struct Removal {
     pub applications: Vec<Application>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct Inventory {
     program_roots: Vec<PathBuf>,
     steam_roots: Vec<PathBuf>,
@@ -81,6 +81,9 @@ impl Inventory {
     }
 }
 
+/// The applications whose uninstallers may be offered for `path`, or `None` when no
+/// installed software manages it. A managed path with no confirmed owner keeps `Some`
+/// with no applications, so it is neither uninstalled nor deleted.
 pub fn inspect(path: &Path) -> Option<Removal> {
     let mut inventory = registry::inventory();
     steam::extend(&mut inventory, path);
@@ -89,7 +92,24 @@ pub fn inspect(path: &Path) -> Option<Removal> {
     if steam::library_for(path).is_some() {
         removal.applications.retain(|app| matches!(app.action, Some(Action::Steam(_))));
     }
+    retain_confirmed_owners(&mut removal, registry::program_roots(), &subfolders);
     Some(removal)
+}
+
+fn subfolders(path: &Path) -> Option<Vec<PathBuf>> {
+    let mut folders = Vec::new();
+    for entry in std::fs::read_dir(path).ok()? {
+        let entry = entry.ok()?;
+        if entry.file_type().ok()?.is_dir() {
+            folders.push(entry.path());
+        }
+    }
+    Some(folders)
+}
+
+/// Read the slower installation records in the background, ahead of the first menu.
+pub fn prepare() {
+    registry::prepare();
 }
 
 /// Resolve menu ownership off-thread. Never advertise an unverified uninstall action.
@@ -115,18 +135,44 @@ pub fn recognized(path: &Path) -> bool {
     entries.retain(|_, (at, result)| result.is_none() || at.elapsed() < Duration::from_secs(30));
     entries.insert(path.clone(), (Instant::now(), None));
     std::thread::spawn(move || {
-        let confirmed = inspect(&path).is_some_and(|removal| confirmed_owner(&removal));
+        let confirmed = inspect(&path).is_some_and(|removal| !removal.applications.is_empty());
         clawback_core::scan::lock(cache).insert(path, (Instant::now(), Some(confirmed)));
     });
     false
 }
 
-fn confirmed_owner(removal: &Removal) -> bool {
-    removal.applications.iter().any(|app| app.action.is_some() && within(&removal.path, &app.location))
+type Subfolders<'a> = &'a dyn Fn(&Path) -> Option<Vec<PathBuf>>;
+
+/// Keep the applications that can be uninstalled and own `removal.path`: those installed
+/// at or above it, or, for a vendor folder in Program Files such as `Vendor` holding
+/// `Vendor\App`, every application inside it, but only when they account for every
+/// folder in it. A folder that also holds something unrecognized offers nothing.
+fn retain_confirmed_owners(removal: &mut Removal, roots: &[PathBuf], subfolders: Subfolders<'_>) {
+    let path = removal.path.clone();
+    removal.applications.retain(|app| app.action.is_some());
+    if removal.applications.iter().any(|app| within(&path, &app.location)) {
+        removal.applications.retain(|app| within(&path, &app.location));
+        return;
+    }
+    removal.applications.retain(|app| within(&app.location, &path));
+    let vendor = !removal.steam
+        && roots.iter().any(|root| within(&path, root) && !within(root, &path))
+        && covered(&path, &removal.applications, subfolders, 4);
+    if !vendor {
+        removal.applications.clear();
+    }
 }
 
-pub fn retain_confirmed_owners(removal: &mut Removal) {
-    removal.applications.retain(|app| app.action.is_some() && within(&removal.path, &app.location));
+/// Whether every folder below `folder` belongs to one of `applications`.
+fn covered(folder: &Path, applications: &[Application], subfolders: Subfolders<'_>, depth: usize) -> bool {
+    if applications.iter().any(|app| within(folder, &app.location)) {
+        return true;
+    }
+    if depth == 0 || !applications.iter().any(|app| within(&app.location, folder)) {
+        return false;
+    }
+    subfolders(folder)
+        .is_some_and(|children| children.iter().all(|child| covered(child, applications, subfolders, depth - 1)))
 }
 
 pub fn protected(path: &Path) -> bool {
@@ -167,20 +213,52 @@ mod tests {
         assert!(!recognized(r"E:\Library\steamapps\common"));
     }
 
+    type Listing<'a> = &'a [(&'a str, &'a [&'a str])];
+
+    fn confirmed(path: &str, applications: &[Application], folders: Listing<'_>) -> Vec<String> {
+        let roots = [PathBuf::from(r"C:\Program Files")];
+        let listing = |path: &Path| {
+            let (_, children) = folders.iter().find(|(folder, _)| Path::new(folder) == path)?;
+            Some(children.iter().map(|child| path.join(child)).collect())
+        };
+        let mut removal = Removal { path: path.into(), steam: false, applications: applications.to_vec() };
+        retain_confirmed_owners(&mut removal, &roots, &listing);
+        removal.applications.into_iter().map(|app| app.name).collect()
+    }
+
     #[test]
-    fn uninstall_requires_an_action_and_an_owning_application_not_just_descendants() {
+    fn uninstall_requires_an_action_and_an_owning_application() {
         let owner = app("App", r"C:\Program Files\Vendor\App", Some(Action::Steam(10)));
-        let mut removal = Removal { path: r"C:\Program Files\WindowsApps".into(), steam: false, applications: vec![] };
-        assert!(!confirmed_owner(&removal));
-        removal.path = r"C:\Program Files\Vendor".into();
-        removal.applications.push(owner.clone());
-        assert!(!confirmed_owner(&removal));
-        removal.path = owner.location.join("assets/large.pak");
-        assert!(confirmed_owner(&removal));
-        removal.applications[0].action = None;
-        assert!(!confirmed_owner(&removal));
-        retain_confirmed_owners(&mut removal);
-        assert!(removal.applications.is_empty());
+        assert!(confirmed(r"C:\Program Files\WindowsApps", &[], &[]).is_empty());
+        assert_eq!(
+            confirmed(r"C:\Program Files\Vendor\App\assets\large.pak", std::slice::from_ref(&owner), &[]),
+            ["App"]
+        );
+        let inert = app("App", r"C:\Program Files\Vendor\App", None);
+        assert!(confirmed(r"C:\Program Files\Vendor\App", &[inert], &[]).is_empty());
+        // Program Files itself is never a vendor folder.
+        let everything: Listing<'_> = &[(r"C:\Program Files", &["Vendor"]), (r"C:\Program Files\Vendor", &["App"])];
+        assert!(confirmed(r"C:\Program Files", &[owner], everything).is_empty());
+    }
+
+    #[test]
+    fn vendor_folders_offer_their_applications_only_when_they_account_for_everything() {
+        let suite = app("Suite", r"C:\Program Files\Vendor\Suite", Some(Action::Steam(1)));
+        let tools = app("Tools", r"C:\Program Files\Vendor\Group\Tools", Some(Action::Steam(2)));
+        let apps = [suite, tools];
+        let tidy: Listing<'_> =
+            &[(r"C:\Program Files\Vendor", &["Suite", "Group"]), (r"C:\Program Files\Vendor\Group", &["Tools"])];
+        assert_eq!(confirmed(r"C:\Program Files\Vendor", &apps, tidy), ["Suite", "Tools"]);
+        let stray: Listing<'_> = &[
+            (r"C:\Program Files\Vendor", &["Suite", "Group", "Unknown"]),
+            (r"C:\Program Files\Vendor\Group", &["Tools"]),
+        ];
+        assert!(confirmed(r"C:\Program Files\Vendor", &apps, stray).is_empty());
+        // An unreadable folder cannot be accounted for.
+        assert!(confirmed(r"C:\Program Files\Vendor", &apps, &[]).is_empty());
+        // Outside Program Files, only an application's own folder counts.
+        let elsewhere = app("Suite", r"D:\Vendor\Suite", Some(Action::Steam(1)));
+        assert!(confirmed(r"D:\Vendor", &[elsewhere], &[(r"D:\Vendor", &["Suite"])]).is_empty());
     }
 
     #[test]
@@ -242,5 +320,31 @@ mod tests {
         assert_eq!(game.applications[0].action, Some(Action::Steam(10)));
         assert_eq!(inventory().resolve(Path::new(r"E:\Games\steamapps\common")).unwrap().applications.len(), 3);
         assert!(inventory().resolve(Path::new(r"E:\Games\steamapps\shadercache")).is_some());
+    }
+
+    /// Which folders in Program Files offer an uninstaller on this machine.
+    /// Run with `cargo test installed_program_folders -- --ignored --nocapture`.
+    #[test]
+    #[ignore = "reads this machine's installations"]
+    fn installed_program_folders() {
+        let start = std::time::Instant::now();
+        let inventory = registry::inventory();
+        println!("{} registrations in {:?}", inventory.applications.len(), start.elapsed());
+        let start = std::time::Instant::now();
+        drop(registry::inventory());
+        println!("again in {:?}", start.elapsed());
+        let (mut offered, mut total) = (0, 0);
+        for root in registry::program_roots() {
+            let Ok(entries) = std::fs::read_dir(root) else { continue };
+            for entry in entries.flatten().filter(|e| e.file_type().is_ok_and(|t| t.is_dir())) {
+                let path = entry.path();
+                let names: Vec<_> =
+                    inspect(&path).map(|r| r.applications.into_iter().map(|a| a.name).collect()).unwrap_or_default();
+                total += 1;
+                offered += usize::from(!names.is_empty());
+                println!("{} {} {names:?}", if names.is_empty() { "  " } else { "OK" }, path.display());
+            }
+        }
+        println!("{offered} of {total} folders offer an uninstaller");
     }
 }

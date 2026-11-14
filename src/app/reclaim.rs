@@ -1,5 +1,5 @@
-//! Space that is likely safe to reclaim: cleanup locations, rebuildable developer output,
-//! download and browser caches, and installed games by when they were last played.
+//! Space that is likely safe to reclaim: cleanup locations, rebuildable project files,
+//! download and browser caches, and installed Steam games by when they were last played.
 //!
 //! Discovery runs on a worker over the whole document; every action reuses the app's own
 //! commands, so special locations keep their confirmations and deletes their safeguards.
@@ -56,6 +56,8 @@ enum Action {
     /// A game: the ordinary delete, which resolves to Steam's uninstaller.
     #[cfg_attr(not(windows), allow(dead_code))] // Steam games are found on Windows.
     Uninstall,
+    /// Output its tools recreate: a confirmed permanent delete, also offered for the whole section.
+    CleanUp,
 }
 
 #[derive(Clone, Debug)]
@@ -138,6 +140,21 @@ impl Reclaim {
                     ui.horizontal(|ui| {
                         ui.label(egui::RichText::new(item.section.title()).small().strong().color(theme::MUTED));
                         ui.label(egui::RichText::new(format::size(size)).small().color(theme::MUTED));
+                        let rebuildable: Vec<NodeId> = items
+                            .iter()
+                            .filter(|other| other.section == item.section && other.action == Action::CleanUp)
+                            .map(|other| other.node)
+                            .collect();
+                        if !rebuildable.is_empty() {
+                            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                                ui.add_space(6.0);
+                                let label = format!("{} {}", icon::BROOM, tr!("clean-up-all"));
+                                let button = egui::Button::new(egui::RichText::new(label).small()).small();
+                                if ui.add_enabled(!deletion_disabled, button).clicked() {
+                                    out.push(Command::CleanUp(rebuildable));
+                                }
+                            });
+                        }
                     });
                     ui.add_space(2.0);
                 }
@@ -243,6 +260,7 @@ impl Reclaim {
             out.push(match item.action {
                 Action::Special(kind) => Command::Special(kind, item.node),
                 Action::Delete | Action::Uninstall => Command::Delete(item.node),
+                Action::CleanUp => Command::CleanUp(vec![item.node]),
             });
         } else if response.clicked() {
             out.push(Command::Show(item.node));
@@ -288,6 +306,7 @@ fn action_label(action: Action, deletion_disabled: bool) -> (&'static str, Strin
         }
         Action::Delete => (icon::TRASH, tr!("delete"), !deletion_disabled),
         Action::Uninstall => (icon::TRASH, tr!("uninstall-software"), !deletion_disabled),
+        Action::CleanUp => (icon::BROOM, tr!("clean-up"), !deletion_disabled),
     }
 }
 
@@ -409,7 +428,10 @@ fn developer(tree: &Tree, id: NodeId) -> Option<Item> {
         _ => return None,
     };
     let project = tree.node(parent).name_lossy().into_owned();
-    Some(item(tree, id, Section::Developer, icon::PACKAGE, format!("{project} › {name}"), detail))
+    Some(Item {
+        action: Action::CleanUp,
+        ..item(tree, id, Section::Developer, icon::PACKAGE, format!("{project} › {name}"), detail)
+    })
 }
 
 /// A folder its program marked as a cache it can recreate, under the Cache Directory

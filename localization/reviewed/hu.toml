@@ -180,6 +180,26 @@ translation = "Szerezze vissza a lemezterületét."
 source = "Clawback Settings"
 translation = "A Clawback beállításai"
 
+[messages.clean-up]
+source = "Clean Up"
+translation = "Takarítás"
+
+[messages.clean-up-all]
+source = "Clean up all"
+translation = "Összes takarítása"
+
+[messages.clean-up-body]
+source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
+translation = "A(z) „{ $name }” törlődik. A projekt eszközei szükség esetén újra létrehozzák."
+
+[messages.clean-up-body-many]
+source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
+translation = "{ $count } mappa törlődik. A projektek eszközei szükség esetén újra létrehozzák őket."
+
+[messages.clean-up-title]
+source = "Clean up permanently?"
+translation = "Végleges takarítás?"
+
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
 translation = "Temp mappa tisztítása…"
@@ -836,8 +856,8 @@ source = "Cleanup"
 translation = "Takarítás"
 
 [messages.reclaim-developer]
-source = "Developer leftovers"
-translation = "Fejlesztési maradványok"
+source = "Rebuildable project files"
+translation = "Újra létrehozható projektfájlok"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -848,8 +868,8 @@ source = "{ $size } found"
 translation = "{ $size } található"
 
 [messages.reclaim-games]
-source = "Games"
-translation = "Játékok"
+source = "Steam Games"
+translation = "Steam-játékok"
 
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"

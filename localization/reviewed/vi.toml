@@ -180,6 +180,26 @@ translation = "Lấy lại dung lượng đĩa của bạn."
 source = "Clawback Settings"
 translation = "Cài đặt Clawback"
 
+[messages.clean-up]
+source = "Clean Up"
+translation = "Dọn dẹp"
+
+[messages.clean-up-all]
+source = "Clean up all"
+translation = "Dọn dẹp tất cả"
+
+[messages.clean-up-body]
+source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
+translation = "“{ $name }” sẽ bị xóa. Công cụ của dự án sẽ tạo lại khi cần."
+
+[messages.clean-up-body-many]
+source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
+translation = "{ $count } thư mục sẽ bị xóa. Công cụ của các dự án sẽ tạo lại chúng khi cần."
+
+[messages.clean-up-title]
+source = "Clean up permanently?"
+translation = "Dọn dẹp vĩnh viễn?"
+
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
 translation = "Dọn dẹp thư mục Temp…"
@@ -836,8 +856,8 @@ source = "Cleanup"
 translation = "Dọn dẹp"
 
 [messages.reclaim-developer]
-source = "Developer leftovers"
-translation = "Phần còn lại khi phát triển"
+source = "Rebuildable project files"
+translation = "Tệp dự án có thể tạo lại"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -848,8 +868,8 @@ source = "{ $size } found"
 translation = "Tìm thấy { $size }"
 
 [messages.reclaim-games]
-source = "Games"
-translation = "Trò chơi"
+source = "Steam Games"
+translation = "Trò chơi Steam"
 
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"

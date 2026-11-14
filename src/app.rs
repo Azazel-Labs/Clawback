@@ -109,6 +109,9 @@ enum DeleteKind {
     /// Confirmed contents-only cleanup, with policy supplied by the special-location handler.
     #[cfg_attr(not(windows), allow(dead_code))] // Current cleanup providers are Windows-only.
     Cleanup(special::Cleanup),
+    /// Confirmed permanent delete of something its tools recreate, such as build output.
+    /// Neighbouring jobs of this kind are confirmed together.
+    Rebuildable,
 }
 
 impl DeleteKind {
@@ -186,12 +189,6 @@ enum Tool {
     SaveSnapshot,
     CompareSnapshot,
     StopComparing,
-}
-
-/// What the directory panel asks for: a folder to view, or its side tab's commands.
-enum PanelOutput {
-    View(NodeId),
-    Commands(Vec<Command>),
 }
 
 /// The panel beside the directory tree.
@@ -294,6 +291,9 @@ impl ClawbackApp {
         crate::startup::mark("translations_ready");
         theme::apply(&cc.egui_ctx, language);
         crate::startup::mark("theme_ready");
+        // Installed-program records take seconds to read; have them ready for the first menu.
+        #[cfg(windows)]
+        special::windows::programs::prepare();
         #[allow(unused_mut)] // Only the screenshot build edits it further.
         let mut app = Self::with_settings(settings);
         #[cfg(feature = "screenshots")]
@@ -693,6 +693,7 @@ impl ClawbackApp {
             }
             Command::Delete(n) => self.delete(n, ctx),
             Command::DeleteContents(n) => self.delete_contents(n, ctx),
+            Command::CleanUp(nodes) => self.clean_up(&nodes),
             Command::Special(kind, node) => self.request_special(kind, node, ctx),
             Command::OpenDrive => self.open = Some(OpenDialog::start(ctx)),
             Command::Rescan => {
@@ -790,6 +791,52 @@ impl ClawbackApp {
         let (size, files) = (n.size, n.files);
         let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: self.delete_kind(), contents: true };
         self.queue_delete(request, ctx);
+    }
+
+    /// Ask once to permanently delete every one of `nodes` that a plain delete would allow.
+    /// Rebuildable output is often too large or has too many files for the Recycle Bin.
+    fn clean_up(&mut self, nodes: &[NodeId]) {
+        if self.settings.disable_delete {
+            return;
+        }
+        let Some(doc) = &self.doc else { return };
+        let mut jobs: Vec<QueuedDelete> = Vec::new();
+        for &node in nodes {
+            if node == ROOT || !doc.tree.is_live(node) || doc.special().classify(&doc.tree, node).is_some() {
+                continue;
+            }
+            let path = doc.tree.path(node);
+            let covered = |other: &PathBuf| path.starts_with(other);
+            if special::is_system(&path)
+                || !crate::container::can_delete(&path)
+                || self.pending_paths().any(covered)
+                || jobs.iter().any(|job| covered(&job.path))
+            {
+                continue;
+            }
+            let n = doc.tree.node(node);
+            jobs.retain(|job| !job.path.starts_with(&path));
+            jobs.push(QueuedDelete {
+                doc: doc.id,
+                node,
+                path,
+                size: n.size,
+                files: n.files,
+                kind: DeleteKind::Rebuildable,
+                contents: false,
+            });
+        }
+        self.confirm.extend(jobs);
+    }
+
+    /// The rebuildable jobs confirmed together with the first one awaiting confirmation.
+    fn confirm_batch(&self) -> usize {
+        match self.confirm.front() {
+            Some(job) if job.kind == DeleteKind::Rebuildable => {
+                self.confirm.iter().take_while(|job| job.kind == DeleteKind::Rebuildable).count()
+            }
+            _ => 1,
+        }
     }
 
     fn queue_delete(&mut self, request: QueuedDelete, ctx: &egui::Context) {
@@ -900,7 +947,7 @@ impl ClawbackApp {
                         Recycled::TooLarge => DeleteDone::TooLarge,
                     })
                 }
-                DeleteKind::Permanent | DeleteKind::Cleanup(_) => {
+                DeleteKind::Permanent | DeleteKind::Cleanup(_) | DeleteKind::Rebuildable => {
                     let target = crate::deletion::Target {
                         root: &p,
                         contents_only: contents || kind.cleanup().is_some(),
@@ -1339,8 +1386,21 @@ impl ClawbackApp {
         let name = display_name(&job.path);
         // Permanent while recycling is in use only when the Recycle Bin turned the item away.
         let too_big = self.delete_kind() == DeleteKind::Recycle;
-        let special::Confirmation { title, body, button } = job.kind.cleanup().map_or_else(
-            || special::Confirmation {
+        let batch = self.confirm_batch();
+        let (size, files) =
+            self.confirm.iter().take(batch).fold((0, 0), |(size, files), job| (size + job.size, files + job.files));
+        let special::Confirmation { title, body, button } = match job.kind {
+            DeleteKind::Cleanup(cleanup) => cleanup.confirmation(&job.path, &drive),
+            DeleteKind::Rebuildable => special::Confirmation {
+                title: tr!("clean-up-title"),
+                body: if batch > 1 {
+                    tr!("clean-up-body-many", count = batch)
+                } else {
+                    tr!("clean-up-body", name = name.clone())
+                },
+                button: tr!("clean-up"),
+            },
+            DeleteKind::Recycle | DeleteKind::Permanent => special::Confirmation {
                 title: if job.contents { tr!("delete-contents-title") } else { tr!("delete-permanently-title") },
                 body: match (job.contents, too_big) {
                     (true, true) => tr!("delete-contents-too-big", name = name.clone()),
@@ -1350,9 +1410,8 @@ impl ClawbackApp {
                 },
                 button: tr!("delete-permanently-button"),
             },
-            |cleanup| cleanup.confirmation(&job.path, &drive),
-        );
-        let details = tr!("delete-size-files", size = format::size(job.size), files = job.files);
+        };
+        let details = tr!("delete-size-files", size = format::size(size), files = files);
         let mut answer = None;
         let flat = theme::modal_frame().shadow(egui::Shadow::NONE);
         let modal = theme::modal("clawback-confirm-purge").frame(flat).show(ctx, |ui| {
@@ -1384,10 +1443,13 @@ impl ClawbackApp {
     }
 
     fn answer_confirm(&mut self, confirmed: bool, ctx: &egui::Context) {
-        let Some(job) = self.confirm.pop_front() else { return };
-        if confirmed && !self.settings.disable_delete {
-            // Confirmed work goes ahead of plain recycling still in the queue.
-            self.delete_queue.push_front(job);
+        let batch = self.confirm_batch().min(self.confirm.len());
+        let jobs: Vec<_> = self.confirm.drain(..batch).collect();
+        if confirmed && !self.settings.disable_delete && !jobs.is_empty() {
+            // Confirmed work goes ahead of plain recycling still in the queue, in its own order.
+            for job in jobs.into_iter().rev() {
+                self.delete_queue.push_front(job);
+            }
             self.start_next_delete(ctx);
         }
     }
@@ -1502,6 +1564,8 @@ impl ClawbackApp {
             .map(|disk| disk.total.saturating_sub(disk.free))
             .filter(|&used| used > 0)
             .map(|used| fraction(progress.bytes, used));
+        #[cfg(windows)]
+        let fraction = run.turbo.progress().map_or(fraction, |mft| Some(turbo_fraction(&mft, fraction)));
         ui.add(
             egui::ProgressBar::new(fraction.unwrap_or(0.0))
                 .animate(!paused && fraction.is_none())
@@ -1708,7 +1772,7 @@ impl ClawbackApp {
                         })
                         .inner;
                     if !commands.is_empty() {
-                        return Some(PanelOutput::Commands(commands));
+                        return Some(commands);
                     }
                 } else {
                     let tab = &mut self.side_tab;
@@ -1730,12 +1794,17 @@ impl ClawbackApp {
                     }
                     if *narrow {
                         let commands = side(ui, *tab);
-                        return (!commands.is_empty()).then_some(PanelOutput::Commands(commands));
+                        return (!commands.is_empty()).then_some(commands);
                     }
                 }
-                self.directories
-                    .ui(ui, &doc.tree, doc.id, doc.generation, scope, self.scan.is_some())
-                    .map(PanelOutput::View)
+                let menu = crate::mapview::MenuContext {
+                    tree: &doc.tree,
+                    view: scope,
+                    settings: &self.settings,
+                    special: doc.special(),
+                };
+                let commands = self.directories.ui(ui, &doc.tree, doc.id, doc.generation, &menu, self.scan.is_some());
+                (!commands.is_empty()).then_some(commands)
             });
         if dragging && below_toolbar > 0.0 {
             let split = to_permille(folder.response.rect.height(), below_toolbar);
@@ -1744,14 +1813,8 @@ impl ClawbackApp {
         } else if std::mem::take(&mut self.split_dragging) {
             self.save_settings();
         }
-        match folder.inner {
-            Some(PanelOutput::View(node)) => self.apply(Command::ZoomTo(node), ctx),
-            Some(PanelOutput::Commands(commands)) => {
-                for command in commands {
-                    self.apply(command, ctx);
-                }
-            }
-            None => {}
+        for command in folder.inner.into_iter().flatten() {
+            self.apply(command, ctx);
         }
     }
 
@@ -1956,6 +2019,23 @@ fn previous_view(history: &mut Vec<PathBuf>, tree: &Tree, current: NodeId) -> Op
         }
     }
     None
+}
+
+/// The scan bar while Turbo reads the MFT: its first part fills as the MFT is read and
+/// processed, since mapped bytes only arrive once Turbo's tree is ready; the bytes mapped
+/// relative to the drive's used space fill the rest.
+#[cfg(windows)]
+fn turbo_fraction(mft: &clawback_core::scan::MftProgress, mapped: Option<f32>) -> f32 {
+    use clawback_core::scan::MftPhase;
+    const MFT_SHARE: f32 = 0.6;
+    let read = match mft.phase {
+        MftPhase::Reading => 0.85 * fraction(mft.read, mft.total),
+        MftPhase::Resolving => 0.88,
+        MftPhase::Assembling => 0.92,
+        MftPhase::Sorting => 0.96,
+        MftPhase::Transferring => 0.98,
+    };
+    MFT_SHARE * read + (1.0 - MFT_SHARE) * mapped.unwrap_or(0.0)
 }
 
 /// What Turbo is doing, and an optional detail for its tooltip.
@@ -2254,6 +2334,49 @@ mod tests {
         }
         assert!(f.app.confirm[0].kind == DeleteKind::Permanent && !f.app.confirm[0].contents);
         assert!(f.app.deleting.is_none() && f.root.join("keep.txt").exists());
+    }
+
+    #[test]
+    fn clean_up_asks_once_for_every_folder_and_deletes_them_permanently() {
+        let layout = [
+            ("a", true),
+            ("a/x.bin", false),
+            ("b", true),
+            ("b/y.bin", false),
+            ("b/inner", true),
+            ("b/inner/z.bin", false),
+            ("keep.txt", false),
+        ];
+        let mut f = DeleteFixture::new("cleanup", &layout, false);
+        let ctx = f.ctx.clone();
+        // Recycling stays on: rebuildable output is deleted permanently all the same.
+        assert!(f.app.settings.use_trash);
+        let nodes = vec![f.node("a"), f.node("b/inner"), f.node("b"), ROOT];
+        f.app.apply(Command::CleanUp(nodes), &ctx);
+        assert!(f.app.deleting.is_none() && f.app.delete_queue.is_empty(), "nothing goes before confirmation");
+        // The root is never offered, and a folder covers what is inside it.
+        let paths: Vec<_> = f.app.confirm.iter().map(|job| job.path.clone()).collect();
+        assert_eq!(paths, [f.root.join("a"), f.root.join("b")]);
+        assert_eq!(f.app.confirm_batch(), 2);
+        f.app.answer_confirm(true, &ctx);
+        assert!(f.app.confirm.is_empty(), "one answer covers the whole batch");
+        f.finish();
+        assert!(f.app.delete_errors.is_empty(), "{:?}", f.app.delete_errors);
+        assert!(!f.root.join("a").exists() && !f.root.join("b").exists());
+        assert!(f.root.join("keep.txt").exists() && f.in_tree("keep.txt"));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn turbo_fills_its_share_of_the_scan_bar_as_it_reads() {
+        use clawback_core::scan::{MftPhase, MftProgress};
+        let reading = |read| MftProgress { phase: MftPhase::Reading, read, total: 100, ..Default::default() };
+        let start = turbo_fraction(&reading(0), Some(0.0));
+        let middle = turbo_fraction(&reading(50), Some(0.0));
+        let read = turbo_fraction(&reading(100), Some(0.0));
+        let sorting = turbo_fraction(&MftProgress { phase: MftPhase::Sorting, ..Default::default() }, None);
+        assert!(start == 0.0 && start < middle && middle < read && read < sorting && sorting < 0.6);
+        assert!((turbo_fraction(&reading(100), Some(1.0)) - 0.91).abs() < 0.01, "mapped bytes fill the rest");
     }
 
     #[test]

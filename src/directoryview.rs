@@ -3,6 +3,7 @@
 use crate::i18n::tr;
 use crate::{
     background::{Job, retire},
+    mapview::{self, Command, MenuContext},
     theme,
 };
 use clawback_core::{NodeId, ROOT, Tree, format, tree::flags};
@@ -59,18 +60,23 @@ pub struct DirectoryView {
     pending: Option<Job<Key, Rows>>,
     reveal: bool,
     scroll_to: Option<f32>,
+    /// The row whose right-click menu is open, kept highlighted while it is.
+    menu_row: Option<NodeId>,
 }
 
 impl DirectoryView {
+    /// The navigator; returns what its rows asked for: a folder to view, or a command
+    /// from a row's right-click menu, which offers the same commands as the map's.
     pub fn ui(
         &mut self,
         ui: &mut Ui,
         tree: &Arc<Tree>,
         document: u64,
         generation: u64,
-        view: NodeId,
+        menu: &MenuContext<'_>,
         scanning: bool,
-    ) -> Option<NodeId> {
+    ) -> Vec<Command> {
+        let view = menu.view;
         let _span = crate::perf::span("ui.directories");
         if self.document != Some(document) || (self.scanning && !scanning) {
             self.document = Some(document);
@@ -132,8 +138,9 @@ impl DirectoryView {
         paint_columns(ui.painter(), header, &tr!("size"), &tr!("of-scan"), &font, theme::MUTED);
         let font = FontId::proportional(12.0);
         let enabled = !scanning && self.displayed == Some(key);
-        let mut selected = None;
+        let mut out = Vec::new();
         let mut toggle = None;
+        let mut menu_row = None;
         let mut scroll = egui::ScrollArea::vertical().id_salt("directory-navigator").auto_shrink([false, false]);
         if let Some(offset) = self.scroll_to.take() {
             scroll = scroll.vertical_scroll_offset(offset);
@@ -151,14 +158,15 @@ impl DirectoryView {
                     {
                         self.drawn_rows += 1;
                     }
-                    let (rect, response) =
-                        ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::click());
+                    let (rect, _) = ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::hover());
+                    // A stable id keeps a row's open menu attached to it while the list scrolls.
+                    let response = ui.interact(rect, ui.scope_id().with(("directory-row", row.node)), Sense::click());
                     let p = ui.painter();
                     p.rect_filled(rect, 0.0, if index % 2 == 0 { theme::NAVIGATOR } else { theme::ROW_ALT });
                     if row.node == view {
                         p.rect_filled(rect, 3.0, theme::CURRENT_ROW);
                         p.rect_filled(Rect::from_min_size(rect.min, vec2(3.0, rect.height())), 1.0, theme::ACCENT);
-                    } else if response.hovered() {
+                    } else if response.hovered() || self.menu_row == Some(row.node) {
                         p.rect_filled(rect, 3.0, theme::PANEL_EDGE);
                     }
                     let indent = (row.depth as f32 * 14.0).min((rect.width() - 220.0).max(0.0));
@@ -188,8 +196,13 @@ impl DirectoryView {
                         if row.expandable && response.interact_pointer_pos().is_some_and(|pos| arrow.contains(pos)) {
                             toggle = Some(row.node);
                         } else {
-                            selected = Some(row.node);
+                            out.push(Command::ZoomTo(row.node));
                         }
+                    }
+                    let node = row.node;
+                    let open = response.context_menu(|ui| mapview::context_menu(ui, menu, Some(node), true, &mut out));
+                    if open.is_some() {
+                        menu_row = Some(node);
                     }
                     response.on_hover_text(&row.name);
                 }
@@ -202,7 +215,8 @@ impl DirectoryView {
             self.revision += 1;
             ui.ctx().request_repaint();
         }
-        selected
+        self.menu_row = menu_row;
+        out
     }
 }
 
@@ -258,7 +272,14 @@ mod tests {
                     ..Default::default()
                 },
                 |ui| {
-                    directories.ui(ui, &tree, 1, 0, selected, false);
+                    let settings = clawback_core::Settings::default();
+                    let menu = MenuContext {
+                        tree: &tree,
+                        view: selected,
+                        settings: &settings,
+                        special: crate::app::special::Inventory::default(),
+                    };
+                    directories.ui(ui, &tree, 1, 0, &menu, false);
                 },
             );
             output.textures_delta.clear();
@@ -291,7 +312,14 @@ mod tests {
                     ..Default::default()
                 },
                 |ui| {
-                    directories.ui(ui, &tree, 1, 0, ROOT, false);
+                    let settings = clawback_core::Settings::default();
+                    let menu = MenuContext {
+                        tree: &tree,
+                        view: ROOT,
+                        settings: &settings,
+                        special: crate::app::special::Inventory::default(),
+                    };
+                    directories.ui(ui, &tree, 1, 0, &menu, false);
                 },
             );
             output.textures_delta.clear();

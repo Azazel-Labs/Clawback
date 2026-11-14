@@ -180,6 +180,26 @@ translation = "디스크 공간을 되찾으세요."
 source = "Clawback Settings"
 translation = "Clawback 설정"
 
+[messages.clean-up]
+source = "Clean Up"
+translation = "정리"
+
+[messages.clean-up-all]
+source = "Clean up all"
+translation = "모두 정리"
+
+[messages.clean-up-body]
+source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
+translation = "“{ $name }”이(가) 삭제됩니다. 필요하면 프로젝트 도구가 다시 만듭니다."
+
+[messages.clean-up-body-many]
+source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
+translation = "폴더 { $count }개가 삭제됩니다. 필요하면 프로젝트 도구가 다시 만듭니다."
+
+[messages.clean-up-title]
+source = "Clean up permanently?"
+translation = "영구적으로 정리하시겠습니까?"
+
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
 translation = "임시 폴더를 청소 중…"
@@ -836,8 +856,8 @@ source = "Cleanup"
 translation = "정리"
 
 [messages.reclaim-developer]
-source = "Developer leftovers"
-translation = "개발 잔여물"
+source = "Rebuildable project files"
+translation = "다시 만들 수 있는 프로젝트 파일"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -848,8 +868,8 @@ source = "{ $size } found"
 translation = "{ $size } 찾음"
 
 [messages.reclaim-games]
-source = "Games"
-translation = "게임"
+source = "Steam Games"
+translation = "Steam 게임"
 
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"

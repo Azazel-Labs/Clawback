@@ -180,6 +180,26 @@ translation = "Recupera l’espai del disc."
 source = "Clawback Settings"
 translation = "Configuració de Clawback"
 
+[messages.clean-up]
+source = "Clean Up"
+translation = "Neteja"
+
+[messages.clean-up-all]
+source = "Clean up all"
+translation = "Neteja-ho tot"
+
+[messages.clean-up-body]
+source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
+translation = 'Se suprimirà "{ $name }". Les eines del projecte el tornen a crear quan cal.'
+
+[messages.clean-up-body-many]
+source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
+translation = "Se suprimiran { $count } carpetes. Les eines dels projectes les tornen a crear quan cal."
+
+[messages.clean-up-title]
+source = "Clean up permanently?"
+translation = "Vols netejar-ho permanentment?"
+
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
 translation = "S’està netejant la carpeta Temp…"
@@ -843,8 +863,8 @@ source = "Cleanup"
 translation = "Neteja"
 
 [messages.reclaim-developer]
-source = "Developer leftovers"
-translation = "Restes de desenvolupament"
+source = "Rebuildable project files"
+translation = "Fitxers de projecte regenerables"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -855,8 +875,8 @@ source = "{ $size } found"
 translation = "{ $size } trobats"
 
 [messages.reclaim-games]
-source = "Games"
-translation = "Jocs"
+source = "Steam Games"
+translation = "Jocs de Steam"
 
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"

@@ -40,7 +40,8 @@ fn main() {
             .set("ProductName", "Clawback")
             .set("CompanyName", "Azazel Labs")
             .set("LegalCopyright", "Copyright © 2026 Azazel Labs")
-            .set("FileDescription", "Clawback disk space visualizer")
+            // Task Manager and Process Explorer show this as the process name.
+            .set("FileDescription", "Clawback")
             .compile()
             .expect("Could not embed the Windows application icon");
     }

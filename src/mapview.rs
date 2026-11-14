@@ -54,6 +54,8 @@ pub enum Command {
     Delete(NodeId),
     /// Delete everything inside a folder, keeping the folder.
     DeleteContents(NodeId),
+    /// Permanently delete folders their tools recreate, such as build output, once confirmed together.
+    CleanUp(Vec<NodeId>),
     Special(special::Kind, NodeId),
     OpenDrive,
     Rescan,
@@ -83,8 +85,8 @@ pub struct MapInput<'a> {
 }
 
 impl MapInput<'_> {
-    fn zoomed(&self) -> bool {
-        self.view != clawback_core::ROOT
+    fn menu(&self) -> MenuContext<'_> {
+        MenuContext { tree: self.tree, view: self.view, settings: self.settings, special: self.special }
     }
 }
 
@@ -439,78 +441,7 @@ impl MapView {
         let cur = self.selected_box().copied();
         let node = cur.and_then(|b| b.node());
         let folder = cur.is_some_and(|b| b.folder);
-        let special = node.and_then(|n| input.special.classify(input.tree, n));
-        // Ownership lookup is asynchronous; refresh the open menu when it completes.
-        ui.ctx().request_repaint_after(Duration::from_millis(200));
-        let s = input.settings;
-        ui.set_min_width(184.0);
-        ui.spacing_mut().button_padding = vec2(8.0, 3.0);
-        ui.spacing_mut().item_spacing = vec2(4.0, 2.0);
-        ui.spacing_mut().interact_size.y = 24.0;
-        ui.style_mut().override_font_id = Some(FontId::proportional(13.0));
-
-        use egui_phosphor::regular as icon;
-        if let Some(n) = node {
-            if let Some(kind) = special {
-                let (glyph, label) = kind.menu_entry();
-                if item(ui, glyph, label, kind.action_enabled(s.disable_delete), true) {
-                    out.push(Command::Special(kind, n));
-                }
-            }
-            if !crate::container::enabled()
-                && item(ui, icon::FOLDER_OPEN, crate::platform::file_manager_label(), true, false)
-            {
-                out.push(Command::Reveal(n));
-            }
-            if item(ui, icon::INFO, tr!("properties-2"), true, false) {
-                out.push(Command::Properties(n));
-            }
-            if special.is_none()
-                && !s.disable_delete
-                && !special::protects_from_raw_delete(&input.tree.path(n))
-                && crate::container::can_delete(&input.tree.path(n))
-                && item(ui, icon::TRASH, tr!("delete"), true, false)
-            {
-                out.push(Command::Delete(n));
-            }
-            if folder
-                && !s.disable_delete
-                && special::contents_deletable(input.tree, input.special, n)
-                && item(ui, icon::BROOM, tr!("delete-contents"), true, false)
-            {
-                out.push(Command::DeleteContents(n));
-            }
-            ui.separator();
-        }
-        if folder
-            && input.special.allows_zoom(node.expect("folder has a node"))
-            && item(ui, icon::MAGNIFYING_GLASS_PLUS, tr!("zoom-in"), true, false)
-        {
-            self.zoom_in();
-        }
-        if input.zoomed() {
-            if item(ui, icon::MAGNIFYING_GLASS_MINUS, tr!("zoom-out"), true, false) {
-                self.zoom_out();
-            }
-            if item(ui, icon::CORNERS_OUT, tr!("zoom-full"), true, false) {
-                self.zoom_full();
-            }
-        }
-        // Keep scan-wide controls available without crowding the item's actions.
-        ui.menu_button(format!("{}  {}", icon::HARD_DRIVES, tr!("view")), |ui| {
-            if item(ui, icon::ARROWS_CLOCKWISE, tr!("rescan"), true, false) {
-                out.push(Command::Rescan);
-            }
-            if item(ui, icon::HARD_DRIVES, tr!("open-drive"), true, false) {
-                out.push(Command::OpenDrive);
-            }
-            ui.separator();
-            let mut free = s.show_free;
-            if ui.checkbox(&mut free, tr!("show-free-space")).clicked() {
-                out.push(Command::ToggleFree);
-                ui.close();
-            }
-        });
+        context_menu(ui, &input.menu(), node, folder, out);
     }
 
     fn paint(&mut self, painter: &egui::Painter, input: &MapInput<'_>, pointer: Option<Pos2>) {
@@ -641,6 +572,93 @@ impl MapView {
         tips.rect_stroke(bounds, 0.0, Stroke::new(1.0, theme::BORDER), StrokeKind::Inside);
         tips.galley(bounds.min + vec2(2.0, 1.0), galley, text_color);
     }
+}
+
+/// What an entry's right-click menu needs to know, shared by the map and the directory tree.
+#[derive(Clone, Copy)]
+pub struct MenuContext<'a> {
+    pub tree: &'a Tree,
+    pub view: NodeId,
+    pub settings: &'a Settings,
+    pub special: special::Inventory,
+}
+
+/// The right-click menu for `node` (`CFolderView::OnRButtonUp`): the same commands
+/// wherever an entry is right-clicked.
+pub fn context_menu(ui: &mut Ui, menu: &MenuContext<'_>, node: Option<NodeId>, folder: bool, out: &mut Vec<Command>) {
+    let special = node.and_then(|n| menu.special.classify(menu.tree, n));
+    // Ownership lookup is asynchronous; refresh the open menu when it completes.
+    ui.ctx().request_repaint_after(Duration::from_millis(200));
+    let s = menu.settings;
+    ui.set_min_width(184.0);
+    ui.spacing_mut().button_padding = vec2(8.0, 3.0);
+    ui.spacing_mut().item_spacing = vec2(4.0, 2.0);
+    ui.spacing_mut().interact_size.y = 24.0;
+    ui.style_mut().override_font_id = Some(FontId::proportional(13.0));
+
+    use egui_phosphor::regular as icon;
+    if let Some(n) = node {
+        if let Some(kind) = special {
+            let (glyph, label) = kind.menu_entry();
+            if item(ui, glyph, label, kind.action_enabled(s.disable_delete), true) {
+                out.push(Command::Special(kind, n));
+            }
+        }
+        if !crate::container::enabled()
+            && item(ui, icon::FOLDER_OPEN, crate::platform::file_manager_label(), true, false)
+        {
+            out.push(Command::Reveal(n));
+        }
+        if item(ui, icon::INFO, tr!("properties-2"), true, false) {
+            out.push(Command::Properties(n));
+        }
+        if special.is_none()
+            && !s.disable_delete
+            && !special::protects_from_raw_delete(&menu.tree.path(n))
+            && crate::container::can_delete(&menu.tree.path(n))
+            && item(ui, icon::TRASH, tr!("delete"), true, false)
+        {
+            out.push(Command::Delete(n));
+        }
+        if folder
+            && !s.disable_delete
+            && special::contents_deletable(menu.tree, menu.special, n)
+            && item(ui, icon::BROOM, tr!("delete-contents"), true, false)
+        {
+            out.push(Command::DeleteContents(n));
+        }
+        ui.separator();
+    }
+    if folder
+        && let Some(n) = node
+        && menu.special.allows_zoom(n)
+        && item(ui, icon::MAGNIFYING_GLASS_PLUS, tr!("zoom-in"), true, false)
+    {
+        out.push(Command::ZoomTo(n));
+    }
+    if menu.view != clawback_core::ROOT {
+        if item(ui, icon::MAGNIFYING_GLASS_MINUS, tr!("zoom-out"), true, false) {
+            out.push(Command::ZoomOut);
+        }
+        if item(ui, icon::CORNERS_OUT, tr!("zoom-full"), true, false) {
+            out.push(Command::ZoomFull);
+        }
+    }
+    // Keep scan-wide controls available without crowding the item's actions.
+    ui.menu_button(format!("{}  {}", icon::HARD_DRIVES, tr!("view")), |ui| {
+        if item(ui, icon::ARROWS_CLOCKWISE, tr!("rescan"), true, false) {
+            out.push(Command::Rescan);
+        }
+        if item(ui, icon::HARD_DRIVES, tr!("open-drive"), true, false) {
+            out.push(Command::OpenDrive);
+        }
+        ui.separator();
+        let mut free = s.show_free;
+        if ui.checkbox(&mut free, tr!("show-free-space")).clicked() {
+            out.push(Command::ToggleFree);
+            ui.close();
+        }
+    });
 }
 
 /// Compact, left-aligned menu rows; special actions carry the accent color.

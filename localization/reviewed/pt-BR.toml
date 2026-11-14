@@ -180,6 +180,26 @@ translation = "Recupere seu espaço em disco."
 source = "Clawback Settings"
 translation = "Configurações do Clawback"
 
+[messages.clean-up]
+source = "Clean Up"
+translation = "Limpar"
+
+[messages.clean-up-all]
+source = "Clean up all"
+translation = "Limpar tudo"
+
+[messages.clean-up-body]
+source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
+translation = "“{ $name }” será excluído. As ferramentas do projeto o recriam quando necessário."
+
+[messages.clean-up-body-many]
+source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
+translation = "{ $count } pastas serão excluídas. As ferramentas dos projetos as recriam quando necessário."
+
+[messages.clean-up-title]
+source = "Clean up permanently?"
+translation = "Limpar permanentemente?"
+
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
 translation = "Limpando a pasta Temp…"
@@ -855,8 +875,8 @@ source = "Cleanup"
 translation = "Limpeza"
 
 [messages.reclaim-developer]
-source = "Developer leftovers"
-translation = "Sobras de desenvolvimento"
+source = "Rebuildable project files"
+translation = "Arquivos de projeto recriáveis"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -867,8 +887,8 @@ source = "{ $size } found"
 translation = "{ $size } encontrados"
 
 [messages.reclaim-games]
-source = "Games"
-translation = "Jogos"
+source = "Steam Games"
+translation = "Jogos da Steam"
 
 [messages.reclaim-gradle]
 source = "Gradle project cache; rebuilt on the next build"
