@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # Must match the windows crate's own windows-core (see Cargo.toml), so it is
+      # bumped by hand together with windows rather than on its own.
+      - dependency-name: windows-core
     groups:
       egui:
         patterns: ["eframe", "egui*", "epaint*", "emath", "ecolor"]
