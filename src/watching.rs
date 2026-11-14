@@ -6,14 +6,17 @@ use std::{
     io,
     path::{Path, PathBuf},
     sync::{
-        Arc, Mutex,
+        Arc, Condvar, Mutex, PoisonError,
         atomic::{AtomicBool, Ordering},
         mpsc,
     },
     time::{Duration, Instant},
 };
 
+/// Individual paths kept before falling back to relisting their directories.
 const CAPACITY: usize = 4096;
+/// Directories kept before falling back to a full rescan.
+const DIRECTORIES: usize = 16_384;
 const BATCH: Duration = Duration::from_secs(1);
 const RECOVERY_INTERVAL: Duration = Duration::from_secs(30);
 
@@ -69,20 +72,31 @@ pub enum Change {
     Failed(String),
 }
 
+/// Changes not yet taken by the live worker, coalesced as they arrive. Nothing drains it
+/// during the initial scan, so a queue of individual events would overflow on a busy disk
+/// and force a full rescan, which holds a second complete tree while it runs.
 #[derive(Clone)]
-pub struct Inbox {
-    tx: mpsc::SyncSender<Change>,
-    overflow: Arc<AtomicBool>,
-    failed: Arc<Mutex<Option<String>>>,
+pub struct Inbox(Arc<Queue>);
+struct Queue {
+    root: PathBuf,
+    pending: Mutex<Pending>,
+    ready: Condvar,
 }
 impl Inbox {
+    fn new(root: &Path) -> Self {
+        Self(Arc::new(Queue { root: root.to_path_buf(), pending: Mutex::default(), ready: Condvar::new() }))
+    }
     pub fn send(&self, change: Change) {
-        if let Change::Failed(error) = &change {
-            *clawback_core::scan::lock(&self.failed) = Some(error.clone());
+        clawback_core::scan::lock(&self.0.pending).add(change, &self.0.root);
+        self.0.ready.notify_one();
+    }
+    /// Everything pending, waiting up to `timeout` for the first change.
+    fn take(&self, timeout: Duration) -> Pending {
+        let mut pending = clawback_core::scan::lock(&self.0.pending);
+        if pending.is_empty() && !timeout.is_zero() {
+            pending = self.0.ready.wait_timeout(pending, timeout).unwrap_or_else(PoisonError::into_inner).0;
         }
-        if let Err(mpsc::TrySendError::Full(_)) = self.tx.try_send(change) {
-            self.overflow.store(true, Ordering::Release);
-        }
+        std::mem::take(&mut *pending)
     }
 }
 
@@ -134,14 +148,13 @@ pub struct Watch {
     #[cfg(not(windows))]
     _watcher: notify::RecommendedWatcher,
     inbox: Inbox,
-    rx: mpsc::Receiver<Change>,
 }
 
 impl Watch {
     /// Called before the initial scan, exclusively on the coordinator thread.
     pub fn start(root: &Path) -> io::Result<Self> {
-        let (tx, rx) = mpsc::sync_channel(CAPACITY);
-        let inbox = Inbox { tx, overflow: Arc::new(AtomicBool::new(false)), failed: Arc::new(Mutex::new(None)) };
+        // In the scanner's namespace, which is where event paths are reported.
+        let inbox = Inbox::new(&std::path::absolute(root)?);
         #[cfg(windows)]
         let watcher = crate::watch_windows::Watcher::start(root, inbox.clone())?;
         #[cfg(not(windows))]
@@ -176,7 +189,7 @@ impl Watch {
             watcher.watch(&watched_root, notify::RecursiveMode::Recursive).map_err(io::Error::other)?;
             watcher
         };
-        Ok(Self { _watcher: watcher, inbox, rx })
+        Ok(Self { _watcher: watcher, inbox })
     }
 
     pub fn live(
@@ -219,32 +232,21 @@ impl Watch {
                 return;
             }
             if pending.is_empty() {
-                match self.rx.recv_timeout(BATCH) {
-                    Ok(change) => pending.add(change, &root),
-                    Err(mpsc::RecvTimeoutError::Disconnected) => return,
-                    Err(mpsc::RecvTimeoutError::Timeout) => continue,
+                pending = self.inbox.take(BATCH);
+                if pending.is_empty() {
+                    continue;
                 }
             }
             // Fixed window: sustained activity cannot postpone updates forever.
             let deadline = Instant::now() + BATCH;
             while Instant::now() < deadline && !stop.load(Ordering::Relaxed) {
-                match self
-                    .rx
-                    .recv_timeout(deadline.saturating_duration_since(Instant::now()).min(Duration::from_millis(100)))
-                {
-                    Ok(change) => pending.add(change, &root),
-                    Err(mpsc::RecvTimeoutError::Disconnected) => return,
-                    Err(mpsc::RecvTimeoutError::Timeout) => {}
-                }
+                std::thread::sleep(deadline.saturating_duration_since(Instant::now()).min(Duration::from_millis(100)));
             }
             if stop.load(Ordering::Relaxed) {
                 return;
             }
-            if self.inbox.overflow.swap(false, Ordering::AcqRel) {
-                pending.rescan = true;
-            }
-            if let Some(error) = clawback_core::scan::lock(&self.inbox.failed).take().or_else(|| pending.failed.take())
-            {
+            pending.merge(self.inbox.take(Duration::ZERO), &root);
+            if let Some(error) = pending.failed.take() {
                 publish(stopped(error));
                 return;
             }
@@ -257,8 +259,7 @@ impl Watch {
                 if !publish(Update::Status(LiveStatus::Reconciling)) {
                     return;
                 }
-                pending.paths.clear();
-                pending.rescan = false;
+                pending.clear();
                 // The app's snapshot keeps what it shows; release this copy during the scan.
                 tree = Tree::new(&root);
                 drop(std::mem::replace(&mut refresh, Refresh::new(&tree, options.clone())));
@@ -286,7 +287,7 @@ impl Watch {
             } else {
                 let budget = Instant::now();
                 for _ in 0..64 {
-                    let Some(path) = pending.paths.pop_first() else { break };
+                    let Some(path) = pending.pop() else { break };
                     if let Ok(updated) = refresh.path(&mut tree, &path, stop) {
                         changed |= updated;
                     } else {
@@ -351,32 +352,75 @@ fn remap_event_path(path: &Path, watched_root: &Path, scan_root: &Path) -> Optio
 
 #[derive(Default)]
 struct Pending {
+    /// Paths as reported. An existing directory's own notification reconciles only its
+    /// immediate children, so descendant events are retained individually.
     paths: BTreeSet<PathBuf>,
+    /// Directories whose children are relisted in place of their individual events once
+    /// there are too many of those. They are never coarsened again, as that would lose
+    /// changes further down.
+    dirs: BTreeSet<PathBuf>,
     rescan: bool,
     failed: Option<String>,
 }
 impl Pending {
     fn is_empty(&self) -> bool {
-        self.paths.is_empty() && !self.rescan && self.failed.is_none()
+        self.paths.is_empty() && self.dirs.is_empty() && !self.rescan && self.failed.is_none()
     }
     fn add(&mut self, change: Change, root: &Path) {
         match change {
-            Change::Path(path) if path.starts_with(root) && !self.rescan => {
-                // Retain individual descendant events: an existing directory
-                // notification only reconciles its immediate children.
-                self.paths.insert(path);
-                if self.paths.len() > CAPACITY {
-                    self.paths.clear();
-                    self.rescan = true;
-                }
-            }
+            Change::Path(path) if path.starts_with(root) => self.insert(path, root),
             Change::Rescan => {
-                self.paths.clear();
+                self.clear();
                 self.rescan = true;
             }
             Change::Failed(error) => self.failed = Some(error),
             Change::Path(_) => {}
         }
+    }
+    fn insert(&mut self, path: PathBuf, root: &Path) {
+        if self.rescan || self.dirs.contains(&path) {
+            return;
+        }
+        self.paths.insert(path);
+        if self.paths.len() <= CAPACITY {
+            return;
+        }
+        for path in std::mem::take(&mut self.paths) {
+            let dir = if path == root { path } else { path.parent().map_or(path.clone(), Path::to_path_buf) };
+            self.dirs.insert(dir);
+        }
+        if self.dirs.len() > DIRECTORIES {
+            self.clear();
+            self.rescan = true;
+        }
+    }
+    fn merge(&mut self, other: Self, root: &Path) {
+        if other.rescan {
+            self.clear();
+            self.rescan = true;
+        }
+        self.failed = other.failed.or(self.failed.take());
+        for dir in other.dirs {
+            if !self.rescan {
+                self.paths.remove(&dir);
+                self.dirs.insert(dir);
+            }
+        }
+        for path in other.paths {
+            self.insert(path, root);
+        }
+        if self.dirs.len() > DIRECTORIES {
+            self.clear();
+            self.rescan = true;
+        }
+    }
+    fn pop(&mut self) -> Option<PathBuf> {
+        self.dirs.pop_first().or_else(|| self.paths.pop_first())
+    }
+    fn clear(&mut self) {
+        self.paths.clear();
+        self.dirs.clear();
+        self.rescan = false;
     }
 }
 
@@ -509,26 +553,63 @@ mod tests {
     }
 
     #[test]
-    fn burst_storage_is_bounded_and_duplicates_coalesce() {
+    fn bursts_coarsen_to_directories_before_rescanning() {
         let root = Path::new("root");
         let mut pending = Pending::default();
         for _ in 0..100_000 {
             pending.add(Change::Path(root.join("same")), root);
         }
         assert_eq!(pending.paths.len(), 1);
-        for i in 0..=CAPACITY {
-            pending.add(Change::Path(root.join(i.to_string())), root);
+        // Many files in a few directories: relisting those directories covers them all.
+        for i in 0..CAPACITY {
+            pending.add(Change::Path(root.join(format!("d{}", i % 3)).join(i.to_string())), root);
+        }
+        assert!(!pending.rescan);
+        assert!(pending.paths.is_empty());
+        let dirs: BTreeSet<_> = [root.into(), root.join("d0"), root.join("d1"), root.join("d2")].into();
+        assert_eq!(pending.dirs, dirs);
+        pending.add(Change::Path(root.join("d1")), root);
+        assert!(pending.paths.is_empty(), "already relisted");
+        pending.add(Change::Path(root.join("d1/later")), root);
+        assert_eq!(pending.paths.len(), 1, "coarsened directories are never coarsened again");
+        // Directories are popped first: relisting them supersedes their children's events.
+        assert_eq!(pending.pop(), Some(root.to_path_buf()));
+        // Changes spread over too many directories fall back to a full rescan.
+        for i in 0..=DIRECTORIES + CAPACITY {
+            pending.add(Change::Path(root.join(format!("e{i}/file"))), root);
         }
         assert!(pending.rescan);
+        assert!(pending.paths.is_empty() && pending.dirs.is_empty());
+        pending.add(Change::Path(Path::new("elsewhere/file").into()), root);
         assert!(pending.paths.is_empty());
-        let (tx, rx) = mpsc::sync_channel(2);
-        let inbox = Inbox { tx, overflow: Arc::new(AtomicBool::new(false)), failed: Arc::new(Mutex::new(None)) };
+    }
+
+    #[test]
+    fn the_inbox_coalesces_until_taken_and_merges_into_the_backlog() {
+        let root = Path::new("root");
+        let inbox = Inbox::new(root);
         for _ in 0..1000 {
             inbox.send(Change::Path(root.join("same")));
         }
+        inbox.send(Change::Path(Path::new("outside").into()));
         inbox.send(Change::Failed("lost watcher".into()));
-        assert_eq!(rx.try_iter().count(), 2);
-        assert!(inbox.overflow.load(Ordering::Acquire));
-        assert_eq!(clawback_core::scan::lock(&inbox.failed).as_deref(), Some("lost watcher"));
+        let taken = inbox.take(Duration::ZERO);
+        assert_eq!(taken.paths.len(), 1);
+        assert_eq!(taken.failed.as_deref(), Some("lost watcher"));
+        assert!(inbox.take(Duration::from_millis(10)).is_empty());
+
+        let mut backlog = Pending::default();
+        backlog.add(Change::Path(root.join("d/file")), root);
+        let mut burst = Pending::default();
+        for i in 0..=CAPACITY {
+            burst.add(Change::Path(root.join(format!("d/{i}"))), root);
+        }
+        backlog.merge(burst, root);
+        assert_eq!(backlog.dirs.len(), 1);
+        assert_eq!(backlog.paths.len(), 1);
+        let mut rescan = Pending::default();
+        rescan.add(Change::Rescan, root);
+        backlog.merge(rescan, root);
+        assert!(backlog.rescan && backlog.paths.is_empty() && backlog.dirs.is_empty());
     }
 }

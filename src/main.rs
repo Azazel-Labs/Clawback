@@ -249,7 +249,14 @@ fn run_gui(path: Option<&std::path::Path>) -> ExitCode {
             if perf::enabled() {
                 perf::instant(&format!("adapter.{:?}", adapter.get_info()));
             }
-            descriptor(adapter)
+            // Size GPU memory for a few textures and buffers, not a game. On integrated GPUs
+            // it comes from system RAM: the default Performance hint suballocates from
+            // 128-256 MB blocks, and DX12 preallocates a descriptor heap with a slot for each
+            // of a million bindings.
+            let mut device = descriptor(adapter);
+            device.memory_hints = eframe::wgpu::MemoryHints::MemoryUsage;
+            device.required_limits.max_non_sampler_bindings = 65_536;
+            device
         });
     }
     // Initialize one backend at a time on Windows, with DX12 preferred.

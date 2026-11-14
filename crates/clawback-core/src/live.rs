@@ -2,7 +2,7 @@
 use crate::hardlinks::LinkIndex;
 use crate::scan::{FileAccounting, mtime_secs, virtual_paths};
 use crate::tree::{NewEntry, flags};
-use crate::{Kind, NodeId, ROOT, Scan, ScanOptions, Tree};
+use crate::{Kind, NodeId, ROOT, Scan, ScanOptions, ScanResult, Tree};
 use std::{
     collections::HashSet,
     fs, io,
@@ -72,6 +72,39 @@ impl Refresh {
         tree.remove(id)
     }
 
+    /// Scan one directory's subtree, or `None` if stopped. Unreadable entries inside it
+    /// are flagged in the result just as the initial scan flags them.
+    fn scan(&self, path: &Path, stop: &AtomicBool) -> io::Result<Option<ScanResult>> {
+        let mut options = self.options.clone();
+        options.threads = 1;
+        // Keep raw allocated sizes while scanning the new subtree; the
+        // document-wide inode index then deduplicates against existing files.
+        options.dedupe_hardlinks = false;
+        let result = Scan::start_with_accounting(path, options, None, self.accounting.exact())?.wait_or_stop(stop);
+        Ok((!result.cancelled).then_some(result))
+    }
+
+    /// Replace `id`'s contents with a scanned subtree.
+    fn graft(&mut self, tree: &mut Tree, id: NodeId, result: ScanResult) {
+        self.dirs += result.dirs;
+        tree.graft(id, result.tree);
+        if let Some(links) = &mut self.links {
+            for node_id in files_below(tree, id) {
+                let node = tree.node(node_id);
+                let entry = NewEntry {
+                    name: node.name.clone().into(),
+                    kind: node.kind,
+                    size: node.size,
+                    len: node.len,
+                    mtime: node.mtime,
+                    flags: node.flags,
+                    file_id: node.file_id,
+                };
+                links.update(tree, node_id, &entry);
+            }
+        }
+    }
+
     fn entry(&mut self, tree: &mut Tree, path: &Path, list_existing: bool, stop: &AtomicBool) -> io::Result<bool> {
         if stop.load(Ordering::Relaxed) {
             return Ok(false);
@@ -85,7 +118,9 @@ impl Refresh {
                 }
                 return Ok(old.is_some_and(|id| self.remove(tree, id)));
             }
-            Err(e) => return Err(e),
+            Err(e) if old == Some(ROOT) => return Err(e),
+            // Unreadable entries stay as the scan saw them, rather than forcing a full rescan.
+            Err(_) => return Ok(false),
         };
         // Windows may deliver a late event using the old spelling after a
         // case-only rename. Both spellings resolve, but only one entry exists.
@@ -113,20 +148,45 @@ impl Refresh {
                 if !list_existing || tree.node(id).has(flags::OTHER_FS | flags::VIRTUAL) {
                     return Ok(false);
                 }
-                if tree.node(id).has(flags::DENIED | flags::PARTIAL) {
-                    return Err(io::Error::other("Reconcile previously unreadable directory"));
+                if tree.node(id).has(flags::DENIED) {
+                    if id == ROOT {
+                        return Err(io::Error::other("Reconcile previously unreadable root"));
+                    }
+                    // Still unreadable: nothing to reconcile. Readable now: scan just it.
+                    if fs::read_dir(path).is_err() {
+                        return Ok(false);
+                    }
+                    let Some(result) = self.scan(path, stop)? else { return Ok(false) };
+                    self.dirs = self.dirs.saturating_sub(tree.dir_count(id));
+                    self.graft(tree, id, result);
+                    return Ok(true);
                 }
                 // Directory notifications need only enumerate direct children.
                 // Existing subdirectories keep their IDs and are not rescanned.
                 let mut names = HashSet::new();
                 let mut changed = false;
+                let mut complete = true;
                 for entry in fs::read_dir(path)? {
                     if stop.load(Ordering::Relaxed) {
                         return Ok(changed);
                     }
-                    let entry = entry?;
+                    let Ok(entry) = entry else {
+                        complete = false;
+                        continue;
+                    };
                     names.insert(entry.file_name());
-                    changed |= self.entry(tree, &entry.path(), false, stop)?;
+                    match self.entry(tree, &entry.path(), false, stop) {
+                        Ok(updated) => changed |= updated,
+                        Err(_) => complete = false,
+                    }
+                }
+                if !complete {
+                    // An unreadable listing entry may still exist; keep every child.
+                    if !tree.node(id).has(flags::PARTIAL) {
+                        tree.node_mut(id).flags |= flags::PARTIAL;
+                        changed = true;
+                    }
+                    return Ok(changed);
                 }
                 let removed: Vec<_> = tree
                     .node(id)
@@ -151,19 +211,7 @@ impl Refresh {
             if self.excludes.iter().any(|p| path.starts_with(p)) {
                 return Ok(false);
             }
-            let mut options = self.options.clone();
-            options.threads = 1;
-            // Keep raw allocated sizes while scanning the new subtree; the
-            // document-wide inode index then deduplicates against existing files.
-            options.dedupe_hardlinks = false;
-            let result = Scan::start_with_accounting(path, options, None, self.accounting.exact())?.wait_or_stop(stop);
-            if result.cancelled {
-                return Ok(false);
-            }
-            // Let global reconciliation report unreadable newly added trees.
-            if !result.skipped.is_empty() {
-                return Err(io::Error::other("New directory contains unreadable entries"));
-            }
+            let Some(result) = self.scan(path, stop)? else { return Ok(false) };
             let id = tree
                 .add_children(
                     parent,
@@ -178,34 +226,31 @@ impl Refresh {
                     }],
                 )
                 .start;
-            self.dirs += result.dirs;
-            tree.graft(id, result.tree);
-            if let Some(links) = &mut self.links {
-                for node_id in files_below(tree, id) {
-                    let node = tree.node(node_id);
-                    let entry = NewEntry {
-                        name: node.name.clone().into(),
-                        kind: node.kind,
-                        size: node.size,
-                        len: node.len,
-                        mtime: node.mtime,
-                        flags: node.flags,
-                        file_id: node.file_id,
-                    };
-                    links.update(tree, node_id, &entry);
-                }
-            }
+            self.graft(tree, id, result);
             return Ok(true);
         }
-        let (size, len, file_id, linked) = self.accounting.measure(path, &md, self.options.apparent_size)?;
-        let entry = NewEntry {
-            name: path.file_name().unwrap_or_default().into(),
-            kind,
-            size,
-            len,
-            mtime: mtime_secs(&md),
-            flags: if linked && file_id.is_some() { flags::LINKED } else { 0 },
-            file_id,
+        let entry = match self.accounting.measure(path, &md, self.options.apparent_size) {
+            Ok((size, len, file_id, linked)) => NewEntry {
+                name: path.file_name().unwrap_or_default().into(),
+                kind,
+                size,
+                len,
+                mtime: mtime_secs(&md),
+                flags: if linked && file_id.is_some() { flags::LINKED } else { 0 },
+                file_id,
+            },
+            // In use or protected. A known file keeps its last measurement until a later
+            // event; a new one is counted the way the scanner counts it.
+            Err(_) if old.is_some() => return Ok(false),
+            Err(_) => NewEntry {
+                name: path.file_name().unwrap_or_default().into(),
+                kind,
+                size: if self.options.apparent_size { md.len() } else { 0 },
+                len: md.len(),
+                mtime: mtime_secs(&md),
+                flags: flags::PARTIAL,
+                file_id: None,
+            },
         };
         if let Some(links) = &mut self.links {
             if let Some(id) = old {
@@ -221,7 +266,7 @@ impl Refresh {
         }
         if let Some(id) = old {
             let node = tree.node(id);
-            if (node.size, node.len, node.mtime) == (size, entry.len, entry.mtime) {
+            if (node.size, node.len, node.mtime) == (entry.size, entry.len, entry.mtime) {
                 return Ok(false);
             }
             tree.update_file(id, entry);
@@ -322,6 +367,38 @@ mod tests {
         assert_eq!(tree.root().size, fresh.bytes);
         assert_eq!(tree.root().files, 2);
         assert_eq!(tree.node(tree.find_path(&dir.0.join("sparse")).unwrap()).len, 8192);
+    }
+
+    #[test]
+    fn unreadable_directories_recover_without_a_full_rescan() {
+        let dir = temp();
+        fs::create_dir_all(dir.0.join("locked/inner")).unwrap();
+        fs::write(dir.0.join("locked/inner/a"), [1; 10]).unwrap();
+        fs::create_dir(dir.0.join("partial")).unwrap();
+        fs::write(dir.0.join("partial/b"), [2; 20]).unwrap();
+        let options =
+            ScanOptions { apparent_size: true, dedupe_hardlinks: false, threads: 1, ..ScanOptions::default() };
+        let mut tree = crate::scan::scan(&dir.0, options.clone()).unwrap().tree;
+        // As the scan leaves a directory it could not list, and one with an unreadable entry.
+        let locked = tree.find_path(&dir.0.join("locked")).unwrap();
+        let mut denied = Tree::new(&dir.0.join("locked"));
+        denied.node_mut(ROOT).flags |= flags::DENIED;
+        tree.graft(locked, denied);
+        let partial = tree.find_path(&dir.0.join("partial")).unwrap();
+        tree.node_mut(partial).flags |= flags::PARTIAL;
+        assert_eq!(tree.root().size, 20);
+        let mut refresh = Refresh::new(&tree, options.clone());
+        let stop = AtomicBool::new(false);
+        // Listable again: only that directory is scanned and grafted in place.
+        assert!(refresh.path(&mut tree, &dir.0.join("locked"), &stop).unwrap());
+        assert_eq!(tree.find_path(&dir.0.join("locked")), Some(locked));
+        assert!(!tree.node(locked).has(flags::DENIED));
+        // A partially read directory still reconciles its readable children.
+        fs::write(dir.0.join("partial/c"), [3; 30]).unwrap();
+        assert!(refresh.path(&mut tree, &dir.0.join("partial"), &stop).unwrap());
+        let fresh = crate::scan::scan(&dir.0, options).unwrap();
+        assert_eq!((tree.root().size, tree.root().files, refresh.dirs), (fresh.bytes, fresh.files, fresh.dirs));
+        assert_eq!(tree.root().size, 60);
     }
 
     #[test]

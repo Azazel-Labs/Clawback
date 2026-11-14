@@ -478,7 +478,8 @@ impl Tree {
     /// Node ids change; children keep their order.
     #[must_use]
     pub fn compacted(self) -> Self {
-        let mut old: Vec<Option<Node>> = self.nodes.into_nodes().map(Some).collect();
+        let mut old: Vec<Option<Node>> = Vec::with_capacity(self.nodes.len());
+        old.extend(self.nodes.into_nodes().map(Some));
         // New ids in breadth-first order, so each directory's children stay contiguous.
         let mut remap = vec![NO_NODE; old.len()];
         let mut order = vec![ROOT];
