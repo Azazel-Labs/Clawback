@@ -234,7 +234,7 @@ mod tests {
         );
         assert_eq!(utc_time(-1), CivilTime { year: 1969, month: 12, day: 31, hour: 23, minute: 59, second: 59 });
         assert_eq!(utc_time(951_782_400).day, 29); // 2000-02-29
-        assert!(date(i64::MIN).is_empty());
+        assert_eq!(date(i64::MIN), "");
         assert!(date(0).contains("19")); // local 1969 or 1970
     }
 }

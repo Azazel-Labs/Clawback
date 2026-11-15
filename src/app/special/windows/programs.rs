@@ -226,19 +226,22 @@ mod tests {
         removal.applications.into_iter().map(|app| app.name).collect()
     }
 
+    /// No applications confirmed.
+    const NONE: [String; 0] = [];
+
     #[test]
     fn uninstall_requires_an_action_and_an_owning_application() {
         let owner = app("App", r"C:\Program Files\Vendor\App", Some(Action::Steam(10)));
-        assert!(confirmed(r"C:\Program Files\WindowsApps", &[], &[]).is_empty());
+        assert_eq!(confirmed(r"C:\Program Files\WindowsApps", &[], &[]), NONE);
         assert_eq!(
             confirmed(r"C:\Program Files\Vendor\App\assets\large.pak", std::slice::from_ref(&owner), &[]),
             ["App"]
         );
         let inert = app("App", r"C:\Program Files\Vendor\App", None);
-        assert!(confirmed(r"C:\Program Files\Vendor\App", &[inert], &[]).is_empty());
+        assert_eq!(confirmed(r"C:\Program Files\Vendor\App", &[inert], &[]), NONE);
         // Program Files itself is never a vendor folder.
         let everything: Listing<'_> = &[(r"C:\Program Files", &["Vendor"]), (r"C:\Program Files\Vendor", &["App"])];
-        assert!(confirmed(r"C:\Program Files", &[owner], everything).is_empty());
+        assert_eq!(confirmed(r"C:\Program Files", &[owner], everything), NONE);
     }
 
     #[test]
@@ -253,12 +256,12 @@ mod tests {
             (r"C:\Program Files\Vendor", &["Suite", "Group", "Unknown"]),
             (r"C:\Program Files\Vendor\Group", &["Tools"]),
         ];
-        assert!(confirmed(r"C:\Program Files\Vendor", &apps, stray).is_empty());
+        assert_eq!(confirmed(r"C:\Program Files\Vendor", &apps, stray), NONE);
         // An unreadable folder cannot be accounted for.
-        assert!(confirmed(r"C:\Program Files\Vendor", &apps, &[]).is_empty());
+        assert_eq!(confirmed(r"C:\Program Files\Vendor", &apps, &[]), NONE);
         // Outside Program Files, only an application's own folder counts.
         let elsewhere = app("Suite", r"D:\Vendor\Suite", Some(Action::Steam(1)));
-        assert!(confirmed(r"D:\Vendor", &[elsewhere], &[(r"D:\Vendor", &["Suite"])]).is_empty());
+        assert_eq!(confirmed(r"D:\Vendor", &[elsewhere], &[(r"D:\Vendor", &["Suite"])]), NONE);
     }
 
     #[test]

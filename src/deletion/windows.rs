@@ -284,7 +284,7 @@ mod tests {
         use windows::Win32::{Foundation::ERROR_SHARING_VIOLATION, UI::Shell::COPYENGINE_E_SHARING_VIOLATION_SRC};
         let message = Error::from(ERROR_SHARING_VIOLATION.to_hresult()).message();
         let result = error_text(&Error::from(COPYENGINE_E_SHARING_VIOLATION_SRC));
-        assert!(!message.trim().is_empty());
+        assert_ne!(message.trim(), "");
         assert!(result.contains(message.trim()));
         assert!(result.contains("0x80270027"));
     }

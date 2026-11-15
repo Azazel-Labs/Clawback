@@ -385,7 +385,7 @@ mod tests {
         t.sort_all();
         let start = std::time::Instant::now();
         let b = build(&t, ROOT, 1920, 1080, &LayoutSettings { density: 3, bias: 0 }, None);
-        assert!(!b.is_empty());
+        assert_ne!(b.len(), 0);
         assert!(start.elapsed().as_secs_f32() < 2.0);
     }
 }
