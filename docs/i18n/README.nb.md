@@ -78,4 +78,4 @@ Byggeinstruksjonene og brukerveiledningen er på engelsk. Oversettelser vedlikeh
 
 [docs/usage.md](../usage.md) · [docs/development.md](../development.md) · [docs/translations.md](../translations.md) · [docs/releases.md](../releases.md)
 
-Copyright © 2026 Azazel Labs. [MIT-0](../../LICENSE).
+Copyright © 2026 Azazel Labs LLC. [MIT-0](../../LICENSE).

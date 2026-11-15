@@ -111,7 +111,7 @@ fn plist(version: &str) -> String {
 <key>CFBundleVersion</key><string>{version}</string>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSPrincipalClass</key><string>NSApplication</string>
-<key>NSHumanReadableCopyright</key><string>Azazel Labs</string>
+<key>NSHumanReadableCopyright</key><string>Copyright © 2026 Azazel Labs LLC</string>
 </dict></plist>
 "#
     )
