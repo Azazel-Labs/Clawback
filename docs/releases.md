@@ -18,7 +18,11 @@ reads the commit messages:
 | `#patch`, `#minor`, `#major` | Bumps the version in Cargo.toml and Cargo.lock and commits "Bump version to X" to `main`. Counts commits since the last version change; the largest bump wins. |
 | `#release` | Tags the current version, which starts the Release and crates.io workflows below. Counts commits since the last version tag. |
 
-Both can go in one push: `#minor #release` bumps 0.4.7 to 0.5.0 and releases it.
+Put tags on a line of their own, alone or together, usually the last line of the
+message. A tag inside a sentence is ignored, so describing these tags in a commit
+message is safe.
+
+Both can go in one push: a `#minor #release` line bumps 1.0.0 to 1.1.0 and releases it.
 Bump without `#release` to let a version collect changes before releasing it. A
 `#release` with no bump for a version that is already tagged only logs a warning.
 
