@@ -1,8 +1,8 @@
 version = 2
 
 [readme]
-source = "f7f5d77c0c68e78f303c8e2e8700ddabc364a699859a31948ff04d8be1b524e5"
-translation = "78e81d4359af8377cc14fb6a15612d114d1a075aae48c49c1fcb1666c2c43a66"
+source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
+translation = "4b114616d18a2346365218172a114dd2513092627e2a509f1d55a33331aa434f"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
@@ -275,8 +275,8 @@ source = "Copy error details"
 translation = "Copiar detalles del error"
 
 [messages.copyright-2026-azazel-labs]
-source = "Copyright © 2026 Azazel Labs."
-translation = "Copyright © 2026 Azazel Labs."
+source = "Copyright © 2026 Azazel Labs LLC."
+translation = "Copyright © 2026 Azazel Labs LLC."
 
 [messages.count-hard-linked-files-once]
 source = "Count hard-linked files once"

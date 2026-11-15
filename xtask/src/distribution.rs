@@ -67,7 +67,7 @@ fn generate(tag: &str, checksums: &str) -> Result<BTreeMap<String, String>> {
     }
     writeln!(installer, "ManifestType: installer\nManifestVersion: {MANIFEST_VERSION}")?;
     let locale = format!(
-        "{header}PackageLocale: en-US\nPublisher: Azazel Labs\nPackageName: Clawback\nLicense: MIT-0\nLicenseUrl: {REPOSITORY}/blob/v{version}/LICENSE\nShortDescription: Disk space visualizer with desktop and terminal interfaces\nPackageUrl: {REPOSITORY}\nManifestType: defaultLocale\nManifestVersion: {MANIFEST_VERSION}\n"
+        "{header}PackageLocale: en-US\nPublisher: Azazel Labs LLC\nPackageName: Clawback\nLicense: MIT-0\nLicenseUrl: {REPOSITORY}/blob/v{version}/LICENSE\nShortDescription: Disk space visualizer with desktop and terminal interfaces\nPackageUrl: {REPOSITORY}\nManifestType: defaultLocale\nManifestVersion: {MANIFEST_VERSION}\n"
     );
     let manifest =
         format!("{header}DefaultLocale: en-US\nManifestType: version\nManifestVersion: {MANIFEST_VERSION}\n");

@@ -8,7 +8,7 @@ edition = "2024"
 rust-version = "1.95"
 license = "MIT-0"
 repository = "https://github.com/Azazel-Labs/Clawback"
-authors = ["Azazel Labs"]
+authors = ["Azazel Labs LLC"]
 
 [workspace.dependencies]
 clawback-core = { path = "crates/clawback-core", version = "1.0.0" }

@@ -1,8 +1,8 @@
 version = 2
 
 [readme]
-source = "f7f5d77c0c68e78f303c8e2e8700ddabc364a699859a31948ff04d8be1b524e5"
-translation = "facfd9f25b4de3686c9b98516dcc1db00cbcd0eeca294ddbdc3d9b2456d82120"
+source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
+translation = "233b7c6a253160d07574630c82c6a9ee2ffc52ddc3b2ed166bab84b4228d5bcb"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
@@ -268,8 +268,8 @@ source = "Copy error details"
 translation = "エラーの詳細をコピー"
 
 [messages.copyright-2026-azazel-labs]
-source = "Copyright © 2026 Azazel Labs."
-translation = "Copyright © 2026 Azazel Labs."
+source = "Copyright © 2026 Azazel Labs LLC."
+translation = "Copyright © 2026 Azazel Labs LLC."
 
 [messages.count-hard-linked-files-once]
 source = "Count hard-linked files once"

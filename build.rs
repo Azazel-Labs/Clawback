@@ -38,8 +38,8 @@ fn main() {
         winresource::WindowsResource::new()
             .set_icon("assets/icons/clawback.ico")
             .set("ProductName", "Clawback")
-            .set("CompanyName", "Azazel Labs")
-            .set("LegalCopyright", "Copyright © 2026 Azazel Labs")
+            .set("CompanyName", "Azazel Labs LLC")
+            .set("LegalCopyright", "Copyright © 2026 Azazel Labs LLC")
             // Task Manager and Process Explorer show this as the process name.
             .set("FileDescription", "Clawback")
             .compile()

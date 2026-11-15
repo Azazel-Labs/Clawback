@@ -105,4 +105,4 @@ Maintainers can find the release process in [docs/releases.md](docs/releases.md)
 
 ## License
 
-Copyright © 2026 Azazel Labs. Released under [MIT-0](LICENSE).
+Copyright © 2026 Azazel Labs LLC. Released under [MIT-0](LICENSE).

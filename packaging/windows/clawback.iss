@@ -25,7 +25,7 @@ AppId={{C86807C6-CFAA-4AC5-B171-9292DB2B1C5C}
 #endif
 AppName={#ProductName}
 AppVersion={#AppVersion}
-AppPublisher=Azazel Labs
+AppPublisher=Azazel Labs LLC
 AppPublisherURL=https://github.com/Azazel-Labs/Clawback
 AppSupportURL=https://github.com/Azazel-Labs/Clawback/issues
 DefaultDirName={autopf}\{#ProductName}
