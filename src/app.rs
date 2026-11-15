@@ -3,7 +3,7 @@
 mod reclaim;
 mod snapshots;
 pub(crate) mod special;
-mod widgets;
+pub(crate) mod widgets;
 
 use crate::i18n::tr;
 
@@ -166,6 +166,9 @@ struct QueuedDelete {
     kind: DeleteKind,
     /// Delete only what is inside the folder at `path`, keeping the folder.
     contents: bool,
+    /// What the list that asked for it calls it, such as "crate › target", so the
+    /// confirmation names it the same way; otherwise the file name.
+    label: Option<String>,
 }
 
 /// How long a recycled path is hidden from live snapshots that predate its removal.
@@ -753,7 +756,16 @@ impl ClawbackApp {
         }
         let n = doc.tree.node(node);
         let (size, files) = (n.size, n.files);
-        let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: self.delete_kind(), contents: false };
+        let request = QueuedDelete {
+            doc: doc.id,
+            node,
+            path,
+            size,
+            files,
+            kind: self.delete_kind(),
+            contents: false,
+            label: None,
+        };
         if crate::container::enabled() {
             self.confirm.push_back(request);
             return;
@@ -788,19 +800,29 @@ impl ClawbackApp {
         }
         let n = doc.tree.node(node);
         let (size, files) = (n.size, n.files);
-        let request = QueuedDelete { doc: doc.id, node, path, size, files, kind: self.delete_kind(), contents: true };
+        let request = QueuedDelete {
+            doc: doc.id,
+            node,
+            path,
+            size,
+            files,
+            kind: self.delete_kind(),
+            contents: true,
+            label: None,
+        };
         self.queue_delete(request, ctx);
     }
 
     /// Ask once to permanently delete every one of `nodes` that a plain delete would allow.
     /// Rebuildable output is often too large or has too many files for the Recycle Bin.
-    fn clean_up(&mut self, nodes: &[NodeId]) {
+    fn clean_up(&mut self, items: &[(NodeId, String)]) {
         if self.settings.disable_delete {
             return;
         }
         let Some(doc) = &self.doc else { return };
         let mut jobs: Vec<QueuedDelete> = Vec::new();
-        for &node in nodes {
+        for (node, label) in items {
+            let node = *node;
             if node == ROOT || !doc.tree.is_live(node) || doc.special().classify(&doc.tree, node).is_some() {
                 continue;
             }
@@ -823,6 +845,7 @@ impl ClawbackApp {
                 files: n.files,
                 kind: DeleteKind::Rebuildable,
                 contents: false,
+                label: Some(label.clone()),
             });
         }
         self.confirm.extend(jobs);
@@ -1353,7 +1376,7 @@ impl ClawbackApp {
     fn confirm_dialog(&mut self, ctx: &egui::Context) {
         let Some(job) = self.confirm.front() else { return };
         let drive = self.doc.as_ref().map(|d| d.tree.root_path().display().to_string()).unwrap_or_default();
-        let name = display_name(&job.path);
+        let name = job.label.clone().unwrap_or_else(|| display_name(&job.path));
         // Permanent while recycling is in use only when the Recycle Bin turned the item away.
         let too_big = self.delete_kind() == DeleteKind::Recycle;
         let batch = self.confirm_batch();
@@ -2242,6 +2265,7 @@ mod tests {
                     files: 2,
                     kind: DeleteKind::Recycle,
                     contents: false,
+                    label: None,
                 },
                 node: Some(node),
                 targets: vec![path],
@@ -2315,12 +2339,19 @@ mod tests {
         let ctx = f.ctx.clone();
         // Recycling stays on: rebuildable output is deleted permanently all the same.
         assert!(f.app.settings.use_trash);
-        let nodes = vec![f.node("a"), f.node("b/inner"), f.node("b"), ROOT];
-        f.app.apply(Command::CleanUp(nodes), &ctx);
+        let items = [("a", "proj › a"), ("b/inner", "b › inner"), ("b", "proj › b")]
+            .map(|(path, label)| (f.node(path), label.to_owned()))
+            .into_iter()
+            .chain([(ROOT, "root".to_owned())])
+            .collect();
+        f.app.apply(Command::CleanUp(items), &ctx);
         assert!(f.app.deleting.is_none() && f.app.delete_queue.is_empty(), "nothing goes before confirmation");
         // The root is never offered, and a folder covers what is inside it.
         let paths: Vec<_> = f.app.confirm.iter().map(|job| job.path.clone()).collect();
         assert_eq!(paths, [f.root.join("a"), f.root.join("b")]);
+        // The confirmation names each folder as the list did, not by its bare file name.
+        let labels: Vec<_> = f.app.confirm.iter().map(|job| job.label.as_deref()).collect();
+        assert_eq!(labels, [Some("proj › a"), Some("proj › b")]);
         assert_eq!(f.app.confirm_batch(), 2);
         f.app.answer_confirm(true, &ctx);
         assert!(f.app.confirm.is_empty(), "one answer covers the whole batch");
@@ -2500,6 +2531,7 @@ mod tests {
             files: entry.files,
             kind: DeleteKind::Cleanup(special::Cleanup::TempFolder),
             contents: false,
+            label: None,
         });
         f.app.answer_confirm(true, &f.ctx.clone());
         f.finish();
@@ -2575,6 +2607,7 @@ mod tests {
                 files: 2,
                 kind: DeleteKind::Cleanup(special::Cleanup::TempFolder),
                 contents: false,
+                label: None,
             },
             &f.ctx.clone(),
         );
@@ -2662,7 +2695,16 @@ mod tests {
             }))
             .unwrap();
         f.app.special.removal_checks.push((
-            QueuedDelete { doc: 1, node, path, size: 16, files: 2, kind: DeleteKind::Recycle, contents: false },
+            QueuedDelete {
+                doc: 1,
+                node,
+                path,
+                size: 16,
+                files: 2,
+                kind: DeleteKind::Recycle,
+                contents: false,
+                label: None,
+            },
             job,
         ));
         f.app.poll(&f.ctx);
@@ -2690,6 +2732,7 @@ mod tests {
                 files: 2,
                 kind: DeleteKind::Recycle,
                 contents: false,
+                label: None,
             },
             job,
         ));

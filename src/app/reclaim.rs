@@ -140,10 +140,10 @@ impl Reclaim {
                     ui.horizontal(|ui| {
                         ui.label(egui::RichText::new(item.section.title()).small().strong().color(theme::MUTED));
                         ui.label(egui::RichText::new(format::size(size)).small().color(theme::MUTED));
-                        let rebuildable: Vec<NodeId> = items
+                        let rebuildable: Vec<(NodeId, String)> = items
                             .iter()
                             .filter(|other| other.section == item.section && other.action == Action::CleanUp)
-                            .map(|other| other.node)
+                            .map(|other| (other.node, other.title.clone()))
                             .collect();
                         if !rebuildable.is_empty() {
                             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
@@ -255,22 +255,25 @@ impl Reclaim {
             if enabled { theme::TEXT } else { theme::MUTED },
         );
         let clicked = action.clicked();
-        action.on_hover_text(label);
+        super::widgets::steady_hover_text(action, label);
         if clicked {
             out.push(match item.action {
                 Action::Special(kind) => Command::Special(kind, item.node),
                 Action::Delete | Action::Uninstall => Command::Delete(item.node),
-                Action::CleanUp => Command::CleanUp(vec![item.node]),
+                Action::CleanUp => Command::CleanUp(vec![(item.node, item.title.clone())]),
             });
         } else if response.clicked() {
             out.push(Command::Show(item.node));
         }
-        response.on_hover_cursor(egui::CursorIcon::PointingHand).on_hover_text(format!(
-            "{}
+        super::widgets::steady_hover_text(
+            response.on_hover_cursor(egui::CursorIcon::PointingHand),
+            format!(
+                "{}
 {}",
-            item.path.display(),
-            tr!("reclaim-show")
-        ));
+                item.path.display(),
+                tr!("reclaim-show")
+            ),
+        );
     }
 
     /// Steam's icon for a game row; false when there is none to draw (yet).

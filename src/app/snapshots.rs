@@ -571,7 +571,8 @@ impl Snapshots {
                             font.clone(),
                             own_color,
                         );
-                        let response = response.on_hover_text(format!("{name}\n{sizes} ({delta})"));
+                        let response =
+                            super::widgets::steady_hover_text(response, format!("{name}\n{sizes} ({delta})"));
                         if let Some(node) = row.node
                             && response.clicked()
                         {

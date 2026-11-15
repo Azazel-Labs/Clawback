@@ -22,9 +22,10 @@ use crate::{
 use clawback_core::layout::{self, DisplayBox, LayoutSettings};
 use clawback_core::{NodeId, Settings, Tree, format};
 use eframe::egui::{
-    self, Color32, FontId, Id, LayerId, Order, Pos2, Rect, Response, RichText, Sense, Stroke, StrokeKind, Ui, Vec2,
-    pos2, vec2,
+    self, Color32, FontId, Galley, Id, LayerId, Order, Pos2, Rect, Response, RichText, Sense, Stroke, StrokeKind, Ui,
+    Vec2, pos2, vec2,
 };
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -45,7 +46,7 @@ fn zoom_target(boxes: &[DisplayBox], x: i32, y: i32) -> Option<NodeId> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Command {
     ZoomTo(NodeId),
-    ZoomPath(std::path::PathBuf),
+    ZoomPath(PathBuf),
     Back,
     ZoomOut,
     ZoomFull,
@@ -55,7 +56,8 @@ pub enum Command {
     /// Delete everything inside a folder, keeping the folder.
     DeleteContents(NodeId),
     /// Permanently delete folders their tools recreate, such as build output, once confirmed together.
-    CleanUp(Vec<NodeId>),
+    /// Each carries the name its list shows ("crate › target"), which the confirmation repeats.
+    CleanUp(Vec<(NodeId, String)>),
     Special(special::Kind, NodeId),
     OpenDrive,
     Rescan,
@@ -113,10 +115,21 @@ fn same_view(a: LayoutKey, b: LayoutKey) -> bool {
 }
 
 /// Cached info-tip text for the hovered node.
+#[derive(Clone)]
 struct InfoTip {
     node: NodeId,
     lines: Vec<String>,
     folder: bool,
+}
+
+/// Tips on screen. They keep saying what they said until the mouse or keyboard is
+/// used, even while the map is refreshed or replaced beneath them.
+#[derive(Default)]
+struct PinnedTips {
+    /// The name label, where it is drawn, and its color.
+    name: Option<(Arc<Galley>, Rect, Color32)>,
+    /// The info tip and the pointer position it is drawn beside.
+    info: Option<(InfoTip, Pos2)>,
 }
 
 type LayoutResult = (Arc<Tree>, Vec<DisplayBox>, PreparedMap);
@@ -142,6 +155,8 @@ pub struct MapView {
     rect: Rect,
     info: Option<InfoTip>,
     info_rx: Option<Job<(), InfoTip>>,
+    pinned: PinnedTips,
+    menu: EntryMenu,
 }
 
 impl Default for MapView {
@@ -165,6 +180,8 @@ impl Default for MapView {
             rect: Rect::ZERO,
             info: None,
             info_rx: None,
+            pinned: PinnedTips::default(),
+            menu: EntryMenu::default(),
         }
     }
 }
@@ -201,8 +218,11 @@ impl MapView {
         self.info_rx = None;
     }
 
+    /// Drop the selection, unless it is what the open menu is for.
     pub fn clear_selection(&mut self) {
-        self.selected = None;
+        if !self.menu.is_open() {
+            self.selected = None;
+        }
     }
 
     /// Select `node`'s box now, or as soon as a layout that shows it is ready.
@@ -282,6 +302,8 @@ impl MapView {
 
         let key = self.sync_layout(&ctx, &painter, rect, input);
 
+        // The menu acts on the current tree, whatever snapshot is on screen.
+        let current = *input;
         // Keep painting the previous complete snapshot until its replacement
         // is ready. Tree and boxes must always refer to the same node ids.
         let displayed = self.display_tree.clone();
@@ -311,10 +333,13 @@ impl MapView {
             self.handle_mouse(&ctx, &response, pointer, input, &mut out);
         }
 
+        self.menu.show(&ctx, &current.menu(), &mut out);
+
         self.paint(&painter, input, pointer);
 
-        if interactive && pointer.is_some() && !ctx.any_popup_open() {
-            self.paint_tips(&ctx, input, pointer, now);
+        match pointer {
+            Some(pointer) if !ctx.any_popup_open() => self.paint_tips(&ctx, input, pointer, now, interactive),
+            _ => self.pinned = PinnedTips::default(),
         }
         out.append(&mut self.queued);
         out
@@ -367,7 +392,10 @@ impl MapView {
             retire(self.prepared.replace(prepared));
             self.boxes = boxes;
             self.key = Some(ready_key);
+            // An open menu keeps its entry selected in the new layout.
+            let menu_node = self.menu.path().and_then(|path| self.display_tree.as_ref()?.find_path(path));
             self.clear_transient();
+            self.selected = menu_node.and_then(|node| self.boxes.iter().position(|b| b.node() == Some(node)));
             self.apply_pending_select();
         }
         if self.key != Some(key) && self.layout_rx.is_none() && self.staging.is_none() {
@@ -406,6 +434,7 @@ impl MapView {
         });
         if active {
             self.last_input = now;
+            self.pinned = PinnedTips::default();
         }
     }
 
@@ -430,18 +459,12 @@ impl MapView {
         {
             out.push(Command::Special(kind, node));
         }
+        // The right-click menu (`CFolderView::OnRButtonUp`).
         if response.secondary_clicked() {
             self.selected = self.hit(response.interact_pointer_pos());
+            let cur = self.selected_box().copied();
+            self.menu.open(response, input.tree, cur.and_then(|b| b.node()), cur.is_some_and(|b| b.folder));
         }
-        response.context_menu(|ui| self.context_menu(ui, input, out));
-    }
-
-    /// The right-click menu (`CFolderView::OnRButtonUp`).
-    fn context_menu(&mut self, ui: &mut Ui, input: &MapInput<'_>, out: &mut Vec<Command>) {
-        let cur = self.selected_box().copied();
-        let node = cur.and_then(|b| b.node());
-        let folder = cur.is_some_and(|b| b.folder);
-        context_menu(ui, &input.menu(), node, folder, out);
     }
 
     fn paint(&mut self, painter: &egui::Painter, input: &MapInput<'_>, pointer: Option<Pos2>) {
@@ -485,8 +508,34 @@ impl MapView {
         }
     }
 
-    fn paint_tips(&mut self, ctx: &egui::Context, input: &MapInput<'_>, pointer: Option<Pos2>, now: f64) {
-        let Some(i) = self.hit(pointer) else {
+    /// Draw the tips on screen, first working out new ones when the map is interactive.
+    fn paint_tips(&mut self, ctx: &egui::Context, input: &MapInput<'_>, pointer: Pos2, now: f64, interactive: bool) {
+        let tips = ctx.layer_painter(LayerId::new(Order::Tooltip, Id::unique("clawback-map-tips")));
+        let screen = ctx.content_rect();
+        if interactive {
+            self.update_tips(ctx, &tips, screen, input, pointer, now);
+        }
+        if let Some((galley, bounds, color)) = &self.pinned.name {
+            tips.rect_filled(*bounds, 0.0, theme::SURFACE);
+            tips.rect_stroke(*bounds, 0.0, Stroke::new(1.0, theme::BORDER), StrokeKind::Inside);
+            tips.galley(bounds.min + vec2(2.0, 1.0), Arc::clone(galley), *color);
+        }
+        if let Some((tip, at)) = &self.pinned.info {
+            paint_info_tip(&tips, screen, tip, *at, input.settings.tip_icon);
+        }
+    }
+
+    /// Pin the tips for the box under a resting pointer once their delays pass.
+    fn update_tips(
+        &mut self,
+        ctx: &egui::Context,
+        tips: &egui::Painter,
+        screen: Rect,
+        input: &MapInput<'_>,
+        pointer: Pos2,
+        now: f64,
+    ) {
+        let Some(i) = self.hit(Some(pointer)) else {
             self.info = None;
             return;
         };
@@ -494,21 +543,19 @@ impl MapView {
         let Some(node) = b.node() else { return };
         let idle = now - self.last_input;
         let s = input.settings;
-        let tips = ctx.layer_painter(LayerId::new(Order::Tooltip, Id::unique("clawback-map-tips")));
-        let screen = ctx.content_rect();
 
         let name_delay = f64::from(s.nametip_delay_ms) / 1000.0;
         let info_delay = f64::from(s.infotip_delay_ms) / 1000.0;
         let mut wake = f64::INFINITY;
 
-        if s.show_name_tips {
+        if s.show_name_tips && self.pinned.name.is_none() {
             if idle >= name_delay {
-                self.paint_name_tip(&tips, screen, &b, i, input);
+                self.pinned.name = self.name_tip(tips, screen, &b, i, input);
             } else {
                 wake = wake.min(name_delay - idle);
             }
         }
-        if s.show_info_tips {
+        if s.show_info_tips && self.pinned.info.is_none() {
             if let Some(((), tip)) = Job::poll(&mut self.info_rx) {
                 self.info = Some(tip);
             }
@@ -529,8 +576,8 @@ impl MapView {
                     }
                     tip
                 }));
-            } else if let (Some(tip), Some(p)) = (self.info.as_ref().filter(|tip| tip.node == node), pointer) {
-                paint_info_tip(&tips, screen, tip, p, s.tip_icon);
+            } else if let Some(tip) = self.info.as_ref().filter(|tip| tip.node == node) {
+                self.pinned.info = Some((tip.clone(), pointer));
             }
         }
         if wake.is_finite() {
@@ -538,19 +585,20 @@ impl MapView {
         }
     }
 
-    /// `CFolderView::SetupNameTip`: show the full name over a truncated label.
-    fn paint_name_tip(
+    /// `CFolderView::SetupNameTip`: the full name to show over a truncated label, where
+    /// to draw it, and its color.
+    fn name_tip(
         &self,
         tips: &egui::Painter,
         screen: Rect,
         tile: &DisplayBox,
         index: usize,
         input: &MapInput<'_>,
-    ) {
-        let Some(node) = tile.node() else { return };
+    ) -> Option<(Arc<Galley>, Rect, Color32)> {
+        let node = tile.node()?;
         // Collapsed folders, such as games, draw their own names.
         if maprender::is_collapsed_folder(input.tree, tile) {
-            return;
+            return None;
         }
         let text_color = if self.selected == Some(index) { theme::ACCENT } else { theme::TEXT };
         let galley = tips.layout_no_wrap(
@@ -560,7 +608,7 @@ impl MapView {
         );
         // Cover the map's own label exactly, or stand in where an unlabelled box would put it.
         let pos = match self.prepared.as_ref().and_then(|prepared| prepared.name_label(index)) {
-            Some(label) if label.complete => return,
+            Some(label) if label.complete => return None,
             Some(label) => label.pos,
             None => {
                 let lines = if maprender::shows_details(tile) { 3 } else { 1 };
@@ -568,10 +616,98 @@ impl MapView {
             }
         };
         let bounds = push_on_screen(Rect::from_min_size(pos, galley.size()).expand2(vec2(2.0, 1.0)), screen);
-        tips.rect_filled(bounds, 0.0, theme::SURFACE);
-        tips.rect_stroke(bounds, 0.0, Stroke::new(1.0, theme::BORDER), StrokeKind::Inside);
-        tips.galley(bounds.min + vec2(2.0, 1.0), galley, text_color);
+        Some((galley, bounds, text_color))
     }
+}
+
+/// A right-click menu that keeps the entry it was opened on while the tree beneath it
+/// updates. egui's own context menu belongs to the widget that opened it, so a live
+/// refresh or a new layout that redraws or replaces that widget closed it or moved it
+/// to another entry. This one owns its popup and follows its entry by path.
+#[derive(Default)]
+pub struct EntryMenu {
+    open: Option<OpenMenu>,
+    opened: u64,
+}
+
+struct OpenMenu {
+    id: Id,
+    layer: LayerId,
+    pos: Pos2,
+    /// The entry, and its path for finding it again if the tree changes.
+    entry: Option<(NodeId, PathBuf)>,
+    folder: bool,
+    /// Opened this frame; the popup still has to be told.
+    fresh: bool,
+}
+
+impl EntryMenu {
+    /// Open the menu at the pointer for `node` in `tree`, the tree `response` was drawn from.
+    pub fn open(&mut self, response: &Response, tree: &Tree, node: Option<NodeId>, folder: bool) {
+        let Some(pos) = response.interact_pointer_pos().or_else(|| response.hover_pos()) else { return };
+        if let Some(old) = self.open.take() {
+            egui::Popup::close_id(&response.ctx, old.id);
+        }
+        self.opened += 1;
+        self.open = Some(OpenMenu {
+            id: response.id.with(("entry-menu", self.opened)),
+            layer: response.layer_id,
+            pos,
+            entry: node.filter(|&n| tree.is_live(n)).map(|n| (n, tree.path(n))),
+            folder,
+            fresh: true,
+        });
+    }
+
+    pub fn is_open(&self) -> bool {
+        self.open.is_some()
+    }
+
+    /// The path of the entry the open menu is for.
+    pub fn path(&self) -> Option<&Path> {
+        self.open.as_ref()?.entry.as_ref().map(|(_, path)| path.as_path())
+    }
+
+    /// The open menu's entry in `tree`, if it is still there.
+    pub fn target(&self, tree: &Tree) -> Option<NodeId> {
+        let (node, path) = self.open.as_ref()?.entry.as_ref()?;
+        resolve(tree, *node, path)
+    }
+
+    /// Draw the open menu against the current tree. Call every frame, whether or not the
+    /// widget that opened it is drawn. Closes when its entry is gone.
+    pub fn show(&mut self, ctx: &egui::Context, menu: &MenuContext<'_>, out: &mut Vec<Command>) {
+        let Some(open) = &mut self.open else { return };
+        let mut node = None;
+        if let Some((last, path)) = &mut open.entry {
+            let Some(found) = resolve(menu.tree, *last, path) else {
+                egui::Popup::close_id(ctx, open.id);
+                self.open = None;
+                return;
+            };
+            *last = found;
+            node = Some(found);
+        }
+        let shown = egui::Popup::new(open.id, ctx.clone(), egui::PopupAnchor::Position(open.pos), open.layer)
+            .kind(egui::PopupKind::Menu)
+            .layout(egui::Layout::top_down_justified(egui::Align::Min))
+            .style(egui::containers::menu::menu_style)
+            .gap(0.0)
+            .open_memory(std::mem::take(&mut open.fresh).then_some(egui::SetOpenCommand::Bool(true)))
+            .show(|ui| context_menu(ui, menu, node, open.folder, out));
+        if shown.is_none() {
+            self.open = None;
+        }
+    }
+}
+
+/// Find `node`, last seen at `path`, in `tree`: the same id while it still names that
+/// path, otherwise whatever now lives there.
+fn resolve(tree: &Tree, node: NodeId, path: &Path) -> Option<NodeId> {
+    if tree.is_live(node) && tree.path(node) == path {
+        return Some(node);
+    }
+    tree.find_path(path).filter(|&n| tree.is_live(n))
 }
 
 /// What an entry's right-click menu needs to know, shared by the map and the directory tree.
@@ -772,6 +908,26 @@ mod tests {
     use super::*;
     use clawback_core::{ROOT, tree::NewEntry};
     use std::{path::Path, time::Instant};
+
+    #[test]
+    fn open_menu_follows_its_entry_by_path_and_lets_go_when_it_is_gone() {
+        let mut old = Tree::new(Path::new("/menu"));
+        let ids = old.add_children(ROOT, vec![NewEntry::dir("keep"), NewEntry::dir("target")]);
+        let target = ids.start + 1;
+        let path = old.path(target);
+        assert_eq!(resolve(&old, target, &path), Some(target));
+
+        // A rescan lists the same folders under other ids.
+        let mut rescanned = Tree::new(Path::new("/menu"));
+        let added = rescanned.add_children(ROOT, vec![NewEntry::dir("a"), NewEntry::dir("b"), NewEntry::dir("target")]);
+        let moved = added.start + 2;
+        assert_ne!(moved, target);
+        assert_eq!(resolve(&rescanned, target, &path), Some(moved));
+
+        // Once the folder is deleted there is nothing left to act on.
+        old.remove(target);
+        assert_eq!(resolve(&old, target, &path), None);
+    }
 
     #[cfg(windows)]
     #[test]
