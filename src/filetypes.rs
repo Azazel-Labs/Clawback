@@ -2,6 +2,7 @@
 mod cache;
 use crate::i18n::tr;
 use crate::{
+    app::widgets::steady_hover_text,
     background::{Job, retire},
     filetype_icons::Icons,
     theme,
@@ -153,7 +154,7 @@ impl FileTypes {
         ui.horizontal(|ui| {
             ui.strong(tr!("file-types"));
             if let Some(summary) = &self.summary {
-                ui.add(egui::Label::new(&summary.name).truncate()).on_hover_text(&summary.name);
+                steady_hover_text(ui.add(egui::Label::new(&summary.name).truncate()), &summary.name);
             }
             if updating {
                 ui.weak(tr!("updating"));
@@ -237,7 +238,7 @@ fn paint_rows(ui: &mut Ui, icons: &mut Icons, summary: &Summary, width: f32) {
                             theme::TEXT,
                         );
                     }
-                    response.on_hover_text(format!("{} — {}", row.extension, row.kind));
+                    steady_hover_text(response, format!("{} — {}", row.extension, row.kind));
                 }
             },
         );

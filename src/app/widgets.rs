@@ -1,4 +1,19 @@
 //! Small widgets shared by the app's dialogs and panels.
+
+/// Hover text that keeps what it said while the pointer stays put, even when the list
+/// beneath it is rebuilt and another row slides under the pointer. Moving the pointer
+/// lets it follow whatever is under it again.
+pub(crate) fn steady_hover_text(response: eframe::egui::Response, text: impl Into<String>) -> eframe::egui::Response {
+    use eframe::egui::{Id, Pos2};
+    let Some(pointer) = response.hover_pos() else { return response };
+    let id = Id::unique("clawback-steady-hover-text");
+    let pinned = response.ctx.data(|d| d.get_temp::<(Pos2, String)>(id)).filter(|(at, _)| *at == pointer);
+    let text = pinned.map_or_else(|| text.into(), |(_, text)| text);
+    if response.is_tooltip_open() {
+        response.ctx.data_mut(|d| d.insert_temp(id, (pointer, text.clone())));
+    }
+    response.on_hover_text(text)
+}
 /// Shared modal heading with an accessible, consistently placed dismiss control.
 pub(super) fn dialog_header(ui: &mut eframe::egui::Ui, title: &str, icon: &str) -> bool {
     use eframe::egui::{self, Align, Layout, RichText};

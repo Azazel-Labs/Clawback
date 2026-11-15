@@ -2,8 +2,9 @@
 //! the UI only draws the rows currently inside the scroll viewport.
 use crate::i18n::tr;
 use crate::{
+    app::widgets::steady_hover_text,
     background::{Job, retire},
-    mapview::{self, Command, MenuContext},
+    mapview::{Command, EntryMenu, MenuContext},
     theme,
 };
 use clawback_core::{NodeId, ROOT, Tree, format, tree::flags};
@@ -41,9 +42,11 @@ struct Key {
     scanning: bool,
 }
 
-struct Rows {
+struct Listing {
     rows: Vec<Row>,
     focus: Option<usize>,
+    /// The tree the rows were listed from, which their node ids refer to.
+    tree: Arc<Tree>,
 }
 
 #[derive(Default)]
@@ -57,11 +60,13 @@ pub struct DirectoryView {
     scanning: bool,
     displayed: Option<Key>,
     rows: Vec<Row>,
-    pending: Option<Job<Key, Rows>>,
+    /// The tree `rows` were listed from.
+    rows_tree: Option<Arc<Tree>>,
+    pending: Option<Job<Key, Listing>>,
     reveal: bool,
     scroll_to: Option<f32>,
-    /// The row whose right-click menu is open, kept highlighted while it is.
-    menu_row: Option<NodeId>,
+    /// A row's right-click menu, which stays with its folder while the list refreshes.
+    menu: EntryMenu,
 }
 
 impl DirectoryView {
@@ -86,6 +91,7 @@ impl DirectoryView {
             self.revision += 1;
             self.displayed = None;
             retire(std::mem::take(&mut self.rows));
+            retire(self.rows_tree.take());
             self.pending = None;
         }
         self.scanning = scanning;
@@ -100,6 +106,7 @@ impl DirectoryView {
             let compatible = pending_key == key || (scanning && Key { generation, ..pending_key } == key);
             if compatible {
                 retire(std::mem::replace(&mut self.rows, result.rows));
+                retire(self.rows_tree.replace(result.tree));
                 self.displayed = Some(pending_key);
                 if self.reveal {
                     self.scroll_to = result.focus.map(|index| index as f32 * ROW_HEIGHT);
@@ -116,7 +123,7 @@ impl DirectoryView {
                 let _span = crate::perf::span("worker.directories");
                 let rows = flatten(&tree, &expanded);
                 let focus = rows.iter().position(|r| r.node == view);
-                Rows { rows, focus }
+                Listing { rows, focus, tree }
             }));
         }
 
@@ -140,7 +147,8 @@ impl DirectoryView {
         let enabled = !scanning && self.displayed == Some(key);
         let mut out = Vec::new();
         let mut toggle = None;
-        let mut menu_row = None;
+        // The open menu's folder stays highlighted while it is open.
+        let menu_row = self.rows_tree.as_ref().and_then(|rows_tree| self.menu.target(rows_tree));
         let mut scroll = egui::ScrollArea::vertical().id_salt("directory-navigator").auto_shrink([false, false]);
         if let Some(offset) = self.scroll_to.take() {
             scroll = scroll.vertical_scroll_offset(offset);
@@ -159,14 +167,13 @@ impl DirectoryView {
                         self.drawn_rows += 1;
                     }
                     let (rect, _) = ui.allocate_exact_size(vec2(ui.available_width(), ROW_HEIGHT), Sense::hover());
-                    // A stable id keeps a row's open menu attached to it while the list scrolls.
                     let response = ui.interact(rect, ui.scope_id().with(("directory-row", row.node)), Sense::click());
                     let p = ui.painter();
                     p.rect_filled(rect, 0.0, if index % 2 == 0 { theme::NAVIGATOR } else { theme::ROW_ALT });
                     if row.node == view {
                         p.rect_filled(rect, 3.0, theme::CURRENT_ROW);
                         p.rect_filled(Rect::from_min_size(rect.min, vec2(3.0, rect.height())), 1.0, theme::ACCENT);
-                    } else if response.hovered() || self.menu_row == Some(row.node) {
+                    } else if response.hovered() || menu_row == Some(row.node) {
                         p.rect_filled(rect, 3.0, theme::PANEL_EDGE);
                     }
                     let indent = (row.depth as f32 * 14.0).min((rect.width() - 220.0).max(0.0));
@@ -199,12 +206,12 @@ impl DirectoryView {
                             out.push(Command::ZoomTo(row.node));
                         }
                     }
-                    let node = row.node;
-                    let open = response.context_menu(|ui| mapview::context_menu(ui, menu, Some(node), true, &mut out));
-                    if open.is_some() {
-                        menu_row = Some(node);
+                    if response.secondary_clicked()
+                        && let Some(rows_tree) = &self.rows_tree
+                    {
+                        self.menu.open(&response, rows_tree, Some(row.node), true);
                     }
-                    response.on_hover_text(&row.name);
+                    steady_hover_text(response, &row.name);
                 }
             });
         });
@@ -215,7 +222,7 @@ impl DirectoryView {
             self.revision += 1;
             ui.ctx().request_repaint();
         }
-        self.menu_row = menu_row;
+        self.menu.show(ui.ctx(), menu, &mut out);
         out
     }
 }
