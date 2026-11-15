@@ -1,0 +1,125 @@
+name: Auto release
+
+# After CI passes on a push to main, commit messages drive versioning:
+#   - #patch, #minor or #major in any commit since the last version change bumps
+#     Cargo.toml and Cargo.lock (the highest wins) and commits "Bump version to X";
+#   - #release in any commit since the last version tag tags the current version,
+#     after any bump in the same run, and starts the release.
+# Pull (--rebase) after a bump: the bot's commit lands on main.
+#
+# Pushes made with GITHUB_TOKEN don't start workflows, so the tag's Release and
+# crates.io workflows are dispatched here instead (dispatch is the exception).
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+# One at a time, never cancelled mid-push. A newer push's run waits, then sees the newer main.
+concurrency:
+  group: auto-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  version:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Plan
+        id: plan
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          # Only act on main's tip: if main has moved on, the newer push's CI run gets here too.
+          if [ "$(git rev-parse HEAD)" != "$SHA" ]; then
+            echo "main has moved past $SHA; skipping"
+            exit 0
+          fi
+          current="$(sed -n '/^\[workspace.package\]/,/^\[/ s/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
+          changed="$(git log -1 --format=%H -G'^version = "' -- Cargo.toml)"
+          bumps="$(git log --format=%B "$changed..HEAD")"
+          IFS=. read -r major minor patch <<< "${current%%-*}"
+          if grep -qiw -- '#major' <<< "$bumps"; then version="$((major + 1)).0.0"
+          elif grep -qiw -- '#minor' <<< "$bumps"; then version="$major.$((minor + 1)).0"
+          elif grep -qiw -- '#patch' <<< "$bumps"; then
+            if [[ "$current" == *-* ]]; then version="${current%%-*}"   # 0.9.0-rc.1 -> 0.9.0
+            else version="$major.$minor.$((patch + 1))"; fi
+          else version=""; fi
+
+          last="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
+          release=false
+          if git log --format=%B ${last:+"$last"..}HEAD | grep -qiw -- '#release'; then
+            if [ -z "$version" ] && [ "$last" = "v$current" ]; then
+              echo "::warning::#release, but v$current is already released. Add #patch, #minor or #major."
+            else
+              release=true
+            fi
+          fi
+
+          echo "Version $current -> ${version:-unchanged}; release: $release"
+          echo "bump=$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "version=${version:-$current}" >> "$GITHUB_OUTPUT"
+      - name: Install toolchain (from rust-toolchain.toml)
+        if: steps.plan.outputs.bump != ''
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        if: steps.plan.outputs.bump != ''
+        with:
+          key: auto-release
+      - name: Bump version
+        if: steps.plan.outputs.bump != ''
+        env:
+          VERSION: ${{ steps.plan.outputs.bump }}
+        run: |
+          # Prepare updates the lockfile offline, so download what it resolves against first.
+          cargo fetch --locked
+          cargo xtask release prepare "$VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Bump version to $VERSION"
+      - name: Tag
+        if: steps.plan.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Clawback $VERSION"
+      - name: Push
+        if: steps.plan.outputs.bump != '' || steps.plan.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.plan.outputs.version }}
+          BUMP: ${{ steps.plan.outputs.bump }}
+          RELEASE: ${{ steps.plan.outputs.release }}
+        run: |
+          refs=()
+          [ -n "$BUMP" ] && refs+=(HEAD:refs/heads/main)
+          [ "$RELEASE" = true ] && refs+=("refs/tags/v$VERSION")
+          # Fails rather than overwrites if main moved; that push's own run picks the tags up.
+          git push --atomic origin "${refs[@]}"
+      - name: Start release
+        if: steps.plan.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          gh workflow run release.yml --ref "v$VERSION"
+          gh workflow run crates.yml --ref main -f tag="v$VERSION"

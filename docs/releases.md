@@ -7,7 +7,26 @@ Release tooling is Rust: `cargo xtask`. You need Rust and Git, with push access 
 the repository. VS Code provides the same commands under **Tasks: Run Task →
 Clawback: Release …**.
 
-## Publish a version
+## Release from commit messages
+
+After CI passes on a push to `main`, the
+[Auto release workflow](https://github.com/Azazel-Labs/Clawback/actions/workflows/auto-release.yml)
+reads the commit messages:
+
+| Tag in a commit message | Effect |
+| --- | --- |
+| `#patch`, `#minor`, `#major` | Bumps the version in Cargo.toml and Cargo.lock and commits "Bump version to X" to `main`. Counts commits since the last version change; the largest bump wins. |
+| `#release` | Tags the current version, which starts the Release and crates.io workflows below. Counts commits since the last version tag. |
+
+Both can go in one push: `#minor #release` bumps 0.4.7 to 0.5.0 and releases it.
+Bump without `#release` to let a version collect changes before releasing it. A
+`#release` with no bump for a version that is already tagged only logs a warning.
+
+After a bump, pull before your next push (`git pull --rebase`), since the bot's
+commit is on `main`. If CI fails, nothing happens; the tags still count once a
+later push passes CI.
+
+## Publish a version manually
 
 Start on `main`. For example, to release `0.1.0`:
 
