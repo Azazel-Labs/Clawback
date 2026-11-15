@@ -26,11 +26,10 @@ pub(super) fn find_path(tree: &Tree, path: &Path) -> Option<NodeId> {
         let prefix = format!("{root}\\");
         for component in wanted.strip_prefix(&prefix)?.split('\\') {
             node = tree
-                .node(node)
-                .children
+                .children(node)
                 .iter()
                 .copied()
-                .find(|&child| tree.node(child).name_lossy().to_lowercase() == component)?;
+                .find(|&child| tree.name_lossy(child).to_lowercase() == component)?;
         }
     }
     tree.node(node).is_dir().then_some(node)

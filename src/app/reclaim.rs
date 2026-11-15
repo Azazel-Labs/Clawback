@@ -338,7 +338,7 @@ fn find(tree: &Tree, is_mount: bool, cancel: &AtomicBool) -> Option<Vec<Item>> {
             items.push(item);
             continue;
         }
-        stack.extend(node.children.iter().copied());
+        stack.extend(tree.children(id).iter().copied());
     }
     items.retain(|item| {
         item.size
@@ -381,7 +381,7 @@ fn cleanup(tree: &Tree, is_mount: bool, items: &mut Vec<Item>) {
 }
 
 fn wsl_disk(tree: &Tree, node: NodeId) -> Option<Item> {
-    let name = tree.node(node).name_lossy();
+    let name = tree.name_lossy(node);
     if !name.to_ascii_lowercase().ends_with(".vhdx") || special::recognize(&tree.path(node)) != Some(Kind::WslDisk) {
         return None;
     }
@@ -392,7 +392,7 @@ fn wsl_disk(tree: &Tree, node: NodeId) -> Option<Item> {
 }
 
 fn has_child(tree: &Tree, dir: NodeId, name: &str) -> bool {
-    tree.node(dir).children.iter().any(|&child| tree.node(child).name_lossy().eq_ignore_ascii_case(name))
+    tree.children(dir).iter().any(|&child| tree.name_lossy(child).eq_ignore_ascii_case(name))
 }
 
 /// Build output and installed packages that their project's tools recreate, recognized by
@@ -403,7 +403,7 @@ fn developer(tree: &Tree, id: NodeId) -> Option<Item> {
     if id == ROOT || parent == clawback_core::NO_NODE {
         return None;
     }
-    let name = node.name_lossy();
+    let name = tree.name_lossy(id);
     let beside = |file: &str| has_child(tree, parent, file);
     // Names match in any letter case, like the files beside them.
     let detail = match name.to_ascii_lowercase().as_str() {
@@ -427,7 +427,7 @@ fn developer(tree: &Tree, id: NodeId) -> Option<Item> {
         "pods" if beside("Podfile") => tr!("reclaim-pods"),
         _ => return None,
     };
-    let project = tree.node(parent).name_lossy().into_owned();
+    let project = tree.name_lossy(parent).into_owned();
     Some(Item {
         action: Action::CleanUp,
         ..item(tree, id, Section::Developer, icon::PACKAGE, format!("{project} › {name}"), detail)
@@ -449,7 +449,7 @@ fn tagged_cache(tree: &Tree, id: NodeId) -> Option<Item> {
         return None;
     }
     let node = tree.node(id);
-    let title = format!("{} › {}", tree.node(node.parent).name_lossy(), node.name_lossy());
+    let title = format!("{} › {}", tree.name_lossy(node.parent), tree.name_lossy(id));
     Some(item(tree, id, Section::Caches, icon::DATABASE, title, tr!("reclaim-cache-tag")))
 }
 
@@ -484,12 +484,12 @@ fn caches(tree: &Tree, items: &mut Vec<Item>) {
     }
     for (profiles, cache, browser) in browser_caches() {
         let Some(base) = tree.find_path(&profiles).filter(|&node| tree.node(node).is_dir()) else { continue };
-        for &profile in &tree.node(base).children {
+        for &profile in tree.children(base) {
             let Some(node) = tree.child_named(profile, std::ffi::OsStr::new(cache)) else { continue };
             if !tree.node(node).is_dir() {
                 continue;
             }
-            let title = format!("{browser} › {}", tree.node(profile).name_lossy());
+            let title = format!("{browser} › {}", tree.name_lossy(profile));
             let detail = tr!("reclaim-browser-cache", browser = browser);
             items.push(item(tree, node, Section::Caches, icon::GLOBE, title, detail));
         }

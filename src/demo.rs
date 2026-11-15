@@ -197,7 +197,7 @@ pub fn baseline(tree: &Tree) -> clawback_core::snapshot::Snapshot {
     let resize = |tree: &mut Tree, path: &str, megabytes: u64| {
         let node = find(tree, path);
         let size = megabytes * 1024 * 1024;
-        tree.update_file(node, NewEntry::file(tree.node(node).name.clone(), size));
+        tree.update_file(node, NewEntry::file(tree.name(node).to_os_string(), size));
     };
     resize(&mut earlier, "Steam Library/steamapps/common/Starfall/Content/Paks/Windows/worlds.pak", 15000);
     resize(&mut earlier, "Downloads/texture-library.zip", 14000);

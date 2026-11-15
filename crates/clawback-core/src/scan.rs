@@ -1108,7 +1108,7 @@ mod tests {
         let b = r.tree.find_path(&d.0.join("a/b")).unwrap();
         assert_eq!(r.tree.node(b).size, 5000);
         // Children sorted largest-first.
-        let sizes: Vec<u64> = r.tree.root().children.iter().map(|&c| r.tree.node(c).size).collect();
+        let sizes: Vec<u64> = r.tree.children(ROOT).iter().map(|&c| r.tree.node(c).size).collect();
         assert!(sizes.windows(2).all(|w| w[0] >= w[1]), "{sizes:?}");
         assert!(r.skipped.is_empty(), "{:?}", r.skipped);
     }
@@ -1218,7 +1218,7 @@ mod tests {
         assert_eq!(result.files, 612);
         assert_eq!(result.dirs, 13);
         assert_eq!(result.bytes, 600 * 3 + 12 * 7);
-        assert_eq!(result.tree.root().children.len(), 612);
+        assert_eq!(result.tree.children(ROOT).len(), 612);
         assert_eq!(result.tree.root().size, result.bytes);
         for i in 0..12 {
             assert!(result.tree.find_path(&d.0.join(format!("dir{i}/nested"))).is_some());

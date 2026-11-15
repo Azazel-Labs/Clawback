@@ -520,7 +520,7 @@ fn build_tree(shared: &Shared, serial: u64, mut records: Records) -> io::Result<
     tree.node_mut(ROOT).mtime = records.slots[root as usize].mtime;
     // Also identifies MFT accounting to incremental reconciliation. Directory
     // traversal deliberately uses listing-only estimates on Windows.
-    tree.node_mut(ROOT).file_id = Some((serial, records.reference(root)));
+    tree.node_mut(ROOT).set_file_id(Some((serial, records.reference(root))));
     {
         let _phase = shared.profile.timer(Phase::Assemble);
         assemble(shared, serial, &records, root, &excluded, &mut tree)?;
@@ -785,8 +785,8 @@ mod tests {
         assert_eq!(tree.dir_count(ROOT), 2);
         let original = tree.find_path(&shared.root.join("folder/original")).unwrap();
         let alias = tree.find_path(&shared.root.join("alias")).unwrap();
-        assert_eq!(tree.node(original).file_id, Some((123, reference(21))));
-        assert_eq!(tree.node(alias).file_id, tree.node(original).file_id);
+        assert_eq!(tree.node(original).file_id(), Some((123, reference(21))));
+        assert_eq!(tree.node(alias).file_id(), tree.node(original).file_id());
         assert_eq!(tree.node(original).size + tree.node(alias).size, 8192);
         drop(tree);
         let mut apparent = state();

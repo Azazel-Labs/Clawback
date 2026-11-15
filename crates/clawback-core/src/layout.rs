@@ -146,8 +146,7 @@ pub fn build_grouped(
             Task::Folder { x, y, w, h, node, depth } => {
                 let mut grouped = 0;
                 let mut list: Vec<Entry> = tree
-                    .node(node)
-                    .children
+                    .children(node)
                     .iter()
                     .filter_map(|&c| {
                         let n = tree.node(c);

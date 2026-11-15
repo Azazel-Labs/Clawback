@@ -232,17 +232,19 @@ fn flatten(tree: &Tree, expanded: &HashSet<NodeId>) -> Vec<Row> {
             continue;
         }
         let node = tree.node(id);
-        let expandable = node.children.iter().any(|&child| visible(child));
+        let expandable = tree.children(id).iter().any(|&child| visible(child));
         rows.push(Row {
             node: id,
             depth,
             expandable,
-            name: node.name_lossy().into_owned(),
+            name: tree.name_lossy(id).into_owned(),
             size: format::size(node.size),
             share: format::percent(node.size, tree.root().size),
         });
         if expanded.contains(&id) {
-            stack.extend(node.children.iter().rev().filter(|&&child| visible(child)).map(|&child| (child, depth + 1)));
+            stack.extend(
+                tree.children(id).iter().rev().filter(|&&child| visible(child)).map(|&child| (child, depth + 1)),
+            );
         }
     }
     rows

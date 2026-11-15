@@ -40,7 +40,7 @@ impl Visuals {
         // File providers are recognized individually, rather than collapsed like cleanup folders.
         for tile in boxes.iter().filter(|tile| !tile.folder && tile.w >= 64 && tile.h >= DISK_BADGE_HEIGHT) {
             let Some(node) = tile.node() else { continue };
-            if !tree.node(node).name_lossy().to_ascii_lowercase().ends_with(".vhdx")
+            if !tree.name_lossy(node).to_ascii_lowercase().ends_with(".vhdx")
                 || inventory.classify(tree, node) != Some(Kind::WslDisk)
             {
                 continue;
@@ -249,13 +249,11 @@ impl Inventory {
         match self.cells.iter().flatten().find(|cell| cell.node == node).map(|cell| cell.kind) {
             Some(Kind::TempFolder) => return Cow::Borrowed("Temp"),
             Some(Kind::WindowsOs) => {
-                return Cow::Owned(
-                    if tree.node(node).is_dir() && tree.node(node).name_lossy() != "System Volume Information" {
-                        tr!("windows-os")
-                    } else {
-                        tr!("windows-system-files")
-                    },
-                );
+                return Cow::Owned(if tree.node(node).is_dir() && tree.name(node) != "System Volume Information" {
+                    tr!("windows-os")
+                } else {
+                    tr!("windows-system-files")
+                });
             }
             _ => {}
         }
@@ -264,7 +262,7 @@ impl Inventory {
         if cfg!(windows)
             && entry.parent == clawback_core::ROOT
             && entry.is_dir()
-            && entry.name_lossy().eq_ignore_ascii_case("$Recycle.Bin")
+            && tree.name_lossy(node).eq_ignore_ascii_case("$Recycle.Bin")
         {
             return Cow::Owned(tr!("recycle-bin"));
         }
@@ -274,7 +272,7 @@ impl Inventory {
         {
             return Cow::Owned(game.name);
         }
-        let name = entry.name_lossy();
+        let name = tree.name_lossy(node);
         if !tile.folder
             && tile.h < DISK_BADGE_HEIGHT
             && name.to_ascii_lowercase().ends_with(".vhdx")
@@ -295,10 +293,7 @@ impl Inventory {
         }
         let mut lines: Vec<_> = grouped
             .iter()
-            .map(|&member| {
-                let member = tree.node(member);
-                format!("{}  ·  {}", member.name_lossy(), format::size(member.len))
-            })
+            .map(|&member| format!("{}  ·  {}", tree.name_lossy(member), format::size(tree.node(member).len)))
             .collect();
         lines.push(tr!("managed-by-windows"));
         lines

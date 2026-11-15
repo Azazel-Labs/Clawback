@@ -31,7 +31,7 @@ impl Refresh {
         let root = tree.root_path();
         Self {
             // Only a tree built from the MFT carries a root identity.
-            accounting: FileAccounting::new(root, tree.root().file_id.is_some()),
+            accounting: FileAccounting::new(root, tree.root().file_id().is_some()),
             links: options.dedupe_hardlinks.then(|| LinkIndex::new(tree)),
             #[cfg(unix)]
             allowed_devs: fs::metadata(root).map(|md| crate::scan::allowed_devices(root, &md)).unwrap_or_default(),
@@ -92,13 +92,13 @@ impl Refresh {
             for node_id in files_below(tree, id) {
                 let node = tree.node(node_id);
                 let entry = NewEntry {
-                    name: node.name.clone().into(),
+                    name: tree.name(node_id).to_os_string(),
                     kind: node.kind,
                     size: node.size,
                     len: node.len,
                     mtime: node.mtime,
                     flags: node.flags,
-                    file_id: node.file_id,
+                    file_id: node.file_id(),
                 };
                 links.update(tree, node_id, &entry);
             }
@@ -188,13 +188,8 @@ impl Refresh {
                     }
                     return Ok(changed);
                 }
-                let removed: Vec<_> = tree
-                    .node(id)
-                    .children
-                    .iter()
-                    .copied()
-                    .filter(|&child| !names.contains(tree.node(child).name.as_ref()))
-                    .collect();
+                let removed: Vec<_> =
+                    tree.children(id).iter().copied().filter(|&child| !names.contains(tree.name(child))).collect();
                 for child in removed {
                     changed |= self.remove(tree, child);
                 }
@@ -302,7 +297,7 @@ mod tests {
         // Windows directory documents intentionally do not deduplicate links.
         #[cfg(windows)]
         {
-            tree.node_mut(ROOT).file_id = Some((0, 5));
+            tree.node_mut(ROOT).set_file_id(Some((0, 5)));
         }
         let mut refresh = Refresh::new(&tree, options.clone());
         assert!(refresh.links.is_some());

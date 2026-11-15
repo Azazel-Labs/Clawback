@@ -173,7 +173,7 @@ pub fn write_tree(output: &mut impl Write, result: &ScanResult) -> io::Result<()
     let tree = &result.tree;
     put(output, tree.len() as u64)?;
     put(output, tree.root().mtime as u64)?;
-    let (volume, reference) = tree.root().file_id.ok_or_else(invalid)?;
+    let (volume, reference) = tree.root().file_id().ok_or_else(invalid)?;
     put(output, volume)?;
     put(output, reference)?;
     put(output, tree.root().size)?;
@@ -181,9 +181,9 @@ pub fn write_tree(output: &mut impl Write, result: &ScanResult) -> io::Result<()
     for id in 1..tree.len() as u32 {
         let n = tree.node(id);
         put(output, u64::from(n.parent))?;
-        string(output, &n.name)?;
-        output.write_all(&[kind_tag(n.kind), n.flags, u8::from(n.file_id.is_some())])?;
-        let (volume, reference) = n.file_id.unwrap_or_default();
+        string(output, tree.name(id))?;
+        output.write_all(&[kind_tag(n.kind), n.flags, u8::from(n.file_id().is_some())])?;
+        let (volume, reference) = n.file_id().unwrap_or_default();
         for value in [if n.is_dir() { 0 } else { n.size }, n.len, n.mtime as u64, volume, reference] {
             put(output, value)?;
         }
@@ -197,7 +197,7 @@ pub fn read_tree(input: &mut impl Read, root: &Path) -> io::Result<ScanResult> {
     }
     let mut tree = Tree::new(root);
     tree.node_mut(ROOT).mtime = number(input)? as i64;
-    tree.node_mut(ROOT).file_id = Some((number(input)?, number(input)?));
+    tree.node_mut(ROOT).set_file_id(Some((number(input)?, number(input)?)));
     let expected_bytes = number(input)?;
     let elapsed = Duration::from_millis(number(input)?);
     let mut parent = ROOT;
@@ -285,7 +285,7 @@ mod tests {
     #[test]
     fn snapshot_round_trip_preserves_sizes_hardlinks_and_utf16() {
         let mut tree = Tree::new(Path::new("C:\\"));
-        tree.node_mut(ROOT).file_id = Some((7, 5));
+        tree.node_mut(ROOT).set_file_id(Some((7, 5)));
         let folder = tree
             .add_children(
                 ROOT,
@@ -329,8 +329,8 @@ mod tests {
         write_tree(&mut data, &result).expect("encode");
         let decoded = read_tree(&mut data.as_slice(), &result.root).expect("decode");
         assert_eq!(decoded.tree.root().size, 4096);
-        assert_eq!(decoded.tree.node(2).name.as_ref(), name);
-        assert_eq!(decoded.tree.node(2).file_id, Some((7, 123)));
+        assert_eq!(decoded.tree.name(2), name);
+        assert_eq!(decoded.tree.node(2).file_id(), Some((7, 123)));
         assert_eq!((decoded.files, decoded.dirs), (1, 2));
         for end in [0, 8, data.len() - 1] {
             assert!(read_tree(&mut &data[..end], &result.root).is_err());

@@ -465,10 +465,9 @@ mod tests {
                         snapshot.tree.root().size,
                         snapshot
                             .tree
-                            .root()
-                            .children
+                            .children(clawback_core::ROOT)
                             .iter()
-                            .map(|&id| snapshot.tree.node(id).name_lossy())
+                            .map(|&id| snapshot.tree.name_lossy(id))
                             .collect::<Vec<_>>()
                     );
                 }

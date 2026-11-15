@@ -71,7 +71,7 @@ impl App {
     }
 
     fn refresh_entries(&mut self) {
-        self.entries.clone_from(&self.tree.node(self.view).children);
+        self.entries = self.tree.children(self.view).to_vec();
         self.entries.sort_by_key(|&id| std::cmp::Reverse(self.tree.node(id).size));
         self.selection = ListState::default().with_selected((!self.entries.is_empty()).then_some(0));
     }
@@ -330,7 +330,7 @@ impl App {
                         "{:>9} {} {}",
                         format::size(node.size),
                         if node.is_dir() { "▸" } else { "·" },
-                        node.name_lossy()
+                        self.tree.name_lossy(id)
                     ))
                 })
                 .collect();
@@ -418,8 +418,7 @@ impl App {
                 .border_style(Style::default().fg(if is_selected { Color::White } else { BACKGROUND }));
             frame.render_widget(block, rect);
             if let Some(id) = b.node() {
-                let node = self.tree.node(id);
-                let label = format!("{}{}", if is_selected { "›" } else { "" }, node.name_lossy());
+                let label = format!("{}{}", if is_selected { "›" } else { "" }, self.tree.name_lossy(id));
                 // Folder titles stay on their first row; later child rectangles
                 // fill the interior without painting over that title.
                 let label_area = Rect::new(rect.x, rect.y, rect.width, 1);

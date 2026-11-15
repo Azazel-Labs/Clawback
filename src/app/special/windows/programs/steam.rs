@@ -282,7 +282,7 @@ pub fn games() -> Arc<[Game]> {
 
 /// The game installed at `node`, a folder directly inside a `steamapps/common` folder.
 pub fn game_at(tree: &Tree, node: NodeId) -> Option<Game> {
-    let named = |node: NodeId, name: &str| node != NO_NODE && tree.node(node).name_lossy().eq_ignore_ascii_case(name);
+    let named = |node: NodeId, name: &str| node != NO_NODE && tree.name_lossy(node).eq_ignore_ascii_case(name);
     let entry = tree.node(node);
     if node == ROOT || !entry.is_dir() || !named(entry.parent, "common") {
         return None;

@@ -13,7 +13,7 @@ impl ClawbackApp {
         let Some(node) = temp_folder::find(&doc.tree) else { return };
         let path = doc.tree.path(node);
         let entry = doc.tree.node(node);
-        if entry.children.is_empty() || self.pending_paths().any(|pending| path.starts_with(pending)) {
+        if doc.tree.children(node).is_empty() || self.pending_paths().any(|pending| path.starts_with(pending)) {
             return;
         }
         self.confirm.push_back(QueuedDelete {
@@ -40,7 +40,7 @@ impl ClawbackApp {
         };
         let path = doc.tree.path(folder);
         let n = doc.tree.node(folder);
-        if n.children.is_empty() || self.pending_paths().any(|pending| *pending == path) {
+        if doc.tree.children(folder).is_empty() || self.pending_paths().any(|pending| *pending == path) {
             return;
         }
         let (size, files) = (n.size, n.files);

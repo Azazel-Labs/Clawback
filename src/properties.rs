@@ -23,7 +23,7 @@ impl Properties {
     fn read(t: &Tree, n: NodeId) -> Self {
         let node = t.node(n);
         let path = t.path(n);
-        let name = node.name_lossy().into_owned();
+        let name = t.name_lossy(n).into_owned();
         let kind = match node.kind {
             Kind::Dir => tr!("folder-2"),
             Kind::File => tr!("file"),

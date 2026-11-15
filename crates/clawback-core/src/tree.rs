@@ -4,7 +4,12 @@
 //! `u32` [`NodeId`]. Snapshots share unchanged pages. Directory sizes are the sum of everything below them and
 //! are kept up to date as the scanner adds entries, so the tree can be drawn
 //! while a scan is still running.
+//!
+//! A node owns no heap memory: its name lives in its page's name buffer and a directory's
+//! children in its page's child lists, so a page is a handful of allocations however many
+//! entries it holds. Read them with [`Tree::name`] and [`Tree::children`].
 
+use std::borrow::Cow;
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::ffi::{OsStr, OsString};
@@ -12,11 +17,25 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 const PAGE_SIZE: usize = 256;
+/// [`Node::list`] of a node without a child list.
+const NO_LIST: u16 = u16::MAX;
+/// [`Node::identity`] of a node without a [`FileId`].
+const NO_IDENTITY: [u64; 2] = [u64::MAX; 2];
+
+/// Up to [`PAGE_SIZE`] nodes with their names and child lists.
+#[derive(Clone, Debug, Default)]
+struct Page {
+    nodes: Vec<Node>,
+    /// The nodes' names back to back. A rename appends; compaction drops what it replaced.
+    names: Vec<u8>,
+    /// Children of this page's directories, in display order.
+    lists: Vec<Vec<NodeId>>,
+}
 
 /// Snapshots share unchanged pages; live edits copy only touched pages.
 #[derive(Clone, Debug, Default)]
 struct Nodes {
-    pages: Vec<Arc<Vec<Node>>>,
+    pages: Vec<Arc<Page>>,
     len: usize,
 }
 
@@ -30,45 +49,77 @@ impl Nodes {
     fn reserve(&mut self, additional: usize) {
         self.pages.reserve(additional.div_ceil(PAGE_SIZE));
     }
-    fn push(&mut self, node: Node) {
+    fn push(&mut self, mut node: Node, name: &OsStr) {
         if self.len.is_multiple_of(PAGE_SIZE) {
-            self.pages.push(Arc::new(Vec::with_capacity(PAGE_SIZE)));
+            self.pages.push(Arc::new(Page { nodes: Vec::with_capacity(PAGE_SIZE), ..Page::default() }));
         }
-        Arc::make_mut(self.pages.last_mut().expect("node page")).push(node);
+        let page = Arc::make_mut(self.pages.last_mut().expect("node page"));
+        node.list = NO_LIST;
+        Self::store_name(page, &mut node, name);
+        page.nodes.push(node);
+        if page.nodes.len() == PAGE_SIZE {
+            page.names.shrink_to_fit();
+        }
         self.len += 1;
     }
+    fn store_name(page: &mut Page, node: &mut Node, name: &OsStr) {
+        let bytes = name.as_encoded_bytes();
+        node.name_at = u32::try_from(page.names.len()).expect("page names fit in u32");
+        node.name_len = u32::try_from(bytes.len()).expect("name fits in u32");
+        page.names.extend_from_slice(bytes);
+    }
     fn get(&self, index: usize) -> Option<&Node> {
-        self.pages.get(index / PAGE_SIZE)?.get(index % PAGE_SIZE)
+        self.pages.get(index / PAGE_SIZE)?.nodes.get(index % PAGE_SIZE)
+    }
+    fn name(&self, index: usize) -> &OsStr {
+        let page = &self.pages[index / PAGE_SIZE];
+        let node = &page.nodes[index % PAGE_SIZE];
+        let bytes = &page.names[node.name_at as usize..][..node.name_len as usize];
+        // SAFETY: `store_name` copied exactly these bytes from `OsStr::as_encoded_bytes` of a
+        // whole `OsStr` in this process.
+        unsafe { OsStr::from_encoded_bytes_unchecked(bytes) }
+    }
+    fn rename(&mut self, index: usize, name: &OsStr) {
+        if self.name(index) != name {
+            let page = Arc::make_mut(&mut self.pages[index / PAGE_SIZE]);
+            let mut node = page.nodes[index % PAGE_SIZE];
+            Self::store_name(page, &mut node, name);
+            page.nodes[index % PAGE_SIZE] = node;
+        }
+    }
+    fn children(&self, index: usize) -> &[NodeId] {
+        let page = &self.pages[index / PAGE_SIZE];
+        match page.nodes[index % PAGE_SIZE].list {
+            NO_LIST => &[],
+            list => &page.lists[list as usize],
+        }
+    }
+    /// The child list of `index`, created if it has none.
+    fn children_mut(&mut self, index: usize) -> &mut Vec<NodeId> {
+        let page = Arc::make_mut(&mut self.pages[index / PAGE_SIZE]);
+        let node = &mut page.nodes[index % PAGE_SIZE];
+        if node.list == NO_LIST {
+            node.list = u16::try_from(page.lists.len()).expect("at most one list per node");
+            page.lists.push(Vec::new());
+        }
+        &mut page.lists[node.list as usize]
     }
     #[cfg(test)]
     fn iter(&self) -> impl Iterator<Item = &Node> {
-        self.pages.iter().flat_map(|page| page.iter())
-    }
-    fn into_nodes(self) -> impl Iterator<Item = Node> {
-        self.pages.into_iter().flat_map(|page| Arc::unwrap_or_clone(page).into_iter())
-    }
-}
-
-impl From<Vec<Node>> for Nodes {
-    fn from(nodes: Vec<Node>) -> Self {
-        let mut result = Self::default();
-        for node in nodes {
-            result.push(node);
-        }
-        result
+        self.pages.iter().flat_map(|page| page.nodes.iter())
     }
 }
 
 impl std::ops::Index<usize> for Nodes {
     type Output = Node;
     fn index(&self, index: usize) -> &Node {
-        &self.pages[index / PAGE_SIZE][index % PAGE_SIZE]
+        &self.pages[index / PAGE_SIZE].nodes[index % PAGE_SIZE]
     }
 }
 
 impl std::ops::IndexMut<usize> for Nodes {
     fn index_mut(&mut self, index: usize) -> &mut Node {
-        &mut Arc::make_mut(&mut self.pages[index / PAGE_SIZE])[index % PAGE_SIZE]
+        &mut Arc::make_mut(&mut self.pages[index / PAGE_SIZE]).nodes[index % PAGE_SIZE]
     }
 }
 
@@ -120,10 +171,10 @@ pub mod flags {
     pub const LINKED: u8 = 1 << 6;
 }
 
-#[derive(Clone, Debug)]
+/// One file or directory. The [`Tree`] stores its name and children: see [`Tree::name`]
+/// and [`Tree::children`].
+#[derive(Clone, Copy, Debug)]
 pub struct Node {
-    /// File name. For the root node this is the full root path.
-    pub name: Box<OsStr>,
     /// Size used for layout: bytes allocated on disk (or the length when
     /// scanning apparent sizes). For directories, everything below it.
     pub size: u64,
@@ -133,14 +184,46 @@ pub struct Node {
     pub mtime: i64,
     /// Number of non-directory entries at or below this node.
     pub files: u64,
+    /// [`FileId`] as an array, which packs without an `Option` tag; [`NO_IDENTITY`] if none.
+    identity: [u64; 2],
     pub parent: NodeId,
-    pub children: Vec<NodeId>,
+    /// Where the name's bytes are in the page's name buffer.
+    name_at: u32,
+    name_len: u32,
+    /// Index of the child list in the page, or [`NO_LIST`].
+    list: u16,
     pub kind: Kind,
     pub flags: u8,
-    pub file_id: Option<FileId>,
 }
 
+const _: () = assert!(size_of::<Node>() <= 64, "nodes are the bulk of a scan's memory");
+
 impl Node {
+    fn new(kind: Kind, parent: NodeId) -> Self {
+        Node {
+            size: 0,
+            len: 0,
+            mtime: i64::MIN,
+            files: 0,
+            identity: NO_IDENTITY,
+            parent,
+            name_at: 0,
+            name_len: 0,
+            list: NO_LIST,
+            kind,
+            flags: 0,
+        }
+    }
+    fn from_entry(e: &NewEntry, parent: NodeId) -> Self {
+        let mut node = Node::new(e.kind, parent);
+        node.size = e.size;
+        node.len = e.len;
+        node.mtime = e.mtime;
+        node.files = u64::from(e.kind != Kind::Dir);
+        node.flags = e.flags;
+        node.set_file_id(e.file_id);
+        node
+    }
     #[inline]
     pub fn is_dir(&self) -> bool {
         self.kind == Kind::Dir
@@ -149,12 +232,17 @@ impl Node {
     pub fn has(&self, flag: u8) -> bool {
         self.flags & flag != 0
     }
-    pub fn name_lossy(&self) -> std::borrow::Cow<'_, str> {
-        self.name.to_string_lossy()
-    }
     /// The byte count SpaceMonger shows on labels: file length, or folder total.
     pub fn display_len(&self) -> u64 {
         if self.is_dir() { self.size } else { self.len }
+    }
+    /// Volume and file identity, shared by hard links to the same file.
+    #[inline]
+    pub fn file_id(&self) -> Option<FileId> {
+        (self.identity != NO_IDENTITY).then_some((self.identity[0], self.identity[1]))
+    }
+    pub fn set_file_id(&mut self, id: Option<FileId>) {
+        self.identity = id.map_or(NO_IDENTITY, |(volume, file)| [volume, file]);
     }
 }
 
@@ -190,21 +278,9 @@ pub struct Tree {
 impl Tree {
     /// A tree containing only a root directory for `root`.
     pub fn new(root: &Path) -> Self {
-        Tree {
-            nodes: vec![Node {
-                name: root.as_os_str().into(),
-                size: 0,
-                len: 0,
-                mtime: i64::MIN,
-                files: 0,
-                parent: NO_NODE,
-                children: Vec::new(),
-                kind: Kind::Dir,
-                flags: 0,
-                file_id: None,
-            }]
-            .into(),
-        }
+        let mut nodes = Nodes::default();
+        nodes.push(Node::new(Kind::Dir, NO_NODE), root.as_os_str());
+        Tree { nodes }
     }
 
     pub(crate) fn placeholder() -> Self {
@@ -240,33 +316,36 @@ impl Tree {
         &self.nodes[ROOT as usize]
     }
 
+    /// File name of `id`. For the root this is the full root path.
+    #[inline]
+    pub fn name(&self, id: NodeId) -> &OsStr {
+        self.nodes.name(id as usize)
+    }
+
+    pub fn name_lossy(&self, id: NodeId) -> Cow<'_, str> {
+        self.name(id).to_string_lossy()
+    }
+
+    /// Children of `id`, largest first once sorted; empty for files.
+    #[inline]
+    pub fn children(&self, id: NodeId) -> &[NodeId] {
+        self.nodes.children(id as usize)
+    }
+
     /// A bounded, breadth-first view for live rendering. Omitted siblings are
     /// represented by one aggregate so their space remains visible. Preview
     /// node ids are independent of the source tree and must not be used for edits.
     #[must_use]
     pub fn preview(&self, limit: usize) -> Self {
-        fn copy_node(node: &Node, parent: NodeId) -> Node {
-            Node {
-                name: node.name.clone(),
-                size: node.size,
-                len: node.len,
-                mtime: node.mtime,
-                files: node.files,
-                parent,
-                children: Vec::new(),
-                kind: node.kind,
-                flags: node.flags,
-                file_id: node.file_id,
-            }
-        }
-        let mut out = Self { nodes: vec![copy_node(self.root(), NO_NODE)].into() };
+        let mut out = Self { nodes: Nodes::default() };
+        out.push_copy(self, ROOT, NO_NODE);
         let mut pending = std::collections::VecDeque::from([(ROOT, ROOT)]);
         while let Some((source, dest)) = pending.pop_front() {
             let room = limit.saturating_sub(out.len());
             if room < 2 {
                 break;
             }
-            let children = &self.node(source).children;
+            let children = self.children(source);
             if children.is_empty() {
                 continue;
             }
@@ -284,7 +363,7 @@ impl Tree {
             for Reverse((_, id)) in largest.into_sorted_vec() {
                 let node = self.node(id);
                 let new_id = out.len() as NodeId;
-                out.nodes.push(copy_node(node, dest));
+                out.push_copy(self, id, dest);
                 ids.push(new_id);
                 remaining_size = remaining_size.saturating_sub(node.size);
                 remaining_files = remaining_files.saturating_sub(node.files);
@@ -294,26 +373,19 @@ impl Tree {
             }
             if children.len() > count {
                 ids.push(out.len() as NodeId);
-                out.nodes.push(Node {
-                    name: OsString::from("Other entries (scanning)").into_boxed_os_str(),
-                    size: remaining_size,
-                    len: remaining_size,
-                    files: remaining_files,
-                    mtime: i64::MIN,
-                    parent: dest,
-                    children: Vec::new(),
-                    kind: Kind::Other,
-                    flags: 0,
-                    file_id: None,
-                });
+                let mut other = Node::new(Kind::Other, dest);
+                other.size = remaining_size;
+                other.len = remaining_size;
+                other.files = remaining_files;
+                out.nodes.push(other, OsStr::new("Other entries (scanning)"));
             }
-            out.nodes[dest as usize].children = ids;
+            *out.nodes.children_mut(dest as usize) = ids;
         }
         out
     }
 
     pub fn root_path(&self) -> &Path {
-        Path::new(&*self.nodes[ROOT as usize].name)
+        Path::new(self.name(ROOT))
     }
 
     pub fn parent(&self, id: NodeId) -> Option<NodeId> {
@@ -324,16 +396,16 @@ impl Tree {
     /// Full path of a node.
     pub fn path(&self, id: NodeId) -> PathBuf {
         let chain = self.chain(id);
-        let mut p = PathBuf::from(&*self.nodes[ROOT as usize].name);
+        let mut p = PathBuf::from(self.name(ROOT));
         for &c in &chain[1..] {
-            p.push(&*self.nodes[c as usize].name);
+            p.push(self.name(c));
         }
         p
     }
 
     /// Path of `id` relative to `base` (which must be an ancestor), for display.
     pub fn relative_path(&self, base: NodeId, id: NodeId) -> PathBuf {
-        self.chain(id).into_iter().skip_while(|&c| c != base).skip(1).map(|c| &*self.nodes[c as usize].name).collect()
+        self.chain(id).into_iter().skip_while(|&c| c != base).skip(1).map(|c| self.name(c)).collect()
     }
 
     /// `id`, then its parent, and so on up to the root.
@@ -346,7 +418,7 @@ impl Tree {
         let mut stack = vec![id];
         std::iter::from_fn(move || {
             let id = stack.pop()?;
-            stack.extend_from_slice(&self.nodes[id as usize].children);
+            stack.extend_from_slice(self.children(id));
             Some(id)
         })
     }
@@ -388,25 +460,15 @@ impl Tree {
         let mut files = 0u64;
         self.nodes.reserve(entries.len());
         for e in entries {
-            let is_dir = e.kind == Kind::Dir;
-            size += e.size;
-            files += u64::from(!is_dir);
-            self.nodes.push(Node {
-                name: e.name.into_boxed_os_str(),
-                size: e.size,
-                len: e.len,
-                mtime: e.mtime,
-                files: u64::from(!is_dir),
-                parent,
-                children: Vec::new(),
-                kind: e.kind,
-                flags: e.flags,
-                file_id: e.file_id,
-            });
+            let node = Node::from_entry(&e, parent);
+            size += node.size;
+            files += node.files;
+            self.nodes.push(node, &e.name);
         }
         let end = self.nodes.len() as NodeId;
-        let children = &mut self.nodes[parent as usize].children;
-        children.extend(start..end);
+        if end > start {
+            self.nodes.children_mut(parent as usize).extend(start..end);
+        }
         self.add_up(parent, size, files);
         start..end
     }
@@ -429,21 +491,34 @@ impl Tree {
         }
     }
 
-    fn sort_children_of(&mut self, id: NodeId) {
-        let mut ch = std::mem::take(&mut self.nodes[id as usize].children);
-        let nodes = &self.nodes;
-        ch.sort_unstable_by(|&a, &b| {
-            let (na, nb) = (&nodes[a as usize], &nodes[b as usize]);
-            nb.size.cmp(&na.size).then_with(|| na.name.cmp(&nb.name))
+    /// Largest first, then by name.
+    fn sort_ids(&self, ids: &mut [NodeId]) {
+        ids.sort_unstable_by(|&a, &b| {
+            self.node(b).size.cmp(&self.node(a).size).then_with(|| self.name(a).cmp(self.name(b)))
         });
-        self.nodes[id as usize].children = ch;
     }
 
-    /// Sort every directory's children by size, largest first.
+    fn sort_children_of(&mut self, id: NodeId) {
+        if self.children(id).len() < 2 {
+            return;
+        }
+        let mut ch = std::mem::take(self.nodes.children_mut(id as usize));
+        self.sort_ids(&mut ch);
+        *self.nodes.children_mut(id as usize) = ch;
+    }
+
+    /// Sort every directory's children by size, largest first, and release spare capacity.
     pub fn sort_all(&mut self) {
-        for i in 0..self.nodes.len() {
-            if self.nodes[i].children.len() > 1 {
-                self.sort_children_of(i as NodeId);
+        for p in 0..self.nodes.pages.len() {
+            for l in 0..self.nodes.pages[p].lists.len() {
+                let list = &self.nodes.pages[p].lists[l];
+                if list.len() < 2 && list.capacity() == list.len() {
+                    continue;
+                }
+                let mut list = std::mem::take(&mut Arc::make_mut(&mut self.nodes.pages[p]).lists[l]);
+                self.sort_ids(&mut list);
+                list.shrink_to_fit();
+                Arc::make_mut(&mut self.nodes.pages[p]).lists[l] = list;
             }
         }
     }
@@ -468,43 +543,45 @@ impl Tree {
             n.flags |= flags::REMOVED;
             (n.size, n.files, n.parent)
         };
-        self.nodes[parent as usize].children.retain(|&c| c != id);
+        self.nodes.children_mut(parent as usize).retain(|&c| c != id);
         self.sub_up(parent, size, files);
         self.resort_upwards(parent);
         true
     }
 
-    /// The same tree without the detached nodes that edits and grafts leave behind.
-    /// Node ids change; children keep their order.
+    /// Append `source`'s node `id` and its name under `parent`, without children.
+    fn push_copy(&mut self, source: &Tree, id: NodeId, parent: NodeId) {
+        self.nodes.push(Node { parent, ..*source.node(id) }, source.name(id));
+    }
+
+    /// The same tree without the detached nodes and replaced names that edits and grafts
+    /// leave behind. Node ids change; children keep their order.
     #[must_use]
     pub fn compacted(self) -> Self {
-        let mut old: Vec<Option<Node>> = Vec::with_capacity(self.nodes.len());
-        old.extend(self.nodes.into_nodes().map(Some));
         // New ids in breadth-first order, so each directory's children stay contiguous.
-        let mut remap = vec![NO_NODE; old.len()];
+        let mut out = Tree { nodes: Nodes::default() };
+        out.nodes.reserve(self.len());
+        out.push_copy(&self, ROOT, NO_NODE);
         let mut order = vec![ROOT];
-        remap[ROOT as usize] = ROOT;
         let mut next = 0;
         while let Some(&id) = order.get(next) {
+            let new_parent = next as NodeId;
             next += 1;
-            for &child in &old[id as usize].as_ref().expect("reachable node").children {
-                remap[child as usize] = order.len() as NodeId;
+            let children = self.children(id);
+            if children.is_empty() {
+                continue;
+            }
+            let start = out.len() as NodeId;
+            for &child in children {
+                out.push_copy(&self, child, new_parent);
                 order.push(child);
             }
+            let end = out.len() as NodeId;
+            let list = out.nodes.children_mut(new_parent as usize);
+            list.reserve_exact(children.len());
+            list.extend(start..end);
         }
-        let mut nodes = Nodes::default();
-        nodes.reserve(order.len());
-        for id in order {
-            let mut node = old[id as usize].take().expect("each node is reached once");
-            if node.parent != NO_NODE {
-                node.parent = remap[node.parent as usize];
-            }
-            for child in &mut node.children {
-                *child = remap[*child as usize];
-            }
-            nodes.push(node);
-        }
-        Self { nodes }
+        out
     }
 
     /// Replace the contents of directory `at` with a freshly scanned tree of
@@ -512,24 +589,29 @@ impl Tree {
     pub fn graft(&mut self, at: NodeId, sub: Tree) {
         // Detached roots make liveness checks proportional to depth, not to
         // the number of siblings in a potentially enormous directory.
-        let old_children = self.node(at).children.clone();
+        let old_children = self.children(at).to_vec();
         for child in old_children {
             self.node_mut(child).flags |= flags::REMOVED;
         }
         let offset = self.nodes.len() as NodeId - 1;
         let remap = |i: NodeId| if i == ROOT { at } else { offset + i };
         self.nodes.reserve(sub.len().saturating_sub(1));
-        let mut it = sub.nodes.into_nodes();
-        let sroot = it.next().expect("scanned tree has a root");
-        for mut n in it {
-            n.parent = remap(n.parent);
-            n.children = n.children.iter().map(|&c| remap(c)).collect();
-            self.nodes.push(n);
+        for id in 1..sub.len() as NodeId {
+            self.push_copy(&sub, id, remap(sub.node(id).parent));
         }
+        for id in 0..sub.len() as NodeId {
+            let children = sub.children(id);
+            if id == ROOT || !children.is_empty() {
+                let list = self.nodes.children_mut(remap(id) as usize);
+                list.clear();
+                list.extend(children.iter().map(|&c| remap(c)));
+            }
+        }
+        let sroot = *sub.root();
+        drop(sub);
         let (old_size, old_files, parent) = {
             let n = &mut self.nodes[at as usize];
             let old = (n.size, n.files, n.parent);
-            n.children = sroot.children.iter().map(|&c| remap(c)).collect();
             n.size = sroot.size;
             n.files = sroot.files;
             n.mtime = sroot.mtime;
@@ -556,7 +638,7 @@ impl Tree {
                 continue; // nothing in here can beat the current top-n
             }
             if node.is_dir() {
-                stack.extend(node.children.iter().copied());
+                stack.extend_from_slice(self.children(id));
             } else if node.size > 0 {
                 heap.push(Reverse((node.size, id)));
                 if heap.len() > n {
@@ -574,7 +656,7 @@ impl Tree {
 
     /// Find the direct child of `parent` with the given name.
     pub fn child_named(&self, parent: NodeId, name: &OsStr) -> Option<NodeId> {
-        self.nodes[parent as usize].children.iter().copied().find(|&c| &*self.nodes[c as usize].name == name)
+        self.children(parent).iter().copied().find(|&c| self.name(c) == name)
     }
 
     /// Resolve an absolute path inside this tree to a node.
@@ -590,16 +672,17 @@ impl Tree {
     /// Replace file metadata without changing its identity or copying the tree.
     pub fn update_file(&mut self, id: NodeId, entry: NewEntry) {
         let (parent, old_size) = (self.node(id).parent, self.node(id).size);
+        let NewEntry { name, kind, size, len, mtime, flags, file_id } = entry;
+        self.nodes.rename(id as usize, &name);
         let node = self.node_mut(id);
-        node.name = entry.name.into_boxed_os_str();
-        node.size = entry.size;
-        node.len = entry.len;
-        node.mtime = entry.mtime;
-        node.flags = entry.flags;
-        node.file_id = entry.file_id;
-        node.kind = entry.kind;
+        node.size = size;
+        node.len = len;
+        node.mtime = mtime;
+        node.flags = flags;
+        node.set_file_id(file_id);
+        node.kind = kind;
         self.sub_up(parent, old_size, 0);
-        self.add_up(parent, entry.size, 0);
+        self.add_up(parent, size, 0);
         self.resort_upwards(id);
     }
 }
@@ -646,7 +729,7 @@ mod tests {
         let first = tree.add_children(dir, vec![entry("a", Kind::File, 10)]).start;
         let second = tree.add_children(dir, vec![entry("b", Kind::File, 20)]).start;
         tree.add_children(dir, Vec::new());
-        assert_eq!(tree.node(dir).children, vec![first, second]);
+        assert_eq!(tree.children(dir), [first, second]);
         assert_eq!(tree.root().size, 30);
         assert_eq!(tree.root().files, 2);
         assert_eq!(tree.path(second), PathBuf::from("/r/dir/b"));
@@ -662,17 +745,18 @@ mod tests {
             assert_eq!(preview.root().size, tree.root().size);
             assert_eq!(preview.root().files, tree.root().files);
             for (id, node) in preview.nodes.iter().enumerate() {
-                if !node.children.is_empty() {
-                    assert_eq!(node.children.iter().map(|&c| preview.node(c).size).sum::<u64>(), node.size);
-                    assert_eq!(node.children.iter().map(|&c| preview.node(c).files).sum::<u64>(), node.files);
+                let children = preview.children(id as NodeId);
+                if !children.is_empty() {
+                    assert_eq!(children.iter().map(|&c| preview.node(c).size).sum::<u64>(), node.size);
+                    assert_eq!(children.iter().map(|&c| preview.node(c).files).sum::<u64>(), node.files);
                 }
-                for &child in &node.children {
+                for &child in children {
                     assert_eq!(preview.node(child).parent as usize, id);
                 }
             }
         }
         let preview = tree.preview(8);
-        assert!(preview.root().children.iter().any(|&id| preview.node(id).name_lossy() == "f999"));
+        assert!(preview.children(ROOT).iter().any(|&id| preview.name_lossy(id) == "f999"));
     }
 
     #[test]
@@ -680,7 +764,7 @@ mod tests {
         let t = sample();
         assert_eq!(t.root().size, 145);
         assert_eq!(t.root().files, 4);
-        let names: Vec<_> = t.root().children.iter().map(|&c| t.node(c).name_lossy().into_owned()).collect();
+        let names: Vec<_> = t.children(ROOT).iter().map(|&c| t.name_lossy(c).into_owned()).collect();
         assert_eq!(names, ["c", "a", "b"]);
     }
 
@@ -710,8 +794,8 @@ mod tests {
         assert!(!t.is_live(z));
         assert_eq!(t.root().size, 45);
         assert_eq!(t.root().files, 3);
-        let first = t.root().children[0];
-        assert_eq!(t.node(first).name_lossy(), "a");
+        let first = t.children(ROOT)[0];
+        assert_eq!(t.name_lossy(first), "a");
     }
 
     #[test]
@@ -725,7 +809,7 @@ mod tests {
         assert_eq!(t.node(a).size, 1000);
         assert_eq!(t.root().size, 1105);
         assert_eq!(t.root().files, 3);
-        assert_eq!(t.root().children[0], a, "a is now the largest child");
+        assert_eq!(t.children(ROOT)[0], a, "a is now the largest child");
         assert!(!t.is_live(old_x));
         let n = t.find_path(Path::new("/r/a/new")).unwrap();
         assert_eq!(t.path(n), PathBuf::from("/r/a/new"));
@@ -739,7 +823,7 @@ mod tests {
         let mut sub = Tree::new(Path::new("/r/a"));
         sub.add_children(ROOT, vec![entry("new", Kind::File, 1000)]);
         t.graft(a, sub);
-        let removed = t.root().children[1];
+        let removed = t.children(ROOT)[1];
         t.remove(removed);
         let (size, files, before) = (t.root().size, t.root().files, t.len());
         let compact = t.compacted();
@@ -752,7 +836,7 @@ mod tests {
             compact
                 .descendants(ROOT)
                 .skip(1)
-                .all(|id| compact.parent(id).is_some_and(|p| compact.node(p).children.contains(&id)))
+                .all(|id| compact.parent(id).is_some_and(|p| compact.children(p).contains(&id)))
         );
     }
 

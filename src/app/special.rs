@@ -175,9 +175,9 @@ pub fn contents_deletable(tree: &Tree, inventory: Inventory, folder: NodeId) -> 
     };
     folder != clawback_core::ROOT
         && entry.is_dir()
-        && !entry.children.is_empty()
+        && !tree.children(folder).is_empty()
         && plain(folder)
-        && entry.children.iter().all(|&child| plain(child))
+        && tree.children(folder).iter().all(|&child| plain(child))
 }
 
 /// Operating system files that must never be deleted from the map, even through a special action.

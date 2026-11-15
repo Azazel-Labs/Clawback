@@ -29,7 +29,7 @@ pub fn render(r: &ScanResult, top: usize) -> String {
     }
 
     let _ = writeln!(s, "\nLargest entries:");
-    for &c in root.children.iter().take(top) {
+    for &c in t.children(ROOT).iter().take(top) {
         let n = t.node(c);
         if n.size == 0 {
             break;
@@ -40,7 +40,7 @@ pub fn render(r: &ScanResult, top: usize) -> String {
             "  {:>6}  {:>10}  {}{}",
             format::percent(n.size, root.size),
             format::size(n.size),
-            n.name_lossy(),
+            t.name_lossy(c),
             slash
         );
     }

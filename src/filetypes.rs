@@ -280,11 +280,11 @@ fn summarize(tree: &Tree, scope: NodeId, cancel: &AtomicBool) -> Option<Summary>
             continue;
         }
         if node.is_dir() {
-            stack.extend(node.children.iter().copied());
+            stack.extend(tree.children(id).iter().copied());
             continue;
         }
         extension.clear();
-        match Path::new(&node.name).extension().filter(|ext| !ext.is_empty()) {
+        match Path::new(tree.name(id)).extension().filter(|ext| !ext.is_empty()) {
             Some(ext) => {
                 extension.push('.');
                 extension.push_str(&ext.to_string_lossy());
@@ -317,7 +317,7 @@ fn summarize(tree: &Tree, scope: NodeId, cancel: &AtomicBool) -> Option<Summary>
             fraction: if total == 0 { 0.0 } else { bytes as f32 / total as f32 },
         })
         .collect();
-    Some(Summary { rows, name: tree.node(scope).name_lossy().into_owned() })
+    Some(Summary { rows, name: tree.name_lossy(scope).into_owned() })
 }
 
 #[cfg(test)]

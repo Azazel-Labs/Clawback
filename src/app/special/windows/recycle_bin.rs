@@ -21,11 +21,10 @@ pub fn find(tree: &Tree, is_mount: bool) -> Option<NodeId> {
     if !is_mount {
         return None;
     }
-    tree.node(ROOT)
-        .children
+    tree.children(ROOT)
         .iter()
         .copied()
-        .find(|&n| tree.node(n).is_dir() && tree.node(n).name_lossy().eq_ignore_ascii_case("$Recycle.Bin"))
+        .find(|&n| tree.node(n).is_dir() && tree.name_lossy(n).eq_ignore_ascii_case("$Recycle.Bin"))
 }
 
 /// The shell's own full or empty Recycle Bin icon at `size` pixels.

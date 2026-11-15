@@ -65,13 +65,13 @@ impl Snapshot {
             let index = entries.len() as u32;
             entries.push(Entry {
                 parent,
-                name: if id == ROOT { String::new() } else { node.name_lossy().into_owned() },
+                name: if id == ROOT { String::new() } else { tree.name_lossy(id).into_owned() },
                 dir: node.is_dir(),
                 size: node.size,
                 files: node.files,
             });
             if node.is_dir() {
-                stack.extend(node.children.iter().rev().map(|&child| (child, index)));
+                stack.extend(tree.children(id).iter().rev().map(|&child| (child, index)));
             }
         }
         Self { root: tree.root_path().to_owned(), taken, detail, label: label.into(), entries }

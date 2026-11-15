@@ -140,7 +140,7 @@ fn from_scan(tree: &Tree, whole_drive: bool, turbo: bool) -> Vec<Achievement> {
             continue;
         }
         if node.is_dir() {
-            black_hole |= node.size >= GB && node.name_lossy() == "node_modules";
+            black_hole |= node.size >= GB && tree.name(id) == "node_modules";
         } else {
             unit |= node.size >= 50 * GB;
         }

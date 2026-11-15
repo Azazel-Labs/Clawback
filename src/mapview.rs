@@ -679,7 +679,7 @@ fn info_tip(tree: &Tree, node: NodeId, s: &Settings) -> InfoTip {
     let mut lines = Vec::new();
 
     // The name always leads; the path option prefixes its folder.
-    lines.push(if s.tip_path { path.display().to_string() } else { n.name_lossy().into_owned() });
+    lines.push(if s.tip_path { path.display().to_string() } else { tree.name_lossy(node).into_owned() });
     if s.tip_size || s.tip_attrib {
         let size = s.tip_size.then(|| format::size(n.display_len()));
         let attrs = s.tip_attrib.then(|| crate::platform::attributes(&path).join(" "));

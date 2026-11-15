@@ -25,7 +25,7 @@ impl LinkIndex {
 
     fn insert(&mut self, tree: &Tree, id: NodeId) {
         let node = tree.node(id);
-        let Some(key) = node.file_id else { return };
+        let Some(key) = node.file_id() else { return };
         if let Some(owner) = self.owners.get_mut(&key) {
             if *owner == id {
                 return;
@@ -49,14 +49,14 @@ impl LinkIndex {
     /// Detach before deleting/replacing the node. Move its counted bytes to a
     /// surviving alias first; subtracting the old node then keeps totals exact.
     pub fn detach(&mut self, tree: &mut Tree, id: NodeId) {
-        let Some(key) = tree.node(id).file_id else { return };
+        let Some(key) = tree.node(id).file_id() else { return };
         let Some(&owner) = self.owners.get(&key) else { return };
         if owner == id {
             if let Some(next) = self.aliases.get_mut(&key).and_then(Vec::pop) {
                 self.owners.insert(key, next);
                 let old = tree.node(id);
                 let entry = NewEntry {
-                    name: tree.node(next).name.clone().into(),
+                    name: tree.name(next).to_os_string(),
                     kind: old.kind,
                     size: old.size,
                     len: old.len,
@@ -79,10 +79,10 @@ impl LinkIndex {
     /// Apply real metadata (including allocated size) to every known alias.
     /// Only one alias contributes bytes; all retain the real length and date.
     pub fn update(&mut self, tree: &mut Tree, id: NodeId, entry: &NewEntry) -> bool {
-        let changed_identity = tree.node(id).file_id != entry.file_id;
+        let changed_identity = tree.node(id).file_id() != entry.file_id;
         if changed_identity {
             self.detach(tree, id);
-            tree.node_mut(id).file_id = entry.file_id;
+            tree.node_mut(id).set_file_id(entry.file_id);
         }
         let Some(key) = entry.file_id else { return apply(tree, id, entry, false) || changed_identity };
         if !self.owners.contains_key(&key) {
@@ -93,7 +93,7 @@ impl LinkIndex {
             // already count its bytes, so index them before this one.
             let siblings: Vec<_> = tree
                 .descendants(ROOT)
-                .filter(|&other| other != id && !tree.node(other).is_dir() && tree.node(other).file_id == Some(key))
+                .filter(|&other| other != id && !tree.node(other).is_dir() && tree.node(other).file_id() == Some(key))
                 .collect();
             for sibling in siblings {
                 self.insert(tree, sibling);
@@ -122,13 +122,13 @@ fn apply(tree: &mut Tree, id: NodeId, metadata: &NewEntry, duplicate: bool) -> b
     let flags = (node.flags & !(flags::HARDLINK_DUP | flags::LINKED))
         | (metadata.flags & flags::LINKED)
         | if duplicate { flags::HARDLINK_DUP } else { 0 };
-    if (node.size, node.len, node.mtime, node.flags, node.file_id)
+    if (node.size, node.len, node.mtime, node.flags, node.file_id())
         == (size, metadata.len, metadata.mtime, flags, metadata.file_id)
     {
         return false;
     }
     let entry = NewEntry {
-        name: node.name.clone().into(),
+        name: tree.name(id).to_os_string(),
         kind: metadata.kind,
         size,
         len: metadata.len,

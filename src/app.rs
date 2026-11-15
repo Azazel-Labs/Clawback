@@ -257,7 +257,7 @@ impl ClawbackApp {
                 let node = self
                     .doc
                     .as_ref()
-                    .and_then(|d| d.tree.root().children.iter().copied().find(|&n| d.tree.node(n).is_dir()));
+                    .and_then(|d| d.tree.children(ROOT).iter().copied().find(|&n| d.tree.node(n).is_dir()));
                 if let Some(node) = node {
                     self.apply(Command::ZoomTo(node), ctx);
                 }
@@ -902,15 +902,12 @@ impl ClawbackApp {
         }
         // Contents-only cleanup preserves its root and any provider-defined exclusions.
         let targets = match (kind, node) {
-            (_, Some(folder)) if contents => doc.tree.node(folder).children.iter().map(|&c| doc.tree.path(c)).collect(),
+            (_, Some(folder)) if contents => doc.tree.children(folder).iter().map(|&c| doc.tree.path(c)).collect(),
             (DeleteKind::Cleanup(cleanup), Some(folder)) => doc
                 .tree
-                .node(folder)
-                .children
+                .children(folder)
                 .iter()
-                .filter(|&&c| {
-                    !cleanup.keep().iter().any(|name| doc.tree.node(c).name_lossy().eq_ignore_ascii_case(name))
-                })
+                .filter(|&&c| !cleanup.keep().iter().any(|name| doc.tree.name_lossy(c).eq_ignore_ascii_case(name)))
                 .map(|&c| doc.tree.path(c))
                 .collect(),
             _ => vec![path.clone()],

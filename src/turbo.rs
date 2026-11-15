@@ -576,7 +576,7 @@ fn fixture(root: &Path) -> ScanResult {
     };
     let started = Instant::now();
     let mut tree = Tree::new(root);
-    tree.node_mut(ROOT).file_id = Some((1, 5));
+    tree.node_mut(ROOT).set_file_id(Some((1, 5)));
     for batch in 0..40 {
         tree.add_children(
             ROOT,
@@ -654,7 +654,9 @@ fn probe(args: &[OsString]) -> io::Result<()> {
                 return Err(io::Error::other("Turbo telemetry did not round-trip"));
             }
             if mode == "fixture"
-                && (result.files != 10240 || result.bytes != 10240 * 4096 || result.tree.root().file_id != Some((1, 5)))
+                && (result.files != 10240
+                    || result.bytes != 10240 * 4096
+                    || result.tree.root().file_id() != Some((1, 5)))
             {
                 return Err(io::Error::other("Fixture snapshot did not round-trip"));
             }

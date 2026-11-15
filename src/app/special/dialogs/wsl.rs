@@ -38,13 +38,13 @@ impl ClawbackApp {
                 updated.info.size_on_disk.unwrap_or(old.size)
             };
             let entry = clawback_core::tree::NewEntry {
-                name: old.name.to_os_string(),
+                name: doc.tree.name(id).to_os_string(),
                 kind: old.kind,
                 size,
                 len,
                 mtime: updated.info.modified.unwrap_or(old.mtime),
                 flags: old.flags,
-                file_id: old.file_id,
+                file_id: old.file_id(),
             };
             std::sync::Arc::make_mut(&mut doc.tree).update_file(id, entry);
         }

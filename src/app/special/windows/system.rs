@@ -26,12 +26,11 @@ pub fn reserved(tree: &Tree) -> [Option<NodeId>; RESERVED.len()] {
     if tree.root_path().parent().is_some() {
         return found;
     }
-    for &child in &tree.node(ROOT).children {
+    for &child in tree.children(ROOT) {
         let node = tree.node(child);
-        if let Some(index) = RESERVED
-            .iter()
-            .position(|&(name, directory)| node.is_dir() == directory && node.name_lossy().eq_ignore_ascii_case(name))
-        {
+        if let Some(index) = RESERVED.iter().position(|&(name, directory)| {
+            node.is_dir() == directory && tree.name_lossy(child).eq_ignore_ascii_case(name)
+        }) {
             found[index] = Some(child);
         }
     }
