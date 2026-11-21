@@ -2,7 +2,7 @@ version = 2
 
 [readme]
 source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
-translation = "a051515bed716e1090678cbe415c3caa7966a28bad0d51dfb25de36a227245be"
+translation = "6695e5b368f34032ee292fca996d0e6183ec215845c22808563266d08d631bd4"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
@@ -46,7 +46,7 @@ translation = "Bahasa Afrikaans"
 
 [messages.all-files]
 source = "All files"
-translation = "Semua berkas"
+translation = "Semua file"
 
 [messages.application-library]
 source = "Application / library"
@@ -210,7 +210,7 @@ translation = "Klik untuk membersihkan file-file sementara Anda"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Klik untuk mengosongkan Recycle Bin drive ini"
+translation = "Klik untuk mengosongkan Tempat Sampah drive ini"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -218,7 +218,7 @@ translation = "Dikelola oleh Windows. Klik untuk membuka pengaturan Penyimpanan 
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
-translation = "VHDX · disk virtual WSL. Klik untuk detail disk, jelajahi file, atau dapatkan kembali ruang."
+translation = "VHDX · disk virtual WSL. Klik untuk detail disk, jelajahi file, atau klaim kembali ruang."
 
 [messages.click-to-uninstall-software]
 source = "Installed application or game files. Click to identify and uninstall the whole application."
@@ -261,7 +261,7 @@ source = """
         [one] { $folders } folder
        *[other] { $folders } folders
     }"""
-translation = "{ $files } berkas, { $folders } folder"
+translation = "{ $files } file, { $folders } folder"
 
 [messages.copy-error-details]
 source = "Copy error details"
@@ -273,7 +273,7 @@ translation = "Hak cipta © 2026 Azazel Labs LLC."
 
 [messages.count-hard-linked-files-once]
 source = "Count hard-linked files once"
-translation = "Hitung berkas dengan tautan keras hanya sekali"
+translation = "Hitung file dengan tautan keras hanya sekali"
 
 [messages.czech]
 source = "Czech"
@@ -317,7 +317,7 @@ translation = "Hapus isi secara permanen?"
 
 [messages.delete-contents-too-big]
 source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
-translation = "Isi “{ $name }” terlalu besar untuk Recycle Bin. Foldernya sendiri tetap ada."
+translation = "Isi “{ $name }” terlalu besar untuk Tempat Sampah. Foldernya sendiri tetap ada."
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
@@ -357,7 +357,7 @@ source = """
         [one] { $count } more item queued
        *[other] { $count } more items queued
     }"""
-translation = "Item tambahan antri: { $count }"
+translation = "Item tambahan dalam antrean: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
@@ -373,7 +373,7 @@ translation = "{ $size } · File: { $files }"
 
 [messages.delete-too-big-for-recycle-bin]
 source = "“{ $name }” is too big for the Recycle Bin."
-translation = "“{ $name }” terlalu besar untuk Recycle Bin."
+translation = "“{ $name }” terlalu besar untuk Tempat Sampah."
 
 [messages.delete-updating]
 source = "Updating disk map…"
@@ -425,7 +425,7 @@ translation = "Dokumen"
 
 [messages.don-t-descend-into-other-drives-or-network]
 source = "Don't descend into other drives or network mounts inside the scanned folder"
-translation = "Jangan masuk ke drive lain atau sistem berkas jaringan yang terpasang di dalam folder yang dipindai"
+translation = "Jangan masuk ke drive lain atau sistem file jaringan yang terpasang di dalam folder yang dipindai"
 
 [messages.double-click-to-explore-right-click-for-actions]
 source = "Double-click to explore / Right-click for actions"
@@ -445,7 +445,7 @@ translation = "Bahasa Belanda"
 
 [messages.empty-recycle-bin-body]
 source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
-translation = "Semua yang ada di Recycle Bin Anda di { $drive } akan dihapus secara permanen."
+translation = "Semua yang ada di Tempat Sampah Anda di { $drive } akan dihapus secara permanen."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
@@ -453,7 +453,7 @@ translation = "Kosongkan Tempat Sampah"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Kosongkan Recycle Bin?"
+translation = "Kosongkan Tempat Sampah?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
@@ -493,35 +493,35 @@ translation = "Perluas untuk menjelajah · Klik folder untuk melihat"
 
 [messages.file]
 source = "File"
-translation = "Berkas"
+translation = "File"
 
 [messages.file-layout]
 source = "File Layout"
-translation = "Tata letak berkas"
+translation = "Tata letak file"
 
 [messages.file-size]
 source = "File Size"
-translation = "Ukuran berkas"
+translation = "Ukuran file"
 
 [messages.file-type]
 source = "FILE TYPE"
-translation = "JENIS BERKAS"
+translation = "JENIS FILE"
 
 [messages.file-types]
 source = "File types"
-translation = "Jenis berkas"
+translation = "Jenis file"
 
 [messages.filename]
 source = "Filename"
-translation = "Nama berkas"
+translation = "Nama file"
 
 [messages.files]
 source = "FILES"
-translation = "BERKAS"
+translation = "FILE"
 
 [messages.files-2]
 source = "Files:"
-translation = "Berkas:"
+translation = "File:"
 
 [messages.finding-drives]
 source = "Finding drives..."
@@ -649,7 +649,7 @@ translation = "Lokasi:"
 
 [messages.lots-of-files]
 source = "Lots of Files"
-translation = "Banyak berkas"
+translation = "Banyak file"
 
 [messages.make-room-for-what-matters]
 source = "Make room for what matters."
@@ -661,7 +661,7 @@ translation = "Windows membuat file ini dan menentukan ukurannya sendiri. Ubah m
 
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
-translation = "Jumlah bita yang dipetakan dibandingkan ruang drive yang terpakai; perkiraan, bukan persentase jumlah berkas."
+translation = "Jumlah bita yang dipetakan dibandingkan ruang drive yang terpakai; perkiraan, bukan persentase jumlah file."
 
 [messages.miscellaneous-options]
 source = "Miscellaneous Options"
@@ -697,7 +697,7 @@ translation = "Tanpa ekstensi"
 
 [messages.no-files-in-this-folder]
 source = "No files in this folder."
-translation = "Tidak ada berkas di folder ini."
+translation = "Tidak ada file di folder ini."
 
 [messages.normal]
 source = "Normal"
@@ -709,7 +709,7 @@ translation = "Bahasa Norwegia Bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% PEMINDAIAN"
+translation = "% DARI PEMINDAIAN"
 
 [messages.offline]
 source = "Offline"
@@ -825,7 +825,7 @@ translation = "Hanya baca"
 
 [messages.reading-file-details]
 source = "Reading file details…"
-translation = "Membaca detail berkas…"
+translation = "Membaca detail file…"
 
 [messages.ready]
 source = "Ready"
@@ -929,7 +929,7 @@ translation = "Pemadatan mempertahankan konten disk dan mengurangi ukuran file W
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
-translation = "Mendapatkan kembali ruang disk WSL"
+translation = "Klaim kembali ruang disk WSL"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
@@ -999,7 +999,7 @@ translation = """
 { $size } | { contents-count }
 
 # reference contents-count
-{ $files } berkas, { $folders } folder"""
+{ $files } file, { $folders } folder"""
 
 [messages.scanning]
 source = "Scanning"
@@ -1071,11 +1071,11 @@ translation = "Jendela dan interaksi"
 
 [messages.show-file-info-tips]
 source = "Show file details tooltips"
-translation = "Tampilkan petunjuk informasi berkas"
+translation = "Tampilkan petunjuk informasi file"
 
 [messages.show-file-name-tips]
 source = "Show file name tooltips"
-translation = "Tampilkan petunjuk nama berkas"
+translation = "Tampilkan petunjuk nama file"
 
 [messages.show-free-space]
 source = "Show Free Space"
@@ -1087,7 +1087,7 @@ translation = "Tampilkan ruang kosong"
 
 [messages.show-in-file-manager]
 source = "Show in File Manager"
-translation = "Tampilkan di pengelola berkas"
+translation = "Tampilkan di manajer file"
 
 [messages.show-rollover-boxes]
 source = "Show Rollover Boxes"
@@ -1219,11 +1219,11 @@ translation = "Jarang"
 
 [messages.special-file]
 source = "Special file"
-translation = "Berkas khusus"
+translation = "File khusus"
 
 [messages.stay-on-one-filesystem]
 source = "Stay on one filesystem"
-translation = "Tetap di satu sistem berkas"
+translation = "Tetap di satu sistem file"
 
 [messages.swedish]
 source = "Swedish"
@@ -1267,11 +1267,11 @@ translation = "Tugas pemindaian berhenti secara tidak terduga."
 
 [messages.too-few-files]
 source = "Too Few Files"
-translation = "Terlalu sedikit berkas"
+translation = "Terlalu sedikit file"
 
 [messages.too-many-files]
 source = "Too Many Files"
-translation = "Terlalu banyak berkas"
+translation = "Terlalu banyak file"
 
 [messages.tooltips]
 source = "Tooltips"
@@ -1379,7 +1379,7 @@ translation = "Tidak ada aplikasi yang dapat diidentifikasi untuk folder ini. Bu
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Buka Aplikasi yang Terinstal"
+translation = "Buka Aplikasi Terinstal"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
@@ -1435,11 +1435,11 @@ translation = "Lokasi ini milik perangkat lunak yang diinstal. Pilih aplikasi di
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows tidak dapat memulai uninstaller (kesalahan { $code }). Buka Aplikasi Terpasang untuk mengelola aplikasi ini."
+translation = "Windows tidak dapat memulai program pencopot pemasangan (kesalahan { $code }). Buka Aplikasi Terinstal untuk mengelola aplikasi ini."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Uninstaller terdaftar tidak dapat ditemukan. Buka Aplikasi Terinstal Windows untuk mengelola aplikasi ini."
+translation = "Program pencopot pemasangan yang terdaftar tidak dapat ditemukan. Buka Aplikasi Terinstal di Windows untuk mengelola aplikasi ini."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1463,7 +1463,7 @@ translation = "Memperbarui…"
 
 [messages.use-file-lengths-not-size-on-disk]
 source = "Use file lengths, not size on disk"
-translation = "Gunakan panjang berkas, bukan ukuran di disk"
+translation = "Gunakan panjang file, bukan ukuran di disk"
 
 [messages.vert]
 source = "Vert"
@@ -1471,11 +1471,11 @@ translation = "Vertikal"
 
 [messages.very-few-files]
 source = "Very Few Files"
-translation = "Sangat sedikit berkas"
+translation = "Sangat sedikit file"
 
 [messages.very-many-files]
 source = "Very Many Files"
-translation = "Sangat banyak berkas"
+translation = "Sangat banyak file"
 
 [messages.video]
 source = "Video"
@@ -1523,7 +1523,7 @@ translation = "Buka distribusi ini di Explorer. Ini mungkin memulai distribusi."
 
 [messages.wsl-choose-action]
 source = "What would you like to do?"
-translation = "Apa yang ingin kamu lakukan?"
+translation = "Apa yang ingin Anda lakukan?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
@@ -1551,7 +1551,7 @@ translation = "Memulihkan ruang disk yang tidak terpakai."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "Mengambil kembali blok yang berisi nol tanpa menghapus berkas Anda. Bersihkan data di dalam Linux atau Docker terlebih dahulu; ruang yang diperoleh bervariasi. Docker dan WSL harus tetap berhenti selama pemadatan."
+translation = "Mengambil kembali blok yang berisi nol tanpa menghapus file Anda. Bersihkan data di dalam Linux atau Docker terlebih dahulu; ruang yang diperoleh bervariasi. Docker dan WSL harus tetap berhenti selama pemadatan."
 
 [messages.wsl-copy-command]
 source = "Copy command"
@@ -1563,7 +1563,7 @@ translation = "Detail file"
 
 [messages.wsl-disk-path]
 source = "Disk file"
-translation = "Berkas diska"
+translation = "File disk"
 
 [messages.wsl-disk-title]
 source = "WSL virtual disk"

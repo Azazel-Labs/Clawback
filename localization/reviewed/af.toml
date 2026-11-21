@@ -202,7 +202,7 @@ translation = "Ruim permanent op?"
 
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
-translation = "Maak Temp-lêergids skoon…"
+translation = "Maak Temp-vouer skoon…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
@@ -210,7 +210,7 @@ translation = "Klik om jou tydelike lêers skoon te maak"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Klik om hierdie aandrywer se asblik leeg te maak"
+translation = "Klik om hierdie dryfeenheid se asblik leeg te maak"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -352,7 +352,7 @@ translation = "Vee permanent uit?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Berei tans voor om te herwin…"
+translation = "Berei tans voor om na die asblik te skuif…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -368,7 +368,7 @@ translation = "Bykomende items in tou: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Skuif tans na herwinblik…"
+translation = "Skuif tans na asblik…"
 
 [messages.delete-size-files]
 source = """
@@ -388,7 +388,7 @@ translation = "Werk tans skyfkaart by…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Die herwinningsproses het onverwags gestop. Gaan die gekose item na voordat jy weer probeer."
+translation = "Die uitveeproses in die agtergrond het onverwags gestop. Gaan die gekose item na voordat jy weer probeer."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -424,7 +424,7 @@ translation = "Vertoonkleure"
 
 [messages.docker-desktop-not-found]
 source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
-translation = "Docker Desktop kon nie in sy standaard installasie liggings gevind word nie. Maak dit oop vanaf die Windows Start-kieslys."
+translation = "Docker Desktop kon nie in sy standaardinstallasieliggings gevind word nie. Maak dit oop vanaf die Windows Start-kieslys."
 
 [messages.document]
 source = "Document"
@@ -464,15 +464,15 @@ translation = "Maak die asblik leeg?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "Vee die inhoud van { $path } permanent uit? Die Temp-lêergids sal gehou word. Items wat Windows weier om uit te vee, sal in plek gelaat word. Maak eers toepassings toe om meer tydelike lêers vry te stel."
+translation = "Vee die inhoud van { $path } permanent uit? Die Temp-vouer sal gehou word. Items wat Windows weier om uit te vee, sal in plek gelaat word. Maak eers toepassings toe om meer tydelike lêers vry te stel."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
-translation = "Maak Temp-lêergids skoon"
+translation = "Maak Temp-vouer skoon"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
-translation = "Maak jou Temp-lêergids skoon?"
+translation = "Maak jou Temp-vouer skoon?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
@@ -620,7 +620,7 @@ translation = "Taal"
 
 [messages.live-catching-up]
 source = "Live · Catching up"
-translation = "Regstreeks · Besig om agterstallige veranderinge te verwerk"
+translation = "Intyds · Besig om agterstallige veranderinge te verwerk"
 
 [messages.live-demo]
 source = "Demo data - fictional files and sizes"
@@ -632,11 +632,11 @@ translation = "Intydse opdaterings gestop · Skandeer weer om te herkoppel"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
-translation = "Regstreeks · Veranderinge word in die agtergrond gesinchroniseer"
+translation = "Intyds · Veranderinge word in die agtergrond gesinchroniseer"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Intydse opdaterings nie beskikbaar nie: Skandering gekanselleer · Skandeer weer om te verfris"
+translation = "Intydse opdaterings nie beskikbaar nie: skandering gekanselleer · Skandeer weer om te verfris"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -648,7 +648,7 @@ translation = "Intydse opdaterings nie beskikbaar nie: { $error } · Skandeer we
 
 [messages.live-watching]
 source = "Live · Watching for changes"
-translation = "Regstreeks · Kyk vir veranderinge"
+translation = "Intyds · Kyk vir veranderinge"
 
 [messages.location]
 source = "Location:"
@@ -940,7 +940,7 @@ translation = "Herwin WSL-skyfspasie"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "Voordat jy verdig, stoor jou werk, verlaat Docker Desktop en maak WSL-sessies toe. Voer hierdie opdrag in PowerShell uit om alle WSL-verspreidings te stop. Hou Docker en WSL gestop totdat verdigting klaar is. Windows sal vir administrateur toestemming vra."
+translation = "Voordat jy verdig, stoor jou werk, verlaat Docker Desktop en maak WSL-sessies toe. Voer hierdie opdrag in PowerShell uit om alle WSL-verspreidings te stop. Hou Docker en WSL gestop totdat verdigting klaar is. Windows sal vir administrateurtoestemming vra."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1388,11 +1388,11 @@ translation = "Begin deïnstalleerder…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Geen toepassing kon vir hierdie vouer geïdentifiseer word nie. Maak geïnstalleerde toepassings of Steam oop om die inhoud daarvan te bestuur."
+translation = "Geen toepassing kon vir hierdie vouer geïdentifiseer word nie. Maak Geïnstalleerde toepassings of Steam oop om die inhoud daarvan te bestuur."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Maak geïnstalleerde toepassings oop"
+translation = "Maak Geïnstalleerde toepassings oop"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
@@ -1416,11 +1416,11 @@ translation = "Geselekteerde item"
 
 [messages.uninstall-software]
 source = "Uninstall…"
-translation = "Deïnstalleer …"
+translation = "Deïnstalleer…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Deïnstalleer deur Steam …"
+translation = "Deïnstalleer deur Steam…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1448,11 +1448,11 @@ translation = "Hierdie ligging behoort aan geïnstalleerde sagteware. Kies 'n to
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows kon nie die deïnstalleerder begin nie (fout { $code }). Maak geïnstalleerde toepassings oop om hierdie toepassing te bestuur."
+translation = "Windows kon nie die deïnstalleerder begin nie (fout { $code }). Maak Geïnstalleerde toepassings oop om hierdie toepassing te bestuur."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Die geregistreerde deïnstalleerder kon nie gevind word nie. Maak Windows-geïnstalleerde toepassings oop om hierdie toepassing te bestuur."
+translation = "Die geregistreerde deïnstalleerder kon nie gevind word nie. Maak Windows se Geïnstalleerde toepassings oop om hierdie toepassing te bestuur."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1548,7 +1548,7 @@ translation = "Wys opruimingsleiding"
 
 [messages.wsl-compact-admin]
 source = "Windows will ask for administrator permission."
-translation = "Windows sal vir administrateur toestemming vra."
+translation = "Windows sal vir administrateurtoestemming vra."
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
@@ -1588,7 +1588,7 @@ translation = "WSL virtuele skyf"
 
 [messages.wsl-distribution]
 source = "WSL distribution"
-translation = "WSL verspreiding"
+translation = "WSL-verspreiding"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."

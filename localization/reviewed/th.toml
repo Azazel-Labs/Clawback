@@ -2,7 +2,7 @@ version = 2
 
 [readme]
 source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
-translation = "0b6c4512fbef31676d7dc84c0f6d38ed9ecf1d7d189580e2cf88f78d48de13e2"
+translation = "1dc7fa796dc35d43e67decee6ead7a5f55cab4d60ea8a521f81bccbacd24766e"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
@@ -301,7 +301,7 @@ translation = "ลบ"
 
 [messages.delete-cannot-be-undone]
 source = "This can’t be undone."
-translation = "การดำเนินการนี้ไม่สามารถยกเลิกได้"
+translation = "การดำเนินการนี้ไม่สามารถเลิกทำได้"
 
 [messages.delete-contents]
 source = "Delete Contents"
@@ -345,7 +345,7 @@ translation = "ลบอย่างถาวรหรือไม่?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "กำลังเตรียมย้ายไปถังขยะ…"
+translation = "กำลังเตรียมย้ายไปถังรีไซเคิล…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -361,7 +361,7 @@ translation = "รายการเพิ่มเติมอยู่ใน�
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "กำลังย้ายไปถังขยะ…"
+translation = "กำลังย้ายไปถังรีไซเคิล…"
 
 [messages.delete-size-files]
 source = """
@@ -381,7 +381,7 @@ translation = "กำลังอัปเดตแผนที่ดิสก�
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "กระบวนการย้ายไปถังขยะหยุดโดยไม่คาดคิด โปรดตรวจสอบรายการที่เลือกก่อนลองอีกครั้ง"
+translation = "กระบวนการย้ายไปถังรีไซเคิลหยุดโดยไม่คาดคิด โปรดตรวจสอบรายการที่เลือกก่อนลองอีกครั้ง"
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -613,7 +613,7 @@ translation = "ภาษา"
 
 [messages.live-catching-up]
 source = "Live · Catching up"
-translation = "แบบสด · กำลังประมวลผลการเปลี่ยนแปลงที่ค้างอยู่"
+translation = "เรียลไทม์ · กำลังประมวลผลการเปลี่ยนแปลงที่ค้างอยู่"
 
 [messages.live-demo]
 source = "Demo data - fictional files and sizes"
@@ -621,27 +621,27 @@ translation = "ข้อมูลสาธิต - ไฟล์และขน�
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
-translation = "หยุดการอัปเดตแบบสดแล้ว · สแกนใหม่เพื่อเชื่อมต่ออีกครั้ง"
+translation = "หยุดการอัปเดตแบบเรียลไทม์แล้ว · สแกนใหม่เพื่อเชื่อมต่ออีกครั้ง"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
-translation = "แบบสด · กำลังปรับข้อมูลตามการเปลี่ยนแปลงในเบื้องหลัง"
+translation = "เรียลไทม์ · กำลังปรับข้อมูลตามการเปลี่ยนแปลงในเบื้องหลัง"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "ไม่สามารถอัปเดตแบบสดได้: ยกเลิกการสแกนแล้ว · สแกนใหม่เพื่ออัปเดตข้อมูล"
+translation = "ไม่สามารถอัปเดตแบบเรียลไทม์ได้: ยกเลิกการสแกนแล้ว · สแกนใหม่เพื่ออัปเดตข้อมูล"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
-translation = "หยุดการอัปเดตแบบสดแล้ว: { $error } · สแกนใหม่เพื่อเชื่อมต่ออีกครั้ง"
+translation = "หยุดการอัปเดตแบบเรียลไทม์แล้ว: { $error } · สแกนใหม่เพื่อเชื่อมต่ออีกครั้ง"
 
 [messages.live-unavailable]
 source = "Live unavailable: { $error } · Rescan to refresh"
-translation = "ไม่สามารถอัปเดตแบบสดได้: { $error } · สแกนใหม่เพื่ออัปเดตข้อมูล"
+translation = "ไม่สามารถอัปเดตแบบเรียลไทม์ได้: { $error } · สแกนใหม่เพื่ออัปเดตข้อมูล"
 
 [messages.live-watching]
 source = "Live · Watching for changes"
-translation = "แบบสด · กำลังเฝ้าดูการเปลี่ยนแปลง"
+translation = "เรียลไทม์ · กำลังเฝ้าดูการเปลี่ยนแปลง"
 
 [messages.location]
 source = "Location:"
@@ -1299,7 +1299,7 @@ translation = "เทอร์โบ"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: กำลังจัดโฟลเดอร์ · { $files } ไฟล์"
+translation = "เทอร์โบ: กำลังจัดโฟลเดอร์ · { $files } ไฟล์"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1307,15 +1307,15 @@ translation = "ยกเลิกเทอร์โบแล้ว — สแก
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "กำลังแสดงความคืบหน้า Turbo · กำลังตรวจสอบผลลัพธ์…"
+translation = "กำลังแสดงความคืบหน้าเทอร์โบ · กำลังตรวจสอบผลลัพธ์…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "ตัวนับจะเปลี่ยนไปแสดง Turbo เมื่อรวบรวมรายการได้มากกว่า แผนที่ยังแสดงตัวอย่างจากการสแกนปกติจนกว่าโครงสร้าง Turbo ทั้งหมดจะผ่านการตรวจสอบ หาก Turbo ล้มเหลว การสแกนปกติจะดำเนินต่อไป"
+translation = "ตัวนับจะเปลี่ยนไปแสดงค่าของเทอร์โบเมื่อเทอร์โบรวบรวมรายการได้มากกว่า แผนที่ยังแสดงตัวอย่างจากการสแกนปกติจนกว่าโครงสร้างของเทอร์โบทั้งหมดจะผ่านการตรวจสอบ หากเทอร์โบล้มเหลว การสแกนปกติจะดำเนินต่อไป"
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: กำลังอ่าน MFT { $percent }% · { $records } ระเบียน"
+translation = "เทอร์โบ: กำลังอ่าน MFT { $percent }% · { $records } ระเบียน"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1323,15 +1323,15 @@ translation = "เทอร์โบ: กำลังอ่าน MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: กำลังระบุชื่อไฟล์…"
+translation = "เทอร์โบ: กำลังระบุชื่อไฟล์…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
-translation = "Turbo: กำลังเรียงผลลัพธ์…"
+translation = "เทอร์โบ: กำลังเรียงผลลัพธ์…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: กำลังโหลดผลลัพธ์…"
+translation = "เทอร์โบ: กำลังโหลดผลลัพธ์…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1391,7 +1391,7 @@ translation = "ผู้จัดพิมพ์: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "แผนที่ติดตามการเปลี่ยนแปลงแบบสด ให้สแกนใหม่หลังถอนการติดตั้ง หากไม่สามารถอัปเดตแบบสดได้"
+translation = "แผนที่ติดตามการเปลี่ยนแปลงแบบเรียลไทม์ ให้สแกนใหม่หลังถอนการติดตั้ง หากไม่สามารถอัปเดตแบบเรียลไทม์ได้"
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
@@ -1439,7 +1439,7 @@ translation = "Windows ไม่สามารถเริ่มโปรแก
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "ไม่พบโปรแกรมถอนการติดตั้งที่ลงทะเบียนไว้ เปิดแอปที่ติดตั้ง Windows เพื่อจัดการแอปพลิเคชันนี้"
+translation = 'ไม่พบโปรแกรมถอนการติดตั้งที่ลงทะเบียนไว้ เปิด "แอปที่ติดตั้ง" ของ Windows เพื่อจัดการแอปพลิเคชันนี้'
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1531,7 +1531,7 @@ translation = "แสดงคำแนะนำในการล้างข�
 
 [messages.wsl-compact-admin]
 source = "Windows will ask for administrator permission."
-translation = "Windows จะขออนุญาตจากผู้ดูแลระบบ"
+translation = "Windows จะขอสิทธิ์ผู้ดูแลระบบ"
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
@@ -1615,11 +1615,11 @@ translation = "ดิสทริบิวชัน Linux ที่ไม่ส�
 
 [messages.wsl-owner-unidentified-detail]
 source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
-translation = "เส้นทางนี้ดูเหมือนการติดตั้ง WSL แต่ไม่พบการลงทะเบียนที่ตรงกันสำหรับผู้ใช้ Windows ปัจจุบัน แพ็คเกจและพาธของไฟล์อาจช่วยระบุได้"
+translation = "เส้นทางนี้ดูเหมือนการติดตั้ง WSL แต่ไม่พบการลงทะเบียนที่ตรงกันสำหรับผู้ใช้ Windows ปัจจุบัน แพ็กเกจและพาธของไฟล์อาจช่วยระบุได้"
 
 [messages.wsl-package]
 source = "Windows package"
-translation = "แพ็คเกจ Windows"
+translation = "แพ็กเกจ Windows"
 
 [messages.wsl-prepare-compaction]
 source = "Compact disk…"

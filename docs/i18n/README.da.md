@@ -10,11 +10,11 @@
 
 [English](../../README.md) · [Afrikaans](README.af.md) · [Català](README.ca.md) · [Čeština](README.cs.md) · Dansk · [Deutsch](README.de.md) · [Ελληνικά](README.el.md) · [Español (Latinoamérica)](README.es-419.md) · [Español (España)](README.es-ES.md) · [Suomi](README.fi.md) · [Français](README.fr.md) · [Magyar](README.hu.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Norsk bokmål](README.nb.md) · [Nederlands](README.nl.md) · [Polski](README.pl.md) · [Português (Brasil)](README.pt-BR.md) · [Português (Portugal)](README.pt-PT.md) · [Română](README.ro.md) · [Русский](README.ru.md) · [Српски](README.sr-Cyrl.md) · [Svenska](README.sv.md) · [ไทย](README.th.md) · [Türkçe](README.tr.md) · [Українська](README.uk.md) · [Tiếng Việt](README.vi.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
 
-Clawback viser, hvad der optager diskpladsen. Det scanner et drev eller en mappe og viser hver fil som et rektangel, der svarer til pladsforbruget, indlejret i mapperne. Til Windows, macOS og Linux med både skrivebordsapp og terminaltilstand.
+Clawback viser, hvad der optager diskpladsen. Programmet scanner et drev eller en mappe og viser hver fil som et rektangel, der svarer til pladsforbruget, indlejret i mapperne. Til Windows, macOS og Linux med både skrivebordsapp og terminaltilstand.
 
 ![Clawback](../images/desktop.png)
 
-*Demodata - fiktive filer og størrelser*
+*Demodata – fiktive filer og størrelser*
 
 ## Funktioner
 
@@ -24,7 +24,7 @@ Udforsk træet sorteret efter størrelse og oversigten over filtyper. Dobbeltkli
 
 ## Installation
 
-Hent den nyeste udgivelse. Kør `clawback.exe` på Windows, træk `Clawback.app` til Applications på macOS, eller kør `clawback` på Linux. Vælg **Fil → Åbn mappe**. Installation fra crates.io kræver Rust 1.95 eller nyere og bruger systemets kinesiske, japanske og koreanske skrifttyper; de færdige udgivelser indeholder dem.
+Hent den nyeste udgivelse. Kør `clawback.exe` på Windows, træk `Clawback.app` til mappen Programmer på macOS, eller kør `clawback` på Linux. Vælg **Fil → Åbn mappe**. Installation fra crates.io kræver Rust 1.95 eller nyere og bruger systemets kinesiske, japanske og koreanske skrifttyper; de færdige udgivelser indeholder dem.
 
 [GitHub Releases](https://github.com/Azazel-Labs/Clawback/releases/latest) · [crates.io](https://crates.io/crates/clawback)
 
@@ -50,7 +50,7 @@ På Windows kan Turbo læse en hel lokal NTFS-diskenhed hurtigere via en separat
 
 ## Docker i browseren
 
-Til en NAS eller hjemmeserver kører Docker-billedet Clawback på serveren og streamer det til en browserfane. Tilknyt de mapper, du vil se, under `/data`. Du kan slette fra mapper med læse-/skriveadgang; skrivebeskyttede mapper kan gennemses, men der slettes aldrig fra dem.
+Til en NAS eller hjemmeserver kører Docker-billedet Clawback på serveren og streamer det til en browserfane. Montér de mapper, du vil se, under `/data`. Du kan slette fra mapper med læse-/skriveadgang; skrivebeskyttede mapper kan gennemses, men der slettes aldrig fra dem.
 
 ```yaml
 services:

@@ -238,11 +238,11 @@ translation = "压缩磁盘…"
 
 [messages.compact-wsl-error]
 source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
-translation = "无法压缩磁盘。确保 Docker Desktop 和 WSL 已停止，然后重试。 Windows 报告：{ $error }"
+translation = "无法压缩磁盘。请确保 Docker Desktop 和 WSL 已停止，然后重试。Windows 报告：{ $error }"
 
 [messages.compacting-wsl-disk]
 source = "Stopping WSL and compacting disk…"
-translation = "停止 WSL 和压缩磁盘…"
+translation = "正在停止 WSL 并压缩磁盘…"
 
 [messages.compress]
 source = "Compress"
@@ -345,7 +345,7 @@ translation = "永久删除？"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "正在准备循环…"
+translation = "正在准备移至回收站…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -361,7 +361,7 @@ translation = "排队的其他项目：{ $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "移动到回收站…"
+translation = "正在移至回收站…"
 
 [messages.delete-size-files]
 source = """
@@ -381,7 +381,7 @@ translation = "更新磁盘地图…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "回收工作异常停顿。请检查选中的项目，然后再尝试。"
+translation = "回收进程意外停止。请先检查所选项目，然后再重试。"
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -457,7 +457,7 @@ translation = "清空回收站？"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "永久删除{ $path }的内容？ Temp 文件夹将被保留。 Windows 拒绝删除的项目将保留在原处。首先关闭应用程序以释放更多临时文件。"
+translation = "要永久删除 { $path } 中的内容吗？临时文件夹本身会保留。Windows 拒绝删除的项目将保留在原处。请先关闭应用程序，以便释放更多临时文件。"
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -465,7 +465,7 @@ translation = "清理临时文件夹"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
-translation = "清理您的临时文件夹？"
+translation = "清理临时文件夹？"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
@@ -709,7 +709,7 @@ translation = "书面挪威语"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% 扫描进度"
+translation = "扫描占比 %"
 
 [messages.offline]
 source = "Offline"
@@ -925,7 +925,7 @@ translation = "WSL 虚拟磁盘，不会自行缩小"
 
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
-translation = "压缩保留磁盘内容并通过回收填充零的块来减小其 Windows 文件大小。它可能会回收很少的空间或根本不回收空间。首先清理 Docker 或 Linux 内部不需要的数据。"
+translation = "压缩会保留磁盘内容，并通过回收以零填充的块来减小其在 Windows 中的文件大小。可能只能回收很少的空间，甚至无法回收。请先清理 Docker 或 Linux 内不需要的数据。"
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
@@ -933,7 +933,7 @@ translation = "回收 WSL 磁盘空间"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "压缩之前，保存您的工作，退出 Docker Desktop 并关闭 WSL 会话。在 PowerShell 中运行此命令以停止所有 WSL 发行版。保持 Docker 和 WSL 停止，直到压缩完成。 Windows 将请求管理员权限。"
+translation = "压缩前，请保存你的工作，退出 Docker Desktop 并关闭 WSL 会话。在 PowerShell 中运行此命令以停止所有 WSL 发行版。在压缩完成前，请保持 Docker 和 WSL 处于停止状态。Windows 将请求管理员权限。"
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1035,11 +1035,11 @@ translation = "行为"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "左侧的水平形状；中心平衡它们；右侧的垂直形状。"
+translation = "左侧偏向横向形状；居中保持均衡；右侧偏向纵向形状。"
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "正在删除文件"
+translation = "删除文件"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
@@ -1067,7 +1067,7 @@ translation = "更新"
 
 [messages.settings-window]
 source = "Window & interaction"
-translation = "窗口和互动"
+translation = "窗口和交互"
 
 [messages.show-file-info-tips]
 source = "Show file details tooltips"
@@ -1299,7 +1299,7 @@ translation = "加速"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo：正在构建文件夹结构 · { $files } 个文件"
+translation = "加速：正在构建文件夹结构 · { $files } 个文件"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1307,15 +1307,15 @@ translation = "加速已取消 — 普通扫描继续进行"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "显示涡轮进度 · 验证结果…"
+translation = "正在显示加速进度 · 正在验证结果…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "当 Turbo 整理出的条目更多时，计数器会切换为显示 Turbo 的进度。在完整的 Turbo 目录树通过验证前，地图会继续显示普通扫描的预览。如果 Turbo 失败，普通扫描会继续。"
+translation = "当加速扫描整理出的条目更多时，计数器会切换为显示加速扫描的进度。在完整的加速扫描目录树通过验证前，地图会继续显示普通扫描的预览。如果加速扫描失败，普通扫描会继续。"
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo：正在读取 MFT { $percent }% · { $records } 条记录"
+translation = "加速：正在读取 MFT { $percent }% · { $records } 条记录"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1323,15 +1323,15 @@ translation = "加速：正在读取 MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "转机器：解析文件名…"
+translation = "加速：正在解析文件名…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
-translation = "Turbo：正在排序结果…"
+translation = "加速：正在排序结果…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: 加载结果…"
+translation = "加速：正在加载结果…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1367,7 +1367,7 @@ translation = "应用程序查找未完成。未删除任何内容。请重试�
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
-translation = "识别已安装的应用程序…"
+translation = "正在识别已安装的应用程序…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
@@ -1375,11 +1375,11 @@ translation = "启动卸载程序…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "无法识别此文件夹的应用程序。打开已安装的应用程序或 Steam 来管理其内容。"
+translation = "无法识别此文件夹所属的应用程序。请打开“已安装的应用”或 Steam 来管理其内容。"
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "打开已安装的应用程序"
+translation = "打开“已安装的应用”"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
@@ -1395,7 +1395,7 @@ translation = "磁盘地图会随文件变化实时更新。如果实时更新�
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
-translation = "删除整个应用程序，包括您选择之外的文件。"
+translation = "删除整个应用程序，包括你选择范围之外的文件。"
 
 [messages.uninstall-selected-path]
 source = "Selected item"
@@ -1403,7 +1403,7 @@ translation = "所选项目"
 
 [messages.uninstall-software]
 source = "Uninstall…"
-translation = "卸载……"
+translation = "卸载…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
@@ -1435,7 +1435,7 @@ translation = "此位置属于已安装的软件。选择下面的应用程序�
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows 无法启动卸载程序（错误 { $code }）。打开已安装的应用程序来管理此应用程序。"
+translation = "Windows 无法启动卸载程序（错误 { $code }）。请打开“已安装的应用”来管理此应用程序。"
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
@@ -1543,7 +1543,7 @@ translation = "准备好压缩了吗？"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "保存您的 Linux 工作并退出 Docker Desktop。 Clawback 将停止所有 WSL 会话，然后压缩该磁盘。保持 Docker 和 WSL 关闭，直到完成。"
+translation = "保存你的 Linux 工作并退出 Docker Desktop。Clawback 将停止所有 WSL 会话，然后压缩该磁盘。在完成之前，请保持 Docker 和 WSL 关闭。"
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
@@ -1551,7 +1551,7 @@ translation = "恢复未使用的磁盘空间。"
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "回收填满零的块，不会删除您的文件。请先清理 Linux 或 Docker 内部的不需要的数据；可回收的空间因情况而异。压缩期间必须保持 Docker 和 WSL 停止。"
+translation = "回收以零填充的块，不会删除你的文件。请先清理 Linux 或 Docker 内不需要的数据；可回收的空间因情况而异。压缩期间必须保持 Docker 和 WSL 停止。"
 
 [messages.wsl-copy-command]
 source = "Copy command"
@@ -1583,7 +1583,7 @@ translation = "存储 Docker 映像、容器、卷和构建缓存。"
 
 [messages.wsl-docker-system-description]
 source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
-translation = "存储Docker Desktop的Linux环境。 Docker 应用程序数据可能存储在单独的磁盘中。"
+translation = "存储 Docker Desktop 的 Linux 环境。Docker 应用程序数据可能存储在单独的磁盘中。"
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."

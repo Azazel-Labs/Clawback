@@ -78,7 +78,7 @@ translation = "已加密"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
-translation = "檔案系統連結或重定向"
+translation = "檔案系統連結或重新導向"
 
 [messages.attribute-temporary]
 source = "Temporary"
@@ -226,7 +226,7 @@ translation = "已安裝的應用程式或遊戲檔案。按一下以識別並�
 
 [messages.click-to-uninstall-steam]
 source = "Steam game files. Click to identify the game and uninstall through Steam."
-translation = "Steam 遊戲檔案。點擊識別遊戲並透過Steam解除安裝。"
+translation = "Steam 遊戲檔案。按一下以識別遊戲並透過 Steam 解除安裝。"
 
 [messages.close-dialog]
 source = "Close"
@@ -242,7 +242,7 @@ translation = "無法壓縮磁碟。請確認 Docker Desktop 和 WSL 已停止�
 
 [messages.compacting-wsl-disk]
 source = "Stopping WSL and compacting disk…"
-translation = "停止 WSL 和壓縮磁碟…"
+translation = "正在停止 WSL 並壓縮磁碟…"
 
 [messages.compress]
 source = "Compress"
@@ -301,7 +301,7 @@ translation = "刪除"
 
 [messages.delete-cannot-be-undone]
 source = "This can’t be undone."
-translation = "這無法撤銷。"
+translation = "此動作無法復原。"
 
 [messages.delete-contents]
 source = "Delete Contents"
@@ -457,7 +457,7 @@ translation = "清空資源回收筒？"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "永久刪除{ $path }的內容？ Temp 資料夾將被保留。 Windows 拒絕刪除的項目將保留在原處。首先關閉應用程式以釋放更多暫存檔案。"
+translation = "要永久刪除 { $path } 中的內容嗎？暫存資料夾本身會保留。Windows 拒絕刪除的項目將保留在原處。請先關閉應用程式，以便釋放更多暫存檔案。"
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -465,7 +465,7 @@ translation = "清理暫存資料夾"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
-translation = "清理您的暫存資料夾？"
+translation = "清理暫存資料夾？"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
@@ -709,7 +709,7 @@ translation = "巴克摩挪威文"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% 掃描進度"
+translation = "掃描占比 %"
 
 [messages.offline]
 source = "Offline"
@@ -805,7 +805,7 @@ translation = "內容…"
 
 [messages.properties-disk-size-detail]
 source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
-translation = "磁碟使用情況與檔案大小不同，例如由於壓縮、稀疏資料或分配開銷。"
+translation = "磁碟使用量與檔案大小不同，例如因為壓縮、疏鬆資料或配置額外負荷。"
 
 [messages.properties-title]
 source = "{ $name } Properties"
@@ -901,7 +901,7 @@ translation = "CocoaPods 套件，pod install 可還原"
 
 [messages.reclaim-python-venv]
 source = "Python virtual environment; recreate it from your requirements"
-translation = "Python 虛擬環境，可依需求重新建立"
+translation = "Python 虛擬環境，可依相依套件需求重新建立"
 
 [messages.reclaim-recycle-bin]
 source = "Deleted items waiting to be emptied"
@@ -925,7 +925,7 @@ translation = "WSL 虛擬磁碟，不會自行縮小"
 
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
-translation = "壓縮保留磁碟內容並透過回收填充零的區塊來減少其 Windows 檔案大小。它可能會回收很少的空間或根本不回收空間。首先清理 Docker 或 Linux 內部不需要的資料。"
+translation = "壓縮會保留磁碟內容，並透過回收以零填充的區塊來減少其在 Windows 中的檔案大小。可能只能回收很少的空間，甚至無法回收。請先清理 Docker 或 Linux 內不需要的資料。"
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
@@ -933,7 +933,7 @@ translation = "回收 WSL 磁碟空間"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "壓縮之前，請儲存您的工作，退出 Docker Desktop 並關閉 WSL 工作階段。在 PowerShell 中執行此命令以停止所有 WSL 發行版本。保持 Docker 和 WSL 停止，直到壓縮完成。 Windows 將請求系統管理員權限。"
+translation = "壓縮之前，請儲存你的工作，結束 Docker Desktop 並關閉 WSL 工作階段。在 PowerShell 中執行此命令以停止所有 WSL 發行版。在壓縮完成前，請讓 Docker 和 WSL 保持停止。Windows 將要求系統管理員權限。"
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1291,7 +1291,7 @@ translation = "刪除的項目可以復原。按一下改為永久刪除；Clawb
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
-translation = "嘗試以系統系統管理員權限執行更快的 NTFS 掃描。目前的掃描將繼續執行。"
+translation = "嘗試以系統管理員權限執行更快的 NTFS 掃描。目前的掃描將繼續執行。"
 
 [messages.turbo]
 source = "Turbo"
@@ -1299,7 +1299,7 @@ translation = "加速"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo：正在建立資料夾結構 · { $files } 個檔案"
+translation = "加速：正在建立資料夾結構 · { $files } 個檔案"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1307,15 +1307,15 @@ translation = "已取消加速 — 一般掃描繼續進行"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "正在顯示 Turbo 進度 · 正在驗證結果…"
+translation = "正在顯示加速進度 · 正在驗證結果…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "當 Turbo 整理出的項目更多時，計數器會切換為顯示 Turbo 的進度。在完整的 Turbo 目錄樹通過驗證前，地圖會繼續顯示一般掃描的預覽。如果 Turbo 失敗，一般掃描會繼續。"
+translation = "當加速掃描整理出的項目更多時，計數器會切換為顯示加速掃描的進度。在完整的加速掃描目錄樹通過驗證前，地圖會繼續顯示一般掃描的預覽。如果加速掃描失敗，一般掃描會繼續。"
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo：正在讀取 MFT { $percent }% · { $records } 筆記錄"
+translation = "加速：正在讀取 MFT { $percent }% · { $records } 筆記錄"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1323,15 +1323,15 @@ translation = "加速：正在讀取 MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo：正在解析檔案名稱…"
+translation = "加速：正在解析檔案名稱…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
-translation = "Turbo：正在排序結果…"
+translation = "加速：正在排序結果…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo：正在載入結果…"
+translation = "加速：正在載入結果…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1367,7 +1367,7 @@ translation = "應用程式查詢未完成。未刪除任何內容。請再試�
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
-translation = "識別已安裝的應用程式…"
+translation = "正在識別已安裝的應用程式…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
@@ -1375,7 +1375,7 @@ translation = "啟動解除安裝程式…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "無法辨識此資料夾的應用程式。打開已安裝的應用程式或 Steam 來管理其內容。"
+translation = "無法辨識此資料夾所屬的應用程式。請開啟「已安裝的應用程式」或 Steam 來管理其內容。"
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
@@ -1383,11 +1383,11 @@ translation = "開啟已安裝的應用程式"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "開啟 Steam 庫"
+translation = "開啟 Steam 收藏庫"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
-translation = "發布者：{ $publisher }"
+translation = "發行者：{ $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
@@ -1395,7 +1395,7 @@ translation = "磁碟地圖會隨檔案變更即時更新。如果無法使用�
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
-translation = "刪除整個應用程式，包括您選擇之外的檔案。"
+translation = "刪除整個應用程式，包括你選取範圍之外的檔案。"
 
 [messages.uninstall-selected-path]
 source = "Selected item"
@@ -1435,7 +1435,7 @@ translation = "此位置屬於已安裝的軟體。選擇下面的應用程式�
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows 無法啟動解除安裝程式（錯誤 { $code }）。打開已安裝的應用程式來管理此應用程式。"
+translation = "Windows 無法啟動解除安裝程式（錯誤 { $code }）。請開啟「已安裝的應用程式」來管理此應用程式。"
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
@@ -1543,7 +1543,7 @@ translation = "準備好壓縮了嗎？"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "儲存您的 Linux 工作並退出 Docker Desktop。 Clawback 將停止所有 WSL 工作階段，然後壓縮該磁碟。保持 Docker 和 WSL 關閉，直到完成。"
+translation = "儲存你的 Linux 工作並結束 Docker Desktop。Clawback 將停止所有 WSL 工作階段，然後壓縮該磁碟。在完成之前，請讓 Docker 和 WSL 保持關閉。"
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
@@ -1551,7 +1551,7 @@ translation = "恢復未使用的磁碟空間。"
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "回收填滿零的區塊，不會刪除您的檔案。請先清理 Linux 或 Docker 內部不需要的資料；可回收的空間依情況而異。壓縮期間必須保持 Docker 和 WSL 停止。"
+translation = "回收以零填充的區塊，不會刪除你的檔案。請先清理 Linux 或 Docker 內不需要的資料；可回收的空間依情況而異。壓縮期間必須保持 Docker 和 WSL 停止。"
 
 [messages.wsl-copy-command]
 source = "Copy command"
@@ -1583,11 +1583,11 @@ translation = "儲存 Docker 映像、容器、磁碟區和建置快取。"
 
 [messages.wsl-docker-system-description]
 source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
-translation = "儲存Docker Desktop的Linux環境。 Docker 應用程式資料可能儲存在單獨的磁碟中。"
+translation = "儲存 Docker Desktop 的 Linux 環境。Docker 應用程式資料可能儲存在另一個磁碟中。"
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = "瀏覽發行版的檔案並刪除不再需要的資料。使用其 Linux 套件管理器來清理套件快取。清理後，發行版內的“sudo fstrim -av”可能有助於在關閉 WSL 和壓縮之前釋放未使用的區塊。"
+translation = "瀏覽發行版的檔案並刪除不再需要的資料。使用其 Linux 套件管理員來清理套件快取。清理後，在發行版內執行「sudo fstrim -av」可能有助於在關閉 WSL 和壓縮之前釋放未使用的區塊。"
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1603,7 +1603,7 @@ translation = "在刪除不需要的資料之前檢查容器、映像和磁碟�
 
 [messages.wsl-owner-docker-data]
 source = "Docker Desktop — data disk"
-translation = "Docker Desktop — 資料盤"
+translation = "Docker Desktop — 資料磁碟"
 
 [messages.wsl-owner-docker-system]
 source = "Docker Desktop — system disk"
@@ -1611,7 +1611,7 @@ translation = "Docker Desktop — 系統磁碟"
 
 [messages.wsl-owner-unidentified]
 source = "Unidentified Linux distribution"
-translation = "未識別的 Linux 發行版本"
+translation = "未識別的 Linux 發行版"
 
 [messages.wsl-owner-unidentified-detail]
 source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."

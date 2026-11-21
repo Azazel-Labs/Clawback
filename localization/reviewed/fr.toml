@@ -352,7 +352,7 @@ translation = "Supprimer définitivement ?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Préparation du recyclage de…"
+translation = "Préparation de la mise à la corbeille…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -396,7 +396,7 @@ translation = "Mise à jour de la carte disque…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "L'ouvrier de recyclage s'est arrêté de façon inattendue. Vérifiez l'objet sélectionné avant de réessayer."
+translation = "Le processus de mise à la corbeille s’est arrêté de manière inattendue. Vérifiez l’élément sélectionné avant de réessayer."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -1060,7 +1060,7 @@ translation = "Comportement"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "La gauche favorise les formes horizontales; le centre les équilibre ; la droite favorise les formes verticales."
+translation = "La gauche favorise les formes horizontales ; le centre les équilibre ; la droite favorise les formes verticales."
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1068,7 +1068,7 @@ translation = "Suppression des fichiers"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Comptabilité de la taille"
+translation = "Calcul des tailles"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1084,7 +1084,7 @@ translation = "Enregistrer les modifications"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Scanner les limites"
+translation = "Limites de l’analyse"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1240,7 +1240,7 @@ translation = "Espagnol d’Espagne"
 
 [messages.sparse]
 source = "Sparse"
-translation = "Clairsemé"
+translation = "Partiellement alloué"
 
 [messages.special-file]
 source = "Special file"
@@ -1336,11 +1336,11 @@ translation = "Affichage de la progression du Turbo · validation des résultats
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Le compteur passe en Turbo quand il a assemblé plus d'entrées. La carte conserve l'aperçu régulier de la numérisation jusqu'à ce que l'arborescence Turbo complète soit validée. Si Turbo échoue, le balayage régulier continue."
+translation = "Les compteurs passent à Turbo lorsque celui-ci a assemblé davantage d’entrées. La carte conserve l’aperçu de l’analyse normale jusqu’à ce que l’arborescence Turbo complète soit validée. Si Turbo échoue, l’analyse normale continue."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: lecture MFT { $percent }% · { $records } enregistrements"
+translation = "Turbo : lecture de la MFT { $percent } % · { $records } enregistrements"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1356,7 +1356,7 @@ translation = "Turbo : tri des résultats…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: chargement des résultats…"
+translation = "Turbo : chargement des résultats…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"

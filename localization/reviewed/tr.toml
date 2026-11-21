@@ -445,7 +445,7 @@ translation = "Felemenkçe"
 
 [messages.empty-recycle-bin-body]
 source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
-translation = "{ $drive } adresindeki Geri Dönüşüm Kutunuzdaki her şey kalıcı olarak silinecek."
+translation = "{ $drive } sürücüsündeki Geri Dönüşüm Kutunuzda bulunan her şey kalıcı olarak silinecek."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
@@ -457,7 +457,7 @@ translation = "Geri Dönüşüm Kutusu boşaltılsın mı?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "{ $path } içeriği kalıcı olarak silinsin mi? Temp klasörü saklanacaktır. Windows'un silmeyi reddettiği öğeler yerinde bırakılacaktır. Daha fazla geçici dosyayı serbest bırakmak için önce uygulamaları kapatın."
+translation = "{ $path } içeriği kalıcı olarak silinsin mi? Temp klasörünün kendisi korunacaktır. Windows'un silmeyi reddettiği öğeler yerinde bırakılacaktır. Daha fazla geçici dosyayı serbest bırakmak için önce uygulamaları kapatın."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -625,7 +625,7 @@ translation = "Canlı güncellemeler durduruldu · Yeniden bağlanmak için tekr
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
-translation = "Canlı · Arka plandaki değişiklikleri uzlaştırma"
+translation = "Canlı · Arka plandaki değişiklikler uzlaştırılıyor"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
@@ -709,7 +709,7 @@ translation = "Norveççe Bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% TARANDI"
+translation = "% TARAMA PAYI"
 
 [messages.offline]
 source = "Offline"
@@ -1247,7 +1247,7 @@ translation = "Sistem varsayılanı"
 
 [messages.takes-effect-the-next-time-clawback-starts]
 source = "Takes effect the next time Clawback starts"
-translation = "Clawback bir sonraki açılışta uygular"
+translation = "Clawback bir sonraki açılışında geçerli olur"
 
 [messages.temp]
 source = "Temp"
@@ -1279,7 +1279,7 @@ translation = "İpuçları"
 
 [messages.trash]
 source = "Trash"
-translation = "Çöp Kutusu"
+translation = "Çöp Sepeti"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
@@ -1407,7 +1407,7 @@ translation = "Kaldır…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Steam aracılığıyla kaldırma…"
+translation = "Steam aracılığıyla kaldır…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1439,7 +1439,7 @@ translation = "Windows, kaldırıcıyı başlatamadı (hata { $code }). Bu uygul
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Kayıtlı kaldırıcı bulunamadı. Bu uygulamayı yönetmek için Windows Yüklü Uygulamaları açın."
+translation = "Kayıtlı kaldırıcı bulunamadı. Bu uygulamayı yönetmek için Windows'ta Yüklü Uygulamalar'ı açın."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1535,7 +1535,7 @@ translation = "Windows yönetici izni isteyecek."
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
-translation = "Diskin içeriğini korurken sıfır dolu blokları geri alın. Docker ve WSL'nin durdurulmasını gerektirir."
+translation = "Diskin içeriğini korurken sıfır dolu blokları geri kazanın. Docker ve WSL'nin durdurulmasını gerektirir."
 
 [messages.wsl-compact-ready]
 source = "Ready to compact?"
@@ -1551,7 +1551,7 @@ translation = "Kullanılmayan disk alanını kurtarın."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "Dosyalarınızı silmeden sıfır dolu blokları geri alır. Önce Linux veya Docker'ın içini temizleyin; tasarruf farklılık gösterir. Sıkıştırma sırasında Docker ve WSL durdurulmuş durumda kalmalıdır."
+translation = "Dosyalarınızı silmeden sıfır dolu blokları geri kazanır. Önce Linux veya Docker'ın içini temizleyin; tasarruf farklılık gösterir. Sıkıştırma sırasında Docker ve WSL durdurulmuş durumda kalmalıdır."
 
 [messages.wsl-copy-command]
 source = "Copy command"
@@ -1575,7 +1575,7 @@ translation = "WSL dağıtımı"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
-translation = "Docker Desktop'nde görüntüleri, durdurulan kapsayıcıları ve birimleri inceleyin. Derleme önbelleği aynı zamanda “docker builder prune” ile de temizlenebilir. Birimler ihtiyacınız olan veritabanlarını veya diğer dosyaları içerebilir; çıkarmadan önce bunları inceleyin. Temizleme ve disk sıkıştırma ayrı adımlardır."
+translation = "Docker Desktop'ta görüntüleri, durdurulan kapsayıcıları ve birimleri inceleyin. Derleme önbelleği “docker builder prune” ile de temizlenebilir. Birimler ihtiyacınız olan veritabanlarını veya diğer dosyaları içerebilir; kaldırmadan önce bunları inceleyin. Temizleme ve disk sıkıştırma ayrı adımlardır."
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
@@ -1587,7 +1587,7 @@ translation = "Docker Desktop'ın Linux ortamını depolar. Docker uygulama veri
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = """Dağıtımın dosyalarına göz atın ve artık ihtiyacınız olmayan verileri kaldırın. Paket önbelleklerini temizlemek için Linux paket yöneticisini kullanın. Temizlemeden sonra, dağıtım içindeki "sudo fstrim -av", WSL'yi kapatmadan ve sıkıştırmadan önce kullanılmayan blokların serbest bırakılmasına yardımcı olabilir."""
+translation = "Dağıtımın dosyalarına göz atın ve artık ihtiyacınız olmayan verileri kaldırın. Paket önbelleklerini temizlemek için Linux paket yöneticisini kullanın. Temizlemeden sonra, dağıtım içinde çalıştırılan “sudo fstrim -av”, WSL'yi kapatmadan ve sıkıştırmadan önce kullanılmayan blokların serbest bırakılmasına yardımcı olabilir."
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."

@@ -66,7 +66,7 @@ translation = "3D-ресурс"
 
 [messages.attribute-backup-flag]
 source = "Marked for backup"
-translation = "Отмечено для резервного копирования."
+translation = "Отмечено для резервного копирования"
 
 [messages.attribute-compressed]
 source = "Compressed"
@@ -74,7 +74,7 @@ translation = "Сжатый"
 
 [messages.attribute-encrypted]
 source = "Encrypted"
-translation = "Зашифровано"
+translation = "Зашифрованный"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
@@ -206,11 +206,11 @@ translation = "Очистка папки Temp…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
-translation = "Нажмите, чтобы очистить временные файлы."
+translation = "Нажмите, чтобы очистить временные файлы"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Нажмите, чтобы очистить корзину этого диска."
+translation = "Нажмите, чтобы очистить корзину этого диска"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -222,11 +222,11 @@ translation = "VHDX · Виртуальный диск WSL. Нажмите, чт
 
 [messages.click-to-uninstall-software]
 source = "Installed application or game files. Click to identify and uninstall the whole application."
-translation = "Установленное приложение или файлы игры. Нажмите, чтобы идентифицировать и удалить все приложение."
+translation = "Установленное приложение или файлы игры. Нажмите, чтобы определить и удалить всё приложение."
 
 [messages.click-to-uninstall-steam]
 source = "Steam game files. Click to identify the game and uninstall through Steam."
-translation = "Файлы игры Steam. Нажмите, чтобы идентифицировать игру и удалить ее через Steam."
+translation = "Файлы игры Steam. Нажмите, чтобы определить игру и удалить её через Steam."
 
 [messages.close-dialog]
 source = "Close"
@@ -340,7 +340,7 @@ translation = 'Не удалось удалить объект: { $path }{ "\u00
 
 [messages.delete-failed-title]
 source = "Couldn’t delete item"
-translation = "Не удалось удалить элемент."
+translation = "Не удалось удалить элемент"
 
 [messages.delete-permanently]
 source = "Deleting permanently…"
@@ -360,7 +360,7 @@ translation = "Подготовка к перемещению в корзину�
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
-translation = "{ $done } из { $total } файлов"
+translation = "Файлы: { $done } из { $total }"
 
 [messages.delete-queued]
 source = """
@@ -372,7 +372,7 @@ translation = "Дополнительные элементы в очереди: 
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Перемещение в Корзину…"
+translation = "Перемещение в корзину…"
 
 [messages.delete-size-files]
 source = """
@@ -392,7 +392,7 @@ translation = "Обновление карты диска…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Работник по рециркуляции неожиданно остановлен. Проверьте выбранный предмет перед повторной попыткой."
+translation = "Задача перемещения в корзину неожиданно завершилась. Проверьте выбранный объект перед повторной попыткой."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -456,7 +456,7 @@ translation = "Нидерландский"
 
 [messages.empty-recycle-bin-body]
 source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
-translation = "Все, что находится в вашей корзине на { $drive }, будет удалено без возможности восстановления."
+translation = "Всё, что находится в вашей корзине на { $drive }, будет удалено без возможности восстановления."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
@@ -472,7 +472,7 @@ translation = "Удалить содержимое { $path } навсегда? �
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
-translation = "Очистить папку Temp."
+translation = "Очистить папку Temp"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
@@ -628,7 +628,7 @@ translation = "В реальном времени · Обработка нако
 
 [messages.live-demo]
 source = "Demo data - fictional files and sizes"
-translation = "Демонстрационные данные — вымышленные файлы и размеры."
+translation = "Демонстрационные данные — вымышленные файлы и размеры"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
@@ -640,7 +640,7 @@ translation = "В реальном времени · Согласование и
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Обновление в реальном времени недоступно: Сканирование отменено · Повторите сканирование для обновления"
+translation = "Обновление в реальном времени недоступно: сканирование отменено · Повторите сканирование для обновления"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -756,7 +756,7 @@ translation = "Открыть в проводнике"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Открыть в диспетчере файлов."
+translation = "Открыть в файловом менеджере"
 
 [messages.open-in-finder]
 source = "Open in Finder"
@@ -944,7 +944,7 @@ translation = "Освободить место на диске WSL"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "Перед сжатием сохраните работу, закройте Docker Desktop и закройте сеансы WSL. Запустите эту команду в PowerShell, чтобы остановить все дистрибутивы WSL. Оставьте Docker и WSL остановленными до завершения уплотнения. Windows запросит разрешение администратора."
+translation = "Перед сжатием сохраните работу, закройте Docker Desktop и закройте сеансы WSL. Запустите эту команду в PowerShell, чтобы остановить все дистрибутивы WSL. Оставьте Docker и WSL остановленными до завершения сжатия. Windows запросит разрешение администратора."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1056,7 +1056,7 @@ translation = "Поведение"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Левый преимущество горизонтальных форм; центр балансирует их; правый благоприятствует вертикальным формам."
+translation = "Влево — преобладают горизонтальные формы; по центру — баланс; вправо — преобладают вертикальные формы."
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1064,11 +1064,11 @@ translation = "Удаление файлов"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Размер счета"
+translation = "Подсчёт размера"
 
 [messages.settings-info-tips]
 source = "File details"
-translation = "Детали файла"
+translation = "Сведения о файлах"
 
 [messages.settings-name-tips]
 source = "File names"
@@ -1184,7 +1184,7 @@ translation = "Нет папки настроек, где можно храни�
 
 [messages.snapshot-none]
 source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
-translation = "Сохранённых снимков { $path } пока нет. Сохраните снимок через Файл › Сохранить снимок."
+translation = "Сохранённых снимков для { $path } пока нет. Сохраните снимок через Файл › Сохранить снимок."
 
 [messages.snapshot-other-root]
 source = "That snapshot is of { $path }, not the folder you are viewing."
@@ -1276,7 +1276,7 @@ translation = "Временный"
 
 [messages.temp-cleanup-skipped]
 source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
-translation = "В результате очистки осталось { $count } элементов, которые невозможно удалить. Первая причина: { $error }"
+translation = "Элементы, которые не удалось удалить при очистке: { $count }. Первая причина: { $error }"
 
 [messages.thai]
 source = "Thai"
@@ -1320,7 +1320,7 @@ translation = "Турбо"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: assembling folders · { $files } файлы"
+translation = "Турбо: сборка папок · файлов: { $files }"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1328,15 +1328,15 @@ translation = "Турбо отменено — обычное сканирова
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Отображение прогресса Turbo · проверка результатов…"
+translation = "Отображение хода Турбо · проверка результатов…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Счётчики переключаются на Turbo, когда он соберёт больше записей. Карта сохраняет предварительные результаты обычного сканирования до проверки всего дерева Turbo. В случае сбоя Turbo обычное сканирование продолжается."
+translation = "Счётчики переключаются на Турбо, когда он соберёт больше записей. Карта сохраняет предварительные результаты обычного сканирования до проверки всего дерева Турбо. В случае сбоя Турбо обычное сканирование продолжается."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: чтение MFT { $percent }% · { $records } записи"
+translation = "Турбо: чтение MFT { $percent }% · записей: { $records }"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1344,7 +1344,7 @@ translation = "Турбо: чтение MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: разрешение имен файлов…"
+translation = "Турбо: определение имён файлов…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
@@ -1384,7 +1384,7 @@ translation = "Удалить"
 
 [messages.uninstall-identification-failed]
 source = "The application lookup did not finish. Nothing was deleted. Try again."
-translation = "Поиск приложения не завершен. Ничего не было удалено. Попробуйте еще раз."
+translation = "Поиск приложения не завершён. Ничего не было удалено. Попробуйте ещё раз."
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
@@ -1396,7 +1396,7 @@ translation = "Запустить программу удаления…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Для этой папки не обнаружено ни одного приложения. Откройте «Установленные приложения» или Steam, чтобы управлять их содержимым."
+translation = "Для этой папки не обнаружено ни одного приложения. Откройте «Установленные приложения» или Steam, чтобы управлять её содержимым."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
@@ -1404,7 +1404,7 @@ translation = "Открыть «Установленные приложения�
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Открыть библиотеку Steam."
+translation = "Открыть библиотеку Steam"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1416,7 +1416,7 @@ translation = "Карта отражает изменения в реально�
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
-translation = "Удаляет все приложение, включая файлы, не выбранные вами."
+translation = "Удаляет всё приложение, включая файлы за пределами выбранного."
 
 [messages.uninstall-selected-path]
 source = "Selected item"
@@ -1428,7 +1428,7 @@ translation = "Удалить…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Удаление через Steam…"
+translation = "Удалить через Steam…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1436,7 +1436,7 @@ translation = "Идентификатор приложения Steam: { $id }"
 
 [messages.uninstall-title]
 source = "Uninstall an application or game"
-translation = "Удаление приложения или игры."
+translation = "Удаление приложения или игры"
 
 [messages.uninstall-version]
 source = "Version: { $version }"
@@ -1444,15 +1444,15 @@ translation = "Версия: { $version }"
 
 [messages.uninstall-via-steam]
 source = "Managed by Steam"
-translation = "Управляется Steam."
+translation = "Управляется Steam"
 
 [messages.uninstall-via-windows]
 source = "Registered Windows application"
-translation = "Зарегистрированное приложение Windows."
+translation = "Зарегистрированное приложение Windows"
 
 [messages.uninstall-whole-application]
 source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
-translation = "Это место принадлежит установленному программному обеспечению. Выберите приложение ниже, чтобы удалить все приложение, включая файлы за пределами выбранной папки. Windows или Steam выполнят удаление."
+translation = "Это место принадлежит установленному программному обеспечению. Выберите приложение ниже, чтобы удалить всё приложение, включая файлы за пределами выбранной папки. Windows или Steam выполнят удаление."
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
@@ -1460,7 +1460,7 @@ translation = "Windows не удалось запустить программу
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Не удалось найти зарегистрированную программу удаления. Откройте «Установленные приложения Windows», чтобы управлять этим приложением."
+translation = "Не удалось найти зарегистрированную программу удаления. Откройте «Установленные приложения» в Windows, чтобы управлять этим приложением."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1542,7 +1542,7 @@ translation = "Текущее ограничение числа параллел
 
 [messages.wsl-browse-linux]
 source = "Browse Linux files"
-translation = "Просмотр файлов Linux"
+translation = "Просмотреть файлы Linux"
 
 [messages.wsl-browse-linux-detail]
 source = "Open this distribution in Explorer. This may start the distribution."
@@ -1554,7 +1554,7 @@ translation = "Что вы хотите сделать?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
-translation = "Показать рекомендации по очистке."
+translation = "Показать рекомендации по очистке"
 
 [messages.wsl-compact-admin]
 source = "Windows will ask for administrator permission."
@@ -1562,7 +1562,7 @@ translation = "Windows запросит разрешение администр�
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
-translation = "Освободите заполненные нулями блоки, сохранив при этом содержимое диска. Требуется остановка Docker и WSL."
+translation = "Освобождает заполненные нулями блоки, сохраняя содержимое диска. Требуется остановка Docker и WSL."
 
 [messages.wsl-compact-ready]
 source = "Ready to compact?"
@@ -1570,7 +1570,7 @@ translation = "Готовы к сжатию?"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "Сохраните работу с Linux и закройте Docker Desktop. Clawback остановит все сеансы WSL, а затем сожмет этот диск. Держите Docker и WSL закрытыми до завершения."
+translation = "Сохраните работу в Linux и закройте Docker Desktop. Clawback остановит все сеансы WSL, а затем сожмёт этот диск. Держите Docker и WSL закрытыми до завершения."
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
@@ -1602,11 +1602,11 @@ translation = "Дистрибутив WSL"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
-translation = "В Docker Desktop проверьте образы, остановленные контейнеры и тома. Кеш сборки также можно очистить командой «docker builder prune». Тома могут содержать базы данных или другие нужные файлы; проверьте их перед удалением. Очистка и сжатие диска — отдельные этапы."
+translation = "В Docker Desktop проверьте образы, остановленные контейнеры и тома. Кэш сборки также можно очистить командой «docker builder prune». Тома могут содержать базы данных или другие нужные файлы; проверьте их перед удалением. Очистка и сжатие диска — отдельные этапы."
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
-translation = "Хранит образы Docker, контейнеры, тома и кеш сборки."
+translation = "Хранит образы Docker, контейнеры, тома и кэш сборки."
 
 [messages.wsl-docker-system-description]
 source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
@@ -1614,7 +1614,7 @@ translation = "Хранит среду Linux Docker Desktop. Данные при
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = "Просмотрите файлы дистрибутива и удалите данные, которые вам больше не нужны. Используйте его менеджер пакетов Linux для очистки кешей пакетов. После очистки команда «sudo fstrim -av» внутри дистрибутива может помочь освободить неиспользуемые блоки перед выключением WSL и сжатием."
+translation = "Просмотрите файлы дистрибутива и удалите данные, которые вам больше не нужны. Используйте менеджер пакетов дистрибутива для очистки кэшей пакетов. После очистки команда «sudo fstrim -av» внутри дистрибутива может помочь освободить неиспользуемые блоки перед выключением WSL и сжатием."
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1638,7 +1638,7 @@ translation = "Docker Desktop — системный диск"
 
 [messages.wsl-owner-unidentified]
 source = "Unidentified Linux distribution"
-translation = "Неопознанный дистрибутив Linux."
+translation = "Неопознанный дистрибутив Linux"
 
 [messages.wsl-owner-unidentified-detail]
 source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
@@ -1646,7 +1646,7 @@ translation = "Этот путь выглядит как установка WSL,
 
 [messages.wsl-package]
 source = "Windows package"
-translation = "Пакет Windows."
+translation = "Пакет Windows"
 
 [messages.wsl-prepare-compaction]
 source = "Compact disk…"

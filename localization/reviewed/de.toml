@@ -2,11 +2,11 @@ version = 2
 
 [readme]
 source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
-translation = "d9ea221eda0f7171836dcc1d1b1fe1cebc3a4166586517c705d4dbe5fc73a046"
+translation = "9a30c8afc781a4f47435134546ca69917d3c40ec5cd2d2e72f39dd19df3fed08"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
-translation = "Eine schnelle, plattformübergreifende Übersicht über Ihren Speicherplatz."
+translation = "Eine schnelle, plattformübergreifende Übersicht über deinen Speicherplatz."
 
 [messages.about-clawback]
 source = "About Clawback"
@@ -162,7 +162,7 @@ translation = "Nach Updates suchen"
 
 [messages.check-for-updates-hint]
 source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
-translation = "Fragt beim Start bei GitHub nach, ob eine neuere Version verfügbar ist. Es werden keine Daten über Sie oder Ihre Dateien gesendet."
+translation = "Fragt beim Start bei GitHub nach, ob eine neuere Version verfügbar ist. Es werden keine Daten über dich oder deine Dateien gesendet."
 
 [messages.chinese-simplified]
 source = "Simplified Chinese"
@@ -174,7 +174,7 @@ translation = "Traditionelles Chinesisch"
 
 [messages.claw-back-your-disk-space]
 source = "Claw back your disk space."
-translation = "Holen Sie sich Ihren Speicherplatz zurück."
+translation = "Hol dir deinen Speicherplatz zurück."
 
 [messages.clawback-settings]
 source = "Clawback Settings"
@@ -328,7 +328,7 @@ translation = "Der Inhalt von „{ $name }“ ist zu groß für den Papierkorb. 
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
-translation = "{ $size } · { $seconds }s abgelaufen"
+translation = "{ $size } · { $seconds } s vergangen"
 
 [messages.delete-error]
 source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
@@ -352,7 +352,7 @@ translation = "Endgültig löschen?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Bereite auf Recycling… vor"
+translation = "Papierkorb wird vorbereitet…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -392,11 +392,11 @@ translation = "„{ $name }“ ist zu groß für den Papierkorb."
 
 [messages.delete-updating]
 source = "Updating disk map…"
-translation = "Aktualisiere Plattenkarte…"
+translation = "Karte wird aktualisiert…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Der Recyclingarbeiter hat unerwartet gestoppt. Überprüfe das ausgewählte Element, bevor du es erneut versuchst."
+translation = "Der Löschvorgang im Hintergrund wurde unerwartet beendet. Überprüfe das ausgewählte Element, bevor du es erneut versuchst."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -668,7 +668,7 @@ translation = "Viele Dateien"
 
 [messages.make-room-for-what-matters]
 source = "Make room for what matters."
-translation = "Schaffen Sie Platz für das Wesentliche."
+translation = "Schaffe Platz für das Wesentliche."
 
 [messages.managed-by-windows]
 source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
@@ -704,7 +704,7 @@ translation = "Name:"
 
 [messages.no-drives-found-use-other-folder-to-pick]
 source = 'No drives found. Use "Other Folder..." to pick a folder.'
-translation = "Keine Laufwerke gefunden. Wählen Sie über „Anderer Ordner…“ einen Ordner aus."
+translation = "Keine Laufwerke gefunden. Wähle über „Anderer Ordner…“ einen Ordner aus."
 
 [messages.no-extension]
 source = "No extension"
@@ -736,15 +736,15 @@ translation = '{ "   OK   " }'
 
 [messages.open-a-drive-or-folder-to-see-where]
 source = "Open a drive or folder to see where your space goes."
-translation = "Öffnen Sie ein Laufwerk oder einen Ordner, um zu sehen, was Ihren Speicherplatz belegt."
+translation = "Öffne ein Laufwerk oder einen Ordner, um zu sehen, was deinen Speicherplatz belegt."
 
 [messages.open-a-folder-or-drive-to-browse-its]
 source = "Open a folder or drive to browse its directory tree."
-translation = "Öffnen Sie einen Ordner oder ein Laufwerk, um die Verzeichnisstruktur zu durchsuchen."
+translation = "Öffne einen Ordner oder ein Laufwerk, um die Verzeichnisstruktur zu durchsuchen."
 
 [messages.open-a-folder-to-begin]
 source = "Open a folder to begin"
-translation = "Öffnen Sie zunächst einen Ordner"
+translation = "Öffne zunächst einen Ordner"
 
 [messages.open-drive]
 source = "Open Drive..."
@@ -788,15 +788,15 @@ translation = "Scan pausieren"
 
 [messages.permission-hint-macos]
 source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
-translation = "macOS schützt bestimmte Ordner (Mail, Nachrichten, andere Benutzer, …). Gewähren Sie Clawback unter Systemeinstellungen › Datenschutz & Sicherheit „Festplattenvollzugriff“, um sie einzubeziehen."
+translation = "macOS schützt bestimmte Ordner (Mail, Nachrichten, andere Benutzer, …). Gewähre Clawback unter Systemeinstellungen › Datenschutz & Sicherheit „Festplattenvollzugriff“, um sie einzubeziehen."
 
 [messages.permission-hint-unix]
 source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
-translation = "Manche Ordner sind nur für andere Benutzer oder root lesbar. Starten Sie Clawback mit erhöhten Rechten (zum Beispiel `sudo -E clawback /`), um sie einzubeziehen."
+translation = "Manche Ordner sind nur für andere Benutzer oder root lesbar. Starte Clawback mit erhöhten Rechten (zum Beispiel `sudo -E clawback /`), um sie einzubeziehen."
 
 [messages.permission-hint-windows]
 source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
-translation = "Manche Systemordner sind nur für Administratoren lesbar. Starten Sie Clawback als Administrator, um sie einzubeziehen."
+translation = "Manche Systemordner sind nur für Administratoren lesbar. Starte Clawback als Administrator, um sie einzubeziehen."
 
 [messages.polish]
 source = "Polish"
@@ -876,7 +876,7 @@ translation = "Bereinigung"
 
 [messages.reclaim-developer]
 source = "Rebuildable project files"
-translation = "Wiederherstellbare Projektdateien"
+translation = "Neu erstellbare Projektdateien"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
@@ -1052,7 +1052,7 @@ translation = "Einstellungen…"
 
 [messages.settings-appearance]
 source = "Appearance"
-translation = "Erscheinung"
+translation = "Darstellung"
 
 [messages.settings-behavior]
 source = "Behavior"
@@ -1060,15 +1060,15 @@ translation = "Verhalten"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Linke bevorzugt horizontale Formen; Mitte gleicht sie aus; rechts bevorzugt vertikale Formen."
+translation = "Links werden horizontale Formen bevorzugt, in der Mitte sind sie ausgeglichen, rechts werden vertikale Formen bevorzugt."
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Lösche Dateien"
+translation = "Dateien löschen"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Abrechnungsgröße"
+translation = "Größenberechnung"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1084,7 +1084,7 @@ translation = "Änderungen speichern"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Grenzen scannen"
+translation = "Scanbereich"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1308,7 +1308,7 @@ translation = "Papierkorb"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
-translation = "Gelöschte Elemente werden nach Ihrer Bestätigung endgültig entfernt. Klicken, damit sie wiederherstellbar bleiben."
+translation = "Gelöschte Elemente werden nach deiner Bestätigung endgültig entfernt. Klicken, damit sie wiederherstellbar bleiben."
 
 [messages.trash-toggle-on]
 source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
@@ -1316,7 +1316,7 @@ translation = "Gelöschte Elemente lassen sich wiederherstellen. Klicken, um sta
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
-translation = "Versuchen Sie einen schnelleren NTFS-Scan mit Administratorberechtigung. Der aktuelle Scan läuft weiter."
+translation = "Versuche einen schnelleren NTFS-Scan mit Administratorberechtigung. Der aktuelle Scan läuft weiter."
 
 [messages.turbo]
 source = "Turbo"
@@ -1324,7 +1324,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: Ordner zusammenstellen · { $files } Dateien"
+translation = "Turbo: Ordner werden zusammengestellt · { $files } Dateien"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1332,15 +1332,15 @@ translation = "Turbo abgebrochen — normaler Scan läuft weiter"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Zeige Turbo-Fortschritt · Validierung der Ergebnisse…"
+translation = "Turbo-Fortschritt wird angezeigt · Ergebnisse werden überprüft…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Zähler wechseln zu Turbo, wenn sie mehr Einträge zusammengestellt haben. Die Karte hält die reguläre Scan-Vorschau bis der komplette Turbo-Baum überprüft ist. Wenn Turbo fehlschlägt, wird der reguläre Scan fortgesetzt."
+translation = "Die Zähler wechseln zu Turbo, sobald Turbo mehr Einträge zusammengestellt hat. Die Karte zeigt die Vorschau des regulären Scans, bis der vollständige Turbo-Baum überprüft ist. Wenn Turbo fehlschlägt, wird der reguläre Scan fortgesetzt."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: Lesen von MFT { $percent }% · { $records } Datensätze"
+translation = "Turbo: MFT wird gelesen { $percent }% · { $records } Datensätze"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1348,15 +1348,15 @@ translation = "Turbo: MFT wird gelesen…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: auflösende Dateinamen…"
+translation = "Turbo: Dateinamen werden aufgelöst…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
-translation = "Turbo: Sortierung der Ergebnisse…"
+translation = "Turbo: Ergebnisse werden sortiert…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: Lade Ergebnisse…"
+translation = "Turbo: Ergebnisse werden geladen…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"

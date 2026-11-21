@@ -50,7 +50,7 @@ Windowson a Turbo külön, csak olvasó segédfolyamattal gyorsabban olvassa be 
 
 ## Docker a böngészőben
 
-NAS-on vagy otthoni szerveren a Docker-lemezkép a szerveren futtatja a Clawbacket, és egy böngészőlapra közvetíti. A megtekinteni kívánt mappákat a `/data` alá csatold. Az írható-olvasható mappákból törölhetsz; a csak olvasható mappák böngészhetők, de soha nem törlődik belőlük semmi.
+NAS-on vagy otthoni szerveren a Docker-lemezkép a szerveren futtatja a Clawbacket, és egy böngészőlapra közvetíti. A megtekinteni kívánt mappákat a `/data` alá csatolja. Az írható-olvasható mappákból törölhet; a csak olvasható mappák böngészhetők, de soha nem törlődik belőlük semmi.
 
 ```yaml
 services:
@@ -68,7 +68,7 @@ services:
     restart: unless-stopped
 ```
 
-Futtasd a `docker compose up -d` parancsot, majd nyisd meg a `https://<server>:3001` címet. Telepítési útmutató (angolul): [docs/docker.md](../docker.md)
+Futtassa a `docker compose up -d` parancsot, majd nyissa meg a `https://<server>:3001` címet. Telepítési útmutató (angolul): [docs/docker.md](../docker.md)
 
 ![Clawback](../images/browser.png)
 

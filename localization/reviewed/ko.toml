@@ -202,7 +202,7 @@ translation = "영구적으로 정리하시겠습니까?"
 
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
-translation = "임시 폴더를 청소 중…"
+translation = "Temp 폴더 정리 중…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
@@ -417,7 +417,7 @@ translation = "표시 색상"
 
 [messages.docker-desktop-not-found]
 source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
-translation = "Docker Desktop을 표준 설치 위치에서 찾을 수 없습니다. Windows 시작 메뉴에서 엽니다."
+translation = "Docker Desktop을 표준 설치 위치에서 찾을 수 없습니다. Windows 시작 메뉴에서 여세요."
 
 [messages.document]
 source = "Document"
@@ -457,11 +457,11 @@ translation = "휴지통을 비우시겠습니까?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "{ $path }의 콘텐츠를 영구적으로 삭제하시겠습니까? Temp 폴더는 유지됩니다. Windows에서 삭제를 거부한 항목은 그대로 유지됩니다. 더 많은 임시 파일을 삭제할 수 있도록 먼저 응용프로그램을 닫으세요."
+translation = "{ $path }의 내용을 영구적으로 삭제하시겠습니까? Temp 폴더는 유지됩니다. Windows에서 삭제를 거부한 항목은 그대로 유지됩니다. 더 많은 임시 파일을 삭제할 수 있도록 먼저 애플리케이션을 닫으세요."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
-translation = "임시 폴더 정리"
+translation = "Temp 폴더 정리"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
@@ -469,7 +469,7 @@ translation = "Temp 폴더를 정리하시겠습니까?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "휴지통 비우기…"
+translation = "휴지통 비우는 중…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -621,7 +621,7 @@ translation = "데모 데이터 - 가상 파일 및 크기"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
-translation = "실시간 업데이트 중지됨 · 다시 연결하려면 다시 검사하세요"
+translation = "실시간 업데이트 중지됨 · 다시 연결하려면 다시 스캔하세요"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
@@ -629,15 +629,15 @@ translation = "실시간 · 백그라운드에서 변경 사항 반영 중"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "실시간 업데이트를 사용할 수 없음: 검사 취소됨 · 새로 고치려면 다시 검사하세요"
+translation = "실시간 업데이트를 사용할 수 없음: 스캔 취소됨 · 새로 고치려면 다시 스캔하세요"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
-translation = "실시간 업데이트 중지됨: { $error } · 다시 연결하려면 다시 검사하세요"
+translation = "실시간 업데이트 중지됨: { $error } · 다시 연결하려면 다시 스캔하세요"
 
 [messages.live-unavailable]
 source = "Live unavailable: { $error } · Rescan to refresh"
-translation = "실시간 업데이트를 사용할 수 없음: { $error } · 새로 고치려면 다시 검사하세요"
+translation = "실시간 업데이트를 사용할 수 없음: { $error } · 새로 고치려면 다시 스캔하세요"
 
 [messages.live-watching]
 source = "Live · Watching for changes"
@@ -709,7 +709,7 @@ translation = "노르웨이어(보크몰)"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% 스캔 진행률"
+translation = "스캔 대비 %"
 
 [messages.offline]
 source = "Offline"
@@ -933,7 +933,7 @@ translation = "WSL 디스크 공간 회수"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "압축하기 전에 작업 내용을 저장하고 Docker Desktop을 종료하고 WSL 세션을 닫습니다. 모든 WSL 배포를 중지하려면 PowerShell에서 이 명령을 실행하세요. 압축이 완료될 때까지 Docker와 WSL을 중지된 상태로 유지합니다. Windows에서는 관리자 권한을 요청합니다."
+translation = "압축하기 전에 작업 내용을 저장하고 Docker Desktop을 종료한 뒤 WSL 세션을 닫으세요. 모든 WSL 배포판을 중지하려면 PowerShell에서 이 명령을 실행하세요. 압축이 완료될 때까지 Docker와 WSL을 중지된 상태로 유지하세요. Windows에서 관리자 권한을 요청합니다."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1059,7 +1059,7 @@ translation = "변경 사항 저장"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "검사 범위"
+translation = "스캔 범위"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1179,7 +1179,7 @@ translation = "스냅샷 저장…"
 
 [messages.snapshot-save-body]
 source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
-translation = "스냅샷은 이 검사를 기록해, 나중에 무엇이 늘었고 줄었고 생기거나 사라졌는지 볼 수 있게 합니다."
+translation = "스냅샷은 이 스캔을 기록해, 나중에 무엇이 늘었고 줄었고 생기거나 사라졌는지 볼 수 있게 합니다."
 
 [messages.snapshot-save-button]
 source = "Save snapshot"
@@ -1311,7 +1311,7 @@ translation = "터보 진행 상황 표시 중 · 결과 검증 중…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "터보가 일반 검사보다 더 많은 항목을 구성하면 카운터가 터보로 전환됩니다. 터보 트리 전체의 검증이 끝날 때까지 지도에는 일반 검사의 미리보기가 표시됩니다. 터보가 실패하면 일반 검사가 계속됩니다."
+translation = "터보가 일반 스캔보다 더 많은 항목을 구성하면 카운터가 터보로 전환됩니다. 터보 트리 전체의 검증이 끝날 때까지 지도에는 일반 스캔의 미리보기가 표시됩니다. 터보가 실패하면 일반 스캔이 계속됩니다."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
@@ -1391,7 +1391,7 @@ translation = "게시자: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "지도는 실시간 변경 사항을 반영합니다. 실시간 업데이트를 사용할 수 없는 경우 제거 후 다시 검사하세요."
+translation = "지도는 실시간 변경 사항을 반영합니다. 실시간 업데이트를 사용할 수 없는 경우 제거 후 다시 스캔하세요."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
@@ -1439,7 +1439,7 @@ translation = "Windows에서 제거 프로그램을 시작할 수 없습니다(�
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "등록된 제거 프로그램을 찾을 수 없습니다. 이 애플리케이션을 관리하려면 Windows에 설치된 앱을 여세요."
+translation = "등록된 제거 프로그램을 찾을 수 없습니다. 이 애플리케이션을 관리하려면 Windows의 '설치된 앱'을 여세요."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1587,7 +1587,7 @@ translation = "Docker Desktop의 Linux 환경을 저장합니다. Docker 애플�
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = '배포 파일을 찾아보고 더 이상 필요하지 않은 데이터를 제거하세요. Linux 패키지 관리자를 사용하여 패키지 캐시를 정리합니다. 정리 후 배포판 내부의 "sudo fstrim -av"는 WSL을 종료하고 압축하기 전에 사용되지 않은 블록을 해제하는 데 도움이 될 수 있습니다.'
+translation = '배포판의 파일을 찾아보고 더 이상 필요하지 않은 데이터를 제거하세요. 배포판의 Linux 패키지 관리자를 사용하여 패키지 캐시를 정리하세요. 정리 후 배포판 내부에서 "sudo fstrim -av"를 실행하면 WSL을 종료하고 압축하기 전에 사용되지 않는 블록을 해제하는 데 도움이 될 수 있습니다.'
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."

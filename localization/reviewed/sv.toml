@@ -82,7 +82,7 @@ translation = "Filsystemlänk eller omdirigering"
 
 [messages.attribute-temporary]
 source = "Temporary"
-translation = "Tillfälligt"
+translation = "Tillfällig"
 
 [messages.attributes]
 source = "Attributes"
@@ -352,7 +352,7 @@ translation = "Ta bort permanent?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Förbereder återvinna…"
+translation = "Förbereder flytt till papperskorgen…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -388,7 +388,7 @@ translation = "Uppdaterar diskkarta…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Återvinningsarbetaren slutade oväntat. Kontrollera det valda objektet innan du försöker igen."
+translation = "Uppgiften som flyttar till papperskorgen avbröts oväntat. Kontrollera det valda objektet innan du försöker igen."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -464,7 +464,7 @@ translation = "Töm papperskorgen?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "Ta bort innehållet i { $path } permanent? Temp-mappen kommer att behållas. Objekt som Windows vägrar att ta bort kommer att lämnas på plats. Stäng applikationer först för att frigöra fler temporära filer."
+translation = "Ta bort innehållet i { $path } permanent? Temp-mappen behålls. Objekt som Windows vägrar att ta bort lämnas kvar. Stäng program först för att frigöra fler temporära filer."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -632,11 +632,11 @@ translation = "Liveuppdatering stoppad · Skanna igen för att återansluta"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
-translation = "Live · Avstämning av förändringar i bakgrunden"
+translation = "Live · Stämmer av ändringar i bakgrunden"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Liveuppdatering inte tillgänglig: Skanning avbruten · Skanna igen för att uppdatera"
+translation = "Liveuppdatering inte tillgänglig: skanning avbruten · Skanna igen för att uppdatera"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -780,7 +780,7 @@ translation = "Pausa skanning"
 
 [messages.permission-hint-macos]
 source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
-translation = "macOS skyddar vissa mappar (Mail, Meddelanden, andra användares mappar med flera). Ge Clawback ”Full skivtillgång” i Systeminställningar › Integritet och säkerhet för att inkludera dem."
+translation = "macOS skyddar vissa mappar (Mail, Meddelanden, andra användares mappar med flera). Ge Clawback ”Full skivåtkomst” i Systeminställningar › Integritet och säkerhet för att inkludera dem."
 
 [messages.permission-hint-unix]
 source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
@@ -1052,11 +1052,11 @@ translation = "Vänster gynnar horisontella former, mitten balanserar dem; höge
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Tar bort filer"
+translation = "Borttagning av filer"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Storlek redovisning"
+translation = "Storleksberäkning"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1072,7 +1072,7 @@ translation = "Spara ändringar"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Skanna gränser"
+translation = "Skanningsgränser"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1176,7 +1176,7 @@ translation = "Det finns ingen inställningsmapp att spara ögonblicksbilder i."
 
 [messages.snapshot-none]
 source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
-translation = "Inga sparade ögonblicksbilder av { $path } ännu. Spara en med Arkiv › Spara ögonblicksbild."
+translation = "Inga sparade ögonblicksbilder av { $path } ännu. Spara en med Fil › Spara ögonblicksbild."
 
 [messages.snapshot-other-root]
 source = "That snapshot is of { $path }, not the folder you are viewing."
@@ -1192,7 +1192,7 @@ translation = "Spara ögonblicksbild…"
 
 [messages.snapshot-save-body]
 source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
-translation = "En ögonblicksbild sparar den här genomsökningen, så att du senare kan se vad som har vuxit, krympt, tillkommit eller försvunnit."
+translation = "En ögonblicksbild sparar den här skanningen, så att du senare kan se vad som har vuxit, krympt, tillkommit eller försvunnit."
 
 [messages.snapshot-save-button]
 source = "Save snapshot"
@@ -1292,7 +1292,7 @@ translation = "Verktygstips"
 
 [messages.trash]
 source = "Trash"
-translation = "Papperskorg"
+translation = "Papperskorgen"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
@@ -1308,11 +1308,11 @@ translation = "Prova en snabbare NTFS-skanning med administratörsbehörighet. D
 
 [messages.turbo]
 source = "Turbo"
-translation = "Turkiska"
+translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: montera mappar · { $files } filer"
+translation = "Turbo: sätter ihop mappar · { $files } filer"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1320,11 +1320,11 @@ translation = "Turbo avbröts — vanlig skanning fortsätter"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Visar Turbo progress · validerar resultat…"
+translation = "Visar Turbo-förlopp · validerar resultat…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Räknare byter till Turbo när den har satt ihop fler poster. Kartan håller förhandsgranskningen av den vanliga skanningen tills det fullständiga Turbo trädet har validerats. Om Turbo misslyckas fortsätter den vanliga skanningen."
+translation = "Räknarna växlar till Turbo när det har satt ihop fler poster. Kartan behåller förhandsvisningen från den vanliga skanningen tills hela Turbo-trädet har validerats. Om Turbo misslyckas fortsätter den vanliga skanningen."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
@@ -1344,7 +1344,7 @@ translation = "Turbo: sorterar resultat…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: laddar resultat…"
+translation = "Turbo: läser in resultat…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1380,7 +1380,7 @@ translation = "Appsökningen slutfördes inte. Ingenting raderades. Försök ige
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
-translation = "Identifierar installerade applikationer…"
+translation = "Identifierar installerade program…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
@@ -1388,7 +1388,7 @@ translation = "Starta avinstallationsprogram…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Ingen applikation kunde identifieras för denna mapp. Öppna Installerade appar eller Steam för att hantera dess innehåll."
+translation = "Inget program kunde identifieras för den här mappen. Öppna Installerade appar eller Steam för att hantera dess innehåll."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
@@ -1440,7 +1440,7 @@ translation = "Hanteras av Steam"
 
 [messages.uninstall-via-windows]
 source = "Registered Windows application"
-translation = "Registrerad Windows-applikation"
+translation = "Registrerat Windows-program"
 
 [messages.uninstall-whole-application]
 source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
@@ -1448,7 +1448,7 @@ translation = "Denna plats tillhör installerad programvara. Välj ett program n
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows kunde inte starta avinstallationsprogrammet (fel { $code }). Öppna Installerade appar för att hantera denna applikation."
+translation = "Windows kunde inte starta avinstallationsprogrammet (fel { $code }). Öppna Installerade appar för att hantera det här programmet."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
@@ -1544,7 +1544,7 @@ translation = "Vad skulle du vilja göra?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
-translation = "Visa städningsvägledning"
+translation = "Visa vägledning för rensning"
 
 [messages.wsl-compact-admin]
 source = "Windows will ask for administrator permission."

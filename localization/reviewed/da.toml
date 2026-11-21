@@ -2,11 +2,11 @@ version = 2
 
 [readme]
 source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
-translation = "f2e20c0acedc88b9bd0b275fa4a4aad903ace705bbf68b8038d4dc6f61a6b698"
+translation = "da20b2e71fbe4707d270dfd7a014f5f35051e5110498d286726e11fb717a9329"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
-translation = "Et hurtig, cross-platform diskplads kort."
+translation = "Et hurtigt, platformsuafhængigt kort over diskpladsen."
 
 [messages.about-clawback]
 source = "About Clawback"
@@ -30,7 +30,7 @@ translation = "Se på Steam"
 
 [messages.about-third-party]
 source = "Includes Noto Sans fonts (SIL Open Font License 1.1) and Phosphor icons (MIT)."
-translation = "Indeholder Noto Sans-skrifttyper (SIL Open Font License 1.1) og Phosphor-ikoner (MIT)."
+translation = "Indeholder skrifttyperne Noto Sans (SIL Open Font License 1.1) og Phosphor-ikoner (MIT)."
 
 [messages.about-version]
 source = "Version { $version }"
@@ -62,11 +62,11 @@ translation = "Arkiv"
 
 [messages.asset-3d]
 source = "3D asset"
-translation = "3D aktiv"
+translation = "3D-model"
 
 [messages.attribute-backup-flag]
 source = "Marked for backup"
-translation = "Mærket til backup"
+translation = "Markeret til sikkerhedskopiering"
 
 [messages.attribute-compressed]
 source = "Compressed"
@@ -98,7 +98,7 @@ translation = "Lyd"
 
 [messages.auto-rescan-on-delete]
 source = "Auto Rescan on Delete"
-translation = "Auto Genskan ved Slet"
+translation = "Scan automatisk igen efter sletning"
 
 [messages.back]
 source = "Back"
@@ -142,11 +142,11 @@ translation = "{ $size } frigjort"
 
 [messages.changes-grew]
 source = "Grew"
-translation = "Voksede"
+translation = "Vokset"
 
 [messages.changes-grew-total]
 source = "{ $size } grew"
-translation = "{ $size } mere"
+translation = "{ $size } vokset"
 
 [messages.changes-none]
 source = "Nothing changed since this snapshot."
@@ -154,7 +154,7 @@ translation = "Intet er ændret siden dette øjebliksbillede."
 
 [messages.changes-shrank]
 source = "Shrank"
-translation = "Skrumpede"
+translation = "Skrumpet"
 
 [messages.check-for-updates]
 source = "Check for updates"
@@ -162,23 +162,23 @@ translation = "Søg efter opdateringer"
 
 [messages.check-for-updates-hint]
 source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
-translation = "Spørger GitHub ved opstart, om der er en nyere version. Intet om dig eller dine filer sendes."
+translation = "Spørger ved opstart GitHub, om der er kommet en nyere version. Der sendes intet om dig eller dine filer."
 
 [messages.chinese-simplified]
 source = "Simplified Chinese"
-translation = "Forenklet Kinesisk"
+translation = "Forenklet kinesisk"
 
 [messages.chinese-traditional]
 source = "Traditional Chinese"
-translation = "Traditionel Kinesisk"
+translation = "Traditionelt kinesisk"
 
 [messages.claw-back-your-disk-space]
 source = "Claw back your disk space."
-translation = "Klo tilbage din diskplads."
+translation = "Tag din diskplads tilbage."
 
 [messages.clawback-settings]
 source = "Clawback Settings"
-translation = "Clawback Indstillinger"
+translation = "Indstillinger for Clawback"
 
 [messages.clean-up]
 source = "Clean Up"
@@ -186,11 +186,11 @@ translation = "Ryd op"
 
 [messages.clean-up-all]
 source = "Clean up all"
-translation = "Ryd op i alt"
+translation = "Ryd op i alle"
 
 [messages.clean-up-body]
 source = "“{ $name }” will be deleted. Its project’s tools recreate it when needed."
-translation = '"{ $name }" bliver slettet. Projektets værktøjer genskaber den efter behov.'
+translation = "“{ $name }” bliver slettet. Projektets værktøjer genskaber den efter behov."
 
 [messages.clean-up-body-many]
 source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
@@ -206,27 +206,27 @@ translation = "Rydder op i Temp-mappen…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
-translation = "Klik for at rense dine midlertidige filer"
+translation = "Klik for at rydde op i dine midlertidige filer"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Klik for at tømme dette drevs papirkurv"
+translation = "Klik for at tømme papirkurven på dette drev"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
-translation = "Administreres af Windows. Klik for at åbne Lagerindstillinger og frigøre plads sikkert."
+translation = "Administreres af Windows. Klik for at åbne lagerindstillingerne og frigøre plads sikkert."
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
-translation = "VHDX · WSL virtuel disk. Klik for at få diskoplysninger, gennemse filer eller genvinde plads."
+translation = "VHDX · Virtuel WSL-disk. Klik for at se diskoplysninger, gennemse filer eller frigøre plads."
 
 [messages.click-to-uninstall-software]
 source = "Installed application or game files. Click to identify and uninstall the whole application."
-translation = "Installerede program- eller spilfiler. Klik for at identificere og afinstallere hele programmet."
+translation = "Filer fra et installeret program eller spil. Klik for at identificere og afinstallere hele programmet."
 
 [messages.click-to-uninstall-steam]
 source = "Steam game files. Click to identify the game and uninstall through Steam."
-translation = "Steam-spilfiler. Klik for at identificere spillet og afinstallere via Steam."
+translation = "Filer fra et Steam-spil. Klik for at identificere spillet og afinstallere det via Steam."
 
 [messages.close-dialog]
 source = "Close"
@@ -242,11 +242,11 @@ translation = "Disken kunne ikke komprimeres. Sørg for, at Docker Desktop og WS
 
 [messages.compacting-wsl-disk]
 source = "Stopping WSL and compacting disk…"
-translation = "Stopper WSL og komprimerer disk…"
+translation = "Stopper WSL og komprimerer disken…"
 
 [messages.compress]
 source = "Compress"
-translation = "Komprimér"
+translation = "Komprimeret"
 
 [messages.contains]
 source = "Contains:"
@@ -276,11 +276,11 @@ translation = "Kopier fejloplysninger"
 
 [messages.copyright-2026-azazel-labs]
 source = "Copyright © 2026 Azazel Labs LLC."
-translation = "Ophavsret © 2026 Azazel Labs LLC."
+translation = "Copyright © 2026 Azazel Labs LLC."
 
 [messages.count-hard-linked-files-once]
 source = "Count hard-linked files once"
-translation = "Tæl hard-linkede filer én gang"
+translation = "Tæl filer med hårde links én gang"
 
 [messages.czech]
 source = "Czech"
@@ -296,7 +296,7 @@ translation = "Data / konfiguration"
 
 [messages.date-time]
 source = "Date / Time"
-translation = "Dato / Tid"
+translation = "Dato / klokkeslæt"
 
 [messages.delay]
 source = "Delay:"
@@ -316,7 +316,7 @@ translation = "Slet indhold"
 
 [messages.delete-contents-body]
 source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
-translation = 'Alt i "{ $name }" bliver slettet. Selve mappen bevares.'
+translation = "Alt i “{ $name }” bliver slettet. Selve mappen bevares."
 
 [messages.delete-contents-title]
 source = "Delete contents permanently?"
@@ -324,11 +324,11 @@ translation = "Slet indholdet permanent?"
 
 [messages.delete-contents-too-big]
 source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
-translation = 'Indholdet af "{ $name }" er for stort til papirkurven. Selve mappen bevares.'
+translation = "Indholdet af “{ $name }” er for stort til papirkurven. Selve mappen bevares."
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
-translation = "{ $size } · { $seconds }s"
+translation = "{ $size } · { $seconds } s forløbet"
 
 [messages.delete-error]
 source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
@@ -352,7 +352,7 @@ translation = "Slet permanent?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Forbereder genbrug af…"
+translation = "Forbereder flytning til papirkurven…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -364,7 +364,11 @@ source = """
         [one] { $count } more item queued
        *[other] { $count } more items queued
     }"""
-translation = "Yderligere elementer i kø: { $count }"
+translation = """
+{ $count ->
+        [one] { $count } element mere i kø
+       *[other] { $count } elementer mere i kø
+    }"""
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
@@ -376,23 +380,27 @@ source = """
         [one] { $files } file
        *[other] { $files } files
     }"""
-translation = "{ $size } · Filer: { $files }"
+translation = """
+{ $size } · { $files ->
+        [one] { $files } fil
+       *[other] { $files } filer
+    }"""
 
 [messages.delete-too-big-for-recycle-bin]
 source = "“{ $name }” is too big for the Recycle Bin."
-translation = '"{ $name }" er for stor til papirkurven.'
+translation = "“{ $name }” er for stor til papirkurven."
 
 [messages.delete-updating]
 source = "Updating disk map…"
-translation = "Opdaterer diskkort…"
+translation = "Opdaterer diskkortet…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Arbejderen for genbrug stoppede uventet. Tjek den valgte vare før du prøver igen."
+translation = "Processen, der flytter til papirkurven, stoppede uventet. Kontroller det valgte element, før du prøver igen."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
-translation = '{ "Sletter...\u000A" }{ $path }'
+translation = '{ "Sletter…\u000A" }{ $path }'
 
 [messages.density]
 source = "Density:"
@@ -400,7 +408,7 @@ translation = "Tæthed:"
 
 [messages.design-document]
 source = "Design document"
-translation = "Design dokument"
+translation = "Designdokument"
 
 [messages.directories]
 source = "Directories"
@@ -408,23 +416,23 @@ translation = "Mapper"
 
 [messages.disable-delete-command]
 source = 'Disable "Delete" Command'
-translation = 'Deaktivér "Slet" Kommando'
+translation = "Deaktiver kommandoen “Slet”"
 
 [messages.discovering-folders]
 source = "Discovering folders…"
-translation = "Opdag mapper…"
+translation = "Finder mapper…"
 
 [messages.disk-image]
 source = "Disk image"
-translation = "Disk billede"
+translation = "Diskbillede"
 
 [messages.display-colors]
 source = "Display Colors"
-translation = "Vis Farver"
+translation = "Visningsfarver"
 
 [messages.docker-desktop-not-found]
 source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
-translation = "Docker Desktop kunne ikke findes på dets standardinstallationsplaceringer. Åbn det fra Windows Start-menuen."
+translation = "Docker Desktop blev ikke fundet på de almindelige installationsplaceringer. Åbn det fra menuen Start i Windows."
 
 [messages.document]
 source = "Document"
@@ -432,11 +440,11 @@ translation = "Dokument"
 
 [messages.don-t-descend-into-other-drives-or-network]
 source = "Don't descend into other drives or network mounts inside the scanned folder"
-translation = "Må ikke stige ned i andre drev eller netværk mounts inde i den scannede mappe"
+translation = "Gå ikke ind i andre drev eller monterede netværksdrev i den scannede mappe"
 
 [messages.double-click-to-explore-right-click-for-actions]
 source = "Double-click to explore / Right-click for actions"
-translation = "Dobbeltklik for at udforske / Højreklik for handlinger"
+translation = "Dobbeltklik for at udforske / højreklik for handlinger"
 
 [messages.drive-free-of-total]
 source = "{ $free } free of { $total }"
@@ -444,15 +452,15 @@ translation = "{ $free } ledig af { $total }"
 
 [messages.drive-summary]
 source = '{ $icon }  { $drive }{ "\u000A        " }{ $free } free of { $total }  ·  { $used } used  ·  { $filesystem }'
-translation = '{ $icon } { $drive }{ "\u000A        " }{ $free } fri for { $total } · { $used } brugte · { $filesystem }'
+translation = '{ $icon }  { $drive }{ "\u000A        " }{ $free } ledig af { $total }  ·  { $used } brugt  ·  { $filesystem }'
 
 [messages.dutch]
 source = "Dutch"
-translation = "Hollandsk"
+translation = "Nederlandsk"
 
 [messages.empty-recycle-bin-body]
 source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
-translation = "Alt i din papirkurv på { $drive } vil blive slettet permanent."
+translation = "Alt i din papirkurv på { $drive } bliver slettet permanent."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
@@ -460,11 +468,11 @@ translation = "Tøm papirkurven"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Tømme papirkurven?"
+translation = "Tøm papirkurven?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "Slet indholdet af { $path } permanent? Temp-mappen bevares. Elementer, som Windows nægter at slette, efterlades på plads. Luk programmer først for at frigøre flere midlertidige filer."
+translation = "Vil du slette indholdet af { $path } permanent? Selve Temp-mappen bevares. Elementer, som Windows nægter at slette, bliver liggende. Luk først programmer for at frigøre flere midlertidige filer."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -472,15 +480,15 @@ translation = "Ryd op i Temp-mappen"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
-translation = "Rens din Temp-mappe?"
+translation = "Ryd op i din Temp-mappe?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Tømning af papirkurven…"
+translation = "Tømmer papirkurven…"
 
 [messages.encrypt]
 source = "Encrypt"
-translation = "Kryptér"
+translation = "Krypteret"
 
 [messages.english]
 source = "English"
@@ -488,7 +496,7 @@ translation = "Engelsk"
 
 [messages.equal]
 source = "Equal"
-translation = "Lige"
+translation = "Balanceret"
 
 [messages.exit]
 source = "Exit"
@@ -496,7 +504,7 @@ translation = "Afslut"
 
 [messages.expand-to-browse-click-a-folder-to-view]
 source = "Expand to browse · Click a folder to view"
-translation = "Udvid for at gennemse · Klik på en mappe for at se"
+translation = "Udvid for at gennemse · Klik på en mappe for at vise den"
 
 [messages.file]
 source = "File"
@@ -504,15 +512,15 @@ translation = "Fil"
 
 [messages.file-layout]
 source = "File Layout"
-translation = "Fil Layout"
+translation = "Fillayout"
 
 [messages.file-size]
 source = "File Size"
-translation = "Fil Størrelse"
+translation = "Filstørrelse"
 
 [messages.file-type]
 source = "FILE TYPE"
-translation = "FIL TYPE"
+translation = "FILTYPE"
 
 [messages.file-types]
 source = "File types"
@@ -532,7 +540,7 @@ translation = "Filer:"
 
 [messages.finding-drives]
 source = "Finding drives..."
-translation = "Finder drev..."
+translation = "Finder drev…"
 
 [messages.finnish]
 source = "Finnish"
@@ -540,7 +548,7 @@ translation = "Finsk"
 
 [messages.folder]
 source = "FOLDER"
-translation = "FØLGENDE"
+translation = "MAPPE"
 
 [messages.folder-2]
 source = "Folder"
@@ -552,7 +560,7 @@ translation = "Mapper:"
 
 [messages.folders-not-scanned]
 source = "Folders Not Scanned"
-translation = "Mapper Ikke Skannet"
+translation = "Mapper, der ikke blev scannet"
 
 [messages.french]
 source = "French"
@@ -560,11 +568,11 @@ translation = "Fransk"
 
 [messages.full-path]
 source = "Full Path"
-translation = "Fuld Sti"
+translation = "Fuld sti"
 
 [messages.game-archive]
 source = "Game archive"
-translation = "Spil arkiv"
+translation = "Spilarkiv"
 
 [messages.german]
 source = "German"
@@ -624,7 +632,7 @@ translation = "Live · Indhenter ændringer"
 
 [messages.live-demo]
 source = "Demo data - fictional files and sizes"
-translation = "Demodata - fiktive filer og størrelser"
+translation = "Demodata – fiktive filer og størrelser"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
@@ -632,11 +640,11 @@ translation = "Liveopdatering stoppet · Scan igen for at genoprette forbindelse
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
-translation = "Live · Afstemning af ændringer i baggrunden"
+translation = "Live · Afstemmer ændringer i baggrunden"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Liveopdatering utilgængelig: Scanning annulleret · Scan igen for at opdatere"
+translation = "Liveopdatering utilgængelig: scanning annulleret · Scan igen for at opdatere"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -648,7 +656,7 @@ translation = "Liveopdatering utilgængelig: { $error } · Scan igen for at opda
 
 [messages.live-watching]
 source = "Live · Watching for changes"
-translation = "Live · Holder øje med ændringer"
+translation = "Live · Overvåger ændringer"
 
 [messages.location]
 source = "Location:"
@@ -656,23 +664,23 @@ translation = "Placering:"
 
 [messages.lots-of-files]
 source = "Lots of Files"
-translation = "Masser af filer"
+translation = "Mange filer"
 
 [messages.make-room-for-what-matters]
 source = "Make room for what matters."
-translation = "Gør plads til, hvad der betyder noget."
+translation = "Gør plads til det, der betyder noget."
 
 [messages.managed-by-windows]
 source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
-translation = "Windows opretter disse filer og bestemmer selv deres størrelse. Skift virtuel hukommelse eller dvale i Windows-indstillinger i stedet for at slette dem."
+translation = "Windows opretter disse filer og bestemmer selv deres størrelse. Rediger virtuel hukommelse eller dvaletilstand i Windows-indstillingerne i stedet for at slette dem."
 
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
-translation = "Tilknyttede bytes i forhold til brugt drevplads; et skøn, ikke en fil-tæller procent."
+translation = "Kortlagte bytes i forhold til brugt plads på drevet; et skøn, ikke en procentdel af antallet af filer."
 
 [messages.miscellaneous-options]
 source = "Miscellaneous Options"
-translation = "Diverse Indstillinger"
+translation = "Diverse indstillinger"
 
 [messages.modified]
 source = "Modified:"
@@ -680,15 +688,15 @@ translation = "Ændret:"
 
 [messages.move-selected-item-to-trash]
 source = "Move selected item to trash"
-translation = "Flyt valgte element til papirkurven"
+translation = "Flyt det valgte element til papirkurven"
 
 [messages.msec]
 source = "msec"
-translation = "msek"
+translation = "ms"
 
 [messages.mute-colors]
 source = "Mute colors"
-translation = "Lydløs farver"
+translation = "Dæmp farver"
 
 [messages.name]
 source = "Name:"
@@ -696,11 +704,11 @@ translation = "Navn:"
 
 [messages.no-drives-found-use-other-folder-to-pick]
 source = 'No drives found. Use "Other Folder..." to pick a folder.'
-translation = 'Ingen drev fundet. Brug "Anden Mappe..." til at vælge en mappe.'
+translation = "Ingen drev fundet. Brug “Anden mappe…” til at vælge en mappe."
 
 [messages.no-extension]
 source = "No extension"
-translation = "Ingen udvidelse"
+translation = "Intet filtypenavn"
 
 [messages.no-files-in-this-folder]
 source = "No files in this folder."
@@ -716,7 +724,7 @@ translation = "Norsk bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% AF SCAN"
+translation = "% AF SCANNING"
 
 [messages.offline]
 source = "Offline"
@@ -728,11 +736,11 @@ translation = '{ "   OK   " }'
 
 [messages.open-a-drive-or-folder-to-see-where]
 source = "Open a drive or folder to see where your space goes."
-translation = "Åbn et drev eller en mappe for at se, hvor dit sted går."
+translation = "Åbn et drev eller en mappe for at se, hvor pladsen bliver af."
 
 [messages.open-a-folder-or-drive-to-browse-its]
 source = "Open a folder or drive to browse its directory tree."
-translation = "Åbn en mappe eller et drev for at gennemse dens mappetræ."
+translation = "Åbn en mappe eller et drev for at gennemse mappetræet."
 
 [messages.open-a-folder-to-begin]
 source = "Open a folder to begin"
@@ -740,7 +748,7 @@ translation = "Åbn en mappe for at begynde"
 
 [messages.open-drive]
 source = "Open Drive..."
-translation = "Åbn Drev..."
+translation = "Åbn drev…"
 
 [messages.open-folder]
 source = "Open folder…"
@@ -760,35 +768,35 @@ translation = "Åbn i Finder"
 
 [messages.open-selected-item]
 source = "Open selected item"
-translation = "Åbn valgte element"
+translation = "Åbn det valgte element"
 
 [messages.open-storage-settings]
 source = "Open Storage settings"
-translation = "Åbn Lagerindstillinger"
+translation = "Åbn lagerindstillinger"
 
 [messages.other-folder]
 source = "Other Folder..."
-translation = "Anden Mappe..."
+translation = "Anden mappe…"
 
 [messages.palette]
 source = "Palette"
-translation = "Palette"
+translation = "Palet"
 
 [messages.pause-scan]
 source = "Pause scan"
-translation = "Sæt skanning på pause"
+translation = "Sæt scanning på pause"
 
 [messages.permission-hint-macos]
 source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
-translation = 'macOS beskytter nogle mapper (Mail, Meddelelser, andre brugere, …). Tildel Clawback "Fuld Disk Access" i Systemindstillinger › Privatliv og Sikkerhed for at inkludere dem.'
+translation = "macOS beskytter nogle mapper (Mail, Beskeder, andre brugere, …). Giv Clawback “Fuld diskadgang” i Systemindstillinger › Anonymitet og sikkerhed for at medtage dem."
 
 [messages.permission-hint-unix]
 source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
-translation = "Nogle mapper kan kun læses af andre brugere eller root. Kør Clawback med forhøjede rettigheder (for eksempel `sudo -E clawback /`) for at inkludere dem."
+translation = "Nogle mapper kan kun læses af andre brugere eller root. Kør Clawback med udvidede rettigheder (for eksempel `sudo -E clawback /`) for at medtage dem."
 
 [messages.permission-hint-windows]
 source = "Some system folders are only readable by administrators. Run Clawback as administrator to include them."
-translation = "Nogle systemmapper kan kun læses af administratorer. Kør Clawback som administrator for at inkludere dem."
+translation = "Nogle systemmapper kan kun læses af administratorer. Kør Clawback som administrator for at medtage dem."
 
 [messages.polish]
 source = "Polish"
@@ -796,11 +804,11 @@ translation = "Polsk"
 
 [messages.portuguese-brazil]
 source = "Brazilian Portuguese"
-translation = "Brasiliansk Portugisisk"
+translation = "Brasiliansk portugisisk"
 
 [messages.portuguese-portugal]
 source = "European Portuguese"
-translation = "Europæisk Portugisisk"
+translation = "Europæisk portugisisk"
 
 [messages.properties]
 source = "Properties"
@@ -808,15 +816,15 @@ translation = "Egenskaber"
 
 [messages.properties-2]
 source = "Properties..."
-translation = "Egenskaber..."
+translation = "Egenskaber…"
 
 [messages.properties-disk-size-detail]
 source = "Disk usage differs from file size, for example because of compression, sparse data, or allocation overhead."
-translation = "Diskbrug adskiller sig fra filstørrelse, for eksempel på grund af komprimering, sparsomme data eller allokeringsoverhead."
+translation = "Diskforbruget afviger fra filstørrelsen, f.eks. på grund af komprimering, sparse-data eller spild ved allokering."
 
 [messages.properties-title]
 source = "{ $name } Properties"
-translation = "{ $name } Egenskaber"
+translation = "Egenskaber for { $name }"
 
 [messages.purge-failed]
 source = """
@@ -824,7 +832,11 @@ source = """
         [one] { $count } item couldn’t be deleted.
        *[other] { $count } items couldn’t be deleted.
     } { $error }"""
-translation = "Elementer, der ikke kunne slettes: { $count }. { $error }"
+translation = """
+{ $count ->
+        [one] { $count } element kunne ikke slettes.
+       *[other] { $count } elementer kunne ikke slettes.
+    } { $error }"""
 
 [messages.read-only]
 source = "Read-Only"
@@ -832,7 +844,7 @@ translation = "Skrivebeskyttet"
 
 [messages.reading-file-details]
 source = "Reading file details…"
-translation = "Læser fil detaljer…"
+translation = "Læser filoplysninger…"
 
 [messages.ready]
 source = "Ready"
@@ -852,11 +864,11 @@ translation = "Cache for { $browser }; luk { $browser } først"
 
 [messages.reclaim-cache-tag]
 source = "Marked by its program as a cache it recreates"
-translation = "Markeret af sit program som en cache, det genskaber"
+translation = "Markeret af sit program som en cache, det selv genskaber"
 
 [messages.reclaim-caches]
 source = "Caches"
-translation = "Caches"
+translation = "Cacher"
 
 [messages.reclaim-cleanup]
 source = "Cleanup"
@@ -868,7 +880,7 @@ translation = "Projektfiler, der kan genskabes"
 
 [messages.reclaim-finding]
 source = "Looking for space to reclaim…"
-translation = "Leder efter plads at frigøre…"
+translation = "Leder efter plads, der kan frigøres…"
 
 [messages.reclaim-found]
 source = "{ $size } found"
@@ -908,7 +920,7 @@ translation = "CocoaPods-pakker; pod install gendanner dem"
 
 [messages.reclaim-python-venv]
 source = "Python virtual environment; recreate it from your requirements"
-translation = "Python virtuelt miljø; genskab det ud fra dine krav"
+translation = "Virtuelt Python-miljø; genskab det ud fra dine afhængigheder"
 
 [messages.reclaim-recycle-bin]
 source = "Deleted items waiting to be emptied"
@@ -916,7 +928,7 @@ translation = "Slettede elementer, der venter på at blive tømt"
 
 [messages.reclaim-rust-target]
 source = "Rust build output; cargo build recreates it"
-translation = "Rust-buildoutput; cargo build genskaber det"
+translation = "Build-output fra Rust; cargo build genskaber det"
 
 [messages.reclaim-show]
 source = "Click to show it on the map."
@@ -928,19 +940,19 @@ translation = "Midlertidige filer, som apps har efterladt"
 
 [messages.reclaim-wsl]
 source = "WSL virtual disk; it does not shrink by itself"
-translation = "WSL-virtuel disk; den skrumper ikke af sig selv"
+translation = "Virtuel WSL-disk; den skrumper ikke af sig selv"
 
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
-translation = "Komprimering bevarer diskens indhold og reducerer dens Windows-filstørrelse ved at genvinde blokke fyldt med nuller. Det kan genvinde lidt eller ingen plads. Ryd først op i uønskede data inde i Docker eller Linux."
+translation = "Komprimering bevarer diskens indhold og gør dens fil i Windows mindre ved at frigøre blokke, der er fyldt med nuller. Det frigør måske kun lidt eller ingen plads. Ryd først op i uønskede data i Docker eller Linux."
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
-translation = "Genvind WSL-diskplads"
+translation = "Frigør WSL-diskplads"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "Før du komprimerer, skal du gemme dit arbejde, afslutte Docker Desktop og lukke WSL-sessioner. Kør denne kommando i PowerShell for at stoppe alle WSL-distributioner. Hold Docker og WSL stoppet, indtil komprimeringen er færdig. Windows vil bede om administratortilladelse."
+translation = "Før du komprimerer, skal du gemme dit arbejde, afslutte Docker Desktop og lukke WSL-sessioner. Kør denne kommando i PowerShell for at stoppe alle WSL-distributioner. Lad Docker og WSL forblive stoppet, indtil komprimeringen er færdig. Windows beder om administratortilladelse."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -948,19 +960,19 @@ translation = "Papirkurv"
 
 [messages.remember-window-position]
 source = "Remember Window Position"
-translation = "Husk Vinduesposition"
+translation = "Husk vinduets placering"
 
 [messages.reparse-pt]
 source = "Reparse-Pt"
-translation = "Reparse- Pt"
+translation = "Genfortolkningspunkt"
 
 [messages.rescan]
 source = "Rescan"
-translation = "Genskan"
+translation = "Scan igen"
 
 [messages.rescan-drive]
 source = "Rescan Drive"
-translation = "Genskan Drev"
+translation = "Scan drevet igen"
 
 [messages.resume-scan]
 source = "Resume scan"
@@ -972,7 +984,7 @@ translation = "Rumænsk"
 
 [messages.run-open]
 source = "Run / Open"
-translation = "Kør / Åbn"
+translation = "Kør / åbn"
 
 [messages.russian]
 source = "Russian"
@@ -988,7 +1000,7 @@ translation = 'Clawback kunne ikke scanne { $path }{ ".\u000A\u000A" }{ $error }
 
 [messages.scan-paused]
 source = "Scan paused"
-translation = "Skan på pause"
+translation = "Scanning sat på pause"
 
 [messages.scan-summary]
 source = """
@@ -1016,19 +1028,19 @@ translation = """
 
 [messages.scanning]
 source = "Scanning"
-translation = "Skanner"
+translation = "Scanner"
 
 [messages.scanning-options-apply-to-the-next-scan]
 source = "Scanning options apply to the next scan."
-translation = "Scanning indstillinger gælder for den næste scanning."
+translation = "Scanningsindstillingerne gælder fra næste scanning."
 
 [messages.select-a-folder-to-view]
 source = "Select a Folder to View"
-translation = "Vælg en mappe at vise"
+translation = "Vælg den mappe, der skal vises"
 
 [messages.select-drive-to-view]
 source = "Select Drive to View"
-translation = "Vælg drev til visning"
+translation = "Vælg det drev, der skal vises"
 
 [messages.serbian-cyrillic]
 source = "Serbian, Cyrillic"
@@ -1036,7 +1048,7 @@ translation = "Serbisk, kyrillisk"
 
 [messages.settings]
 source = "Settings…"
-translation = "Opsætning…"
+translation = "Indstillinger…"
 
 [messages.settings-appearance]
 source = "Appearance"
@@ -1044,27 +1056,27 @@ translation = "Udseende"
 
 [messages.settings-behavior]
 source = "Behavior"
-translation = "Opførsel"
+translation = "Adfærd"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Venstre favoriserer vandrette former; center balancerer dem; højre favoriserer lodrette former."
+translation = "Venstre foretrækker vandrette former, midten balancerer dem, og højre foretrækker lodrette former."
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Sletter filer"
+translation = "Sletning af filer"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Regnskabsstørrelse"
+translation = "Størrelsesberegning"
 
 [messages.settings-info-tips]
 source = "File details"
-translation = "Fil detaljer"
+translation = "Filoplysninger"
 
 [messages.settings-name-tips]
 source = "File names"
-translation = "Fil navne"
+translation = "Filnavne"
 
 [messages.settings-save]
 source = "Save changes"
@@ -1072,7 +1084,7 @@ translation = "Gem ændringer"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Skan grænser"
+translation = "Scanningens omfang"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1080,19 +1092,19 @@ translation = "Opdateringer"
 
 [messages.settings-window]
 source = "Window & interaction"
-translation = "Vindue & interaktion"
+translation = "Vindue og interaktion"
 
 [messages.show-file-info-tips]
 source = "Show file details tooltips"
-translation = "Vis fil-info-tips"
+translation = "Vis værktøjstip med filoplysninger"
 
 [messages.show-file-name-tips]
 source = "Show file name tooltips"
-translation = "Vis filnavnetips"
+translation = "Vis værktøjstip med filnavne"
 
 [messages.show-free-space]
 source = "Show Free Space"
-translation = "Vis Ledig Mellemrum"
+translation = "Vis ledig plads"
 
 [messages.show-free-space-2]
 source = "Show free space"
@@ -1104,7 +1116,7 @@ translation = "Vis i filhåndtering"
 
 [messages.show-rollover-boxes]
 source = "Show Rollover Boxes"
-translation = "Vis Rollover Kasser"
+translation = "Fremhæv elementer under markøren"
 
 [messages.size]
 source = "SIZE"
@@ -1176,11 +1188,11 @@ translation = "Der er ingen indstillingsmappe at gemme øjebliksbilleder i."
 
 [messages.snapshot-none]
 source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
-translation = "Der er endnu ingen gemte øjebliksbilleder af { $path }. Gem et med Filer › Gem øjebliksbillede."
+translation = "Der er endnu ingen gemte øjebliksbilleder af { $path }. Gem et via Fil › Gem øjebliksbillede."
 
 [messages.snapshot-other-root]
 source = "That snapshot is of { $path }, not the folder you are viewing."
-translation = "Det øjebliksbillede er af { $path }, ikke af den mappe, du ser."
+translation = "Øjebliksbilledet er af { $path }, ikke af den mappe, du ser."
 
 [messages.snapshot-pick-title]
 source = "Compare with a snapshot"
@@ -1216,11 +1228,11 @@ translation = "Stop sammenligning"
 
 [messages.source-code]
 source = "Source code"
-translation = "Kilde kode"
+translation = "Kildekode"
 
 [messages.spanish-latin-america]
 source = "Latin American Spanish"
-translation = "Latin Amerikansk Spansk"
+translation = "Latinamerikansk spansk"
 
 [messages.spanish-spain]
 source = "Spanish from Spain"
@@ -1228,11 +1240,11 @@ translation = "Spansk fra Spanien"
 
 [messages.sparse]
 source = "Sparse"
-translation = "Fortolk"
+translation = "Sparse-fil"
 
 [messages.special-file]
 source = "Special file"
-translation = "Speciel fil"
+translation = "Specialfil"
 
 [messages.stay-on-one-filesystem]
 source = "Stay on one filesystem"
@@ -1256,39 +1268,39 @@ translation = "System"
 
 [messages.system-default]
 source = "System default"
-translation = "System standard"
+translation = "Systemstandard"
 
 [messages.takes-effect-the-next-time-clawback-starts]
 source = "Takes effect the next time Clawback starts"
-translation = "Tager effekt næste gang Clawback starter"
+translation = "Træder i kraft, næste gang Clawback starter"
 
 [messages.temp]
 source = "Temp"
-translation = "Temp"
+translation = "Midlertidig"
 
 [messages.temp-cleanup-skipped]
 source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
-translation = "Oprydning efterlod { $count } elementer, der ikke kunne fjernes. Første grund: { $error }"
+translation = "Oprydningen efterlod { $count } elementer, der ikke kunne fjernes. Første årsag: { $error }"
 
 [messages.thai]
 source = "Thai"
-translation = "Thailandsk"
+translation = "Thai"
 
 [messages.the-scan-worker-stopped-unexpectedly]
 source = "The scan worker stopped unexpectedly."
-translation = "Scanningen arbejdstager stoppede uventet."
+translation = "Scanningsprocessen stoppede uventet."
 
 [messages.too-few-files]
 source = "Too Few Files"
-translation = "For Få Filer"
+translation = "For få filer"
 
 [messages.too-many-files]
 source = "Too Many Files"
-translation = "For Mange Filer"
+translation = "For mange filer"
 
 [messages.tooltips]
 source = "Tooltips"
-translation = "Værktøjstips"
+translation = "Værktøjstip"
 
 [messages.trash]
 source = "Trash"
@@ -1296,15 +1308,15 @@ translation = "Papirkurv"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
-translation = "Slettede elementer fjernes permanent, når du bekræfter. Klik for at gøre sletninger gendannelige."
+translation = "Slettede elementer fjernes permanent, når du har bekræftet. Klik for at gøre sletninger gendannelige."
 
 [messages.trash-toggle-on]
 source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
-translation = "Slettede elementer kan gendannes. Klik for at slette permanent i stedet; Clawback spørger først."
+translation = "Slettede elementer kan gendannes. Klik for i stedet at slette permanent; Clawback spørger først."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
-translation = "Prøv en hurtigere NTFS-scanning med administratortilladelse. Den aktuelle scanning kører fortsat."
+translation = "Prøv en hurtigere NTFS-scanning med administratortilladelse. Den aktuelle scanning fortsætter."
 
 [messages.turbo]
 source = "Turbo"
@@ -1312,31 +1324,31 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: samlingsmapper · { $files } filer"
+translation = "Turbo: samler mapper · { $files } filer"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
-translation = "Turbo annulleret - normal scanning fortsætter"
+translation = "Turbo annulleret – normal scanning fortsætter"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Viser Turbo progress · validerer resultater…"
+translation = "Viser Turbo-status · validerer resultater…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Tællere skifte til Turbo, når det har samlet flere poster. Kortet beholder den regelmæssige scanning forhåndsvisning indtil hele Turbo træet er valideret. Hvis Turbo mislykkes, fortsætter den regelmæssige scanning."
+translation = "Tællerne skifter til Turbo, når den har samlet flere poster. Kortet viser forhåndsvisningen fra den almindelige scanning, indtil hele Turbo-træet er valideret. Hvis Turbo mislykkes, fortsætter den almindelige scanning."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: læsning MFT { $percent }% · { $records } poster"
+translation = "Turbo: læser MFT { $percent }% · { $records } poster"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
-translation = "Turbo: læsning MFT…"
+translation = "Turbo: læser MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: At løse filnavne…"
+translation = "Turbo: slår filnavne op…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
@@ -1344,11 +1356,11 @@ translation = "Turbo: sorterer resultater…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: indlæsning af resultater…"
+translation = "Turbo: indlæser resultater…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
-translation = "Turbo utilgængelig — normal scanning fortsætter"
+translation = "Turbo utilgængelig – normal scanning fortsætter"
 
 [messages.turkish]
 source = "Turkish"
@@ -1368,7 +1380,7 @@ translation = "Ukrainsk"
 
 [messages.uninstall-details]
 source = "Installation details"
-translation = "Installationsdetaljer"
+translation = "Installationsoplysninger"
 
 [messages.uninstall-dialog-title]
 source = "Uninstall"
@@ -1376,23 +1388,23 @@ translation = "Afinstaller"
 
 [messages.uninstall-identification-failed]
 source = "The application lookup did not finish. Nothing was deleted. Try again."
-translation = "Applikationsopslaget blev ikke afsluttet. Intet blev slettet. Prøv igen."
+translation = "Opslaget af programmer blev ikke fuldført. Intet blev slettet. Prøv igen."
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
-translation = "Identifikation af installerede applikationer…"
+translation = "Identificerer installerede programmer…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
-translation = "Start afinstallationsprogram…"
+translation = "Start afinstallationsprogrammet…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Ingen applikation kunne identificeres for denne mappe. Åbn Installerede apps eller Steam for at administrere indholdet."
+translation = "Der kunne ikke identificeres noget program for denne mappe. Åbn Installerede apps eller Steam for at administrere indholdet."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Åbn installerede apps"
+translation = "Åbn Installerede apps"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
@@ -1404,11 +1416,11 @@ translation = "Udgiver: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "Kortet følger ændringer løbende. Scan igen efter afinstallation, hvis liveopdateringer ikke er tilgængelige."
+translation = "Kortet følger ændringer løbende. Scan igen efter afinstallationen, hvis liveopdateringer ikke er tilgængelige."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
-translation = "Fjerner hele programmet, inklusive filer uden for dit valg."
+translation = "Fjerner hele programmet, inklusive filer uden for det valgte."
 
 [messages.uninstall-selected-path]
 source = "Selected item"
@@ -1424,7 +1436,7 @@ translation = "Afinstaller via Steam…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
-translation = "Steam app-id: { $id }"
+translation = "Steam-app-id: { $id }"
 
 [messages.uninstall-title]
 source = "Uninstall an application or game"
@@ -1436,23 +1448,23 @@ translation = "Version: { $version }"
 
 [messages.uninstall-via-steam]
 source = "Managed by Steam"
-translation = "Administreret af Steam"
+translation = "Administreres af Steam"
 
 [messages.uninstall-via-windows]
 source = "Registered Windows application"
-translation = "Registreret Windows-applikation"
+translation = "Registreret Windows-program"
 
 [messages.uninstall-whole-application]
 source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
-translation = "Denne placering tilhører installeret software. Vælg et program nedenfor for at afinstallere hele programmet, inklusive filer uden for den valgte mappe. Windows eller Steam håndterer fjernelsen."
+translation = "Denne placering tilhører installeret software. Vælg et program nedenfor for at afinstallere hele programmet, inklusive filer uden for den valgte mappe. Windows eller Steam står for fjernelsen."
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows kunne ikke starte afinstallationsprogrammet (fejl { $code }). Åbn Installerede apps for at administrere denne applikation."
+translation = "Windows kunne ikke starte afinstallationsprogrammet (fejl { $code }). Åbn Installerede apps for at administrere dette program."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Det registrerede afinstallationsprogram kunne ikke findes. Åbn Windows-installerede apps for at administrere denne applikation."
+translation = "Det registrerede afinstallationsprogram blev ikke fundet. Åbn Installerede apps i Windows for at administrere dette program."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1460,7 +1472,7 @@ translation = "Ulæselige mapper"
 
 [messages.up-a-level]
 source = "Up a level"
-translation = "Op et niveau"
+translation = "Et niveau op"
 
 [messages.update-available]
 source = "Version { $version } available"
@@ -1476,7 +1488,7 @@ translation = "Opdaterer…"
 
 [messages.use-file-lengths-not-size-on-disk]
 source = "Use file lengths, not size on disk"
-translation = "Brug fillængder, ikke størrelse på disk"
+translation = "Brug filstørrelse frem for størrelse på disk"
 
 [messages.vert]
 source = "Vert"
@@ -1484,11 +1496,11 @@ translation = "Lodr."
 
 [messages.very-few-files]
 source = "Very Few Files"
-translation = "Meget Få Filer"
+translation = "Meget få filer"
 
 [messages.very-many-files]
 source = "Very Many Files"
-translation = "Meget Mange Filer"
+translation = "Meget mange filer"
 
 [messages.video]
 source = "Video"
@@ -1504,7 +1516,7 @@ translation = "Vis"
 
 [messages.waiting-for-windows-permission]
 source = "Waiting for Windows permission…"
-translation = "Venter på Windows tilladelse…"
+translation = "Venter på tilladelse fra Windows…"
 
 [messages.windows-os]
 source = "Windows OS"
@@ -1522,13 +1534,13 @@ source = """
     }"""
 translation = """
 { $count ->
-        [one] { $count } arbejdstager
-       *[other] { $count } arbejdstagere
+        [one] { $count } samtidig opgave
+       *[other] { $count } samtidige opgaver
     }"""
 
 [messages.workers-help]
 source = "Current concurrency limit; automatically adapts to measured throughput and latency."
-translation = "Nuværende concurrency limit; tilpasser sig automatisk til målt gennemløb og latenstid."
+translation = "Aktuel grænse for samtidige opgaver; tilpasses automatisk efter målt gennemløb og svartid."
 
 [messages.wsl-browse-linux]
 source = "Browse Linux files"
@@ -1536,23 +1548,23 @@ translation = "Gennemse Linux-filer"
 
 [messages.wsl-browse-linux-detail]
 source = "Open this distribution in Explorer. This may start the distribution."
-translation = "Åbn denne distribution i Explorer. Dette kan starte distributionen."
+translation = "Åbn denne distribution i Stifinder. Det kan starte distributionen."
 
 [messages.wsl-choose-action]
 source = "What would you like to do?"
-translation = "Hvad vil du gerne lave?"
+translation = "Hvad vil du gøre?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
-translation = "Vis oprydningsvejledning"
+translation = "Vis vejledning i oprydning"
 
 [messages.wsl-compact-admin]
 source = "Windows will ask for administrator permission."
-translation = "Windows vil bede om administratortilladelse."
+translation = "Windows beder om administratortilladelse."
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
-translation = "Genvind nulfyldte blokke, mens diskens indhold bevares. Kræver, at Docker og WSL stoppes."
+translation = "Frigør nulfyldte blokke og bevarer diskens indhold. Kræver, at Docker og WSL er stoppet."
 
 [messages.wsl-compact-ready]
 source = "Ready to compact?"
@@ -1560,23 +1572,23 @@ translation = "Klar til at komprimere?"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "Gem dit Linux-arbejde, og afslut Docker Desktop. Clawback stopper alle WSL-sessioner og komprimerer derefter denne disk. Hold Docker og WSL lukket, indtil det er færdigt."
+translation = "Gem dit arbejde i Linux, og afslut Docker Desktop. Clawback stopper alle WSL-sessioner og komprimerer derefter denne disk. Hold Docker og WSL lukket, indtil det er færdigt."
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
-translation = "Gendan ubrugt diskplads."
+translation = "Frigør ubrugt diskplads."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "Genvinder nul-fyldte blokke uden at slette dine filer. Ryd op i Linux eller Docker først; besparelser varierer. Docker og WSL skal forblive stoppet under komprimering."
+translation = "Frigør nulfyldte blokke uden at slette dine filer. Ryd først op i Linux eller Docker; besparelsen varierer. Docker og WSL skal forblive stoppet under komprimeringen."
 
 [messages.wsl-copy-command]
 source = "Copy command"
-translation = "Kopiér kommando"
+translation = "Kopier kommando"
 
 [messages.wsl-disk-details]
 source = "File details"
-translation = "Fildetaljer"
+translation = "Filoplysninger"
 
 [messages.wsl-disk-path]
 source = "Disk file"
@@ -1592,23 +1604,23 @@ translation = "WSL-distribution"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
-translation = 'Gennemgå images, stoppede containere og volumener i Docker Desktop. Build-cachen kan også ryddes med "docker builder prune". Volumener kan indeholde databaser eller andre filer, du har brug for; undersøg dem, før du fjerner dem. Oprydning og diskkomprimering er separate trin.'
+translation = "Gennemgå images, stoppede containere og volumener i Docker Desktop. Build-cachen kan også ryddes med “docker builder prune”. Volumener kan indeholde databaser eller andre filer, du har brug for; undersøg dem, før du fjerner dem. Oprydning og komprimering af disken er separate trin."
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
-translation = "Gemmer Docker-images, containere, volumener og build-cache."
+translation = "Indeholder Docker-images, containere, volumener og build-cache."
 
 [messages.wsl-docker-system-description]
 source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
-translation = "Gemmer Docker Desktops Linux-miljø. Docker-applikationsdata kan gemmes på en separat disk."
+translation = "Indeholder Docker Desktops Linux-miljø. Docker-programdata kan ligge på en separat disk."
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = 'Gennemse distributionens filer og fjern data, du ikke længere har brug for. Brug dens Linux-pakkehåndtering til at rense pakkecache. Efter oprydning kan "sudo fstrim -av" inde i distributionen hjælpe med at frigive ubrugte blokke, før du lukker ned for WSL og komprimerer.'
+translation = "Gennemse distributionens filer, og fjern data, du ikke længere har brug for. Brug distributionens Linux-pakkehåndtering til at rydde pakkecacher. Efter oprydningen kan “sudo fstrim -av” i distributionen hjælpe med at frigive ubrugte blokke, før du lukker WSL ned og komprimerer."
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
-translation = "Gemmer denne Linux-distributions filsystem, inklusive dens programmer og Linux-sidefiler."
+translation = "Indeholder denne Linux-distributions filsystem, herunder dens programmer og filer på Linux-siden."
 
 [messages.wsl-open-docker]
 source = "Open Docker Desktop"
@@ -1648,11 +1660,11 @@ translation = "Stop WSL og komprimer"
 
 [messages.zoom-full]
 source = "Zoom Full"
-translation = "Zoom Fuld"
+translation = "Vis alt"
 
 [messages.zoom-in]
 source = "Zoom In"
-translation = "Zoom Ind"
+translation = "Zoom ind"
 
 [messages.zoom-in-2]
 source = "Zoom in"
@@ -1660,4 +1672,4 @@ translation = "Zoom ind"
 
 [messages.zoom-out]
 source = "Zoom Out"
-translation = "Zoom Ud"
+translation = "Zoom ud"

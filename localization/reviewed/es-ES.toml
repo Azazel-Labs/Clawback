@@ -352,7 +352,7 @@ translation = "¿Eliminar permanentemente?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Preparando para reciclar…"
+translation = "Preparando para mover a la papelera…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -396,7 +396,7 @@ translation = "Actualizando mapa de disco…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "El trabajador de reciclado se detuvo inesperadamente. Compruebe el elemento seleccionado antes de volver a intentarlo."
+translation = "El proceso de eliminación en segundo plano se detuvo inesperadamente. Comprueba el elemento seleccionado antes de volver a intentarlo."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -720,7 +720,7 @@ translation = "Normal"
 
 [messages.norwegian-bokmal]
 source = "Norwegian Bokmål"
-translation = "Noruego bokmal"
+translation = "Noruego bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
@@ -1064,11 +1064,11 @@ translation = "La izquierda favorece las formas horizontales; el centro las equi
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Eliminando archivos"
+translation = "Eliminación de archivos"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Tamaño contable"
+translation = "Cálculo del tamaño"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1084,7 +1084,7 @@ translation = "Guardar cambios"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Escanear límites"
+translation = "Límites del análisis"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1324,7 +1324,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: carpetas ensambladoras · { $files } archivos"
+translation = "Turbo: ensamblando carpetas · { $files } archivos"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1336,7 +1336,7 @@ translation = "Mostrando progreso Turbo · validando resultados…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Los contadores cambian a Turbo cuando ha ensamblado más entradas. El mapa mantiene la vista previa del escaneo regular hasta que el árbol completo del Turbo sea validado. Si el Turbo falla, el escaneo normal continúa."
+translation = "Los contadores cambian a Turbo cuando este ha ensamblado más entradas. El mapa mantiene la vista previa del análisis normal hasta que se valida el árbol completo de Turbo. Si Turbo falla, el análisis normal continúa."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"

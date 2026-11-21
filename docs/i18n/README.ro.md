@@ -50,7 +50,7 @@ Pe Windows, Turbo citește mai rapid un întreg volum NTFS local printr-un proce
 
 ## Docker în browser
 
-Pentru un NAS sau un server de acasă, imaginea Docker rulează Clawback pe server și îl transmite într-o filă a browserului. Mapează folderele pe care vrei să le vezi sub `/data`. Poți șterge din folderele cu citire/scriere; folderele doar în citire pot fi răsfoite, dar din ele nu se șterge niciodată nimic.
+Pentru un NAS sau un server de acasă, imaginea Docker rulează Clawback pe server și îl transmite într-o filă a browserului. Mapează dosarele pe care vrei să le vezi sub `/data`. Poți șterge din dosarele cu citire/scriere; dosarele doar în citire pot fi răsfoite, dar din ele nu se șterge niciodată nimic.
 
 ```yaml
 services:

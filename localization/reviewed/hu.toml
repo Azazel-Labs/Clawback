@@ -2,7 +2,7 @@ version = 2
 
 [readme]
 source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
-translation = "e1f6e999b079011d75e91ad4fe8fd1f2967894f37bccfb36638d8f0953c55056"
+translation = "d641a30778e873b2facb5185d74f4017697e7f5685d9ae4fa328b8f7e49fb521"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
@@ -70,7 +70,7 @@ translation = "Biztonsági mentésre megjelölve"
 
 [messages.attribute-compressed]
 source = "Compressed"
-translation = "Tömörítve"
+translation = "Tömörített"
 
 [messages.attribute-encrypted]
 source = "Encrypted"
@@ -150,7 +150,7 @@ translation = "{ $size } növekedés"
 
 [messages.changes-none]
 source = "Nothing changed since this snapshot."
-translation = "Ennek a pillanatképnek az óta semmi sem változott."
+translation = "E pillanatkép óta semmi sem változott."
 
 [messages.changes-shrank]
 source = "Shrank"
@@ -162,7 +162,7 @@ translation = "Frissítések keresése"
 
 [messages.check-for-updates-hint]
 source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
-translation = "Indításkor megkérdezi a GitHubot, hogy elérhető-e újabb verzió. Rólad és a fájljaidról semmit sem küld el."
+translation = "Indításkor megkérdezi a GitHubot, hogy elérhető-e újabb verzió. Önről és a fájljairól semmit sem küld el."
 
 [messages.chinese-simplified]
 source = "Simplified Chinese"
@@ -214,7 +214,7 @@ translation = "Kattintson a meghajtó Lomtárának kiürítéséhez"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
-translation = "A Windows kezeli. Kattints a tárolási beállítások megnyitásához és a hely biztonságos felszabadításához."
+translation = "A Windows kezeli. Kattintson a tárolási beállítások megnyitásához és a hely biztonságos felszabadításához."
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
@@ -357,7 +357,7 @@ source = """
         [one] { $count } more item queued
        *[other] { $count } more items queued
     }"""
-translation = "További tételek a sorban: { $count }"
+translation = "További elemek a sorban: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
@@ -449,7 +449,7 @@ translation = "A { $drive } Lomtárában lévő összes elem véglegesen törlő
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
-translation = "Ürítse ki a Lomtárat"
+translation = "Lomtár ürítése"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
@@ -461,7 +461,7 @@ translation = "Véglegesen törli a { $path } tartalmát? A Temp mappa megmarad.
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
-translation = "Tisztítsa meg a Temp mappát"
+translation = "Temp mappa tisztítása"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
@@ -629,7 +629,7 @@ translation = "Élő · Változások egyeztetése a háttérben"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Élő frissítés nem érhető el: Vizsgálat megszakítva · Frissítéshez indítson új vizsgálatot"
+translation = "Élő frissítés nem érhető el: vizsgálat megszakítva · Frissítéshez indítson új vizsgálatot"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -657,7 +657,7 @@ translation = "Csináljon helyet annak, ami fontos."
 
 [messages.managed-by-windows]
 source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
-translation = "Ezeket a fájlokat a Windows hozza létre, és maga határozza meg a méretüket. Törlés helyett a virtuális memóriát vagy a hibernálást a Windows beállításaiban módosítsd."
+translation = "Ezeket a fájlokat a Windows hozza létre, és maga határozza meg a méretüket. Törlés helyett a virtuális memóriát vagy a hibernálást a Windows beállításaiban módosítsa."
 
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
@@ -709,7 +709,7 @@ translation = "Norvég bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% FELDOLGOZVA"
+translation = "% A VIZSGÁLATBÓL"
 
 [messages.offline]
 source = "Offline"
@@ -741,11 +741,11 @@ translation = "Mappa megnyitása…"
 
 [messages.open-in-explorer]
 source = "Open in Explorer"
-translation = "Nyissa meg az Intézőben"
+translation = "Megnyitás az Intézőben"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Nyissa meg a Fájlkezelőben"
+translation = "Megnyitás a fájlkezelőben"
 
 [messages.open-in-finder]
 source = "Open in Finder"
@@ -841,7 +841,7 @@ translation = "Felszabadítás"
 
 [messages.reclaim-browser-cache]
 source = "{ $browser } cache; close { $browser } first"
-translation = "{ $browser } gyorsítótár; előbb zárd be: { $browser }"
+translation = "{ $browser } gyorsítótár; előbb zárja be: { $browser }"
 
 [messages.reclaim-cache-tag]
 source = "Marked by its program as a cache it recreates"
@@ -901,7 +901,7 @@ translation = "CocoaPods-csomagok; a pod install visszaállítja őket"
 
 [messages.reclaim-python-venv]
 source = "Python virtual environment; recreate it from your requirements"
-translation = "Python virtuális környezet; hozd létre újra a követelményekből"
+translation = "Python virtuális környezet; hozza létre újra a követelményekből"
 
 [messages.reclaim-recycle-bin]
 source = "Deleted items waiting to be emptied"
@@ -913,7 +913,7 @@ translation = "Rust fordítási kimenet; a cargo build újra létrehozza"
 
 [messages.reclaim-show]
 source = "Click to show it on the map."
-translation = "Kattints, hogy megjelenjen a térképen."
+translation = "Kattintson, hogy megjelenjen a térképen."
 
 [messages.reclaim-temp]
 source = "Temporary files apps left behind"
@@ -1163,7 +1163,7 @@ translation = "Nincs beállításmappa a pillanatképek tárolásához."
 
 [messages.snapshot-none]
 source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
-translation = "Még nincs mentett pillanatkép erről: { $path }. Ments egyet a Fájl › Pillanatkép mentése paranccsal."
+translation = "Még nincs mentett pillanatkép erről: { $path }. Mentsen egyet a Fájl › Pillanatkép mentése paranccsal."
 
 [messages.snapshot-other-root]
 source = "That snapshot is of { $path }, not the folder you are viewing."
@@ -1179,7 +1179,7 @@ translation = "Pillanatkép mentése…"
 
 [messages.snapshot-save-body]
 source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
-translation = "A pillanatkép rögzíti ezt a vizsgálatot, így később láthatod, mi nőtt, mi csökkent, mi jelent meg vagy tűnt el."
+translation = "A pillanatkép rögzíti ezt a vizsgálatot, így később láthatja, mi nőtt, mi csökkent, mi jelent meg vagy tűnt el."
 
 [messages.snapshot-save-button]
 source = "Save snapshot"
@@ -1283,11 +1283,11 @@ translation = "Kuka"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
-translation = "A törölt elemek megerősítés után véglegesen törlődnek. Kattints, hogy a törlések visszaállíthatók legyenek."
+translation = "A törölt elemek megerősítés után véglegesen törlődnek. Kattintson, hogy a törlések visszaállíthatók legyenek."
 
 [messages.trash-toggle-on]
 source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
-translation = "A törölt elemek visszaállíthatók. Kattints a végleges törléshez; a Clawback előbb rákérdez."
+translation = "A törölt elemek visszaállíthatók. Kattintson a végleges törléshez; a Clawback előbb rákérdez."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
@@ -1371,7 +1371,7 @@ translation = "A telepített alkalmazások azonosítása…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
-translation = "Indítsa el az eltávolító programot…"
+translation = "Eltávolító program indítása…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
@@ -1379,11 +1379,11 @@ translation = "Nem azonosítható alkalmazás ehhez a mappához. Nyissa meg a Te
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Nyissa meg a telepített alkalmazásokat"
+translation = "Telepített alkalmazások megnyitása"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Nyissa meg a Steam könyvtárat"
+translation = "Steam-könyvtár megnyitása"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1391,7 +1391,7 @@ translation = "Kiadó: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "A térkép élő változásokat követ. Ha az élő frissítések nem érhetők el, az eltávolítás után használja az Újrakeresést."
+translation = "A térkép élő változásokat követ. Ha az élő frissítések nem érhetők el, az eltávolítás után használja az Újravizsgálat parancsot."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
@@ -1399,7 +1399,7 @@ translation = "Eltávolítja a teljes alkalmazást, beleértve a kiválasztotton
 
 [messages.uninstall-selected-path]
 source = "Selected item"
-translation = "Kiválasztott tétel"
+translation = "Kiválasztott elem"
 
 [messages.uninstall-software]
 source = "Uninstall…"
@@ -1407,7 +1407,7 @@ translation = "Eltávolítás…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Távolítsa el a Steamen keresztül…"
+translation = "Eltávolítás a Steamen keresztül…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1415,7 +1415,7 @@ translation = "Steam alkalmazás azonosítója: { $id }"
 
 [messages.uninstall-title]
 source = "Uninstall an application or game"
-translation = "Távolítson el egy alkalmazást vagy játékot"
+translation = "Alkalmazás vagy játék eltávolítása"
 
 [messages.uninstall-version]
 source = "Version: { $version }"
@@ -1455,7 +1455,7 @@ translation = "Elérhető a(z) { $version } verzió"
 
 [messages.update-available-docker]
 source = "To update, run: { $command } (click to copy)"
-translation = "A frissítéshez futtasd: { $command } (kattints a másoláshoz)"
+translation = "A frissítéshez futtassa: { $command } (kattintson a másoláshoz)"
 
 [messages.updating]
 source = "Updating…"
@@ -1527,7 +1527,7 @@ translation = "Mit szeretne tenni?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
-translation = "Jelenítse meg a tisztítási útmutatót"
+translation = "Tisztítási útmutató megjelenítése"
 
 [messages.wsl-compact-admin]
 source = "Windows will ask for administrator permission."
@@ -1547,7 +1547,7 @@ translation = "Mentse el linuxos munkáját, és lépjen ki a Docker Desktopból
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
-translation = "A fel nem használt lemezterület helyreállítása."
+translation = "A fel nem használt lemezterület felszabadítása."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
@@ -1587,7 +1587,7 @@ translation = "Tárolja a Docker Desktop Linux környezetét. A Docker alkalmaz�
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = "Böngésszen a disztribúció fájljaiban, és távolítsa el a már nem szükséges adatokat. Használja a Linux csomagkezelőjét a csomaggyorsítótárak tisztításához. A tisztítás után a disztribúcióban található „sudo fstrim -av” segíthet felszabadítani a nem használt blokkokat a WSL leállítása és a tömörítés előtt."
+translation = "Böngésszen a disztribúció fájljaiban, és távolítsa el a már nem szükséges adatokat. Használja a disztribúció csomagkezelőjét a csomaggyorsítótárak tisztításához. A tisztítás után a disztribúción belül futtatott „sudo fstrim -av” segíthet felszabadítani a nem használt blokkokat a WSL leállítása és a tömörítés előtt."
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1595,7 +1595,7 @@ translation = "Tárolja ennek a Linux-disztribúciónak a fájlrendszerét, bele
 
 [messages.wsl-open-docker]
 source = "Open Docker Desktop"
-translation = "Nyissa meg a Docker Desktopot"
+translation = "Docker Desktop megnyitása"
 
 [messages.wsl-open-docker-detail]
 source = "Review containers, images and volumes before removing unwanted data."

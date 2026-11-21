@@ -78,7 +78,7 @@ translation = "Đã mã hóa"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
-translation = "Liên kết hoặc chuyển hướng hệ thống tập tin"
+translation = "Liên kết hoặc chuyển hướng hệ thống tệp"
 
 [messages.attribute-temporary]
 source = "Temporary"
@@ -202,7 +202,7 @@ translation = "Dọn dẹp vĩnh viễn?"
 
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
-translation = "Dọn dẹp thư mục Temp…"
+translation = "Đang dọn dẹp thư mục Temp…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
@@ -210,11 +210,11 @@ translation = "Nhấp để xóa các tệp tạm thời của bạn"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Nhấp để dọn sạch Thùng rác của ổ đĩa này"
+translation = "Nhấp để làm trống Thùng rác của ổ đĩa này"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
-translation = "Do Windows quản lý. Bấm để mở cài đặt Lưu trữ và giải phóng dung lượng một cách an toàn."
+translation = "Do Windows quản lý. Nhấp để mở cài đặt Lưu trữ và giải phóng dung lượng một cách an toàn."
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
@@ -238,11 +238,11 @@ translation = "Thu gọn đĩa…"
 
 [messages.compact-wsl-error]
 source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
-translation = "Không thể nén đĩa. Đảm bảo Docker Desktop và WSL đã dừng, sau đó thử lại. Windows đã báo cáo: { $error }"
+translation = "Không thể thu gọn đĩa. Đảm bảo Docker Desktop và WSL đã dừng, sau đó thử lại. Windows đã báo cáo: { $error }"
 
 [messages.compacting-wsl-disk]
 source = "Stopping WSL and compacting disk…"
-translation = "Đang dừng WSL và nén đĩa…"
+translation = "Đang dừng WSL và thu gọn đĩa…"
 
 [messages.compress]
 source = "Compress"
@@ -449,15 +449,15 @@ translation = "Mọi thứ trong Thùng rác của bạn trên { $drive } sẽ b
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
-translation = "Dọn sạch Thùng rác"
+translation = "Làm trống Thùng rác"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Làm trống thùng rác?"
+translation = "Làm trống Thùng rác?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "Xóa vĩnh viễn nội dung của { $path }? Thư mục Temp sẽ được giữ lại. Các mục Windows từ chối xóa sẽ được giữ nguyên. Đóng ứng dụng trước để giải phóng nhiều tập tin tạm thời hơn."
+translation = "Xóa vĩnh viễn nội dung của { $path }? Thư mục Temp sẽ được giữ lại. Các mục Windows từ chối xóa sẽ được giữ nguyên. Hãy đóng các ứng dụng trước để giải phóng thêm tệp tạm thời."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -469,7 +469,7 @@ translation = "Làm sạch thư mục Temp của bạn?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Đang dọn sạch thùng rác…"
+translation = "Đang làm trống Thùng rác…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -709,7 +709,7 @@ translation = "Tiếng Na Uy Bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% QUÉT"
+translation = "% CỦA LẦN QUÉT"
 
 [messages.offline]
 source = "Offline"
@@ -913,7 +913,7 @@ translation = "Kết quả biên dịch Rust; cargo build sẽ tạo lại"
 
 [messages.reclaim-show]
 source = "Click to show it on the map."
-translation = "Bấm để hiển thị trên bản đồ."
+translation = "Nhấp để hiển thị trên bản đồ."
 
 [messages.reclaim-temp]
 source = "Temporary files apps left behind"
@@ -933,7 +933,7 @@ translation = "Lấy lại dung lượng ổ đĩa WSL"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "Trước khi nén, hãy lưu công việc của bạn, thoát khỏi Docker Desktop và đóng các phiên WSL. Chạy lệnh này trong PowerShell để dừng tất cả các bản phân phối WSL. Giữ Docker và WSL dừng lại cho đến khi quá trình nén kết thúc. Windows sẽ yêu cầu quyền quản trị viên."
+translation = "Trước khi thu gọn, hãy lưu công việc của bạn, thoát khỏi Docker Desktop và đóng các phiên WSL. Chạy lệnh này trong PowerShell để dừng tất cả các bản phân phối WSL. Giữ Docker và WSL ở trạng thái dừng cho đến khi quá trình thu gọn kết thúc. Windows sẽ yêu cầu quyền quản trị viên."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1367,7 +1367,7 @@ translation = "Quá trình tra cứu ứng dụng chưa hoàn tất. Không có 
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
-translation = "Xác định các ứng dụng đã cài đặt…"
+translation = "Đang xác định các ứng dụng đã cài đặt…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
@@ -1431,7 +1431,7 @@ translation = "Ứng dụng Windows đã đăng ký"
 
 [messages.uninstall-whole-application]
 source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
-translation = "Vị trí này thuộc về phần mềm đã cài đặt. Chọn một ứng dụng bên dưới để gỡ cài đặt toàn bộ ứng dụng, bao gồm cả các file nằm ngoài thư mục đã chọn. Windows hoặc Steam sẽ xử lý việc gỡ bỏ."
+translation = "Vị trí này thuộc về phần mềm đã cài đặt. Chọn một ứng dụng bên dưới để gỡ cài đặt toàn bộ ứng dụng, bao gồm cả các tệp nằm ngoài thư mục đã chọn. Windows hoặc Steam sẽ xử lý việc gỡ bỏ."
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
@@ -1439,7 +1439,7 @@ translation = "Windows không thể khởi động trình gỡ cài đặt (lỗ
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Không thể tìm thấy trình gỡ cài đặt đã đăng ký. Mở Ứng dụng đã cài đặt Windows để quản lý ứng dụng này."
+translation = "Không thể tìm thấy trình gỡ cài đặt đã đăng ký. Mở mục Ứng dụng đã cài đặt của Windows để quản lý ứng dụng này."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1543,7 +1543,7 @@ translation = "Sẵn sàng thu gọn?"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "Lưu công việc Linux của bạn và thoát khỏi Docker Desktop. Clawback sẽ dừng tất cả các phiên WSL, sau đó nén đĩa này. Giữ Docker và WSL đóng cho đến khi hoàn tất."
+translation = "Lưu công việc Linux của bạn và thoát khỏi Docker Desktop. Clawback sẽ dừng tất cả các phiên WSL, sau đó thu gọn đĩa này. Giữ Docker và WSL đóng cho đến khi hoàn tất."
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
@@ -1587,7 +1587,7 @@ translation = "Lưu trữ môi trường Linux của Docker Desktop. Dữ liệu
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = "Duyệt qua các tệp của bản phân phối và xóa dữ liệu bạn không cần nữa. Sử dụng trình quản lý gói Linux của nó để dọn dẹp bộ đệm gói. Sau khi dọn dẹp, “sudo fstrim -av” bên trong bản phân phối có thể giúp giải phóng các khối không sử dụng trước khi tắt WSL và nén."
+translation = "Duyệt qua các tệp của bản phân phối và xóa dữ liệu bạn không cần nữa. Sử dụng trình quản lý gói Linux của bản phân phối để dọn bộ nhớ đệm gói. Sau khi dọn dẹp, chạy “sudo fstrim -av” bên trong bản phân phối có thể giúp giải phóng các khối không sử dụng trước khi tắt WSL và thu gọn."
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1615,7 +1615,7 @@ translation = "Bản phân phối Linux không xác định"
 
 [messages.wsl-owner-unidentified-detail]
 source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
-translation = "Đường dẫn này trông giống như cài đặt WSL nhưng không tìm thấy đăng ký phù hợp nào cho người dùng Windows hiện tại. Đường dẫn gói và tệp có thể giúp xác định nó."
+translation = "Đường dẫn này trông giống như một bản cài đặt WSL nhưng không tìm thấy đăng ký phù hợp nào cho người dùng Windows hiện tại. Gói và đường dẫn tệp có thể giúp xác định nó."
 
 [messages.wsl-package]
 source = "Windows package"

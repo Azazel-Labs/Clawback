@@ -78,7 +78,7 @@ translation = "Crittografato"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
-translation = "Collegamento o reindirizzamento al file system"
+translation = "Collegamento o reindirizzamento del file system"
 
 [messages.attribute-temporary]
 source = "Temporary"
@@ -206,11 +206,11 @@ translation = "Pulizia cartella Temp…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
-translation = "Fare clic per pulire i file temporanei"
+translation = "Fai clic per pulire i file temporanei"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Fare clic per svuotare il cestino di questa unità"
+translation = "Fai clic per svuotare il Cestino di questa unità"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -325,7 +325,7 @@ translation = 'Il contenuto di "{ $name }" è troppo grande per il Cestino. La c
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
-translation = "{ $size } · { $seconds }s trascorso"
+translation = "{ $size } · { $seconds } s trascorsi"
 
 [messages.delete-error]
 source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
@@ -349,7 +349,7 @@ translation = "Eliminare definitivamente?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Preparazione al riciclo…"
+translation = "Preparazione dello spostamento nel Cestino…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -365,7 +365,7 @@ translation = "Elementi aggiuntivi in coda: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Spostamento nel cestino…"
+translation = "Spostamento nel Cestino…"
 
 [messages.delete-size-files]
 source = """
@@ -385,7 +385,7 @@ translation = "Aggiornamento mappa disco…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Il worker di riciclaggio si è fermato inaspettatamente. Controllare l'elemento selezionato prima di riprovare."
+translation = "Il processo di spostamento nel Cestino si è interrotto inaspettatamente. Controlla l’elemento selezionato prima di riprovare."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -457,7 +457,7 @@ translation = "Svuota il Cestino"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Svuotare il cestino?"
+translation = "Svuotare il Cestino?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
@@ -473,7 +473,7 @@ translation = "Pulire la cartella Temp?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Svuotamento del cestino…"
+translation = "Svuotamento del Cestino…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -633,7 +633,7 @@ translation = "In tempo reale · Riconciliazione delle modifiche in background"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Aggiornamenti in tempo reale non disponibili: Scansione annullata · Ripeti la scansione per aggiornare"
+translation = "Aggiornamenti in tempo reale non disponibili: scansione annullata · Ripeti la scansione per aggiornare"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -677,7 +677,7 @@ translation = "Ultima modifica:"
 
 [messages.move-selected-item-to-trash]
 source = "Move selected item to trash"
-translation = "Sposta l’elemento selezionato nel cestino"
+translation = "Sposta l’elemento selezionato nel Cestino"
 
 [messages.msec]
 source = "msec"
@@ -745,11 +745,11 @@ translation = "Apri cartella…"
 
 [messages.open-in-explorer]
 source = "Open in Explorer"
-translation = "Apri in Esplora risorse"
+translation = "Apri in Esplora file"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Aprire in File Manager"
+translation = "Apri nel gestore di file"
 
 [messages.open-in-finder]
 source = "Open in Finder"
@@ -1042,7 +1042,7 @@ translation = "Comportamento"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "La sinistra favorisce le forme orizzontali; il centro li compensa; destra favorisce le forme verticali."
+translation = "La sinistra favorisce le forme orizzontali; il centro le bilancia; la destra favorisce le forme verticali."
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1050,7 +1050,7 @@ translation = "Eliminazione file"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Contabilità delle dimensioni"
+translation = "Calcolo delle dimensioni"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1066,7 +1066,7 @@ translation = "Salva modifiche"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Scansione dei confini"
+translation = "Limiti della scansione"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1306,7 +1306,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: assembling folders · { $files } file"
+translation = "Turbo: assemblaggio delle cartelle · { $files } file"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1318,7 +1318,7 @@ translation = "Visualizzazione dei progressi Turbo · validazione dei risultati�
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "I contatori passano a Turbo quando ha assemblato più voci. La mappa mantiene l'anteprima di scansione regolare fino a quando non viene convalidato l'albero Turbo completo. Se Turbo fallisce, la scansione regolare continua."
+translation = "I contatori passano a Turbo quando questo ha assemblato più voci. La mappa mantiene l’anteprima della scansione normale finché l’albero Turbo completo non viene convalidato. Se Turbo non riesce, la scansione normale continua."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
@@ -1338,7 +1338,7 @@ translation = "Turbo: ordinamento dei risultati…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: risultati di caricamento…"
+translation = "Turbo: caricamento dei risultati…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1370,7 +1370,7 @@ translation = "Disinstalla"
 
 [messages.uninstall-identification-failed]
 source = "The application lookup did not finish. Nothing was deleted. Try again."
-translation = "La ricerca dell'applicazione non è stata completata. Niente è stato cancellato. Riprova."
+translation = "La ricerca delle applicazioni non è stata completata. Non è stato eliminato nulla. Riprova."
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
@@ -1386,7 +1386,7 @@ translation = "Nessuna applicazione identificata per questa cartella. Apri App i
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Aprire le app installate"
+translation = "Apri App installate"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
@@ -1398,7 +1398,7 @@ translation = "Editore: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "La mappa segue i cambiamenti in tempo reale. Utilizzare Ripeti scansione dopo la disinstallazione se gli aggiornamenti live non sono disponibili."
+translation = "La mappa segue le modifiche in tempo reale. Usa Ripeti scansione dopo la disinstallazione se gli aggiornamenti in tempo reale non sono disponibili."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
@@ -1414,7 +1414,7 @@ translation = "Disinstalla…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Disinstallazione tramite Steam…"
+translation = "Disinstalla tramite Steam…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1446,7 +1446,7 @@ translation = "Windows non è riuscito ad avviare il programma di disinstallazio
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Impossibile trovare il programma di disinstallazione registrato. Apri le app installate di Windows per gestire questa applicazione."
+translation = "Impossibile trovare il programma di disinstallazione registrato. Apri App installate di Windows per gestire questa applicazione."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1586,7 +1586,7 @@ translation = "Distribuzione WSL"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
-translation = 'In Docker Desktop, rivedere le immagini, i contenitori e i volumi arrestati. La cache di build può anche essere pulita con "docker builder prune". I volumi possono contenere database o altri file necessari; ispezionarli prima di rimuoverli. La pulizia e la compattazione del disco sono passaggi separati.'
+translation = 'In Docker Desktop, esamina le immagini, i container arrestati e i volumi. La cache di compilazione può essere pulita anche con "docker builder prune". I volumi possono contenere database o altri file necessari; controllali prima di rimuoverli. La pulizia e la compattazione del disco sono passaggi separati.'
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
@@ -1598,7 +1598,7 @@ translation = "Memorizza l'ambiente Linux di Docker Desktop. I dati dell'applica
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = """Sfoglia i file della distribuzione e rimuovi i dati che non ti servono più. Usa il suo gestore di pacchetti Linux per pulire le cache dei pacchetti. Dopo la pulizia, "sudo fstrim -av" all'interno della distribuzione può aiutare a rilasciare i blocchi inutilizzati prima di chiudere WSL e compattarlo."""
+translation = """Sfoglia i file della distribuzione e rimuovi i dati che non ti servono più. Usa il suo gestore di pacchetti Linux per pulire le cache dei pacchetti. Dopo la pulizia, "sudo fstrim -av" all'interno della distribuzione può aiutare a rilasciare i blocchi inutilizzati prima di arrestare WSL e compattare il disco."""
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1610,7 +1610,7 @@ translation = "Apri Docker Desktop"
 
 [messages.wsl-open-docker-detail]
 source = "Review containers, images and volumes before removing unwanted data."
-translation = "Esamina contenitori, immagini e volumi prima di rimuovere dati indesiderati."
+translation = "Esamina container, immagini e volumi prima di rimuovere dati indesiderati."
 
 [messages.wsl-owner-docker-data]
 source = "Docker Desktop — data disk"

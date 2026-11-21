@@ -70,7 +70,7 @@ translation = "Marcado para backup"
 
 [messages.attribute-compressed]
 source = "Compressed"
-translation = "Comprimido"
+translation = "Compactado"
 
 [messages.attribute-encrypted]
 source = "Encrypted"
@@ -210,7 +210,7 @@ translation = "Clique para limpar seus arquivos temporários"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Clique para esvaziar a lixeira desta unidade"
+translation = "Clique para esvaziar a Lixeira desta unidade"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -226,7 +226,7 @@ translation = "Arquivos de um aplicativo ou jogo instalado. Clique para identifi
 
 [messages.click-to-uninstall-steam]
 source = "Steam game files. Click to identify the game and uninstall through Steam."
-translation = "Arquivos de um jogo do Steam. Clique para identificar o jogo e desinstalá-lo pelo Steam."
+translation = "Arquivos de um jogo da Steam. Clique para identificar o jogo e desinstalá-lo pela Steam."
 
 [messages.close-dialog]
 source = "Close"
@@ -324,7 +324,7 @@ translation = "Excluir o conteúdo permanentemente?"
 
 [messages.delete-contents-too-big]
 source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
-translation = "O conteúdo de “{ $name }” é grande demais para a lixeira. A pasta em si é mantida."
+translation = "O conteúdo de “{ $name }” é grande demais para a Lixeira. A pasta em si é mantida."
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
@@ -352,7 +352,7 @@ translation = "Excluir permanentemente?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Preparando-se para reciclar…"
+translation = "Preparando para mover para a Lixeira…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -388,7 +388,7 @@ translation = """
 
 [messages.delete-too-big-for-recycle-bin]
 source = "“{ $name }” is too big for the Recycle Bin."
-translation = "“{ $name }” é grande demais para a lixeira."
+translation = "“{ $name }” é grande demais para a Lixeira."
 
 [messages.delete-updating]
 source = "Updating disk map…"
@@ -396,7 +396,7 @@ translation = "Atualizando mapa de disco…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "O trabalhador de reciclagem parou inesperadamente. Verifique o item selecionado antes de tentar novamente."
+translation = "O processo de envio para a Lixeira parou inesperadamente. Verifique o item selecionado antes de tentar novamente."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -460,15 +460,15 @@ translation = "Neerlandês"
 
 [messages.empty-recycle-bin-body]
 source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
-translation = "Todo o conteúdo da sua lixeira em { $drive } será excluído permanentemente."
+translation = "Todo o conteúdo da sua Lixeira em { $drive } será excluído permanentemente."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
-translation = "Esvaziar lixeira"
+translation = "Esvaziar Lixeira"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Esvaziar a lixeira?"
+translation = "Esvaziar a Lixeira?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
@@ -484,7 +484,7 @@ translation = "Limpar sua pasta Temp?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Esvaziando a lixeira…"
+translation = "Esvaziando a Lixeira…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -636,7 +636,7 @@ translation = "Dados de demonstração: arquivos e tamanhos fictícios"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
-translation = "Atualização ao vivo interrompida · Analise novamente para reconectar"
+translation = "Atualização ao vivo interrompida · Verifique novamente para reconectar"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
@@ -644,15 +644,15 @@ translation = "Ao vivo · Conciliando alterações em segundo plano"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Atualização ao vivo indisponível: análise cancelada · Analise novamente para atualizar"
+translation = "Atualização ao vivo indisponível: verificação cancelada · Verifique novamente para atualizar"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
-translation = "Atualização ao vivo interrompida: { $error } · Analise novamente para reconectar"
+translation = "Atualização ao vivo interrompida: { $error } · Verifique novamente para reconectar"
 
 [messages.live-unavailable]
 source = "Live unavailable: { $error } · Rescan to refresh"
-translation = "Atualização ao vivo indisponível: { $error } · Analise novamente para atualizar"
+translation = "Atualização ao vivo indisponível: { $error } · Verifique novamente para atualizar"
 
 [messages.live-watching]
 source = "Live · Watching for changes"
@@ -688,7 +688,7 @@ translation = "Modificado em:"
 
 [messages.move-selected-item-to-trash]
 source = "Move selected item to trash"
-translation = "Mover o item selecionado para a lixeira"
+translation = "Mover o item selecionado para a Lixeira"
 
 [messages.msec]
 source = "msec"
@@ -716,7 +716,7 @@ translation = "Não há arquivos nesta pasta."
 
 [messages.normal]
 source = "Normal"
-translation = "normal"
+translation = "Normal"
 
 [messages.norwegian-bokmal]
 source = "Norwegian Bokmål"
@@ -1060,15 +1060,15 @@ translation = "Comportamento"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "A esquerda favorece as formas horizontais; os centralizados; a direita favorece as formas verticais."
+translation = "A esquerda favorece formas horizontais; o centro as equilibra; a direita favorece formas verticais."
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Excluindo arquivos"
+translation = "Exclusão de arquivos"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Contagem de tamanho"
+translation = "Cálculo de tamanho"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1084,7 +1084,7 @@ translation = "Salvar as alterações"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Digitalizar limites"
+translation = "Limites da verificação"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1324,7 +1324,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: pastas de montagem · { $files } arquivos"
+translation = "Turbo: montando pastas · { $files } arquivos"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1336,7 +1336,7 @@ translation = "Mostrando o progresso do Turbo · validando resultados…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Os contadores alteram para o Turbo quando montaram mais entradas. O mapa mantém a pré-visualização de varredura regular até que a árvore Turbo completa seja validada. Se o Turbo falhar, a varredura regular continua."
+translation = "Os contadores passam para o Turbo quando ele tiver montado mais entradas. O mapa mantém a prévia da verificação normal até que a árvore completa do Turbo seja validada. Se o Turbo falhar, a verificação normal continua."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
@@ -1400,7 +1400,7 @@ translation = "Iniciar desinstalador…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Não foi possível identificar um aplicativo para esta pasta. Abra Aplicativos instalados ou o Steam para gerenciar seu conteúdo."
+translation = "Não foi possível identificar um aplicativo para esta pasta. Abra Aplicativos instalados ou a Steam para gerenciar seu conteúdo."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
@@ -1408,7 +1408,7 @@ translation = "Abrir Aplicativos instalados"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Abrir biblioteca do Steam"
+translation = "Abrir biblioteca da Steam"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1416,7 +1416,7 @@ translation = "Editor: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "O mapa acompanha as alterações ao vivo. Analise novamente após desinstalar se as atualizações ao vivo estiverem indisponíveis."
+translation = "O mapa acompanha as alterações ao vivo. Verifique novamente após desinstalar se as atualizações ao vivo estiverem indisponíveis."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
@@ -1432,7 +1432,7 @@ translation = "Desinstalar…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Desinstalar pelo Steam…"
+translation = "Desinstalar pela Steam…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1448,7 +1448,7 @@ translation = "Versão: { $version }"
 
 [messages.uninstall-via-steam]
 source = "Managed by Steam"
-translation = "Gerenciado pelo Steam"
+translation = "Gerenciado pela Steam"
 
 [messages.uninstall-via-windows]
 source = "Registered Windows application"
@@ -1456,7 +1456,7 @@ translation = "Aplicativo registrado no Windows"
 
 [messages.uninstall-whole-application]
 source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
-translation = "Este local pertence a um software instalado. Escolha um aplicativo abaixo para desinstalá-lo por completo, incluindo arquivos fora da pasta selecionada. O Windows ou o Steam cuidará da remoção."
+translation = "Este local pertence a um software instalado. Escolha um aplicativo abaixo para desinstalá-lo por completo, incluindo arquivos fora da pasta selecionada. O Windows ou a Steam cuidará da remoção."
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."

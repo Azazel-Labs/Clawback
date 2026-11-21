@@ -74,7 +74,7 @@ translation = "Komprimovaný"
 
 [messages.attribute-encrypted]
 source = "Encrypted"
-translation = "Šifrováno"
+translation = "Šifrovaný"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
@@ -82,7 +82,7 @@ translation = "Odkaz na souborový systém nebo přesměrování"
 
 [messages.attribute-temporary]
 source = "Temporary"
-translation = "Dočasné"
+translation = "Dočasný"
 
 [messages.attributes]
 source = "Attributes"
@@ -210,7 +210,7 @@ translation = "Kliknutím vyčistíte dočasné soubory"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Kliknutím vyprázdníte koš tohoto disku"
+translation = "Kliknutím vysypete koš tohoto disku"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -356,7 +356,7 @@ translation = "Smazat trvale?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Příprava na recyklaci…"
+translation = "Příprava přesunu do koše…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -392,7 +392,7 @@ translation = "Aktualizace diskové mapy…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Recyklační pracovník byl neočekávaně zastaven. Před dalším pokusem zkontrolujte vybranou položku."
+translation = "Úloha přesouvání do koše byla neočekávaně ukončena. Před dalším pokusem zkontrolujte vybranou položku."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -460,11 +460,11 @@ translation = "Vše v koši na jednotce { $drive } bude trvale smazáno."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
-translation = "Vyprázdnit koš"
+translation = "Vysypat koš"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Vyprázdnit koš?"
+translation = "Vysypat koš?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
@@ -480,7 +480,7 @@ translation = "Vyčistit složku Temp?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Vyprazdňování koše…"
+translation = "Vysypávání koše…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -640,7 +640,7 @@ translation = "Živě · Sladění změn na pozadí"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Živé aktualizace nejsou dostupné: Skenování zrušeno · Pro obnovení spusťte nové skenování"
+translation = "Živé aktualizace nejsou dostupné: skenování zrušeno · Pro obnovení spusťte nové skenování"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -652,7 +652,7 @@ translation = "Živé aktualizace nejsou dostupné: { $error } · Pro obnovení 
 
 [messages.live-watching]
 source = "Live · Watching for changes"
-translation = "Živě · Sledujeme změny"
+translation = "Živě · Sledování změn"
 
 [messages.location]
 source = "Location:"
@@ -752,11 +752,11 @@ translation = "Otevřít složku…"
 
 [messages.open-in-explorer]
 source = "Open in Explorer"
-translation = "Otevřete v Průzkumníku"
+translation = "Otevřít v Průzkumníku"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Otevřete ve Správci souborů"
+translation = "Otevřít ve správci souborů"
 
 [messages.open-in-finder]
 source = "Open in Finder"
@@ -784,7 +784,7 @@ translation = "Pozastavit skenování"
 
 [messages.permission-hint-macos]
 source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
-translation = "macOS chrání některé složky (Mail, Zprávy, složky jiných uživatelů atd.). Chcete-li je zahrnout, povolte Clawback „Úplný přístup k disku“ v Nastavení systému › Soukromí a zabezpečení."
+translation = "macOS chrání některé složky (Mail, Zprávy, složky jiných uživatelů atd.). Chcete-li je zahrnout, povolte Clawback „Plný přístup k disku“ v Nastavení systému › Soukromí a zabezpečení."
 
 [messages.permission-hint-unix]
 source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
@@ -1056,7 +1056,7 @@ translation = "Chování"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Levice upřednostňuje vodorovné tvary, středová rovnováha mezi nimi; pravice upřednostňuje vertikální tvary."
+translation = "Vlevo se upřednostňují vodorovné tvary, uprostřed jsou vyvážené; vpravo se upřednostňují svislé tvary."
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1064,11 +1064,11 @@ translation = "Mazání souborů"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Účtování o velikosti"
+translation = "Výpočet velikosti"
 
 [messages.settings-info-tips]
 source = "File details"
-translation = "Detaily souboru"
+translation = "Podrobnosti o souborech"
 
 [messages.settings-name-tips]
 source = "File names"
@@ -1200,7 +1200,7 @@ translation = "Uložit snímek…"
 
 [messages.snapshot-save-body]
 source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
-translation = "Snímek zaznamená toto prohledání, abyste později viděli, co narostlo, zmenšilo se, přibylo nebo zmizelo."
+translation = "Snímek zaznamená toto skenování, abyste později viděli, co narostlo, zmenšilo se, přibylo nebo zmizelo."
 
 [messages.snapshot-save-button]
 source = "Save snapshot"
@@ -1320,7 +1320,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: montáž souborů · { $files }"
+translation = "Turbo: sestavování složek · soubory: { $files }"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1328,11 +1328,11 @@ translation = "Turbo zrušeno — běžné skenování pokračuje"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Zobrazuji Turbo průběh · ověřování výsledků…"
+translation = "Zobrazení průběhu Turbo · ověřování výsledků…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Počítadlo přepne na Turbo poté, co sestaví více položek. Mapa udržuje pravidelný náhled skenování, dokud není ověřen kompletní Turbo strom. Pokud Turbo selže, bude pokračovat pravidelné skenování."
+translation = "Počítadla se přepnou na Turbo, jakmile sestaví více položek. Mapa ponechává náhled běžného skenování, dokud není ověřen celý strom Turbo. Pokud Turbo selže, běžné skenování pokračuje."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
@@ -1344,15 +1344,15 @@ translation = "Turbo: čtení MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: řešení názvů souborů…"
+translation = "Turbo: zjišťování názvů souborů…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
-translation = "Turbo: výsledky třídění…"
+translation = "Turbo: řazení výsledků…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: Načítání výsledků…"
+translation = "Turbo: načítání výsledků…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1392,7 +1392,7 @@ translation = "Identifikace nainstalovaných aplikací…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
-translation = "Spusťte odinstalační program…"
+translation = "Spustit odinstalační program…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
@@ -1400,11 +1400,11 @@ translation = "Pro tuto složku se nepodařilo určit žádnou aplikaci. Její o
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Otevřete nainstalované aplikace"
+translation = "Otevřít Nainstalované aplikace"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Otevřete knihovnu Steam"
+translation = "Otevřít knihovnu Steam"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1428,7 +1428,7 @@ translation = "Odinstalovat…"
 
 [messages.uninstall-steam]
 source = "Uninstall through Steam…"
-translation = "Odinstalujte přes Steam…"
+translation = "Odinstalovat přes Steam…"
 
 [messages.uninstall-steam-id]
 source = "Steam app ID: { $id }"
@@ -1436,7 +1436,7 @@ translation = "ID aplikace Steam: { $id }"
 
 [messages.uninstall-title]
 source = "Uninstall an application or game"
-translation = "Odinstalujte aplikaci nebo hru"
+translation = "Odinstalovat aplikaci nebo hru"
 
 [messages.uninstall-version]
 source = "Version: { $version }"
@@ -1456,11 +1456,11 @@ translation = "Toto umístění patří nainstalovanému softwaru. Vyberte aplik
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows nemohl spustit odinstalační program (chyba { $code }). Chcete-li tuto aplikaci spravovat, otevřete nainstalované aplikace."
+translation = "Windows nemohl spustit odinstalační program (chyba { $code }). Chcete-li tuto aplikaci spravovat, otevřete Nainstalované aplikace."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Registrovaný odinstalační program nebyl nalezen. Chcete-li tuto aplikaci spravovat, otevřete nainstalované aplikace Windows."
+translation = "Registrovaný odinstalační program nebyl nalezen. Chcete-li tuto aplikaci spravovat, otevřete Nainstalované aplikace ve Windows."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1488,7 +1488,7 @@ translation = "Používat velikosti souborů místo místa zabraného na disku"
 
 [messages.vert]
 source = "Vert"
-translation = "Svisle"
+translation = "Svis."
 
 [messages.very-few-files]
 source = "Very Few Files"
@@ -1542,7 +1542,7 @@ translation = "Aktuální limit souběžných úloh; automaticky se přizpůsobu
 
 [messages.wsl-browse-linux]
 source = "Browse Linux files"
-translation = "Procházení souborů Linuxu"
+translation = "Procházet soubory Linuxu"
 
 [messages.wsl-browse-linux-detail]
 source = "Open this distribution in Explorer. This may start the distribution."
@@ -1622,7 +1622,7 @@ translation = "Ukládá souborový systém této distribuce Linuxu, včetně jej
 
 [messages.wsl-open-docker]
 source = "Open Docker Desktop"
-translation = "Otevřete Docker Desktop"
+translation = "Otevřít Docker Desktop"
 
 [messages.wsl-open-docker-detail]
 source = "Review containers, images and volumes before removing unwanted data."

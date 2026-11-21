@@ -352,7 +352,7 @@ translation = "Eliminar permanentemente?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Preparando-se para reciclar…"
+translation = "A preparar a reciclagem…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -372,7 +372,7 @@ translation = """
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Movendo para a Lixeira…"
+translation = "A mover para a Reciclagem…"
 
 [messages.delete-size-files]
 source = """
@@ -392,11 +392,11 @@ translation = "“{ $name }” é demasiado grande para a reciclagem."
 
 [messages.delete-updating]
 source = "Updating disk map…"
-translation = "Atualizando mapa de disco…"
+translation = "A atualizar o mapa do disco…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "O trabalhador de reciclagem parou inesperadamente. Verifique o item selecionado antes de tentar novamente."
+translation = "A tarefa de reciclagem foi interrompida inesperadamente. Verifique o item selecionado antes de tentar novamente."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -636,7 +636,7 @@ translation = "Dados de demonstração: ficheiros e tamanhos fictícios"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
-translation = "Atualização ao vivo interrompida · Analise novamente para reconectar"
+translation = "Atualização ao vivo interrompida · Verifique novamente para restabelecer a ligação"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
@@ -644,15 +644,15 @@ translation = "Ao vivo · A conciliar alterações em segundo plano"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Atualização ao vivo indisponível: análise cancelada · Analise novamente para atualizar"
+translation = "Atualização ao vivo indisponível: verificação cancelada · Verifique novamente para atualizar"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
-translation = "Atualização ao vivo interrompida: { $error } · Analise novamente para reconectar"
+translation = "Atualização ao vivo interrompida: { $error } · Verifique novamente para restabelecer a ligação"
 
 [messages.live-unavailable]
 source = "Live unavailable: { $error } · Rescan to refresh"
-translation = "Atualização ao vivo indisponível: { $error } · Analise novamente para atualizar"
+translation = "Atualização ao vivo indisponível: { $error } · Verifique novamente para atualizar"
 
 [messages.live-watching]
 source = "Live · Watching for changes"
@@ -716,7 +716,7 @@ translation = "Não há ficheiros nesta pasta."
 
 [messages.normal]
 source = "Normal"
-translation = "normal"
+translation = "Normal"
 
 [messages.norwegian-bokmal]
 source = "Norwegian Bokmål"
@@ -1060,11 +1060,11 @@ translation = "Comportamento"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "A esquerda favorece as formas horizontais; os centralizados; a direita favorece as formas verticais."
+translation = "A esquerda favorece formas horizontais; o centro equilibra-as; a direita favorece formas verticais."
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Excluindo arquivos"
+translation = "Eliminação de ficheiros"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
@@ -1072,19 +1072,19 @@ translation = "Contagem de tamanho"
 
 [messages.settings-info-tips]
 source = "File details"
-translation = "Detalhes do arquivo"
+translation = "Detalhes dos ficheiros"
 
 [messages.settings-name-tips]
 source = "File names"
-translation = "Nomes de arquivos"
+translation = "Nomes de ficheiros"
 
 [messages.settings-save]
 source = "Save changes"
-translation = "Salvar as alterações"
+translation = "Guardar alterações"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Digitalizar limites"
+translation = "Limites da verificação"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1204,7 +1204,7 @@ translation = "Guardar instantâneo…"
 
 [messages.snapshot-save-body]
 source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
-translation = "Um instantâneo regista esta análise, para mais tarde ver o que cresceu, diminuiu, apareceu ou desapareceu."
+translation = "Um instantâneo regista esta verificação, para mais tarde ver o que cresceu, diminuiu, apareceu ou desapareceu."
 
 [messages.snapshot-save-button]
 source = "Save snapshot"
@@ -1324,7 +1324,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: pastas de montagem · { $files } arquivos"
+translation = "Turbo: a montar pastas · { $files } ficheiros"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1332,15 +1332,15 @@ translation = "Turbo cancelado — a verificação normal continua"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Mostrando o progresso do Turbo · validando resultados…"
+translation = "A mostrar o progresso do Turbo · a validar resultados…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Os contadores alteram para o Turbo quando montaram mais entradas. O mapa mantém a pré-visualização de varredura regular até que a árvore Turbo completa seja validada. Se o Turbo falhar, a varredura regular continua."
+translation = "Os contadores passam para o Turbo quando este tiver montado mais entradas. O mapa mantém a pré-visualização da verificação normal até a árvore completa do Turbo ser validada. Se o Turbo falhar, a verificação normal continua."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: lendo MFT { $percent }% · { $records } registros"
+translation = "Turbo: a ler a MFT { $percent }% · { $records } registos"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1348,15 +1348,15 @@ translation = "Turbo: a ler a MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: resolvendo nomes de arquivos…"
+translation = "Turbo: a resolver nomes de ficheiros…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
-translation = "Turbo: classificando resultados…"
+translation = "Turbo: a ordenar resultados…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: carregando resultados…"
+translation = "Turbo: a carregar resultados…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1416,7 +1416,7 @@ translation = "Editor: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "O mapa acompanha as alterações ao vivo. Analise novamente após desinstalar se as atualizações ao vivo estiverem indisponíveis."
+translation = "O mapa acompanha as alterações ao vivo. Use Verificar novamente após desinstalar se as atualizações ao vivo estiverem indisponíveis."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
@@ -1620,7 +1620,7 @@ translation = "Explore os ficheiros da distribuição e remova os dados de que j
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
-translation = "Armazena o sistema de ficheiros desta distribuição Linux, incluindo seus programas e ficheiros do lado do Linux."
+translation = "Armazena o sistema de ficheiros desta distribuição Linux, incluindo os seus programas e ficheiros do lado do Linux."
 
 [messages.wsl-open-docker]
 source = "Open Docker Desktop"

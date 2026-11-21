@@ -2,7 +2,7 @@ version = 2
 
 [readme]
 source = "9ce11f4a17cb54de2f344a1c1ed2bb1a916ef349295efc521273e84472ab5194"
-translation = "a99965103fe21082f4ec8b731925941536a2276abb27314b312d58549dcf084f"
+translation = "919818ecd064c3779a226f497db88c175bb33c529a2aeb8e4352ceba742315c4"
 
 [messages.a-fast-cross-platform-disk-space-map]
 source = "A fast, cross-platform disk space map."
@@ -194,23 +194,23 @@ translation = "„{ $name }” va fi șters. Instrumentele proiectului îl recre
 
 [messages.clean-up-body-many]
 source = "{ $count } folders will be deleted. Their projects’ tools recreate them when needed."
-translation = "Foldere de șters: { $count }. Instrumentele proiectelor le recreează când este nevoie."
+translation = "Dosare de șters: { $count }. Instrumentele proiectelor le recreează când este nevoie."
 
 [messages.clean-up-title]
 source = "Clean up permanently?"
-translation = "Curățați definitiv?"
+translation = "Cureți definitiv?"
 
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
-translation = "Se curăță folderul Temp…"
+translation = "Se curăță dosarul Temp…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
-translation = "Faceți clic pentru a vă curăța fișierele temporare"
+translation = "Fă clic pentru a-ți curăța fișierele temporare"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
-translation = "Faceți clic pentru a goli Coșul de reciclare al acestei unități"
+translation = "Fă clic pentru a goli Coșul de reciclare al acestei unități"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
@@ -218,15 +218,15 @@ translation = "Gestionat de Windows. Fă clic pentru a deschide setările de sto
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
-translation = "VHDX · disc virtual WSL. Faceți clic pentru detalii despre disc, răsfoiți fișiere sau recuperați spațiu."
+translation = "VHDX · disc virtual WSL. Fă clic pentru detalii despre disc, pentru a răsfoi fișierele sau pentru a recupera spațiu."
 
 [messages.click-to-uninstall-software]
 source = "Installed application or game files. Click to identify and uninstall the whole application."
-translation = "Fișiere de aplicație sau joc instalate. Faceți clic pentru a identifica și dezinstala întreaga aplicație."
+translation = "Fișiere de aplicație sau joc instalate. Fă clic pentru a identifica și dezinstala întreaga aplicație."
 
 [messages.click-to-uninstall-steam]
 source = "Steam game files. Click to identify the game and uninstall through Steam."
-translation = "Fișiere de jocuri Steam. Faceți clic pentru a identifica jocul și dezinstalați prin Steam."
+translation = "Fișiere de jocuri Steam. Fă clic pentru a identifica jocul și a-l dezinstala prin Steam."
 
 [messages.close-dialog]
 source = "Close"
@@ -238,7 +238,7 @@ translation = "Compactează discul…"
 
 [messages.compact-wsl-error]
 source = "Could not compact the disk. Make sure Docker Desktop and WSL are stopped, then try again. Windows reported: { $error }"
-translation = "Discul nu a putut fi compactat. Asigurați-vă că Docker Desktop și WSL sunt oprite, apoi încercați din nou. Windows a raportat: { $error }"
+translation = "Discul nu a putut fi compactat. Asigură-te că Docker Desktop și WSL sunt oprite, apoi încearcă din nou. Windows a raportat: { $error }"
 
 [messages.compacting-wsl-disk]
 source = "Stopping WSL and compacting disk…"
@@ -265,7 +265,7 @@ translation = "Fișiere: { $files }, dosare: { $folders }"
 
 [messages.copy-error-details]
 source = "Copy error details"
-translation = "Copiați detaliile erorii"
+translation = "Copiază detaliile erorii"
 
 [messages.copyright-2026-azazel-labs]
 source = "Copyright © 2026 Azazel Labs LLC."
@@ -309,15 +309,15 @@ translation = "Șterge conținutul"
 
 [messages.delete-contents-body]
 source = "Everything inside “{ $name }” will be deleted. The folder itself is kept."
-translation = "Tot ce se află în „{ $name }” va fi șters. Folderul în sine se păstrează."
+translation = "Tot ce se află în „{ $name }” va fi șters. Dosarul în sine se păstrează."
 
 [messages.delete-contents-title]
 source = "Delete contents permanently?"
-translation = "Ștergeți definitiv conținutul?"
+translation = "Ștergi definitiv conținutul?"
 
 [messages.delete-contents-too-big]
 source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
-translation = "Conținutul „{ $name }” este prea mare pentru Coșul de reciclare. Folderul în sine se păstrează."
+translation = "Conținutul „{ $name }” este prea mare pentru Coșul de reciclare. Dosarul în sine se păstrează."
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
@@ -337,19 +337,19 @@ translation = "Se șterge definitiv…"
 
 [messages.delete-permanently-button]
 source = "Delete permanently"
-translation = "Ștergeți definitiv"
+translation = "Șterge definitiv"
 
 [messages.delete-permanently-title]
 source = "Delete permanently?"
-translation = "Ștergeți definitiv?"
+translation = "Ștergi definitiv?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Se pregătește reciclarea…"
+translation = "Se pregătește mutarea în Coșul de reciclare…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
-translation = "{ $done } din { $total } fișiere"
+translation = "Fișiere: { $done } din { $total }"
 
 [messages.delete-queued]
 source = """
@@ -361,7 +361,7 @@ translation = "Elemente suplimentare în coadă: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Se mută la Coșul de gunoi…"
+translation = "Se mută în Coșul de reciclare…"
 
 [messages.delete-size-files]
 source = """
@@ -377,11 +377,11 @@ translation = "„{ $name }” este prea mare pentru Coșul de reciclare."
 
 [messages.delete-updating]
 source = "Updating disk map…"
-translation = "Se actualizează harta de pe disc…"
+translation = "Se actualizează harta discului…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Lucrătorul care a efectuat reciclarea s-a oprit în mod neașteptat. Verificați obiectul selectat înainte de a încerca din nou."
+translation = "Sarcina de mutare în Coșul de reciclare s-a oprit în mod neașteptat. Verifică elementul selectat înainte de a încerca din nou."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -417,7 +417,7 @@ translation = "Culori de afișare"
 
 [messages.docker-desktop-not-found]
 source = "Docker Desktop could not be found in its standard installation locations. Open it from the Windows Start menu."
-translation = "Docker Desktop nu a putut fi găsit în locațiile sale standard de instalare. Deschideți-l din meniul Start din Windows."
+translation = "Docker Desktop nu a putut fi găsit în locațiile sale standard de instalare. Deschide-l din meniul Start din Windows."
 
 [messages.document]
 source = "Document"
@@ -449,27 +449,27 @@ translation = "Tot ce se află în Coșul de reciclare de pe { $drive } va fi ș
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
-translation = "Goliți coșul de reciclare"
+translation = "Golește Coșul de reciclare"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Goliți coșul de reciclare?"
+translation = "Golești Coșul de reciclare?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "Ștergeți definitiv conținutul { $path }? Dosarul Temp va fi păstrat. Elementele pe care Windows refuză să le ștergă vor fi lăsate pe loc. Închideți mai întâi aplicațiile pentru a elibera mai multe fișiere temporare."
+translation = "Ștergi definitiv conținutul { $path }? Dosarul Temp va fi păstrat. Elementele pe care Windows refuză să le șteargă vor rămâne pe loc. Închide mai întâi aplicațiile pentru a elibera mai multe fișiere temporare."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
-translation = "Curăță folderul Temp"
+translation = "Curăță dosarul Temp"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
-translation = "Curăță folderul Temp?"
+translation = "Cureți dosarul Temp?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Se golește coșul de reciclare…"
+translation = "Se golește Coșul de reciclare…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -621,7 +621,7 @@ translation = "Date demonstrative - fișiere și dimensiuni fictive"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
-translation = "Actualizări în timp real oprite · Scanați din nou pentru reconectare"
+translation = "Actualizări în timp real oprite · Rescanează pentru reconectare"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
@@ -629,15 +629,15 @@ translation = "În timp real · Sincronizarea modificărilor în fundal"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Actualizări în timp real indisponibile: Scanare anulată · Scanați din nou pentru actualizare"
+translation = "Actualizări în timp real indisponibile: scanare anulată · Rescanează pentru actualizare"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
-translation = "Actualizări în timp real oprite: { $error } · Scanați din nou pentru reconectare"
+translation = "Actualizări în timp real oprite: { $error } · Rescanează pentru reconectare"
 
 [messages.live-unavailable]
 source = "Live unavailable: { $error } · Rescan to refresh"
-translation = "Actualizări în timp real indisponibile: { $error } · Scanați din nou pentru actualizare"
+translation = "Actualizări în timp real indisponibile: { $error } · Rescanează pentru actualizare"
 
 [messages.live-watching]
 source = "Live · Watching for changes"
@@ -741,15 +741,15 @@ translation = "Deschide un dosar…"
 
 [messages.open-in-explorer]
 source = "Open in Explorer"
-translation = "Deschideți în Explorer"
+translation = "Deschide în Explorer"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Deschideți în managerul de fișiere"
+translation = "Deschide în managerul de fișiere"
 
 [messages.open-in-finder]
 source = "Open in Finder"
-translation = "Deschideți în Finder"
+translation = "Deschide în Finder"
 
 [messages.open-selected-item]
 source = "Open selected item"
@@ -773,7 +773,7 @@ translation = "Întrerupe scanarea"
 
 [messages.permission-hint-macos]
 source = 'macOS protects some folders (Mail, Messages, other users, …). Grant Clawback "Full Disk Access" in System Settings › Privacy & Security to include them.'
-translation = "macOS protejează unele dosare (Mail, Messages, alți utilizatori, …). Acordă aplicației Clawback „Acces complet la disc” în Configurări sistem › Intimitate și securitate pentru a le include."
+translation = "macOS protejează unele dosare (Mail, Mesaje, alți utilizatori, …). Acordă aplicației Clawback „Acces complet la disc” în Configurări sistem › Confidențialitate și securitate pentru a le include."
 
 [messages.permission-hint-unix]
 source = "Some folders are only readable by other users or root. Run Clawback with elevated privileges (for example `sudo -E clawback /`) to include them."
@@ -925,15 +925,15 @@ translation = "Disc virtual WSL; nu se micșorează singur"
 
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
-translation = "Compactarea păstrează conținutul discului și reduce dimensiunea fișierului său din Windows prin recuperarea blocurilor pline cu zerouri. Poate recupera puțin spațiu sau deloc. Curățați mai întâi datele nedorite din Docker sau Linux."
+translation = "Compactarea păstrează conținutul discului și reduce dimensiunea fișierului său din Windows prin recuperarea blocurilor pline cu zerouri. Poate recupera puțin spațiu sau deloc. Curăță mai întâi datele nedorite din Docker sau Linux."
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
-translation = "Recuperați spațiu pe disc WSL"
+translation = "Recuperează spațiu pe discul WSL"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "Înainte de compactare, salvați-vă munca, părăsiți Docker Desktop și închideți sesiunile WSL. Rulați această comandă în PowerShell pentru a opri toate distribuțiile WSL. Țineți Docker și WSL oprite până la terminarea compactării. Windows va cere permisiunea de administrator."
+translation = "Înainte de compactare, salvează-ți munca, închide Docker Desktop și închide sesiunile WSL. Rulează această comandă în PowerShell pentru a opri toate distribuțiile WSL. Ține Docker și WSL oprite până la terminarea compactării. Windows va cere permisiunea de administrator."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1027,7 +1027,7 @@ translation = "Setări…"
 
 [messages.settings-appearance]
 source = "Appearance"
-translation = "Aspectul"
+translation = "Aspect"
 
 [messages.settings-behavior]
 source = "Behavior"
@@ -1035,15 +1035,15 @@ translation = "Comportament"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Favorizează formele orizontale, centrul le echilibrează; favorizează în dreapta formele verticale."
+translation = "Stânga favorizează formele orizontale; centrul le echilibrează; dreapta favorizează formele verticale."
 
 [messages.settings-deletion]
 source = "Deleting files"
-translation = "Ştergere fişiere"
+translation = "Ștergerea fișierelor"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Contabilitate mărime"
+translation = "Calculul dimensiunilor"
 
 [messages.settings-info-tips]
 source = "File details"
@@ -1059,7 +1059,7 @@ translation = "Salvează modificările"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Scanare limite"
+translation = "Limitele scanării"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1127,11 +1127,11 @@ translation = "Toate fișierele (cel mai mare; modificări exacte ale fișierelo
 
 [messages.snapshot-detail-folders]
 source = "Folders only (smallest)"
-translation = "Doar foldere (cel mai mic)"
+translation = "Doar dosare (cel mai mic)"
 
 [messages.snapshot-detail-large-files]
 source = "Folders and files of at least"
-translation = "Foldere și fișiere de cel puțin"
+translation = "Dosare și fișiere de cel puțin"
 
 [messages.snapshot-every-file]
 source = "Every file"
@@ -1147,7 +1147,7 @@ translation = "Fișiere de { $size } sau mai mari"
 
 [messages.snapshot-folders-only]
 source = "Folders only"
-translation = "Doar foldere"
+translation = "Doar dosare"
 
 [messages.snapshot-label]
 source = "Name (optional)"
@@ -1159,7 +1159,7 @@ translation = "Se încarcă instantaneele…"
 
 [messages.snapshot-no-folder]
 source = "There is no settings folder to keep snapshots in."
-translation = "Nu există un folder de setări în care să se păstreze instantaneele."
+translation = "Nu există un dosar de setări în care să se păstreze instantaneele."
 
 [messages.snapshot-none]
 source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
@@ -1167,7 +1167,7 @@ translation = "Nu există încă instantanee salvate pentru { $path }. Salvează
 
 [messages.snapshot-other-root]
 source = "That snapshot is of { $path }, not the folder you are viewing."
-translation = "Acel instantaneu este al { $path }, nu al folderului pe care îl vezi."
+translation = "Acel instantaneu este al { $path }, nu al dosarului pe care îl vezi."
 
 [messages.snapshot-pick-title]
 source = "Compare with a snapshot"
@@ -1255,7 +1255,7 @@ translation = "Temporar"
 
 [messages.temp-cleanup-skipped]
 source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
-translation = "Curățarea a lăsat { $count } elemente care nu au putut fi eliminate. Primul motiv: { $error }"
+translation = "Curățarea a lăsat elemente care nu au putut fi eliminate: { $count }. Primul motiv: { $error }"
 
 [messages.thai]
 source = "Thai"
@@ -1283,11 +1283,11 @@ translation = "Coș de gunoi"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
-translation = "Elementele șterse sunt eliminate definitiv după confirmare. Faceți clic pentru a le putea recupera."
+translation = "Elementele șterse sunt eliminate definitiv după confirmare. Fă clic pentru a le putea recupera."
 
 [messages.trash-toggle-on]
 source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
-translation = "Elementele șterse pot fi restaurate. Faceți clic pentru a le șterge definitiv; Clawback întreabă mai întâi."
+translation = "Elementele șterse pot fi restaurate. Fă clic pentru a le șterge definitiv; Clawback întreabă mai întâi."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
@@ -1295,11 +1295,11 @@ translation = "Încearcă o scanare NTFS mai rapidă cu permisiune de administra
 
 [messages.turbo]
 source = "Turbo"
-translation = "Turbou"
+translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: asamblarea dosarelor · { $files } fișiere"
+translation = "Turbo: se asamblează dosarele · fișiere: { $files }"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1315,7 +1315,7 @@ translation = "Contoarele trec la Turbo când acesta a asamblat mai multe elemen
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: citind MFT { $percent }% · { $records } înregistrări"
+translation = "Turbo: se citește MFT { $percent }% · înregistrări: { $records }"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1323,7 +1323,7 @@ translation = "Turbo: se citește MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: rezolvarea numelor fişierelor…"
+translation = "Turbo: se determină numele fișierelor…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
@@ -1363,7 +1363,7 @@ translation = "Dezinstalează"
 
 [messages.uninstall-identification-failed]
 source = "The application lookup did not finish. Nothing was deleted. Try again."
-translation = "Căutarea aplicației nu s-a încheiat. Nu s-a șters nimic. Încercați din nou."
+translation = "Căutarea aplicației nu s-a încheiat. Nu s-a șters nimic. Încearcă din nou."
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
@@ -1371,19 +1371,19 @@ translation = "Identificarea aplicațiilor instalate…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
-translation = "Lansați dezinstalarea…"
+translation = "Lansează programul de dezinstalare…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Nu s-a putut identifica o aplicație pentru acest folder. Deschideți Aplicații instalate sau Steam pentru a gestiona conținutul acestuia."
+translation = "Nu s-a putut identifica o aplicație pentru acest dosar. Deschide Aplicații instalate sau Steam pentru a gestiona conținutul acestuia."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Deschideți aplicațiile instalate"
+translation = "Deschide Aplicații instalate"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Deschideți biblioteca Steam"
+translation = "Deschide biblioteca Steam"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1391,11 +1391,11 @@ translation = "Editor: { $publisher }"
 
 [messages.uninstall-refresh-help]
 source = "The map follows live changes. Use Rescan after uninstalling if live updates are unavailable."
-translation = "Harta urmărește modificările în timp real. Scanați din nou după dezinstalare dacă actualizările în timp real nu sunt disponibile."
+translation = "Harta urmărește modificările în timp real. Rescanează după dezinstalare dacă actualizările în timp real nu sunt disponibile."
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
-translation = "Elimină întreaga aplicație, inclusiv fișierele din afara selecției dvs."
+translation = "Elimină întreaga aplicație, inclusiv fișierele din afara selecției tale."
 
 [messages.uninstall-selected-path]
 source = "Selected item"
@@ -1415,7 +1415,7 @@ translation = "ID aplicație Steam: { $id }"
 
 [messages.uninstall-title]
 source = "Uninstall an application or game"
-translation = "Dezinstalați o aplicație sau un joc"
+translation = "Dezinstalează o aplicație sau un joc"
 
 [messages.uninstall-version]
 source = "Version: { $version }"
@@ -1431,15 +1431,15 @@ translation = "Aplicație Windows înregistrată"
 
 [messages.uninstall-whole-application]
 source = "This location belongs to installed software. Choose an application below to uninstall the entire application, including files outside the selected folder. Windows or Steam will handle the removal."
-translation = "Această locație aparține software-ului instalat. Alegeți o aplicație de mai jos pentru a dezinstala întreaga aplicație, inclusiv fișierele din afara folderului selectat. Windows sau Steam se vor ocupa de eliminare."
+translation = "Această locație aparține software-ului instalat. Alege o aplicație de mai jos pentru a dezinstala întreaga aplicație, inclusiv fișierele din afara dosarului selectat. Windows sau Steam se vor ocupa de eliminare."
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "Windows nu a putut porni programul de dezinstalare (eroare { $code }). Deschideți Aplicații instalate pentru a gestiona această aplicație."
+translation = "Windows nu a putut porni programul de dezinstalare (eroare { $code }). Deschide Aplicații instalate pentru a gestiona această aplicație."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Programul de dezinstalare înregistrat nu a putut fi găsit. Deschideți Aplicațiile instalate Windows pentru a gestiona această aplicație."
+translation = "Programul de dezinstalare înregistrat nu a putut fi găsit. Deschide Aplicații instalate din Windows pentru a gestiona această aplicație."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1515,15 +1515,15 @@ translation = "Limita curentă de sarcini simultane; se adaptează automat la de
 
 [messages.wsl-browse-linux]
 source = "Browse Linux files"
-translation = "Răsfoiți fișierele Linux"
+translation = "Răsfoiește fișierele Linux"
 
 [messages.wsl-browse-linux-detail]
 source = "Open this distribution in Explorer. This may start the distribution."
-translation = "Deschideți această distribuție în Explorer. Acest lucru poate porni distribuția."
+translation = "Deschide această distribuție în Explorer. Acest lucru poate porni distribuția."
 
 [messages.wsl-choose-action]
 source = "What would you like to do?"
-translation = "Ce doriți să faceți?"
+translation = "Ce vrei să faci?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
@@ -1535,7 +1535,7 @@ translation = "Windows va cere permisiunea de administrator."
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
-translation = "Recuperați blocurile umplute cu zero, păstrând în același timp conținutul discului. Necesită oprirea Docker și WSL."
+translation = "Recuperează blocurile umplute cu zerouri, păstrând în același timp conținutul discului. Necesită oprirea Docker și WSL."
 
 [messages.wsl-compact-ready]
 source = "Ready to compact?"
@@ -1543,19 +1543,19 @@ translation = "Gata de compactare?"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "Salvați munca dvs. Linux și părăsiți Docker Desktop. Clawback va opri toate sesiunile WSL, apoi va compacta acest disc. Țineți Docker și WSL închise până când se termină."
+translation = "Salvează-ți munca din Linux și închide Docker Desktop. Clawback va opri toate sesiunile WSL, apoi va compacta acest disc. Ține Docker și WSL închise până la final."
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
-translation = "Recuperați spațiul pe disc neutilizat."
+translation = "Recuperează spațiul neutilizat de pe disc."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "Recuperează blocurile cu zero fără a vă șterge fișierele. Curățați mai întâi în Linux sau Docker; economiile variază. Docker și WSL trebuie să rămână oprite în timpul compactării."
+translation = "Recuperează blocurile umplute cu zerouri fără a-ți șterge fișierele. Curăță mai întâi în Linux sau Docker; economiile variază. Docker și WSL trebuie să rămână oprite în timpul compactării."
 
 [messages.wsl-copy-command]
 source = "Copy command"
-translation = "Copiați comanda"
+translation = "Copiază comanda"
 
 [messages.wsl-disk-details]
 source = "File details"
@@ -1575,7 +1575,7 @@ translation = "Distribuție WSL"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
-translation = "În Docker Desktop, verificați imaginile, containerele oprite și volumele. Memoria cache de compilare poate fi curățată și cu „docker builder prune”. Volumele pot conține baze de date sau alte fișiere necesare; verificați-le înainte de a le elimina. Curățarea și compactarea discului sunt pași separați."
+translation = "În Docker Desktop, verifică imaginile, containerele oprite și volumele. Memoria cache de compilare poate fi curățată și cu „docker builder prune”. Volumele pot conține baze de date sau alte fișiere necesare; verifică-le înainte de a le elimina. Curățarea și compactarea discului sunt pași separați."
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
@@ -1587,7 +1587,7 @@ translation = "Stochează mediul Linux al Docker Desktop. Datele aplicației Doc
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = "Răsfoiți fișierele distribuției și eliminați datele de care nu mai aveți nevoie. Utilizați managerul de pachete Linux pentru a curăța cache-urile de pachete. După curățare, „sudo fstrim -av” în interiorul distribuției poate ajuta la eliberarea blocurilor neutilizate înainte de a opri WSL și de a compacta."
+translation = "Răsfoiește fișierele distribuției și elimină datele de care nu mai ai nevoie. Folosește managerul de pachete Linux pentru a curăța cache-urile de pachete. După curățare, „sudo fstrim -av” în interiorul distribuției poate ajuta la eliberarea blocurilor neutilizate înainte de a opri WSL și de a compacta."
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1595,11 +1595,11 @@ translation = "Stochează sistemul de fișiere al acestei distribuții Linux, in
 
 [messages.wsl-open-docker]
 source = "Open Docker Desktop"
-translation = "Deschideți Docker Desktop"
+translation = "Deschide Docker Desktop"
 
 [messages.wsl-open-docker-detail]
 source = "Review containers, images and volumes before removing unwanted data."
-translation = "Examinați containerele, imaginile și volumele înainte de a elimina datele nedorite."
+translation = "Examinează containerele, imaginile și volumele înainte de a elimina datele nedorite."
 
 [messages.wsl-owner-docker-data]
 source = "Docker Desktop — data disk"
@@ -1627,7 +1627,7 @@ translation = "Compactează discul…"
 
 [messages.wsl-stop-and-compact]
 source = "Stop WSL and compact"
-translation = "Opriți WSL și compactați discul"
+translation = "Oprește WSL și compactează discul"
 
 [messages.zoom-full]
 source = "Zoom Full"

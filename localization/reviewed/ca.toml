@@ -162,7 +162,7 @@ translation = "Comprova si hi ha actualitzacions"
 
 [messages.check-for-updates-hint]
 source = "At startup, asks GitHub whether a newer version is out. Nothing about you or your files is sent."
-translation = "En iniciar, pregunta a GitHub si hi ha una versió més nova. No s’envia res sobre tu ni sobre els teus fitxers."
+translation = "En iniciar, pregunta a GitHub si hi ha una versió més nova. No s’envia res sobre vós ni sobre els vostres fitxers."
 
 [messages.chinese-simplified]
 source = "Simplified Chinese"
@@ -198,7 +198,7 @@ translation = "Se suprimiran { $count } carpetes. Les eines dels projectes les t
 
 [messages.clean-up-title]
 source = "Clean up permanently?"
-translation = "Vols netejar-ho permanentment?"
+translation = "Voleu netejar-ho permanentment?"
 
 [messages.cleaning-temp-folder]
 source = "Cleaning Temp folder…"
@@ -214,15 +214,15 @@ translation = "Feu clic per buidar la paperera de reciclatge d'aquesta unitat"
 
 [messages.click-to-open-storage-settings]
 source = "Managed by Windows. Click to open Storage settings and free space safely."
-translation = "Gestionat per Windows. Fes clic per obrir la configuració d’emmagatzematge i alliberar espai de manera segura."
+translation = "Gestionat per Windows. Feu clic per obrir la configuració d’emmagatzematge i alliberar espai de manera segura."
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
-translation = "VHDX · Disc virtual WSL. Feu clic per veure els detalls del disc, buscar fitxers o recuperar espai."
+translation = "VHDX · Disc virtual WSL. Feu clic per veure els detalls del disc, navegar pels fitxers o recuperar espai."
 
 [messages.click-to-uninstall-software]
 source = "Installed application or game files. Click to identify and uninstall the whole application."
-translation = "Arxius d'aplicació o joc instal·lats. Feu clic per identificar i desinstal·lar tota l'aplicació."
+translation = "Fitxers d'aplicació o de joc instal·lats. Feu clic per identificar i desinstal·lar tota l'aplicació."
 
 [messages.click-to-uninstall-steam]
 source = "Steam game files. Click to identify the game and uninstall through Steam."
@@ -230,7 +230,7 @@ translation = "Fitxers de jocs de Steam. Feu clic per identificar el joc i desin
 
 [messages.close-dialog]
 source = "Close"
-translation = "Tancar"
+translation = "Tanca"
 
 [messages.compact-wsl-disk]
 source = "Compact disk…"
@@ -320,7 +320,7 @@ translation = 'Se suprimirà tot el que hi ha dins de "{ $name }". La carpeta es
 
 [messages.delete-contents-title]
 source = "Delete contents permanently?"
-translation = "Vols suprimir el contingut permanentment?"
+translation = "Voleu suprimir el contingut permanentment?"
 
 [messages.delete-contents-too-big]
 source = "The contents of “{ $name }” are too big for the Recycle Bin. The folder itself is kept."
@@ -348,7 +348,7 @@ translation = "Suprimeix permanentment"
 
 [messages.delete-permanently-title]
 source = "Delete permanently?"
-translation = "Vols suprimir-lo permanentment?"
+translation = "Voleu suprimir-lo permanentment?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
@@ -388,7 +388,7 @@ translation = "S’està actualitzant el mapa del disc…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "El procés de reciclatge s’ha aturat inesperadament. Comproveu l’element seleccionat abans de tornar-ho a provar."
+translation = "El procés d’enviament a la paperera s’ha aturat inesperadament. Comproveu l’element seleccionat abans de tornar-ho a provar."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -460,11 +460,11 @@ translation = "Buida la paperera de reciclatge"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Buidar la paperera de reciclatge?"
+translation = "Voleu buidar la paperera de reciclatge?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
-translation = "Suprimir permanentment el contingut de { $path }? La carpeta Temp es conservarà. Els elements que Windows es nega a eliminar es deixaran al seu lloc. Tanqueu primer les aplicacions per alliberar més fitxers temporals."
+translation = "Voleu suprimir permanentment el contingut de { $path }? La carpeta Temp es conservarà. Els elements que Windows es nega a eliminar es deixaran al seu lloc. Tanqueu primer les aplicacions per alliberar més fitxers temporals."
 
 [messages.empty-temp-button]
 source = "Clean Temp folder"
@@ -628,7 +628,7 @@ translation = "Dades de demostració: fitxers i mides de ficció"
 
 [messages.live-disconnected]
 source = "Live stopped · Rescan to reconnect"
-translation = "Actualització en directe aturada · Torna a escanejar per reconnectar"
+translation = "Actualització en directe aturada · Torneu a analitzar per reconnectar"
 
 [messages.live-reconciling]
 source = "Live · Reconciling changes in background"
@@ -636,15 +636,15 @@ translation = "En directe · Sincronitzant els canvis en segon pla"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Actualització en directe no disponible: Escaneig cancel·lat · Torna a escanejar per actualitzar"
+translation = "Actualització en directe no disponible: anàlisi cancel·lada · Torneu a analitzar per actualitzar"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
-translation = "Actualització en directe aturada: { $error } · Torna a escanejar per reconnectar"
+translation = "Actualització en directe aturada: { $error } · Torneu a analitzar per reconnectar"
 
 [messages.live-unavailable]
 source = "Live unavailable: { $error } · Rescan to refresh"
-translation = "Actualització en directe no disponible: { $error } · Torna a escanejar per actualitzar"
+translation = "Actualització en directe no disponible: { $error } · Torneu a analitzar per actualitzar"
 
 [messages.live-watching]
 source = "Live · Watching for changes"
@@ -664,7 +664,7 @@ translation = "Fes lloc per al que importa."
 
 [messages.managed-by-windows]
 source = "Windows creates and sizes these files itself. Change virtual memory or hibernation in Windows settings instead of deleting them."
-translation = "Windows crea aquests fitxers i n’ajusta la mida per si mateix. Canvia la memòria virtual o la hibernació a la configuració de Windows en lloc de suprimir-los."
+translation = "Windows crea aquests fitxers i n’ajusta la mida per si mateix. Canvieu la memòria virtual o la hibernació a la configuració de Windows en lloc de suprimir-los."
 
 [messages.mapped-bytes-relative-to-used-drive-space-an]
 source = "Mapped bytes relative to used drive space; an estimate, not a file-count percentage."
@@ -752,7 +752,7 @@ translation = "Obre a l'Explorador"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Obre al Gestor de fitxers"
+translation = "Obre al gestor de fitxers"
 
 [messages.open-in-finder]
 source = "Open in Finder"
@@ -848,7 +848,7 @@ translation = "Recupera"
 
 [messages.reclaim-browser-cache]
 source = "{ $browser } cache; close { $browser } first"
-translation = "Memòria cau de { $browser }; tanca { $browser } abans"
+translation = "Memòria cau de { $browser }; tanqueu { $browser } abans"
 
 [messages.reclaim-cache-tag]
 source = "Marked by its program as a cache it recreates"
@@ -908,7 +908,7 @@ translation = "Paquets de CocoaPods; pod install els restaura"
 
 [messages.reclaim-python-venv]
 source = "Python virtual environment; recreate it from your requirements"
-translation = "Entorn virtual de Python; torna’l a crear a partir dels requisits"
+translation = "Entorn virtual de Python; torneu-lo a crear a partir dels requisits"
 
 [messages.reclaim-recycle-bin]
 source = "Deleted items waiting to be emptied"
@@ -920,7 +920,7 @@ translation = "Sortida de compilació de Rust; cargo build la torna a crear"
 
 [messages.reclaim-show]
 source = "Click to show it on the map."
-translation = "Fes clic per mostrar-ho al mapa."
+translation = "Feu clic per mostrar-ho al mapa."
 
 [messages.reclaim-temp]
 source = "Temporary files apps left behind"
@@ -1176,11 +1176,11 @@ translation = "No hi ha cap carpeta de configuració on guardar instantànies."
 
 [messages.snapshot-none]
 source = "No saved snapshots of { $path } yet. Save one with File › Save snapshot."
-translation = "Encara no hi ha instantànies desades de { $path }. Desa’n una amb Fitxer › Desa una instantània."
+translation = "Encara no hi ha instantànies desades de { $path }. Deseu-ne una amb Fitxer › Desa una instantània."
 
 [messages.snapshot-other-root]
 source = "That snapshot is of { $path }, not the folder you are viewing."
-translation = "Aquesta instantània és de { $path }, no de la carpeta que estàs veient."
+translation = "Aquesta instantània és de { $path }, no de la carpeta que esteu veient."
 
 [messages.snapshot-pick-title]
 source = "Compare with a snapshot"
@@ -1192,7 +1192,7 @@ translation = "Desa una instantània…"
 
 [messages.snapshot-save-body]
 source = "A snapshot records this scan, so you can later see what grew, shrank, appeared or disappeared."
-translation = "Una instantània registra aquesta exploració, perquè després puguis veure què ha crescut, què s’ha reduït, què ha aparegut o què ha desaparegut."
+translation = "Una instantània registra aquesta anàlisi, perquè després pugueu veure què ha crescut, què s’ha reduït, què ha aparegut o què ha desaparegut."
 
 [messages.snapshot-save-button]
 source = "Save snapshot"
@@ -1296,11 +1296,11 @@ translation = "Paperera"
 
 [messages.trash-toggle-off]
 source = "Deleted items are removed permanently, after you confirm. Click to make deletes recoverable."
-translation = "Els elements suprimits s’eliminen permanentment després de confirmar-ho. Fes clic perquè es puguin recuperar."
+translation = "Els elements suprimits s’eliminen permanentment després de confirmar-ho. Feu clic perquè es puguin recuperar."
 
 [messages.trash-toggle-on]
 source = "Deleted items can be restored. Click to delete permanently instead; Clawback asks first."
-translation = "Els elements suprimits es poden restaurar. Fes clic per suprimir-los permanentment; Clawback ho preguntarà abans."
+translation = "Els elements suprimits es poden restaurar. Feu clic per suprimir-los permanentment; Clawback ho preguntarà abans."
 
 [messages.try-a-faster-ntfs-scan-with-administrator-permission]
 source = "Try a faster NTFS scan with administrator permission. The current scan keeps running."
@@ -1376,15 +1376,15 @@ translation = "Desinstal·la"
 
 [messages.uninstall-identification-failed]
 source = "The application lookup did not finish. Nothing was deleted. Try again."
-translation = "La cerca de l'aplicació no s'ha acabat. No s'ha esborrat res. Torna-ho a provar."
+translation = "La cerca de l'aplicació no s'ha acabat. No s'ha suprimit res. Torneu-ho a provar."
 
 [messages.uninstall-identifying]
 source = "Identifying installed applications…"
-translation = "Identificant les aplicacions instal·lades…"
+translation = "S’estan identificant les aplicacions instal·lades…"
 
 [messages.uninstall-launch]
 source = "Launch uninstaller…"
-translation = "Inicieu el desinstal·lador…"
+translation = "Inicia el desinstal·lador…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
@@ -1392,11 +1392,11 @@ translation = "No s'ha pogut identificar cap aplicació per a aquesta carpeta. O
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Obriu les aplicacions instal·lades"
+translation = "Obre Aplicacions instal·lades"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Obriu la biblioteca de Steam"
+translation = "Obre la biblioteca de Steam"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1468,7 +1468,7 @@ translation = "Versió { $version } disponible"
 
 [messages.update-available-docker]
 source = "To update, run: { $command } (click to copy)"
-translation = "Per actualitzar, executa: { $command } (fes clic per copiar)"
+translation = "Per actualitzar, executeu: { $command } (feu clic per copiar)"
 
 [messages.updating]
 source = "Updating…"
@@ -1532,7 +1532,7 @@ translation = "Límit de concurrència actual; s’adapta automàticament al ren
 
 [messages.wsl-browse-linux]
 source = "Browse Linux files"
-translation = "Exploreu fitxers Linux"
+translation = "Explora els fitxers de Linux"
 
 [messages.wsl-browse-linux-detail]
 source = "Open this distribution in Explorer. This may start the distribution."
@@ -1540,7 +1540,7 @@ translation = "Obriu aquesta distribució a l'Explorador. Això pot iniciar la d
 
 [messages.wsl-choose-action]
 source = "What would you like to do?"
-translation = "Què t'agradaria fer?"
+translation = "Què voleu fer?"
 
 [messages.wsl-cleanup-help]
 source = "Show cleanup guidance"
@@ -1568,7 +1568,7 @@ translation = "Recupera l'espai de disc no utilitzat."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "Recupera els blocs plens de zeros sense suprimir els fitxers. Neteja primer les dades dins de Linux o Docker; l'espai recuperat varia. Docker i WSL han de romandre aturats durant la compactació."
+translation = "Recupera els blocs plens de zeros sense suprimir els fitxers. Netegeu primer les dades dins de Linux o Docker; l'espai recuperat varia. Docker i WSL han de romandre aturats durant la compactació."
 
 [messages.wsl-copy-command]
 source = "Copy command"
@@ -1596,7 +1596,7 @@ translation = 'A Docker Desktop, reviseu imatges, contenidors aturats i volums. 
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
-translation = "Emmagatzema imatges de Docker, contenidors, volums i memòria cau de creació."
+translation = "Emmagatzema imatges de Docker, contenidors, volums i memòria cau de compilació."
 
 [messages.wsl-docker-system-description]
 source = "Stores Docker Desktop’s Linux environment. Docker application data may be stored in a separate disk."
@@ -1632,7 +1632,7 @@ translation = "Distribució de Linux no identificada"
 
 [messages.wsl-owner-unidentified-detail]
 source = "This path looks like a WSL installation, but no matching registration was found for the current Windows user. The package and file path may help identify it."
-translation = "Aquest camí sembla una instal·lació WSL, però no s'ha trobat cap registre coincident per a l'usuari actual de Windows. El paquet i la ruta del fitxer poden ajudar a identificar-lo."
+translation = "Aquest camí sembla una instal·lació WSL, però no s'ha trobat cap registre coincident per a l'usuari actual de Windows. El paquet i el camí del fitxer poden ajudar a identificar-lo."
 
 [messages.wsl-package]
 source = "Windows package"

@@ -720,7 +720,7 @@ translation = "Normal"
 
 [messages.norwegian-bokmal]
 source = "Norwegian Bokmål"
-translation = "Noruego bokmal"
+translation = "Noruego bokmål"
 
 [messages.of-scan]
 source = "% OF SCAN"
@@ -760,7 +760,7 @@ translation = "Abrir en el Explorador"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Abrir en el gestor de archivos"
+translation = "Abrir en el administrador de archivos"
 
 [messages.open-in-finder]
 source = "Open in Finder"

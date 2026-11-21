@@ -74,7 +74,7 @@ translation = "Skompresowany"
 
 [messages.attribute-encrypted]
 source = "Encrypted"
-translation = "Zaszyfrowane"
+translation = "Zaszyfrowany"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
@@ -82,7 +82,7 @@ translation = "Dowiązanie lub przekierowanie w systemie plików"
 
 [messages.attribute-temporary]
 source = "Temporary"
-translation = "Tymczasowe"
+translation = "Tymczasowy"
 
 [messages.attributes]
 source = "Attributes"
@@ -332,7 +332,7 @@ translation = "Zawartość „{ $name }” jest za duża, aby umieścić ją w K
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
-translation = "{ $size } · { $seconds }s upłynął"
+translation = "{ $size } · upłynęło { $seconds } s"
 
 [messages.delete-error]
 source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
@@ -356,7 +356,7 @@ translation = "Usunąć trwale?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Przygotowanie do recyklingu…"
+translation = "Przygotowywanie przeniesienia do Kosza…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -372,7 +372,7 @@ translation = "Dodatkowe elementy w kolejce: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Przenoszenie do kosza…"
+translation = "Przenoszenie do Kosza…"
 
 [messages.delete-size-files]
 source = """
@@ -392,7 +392,7 @@ translation = "Aktualizowanie mapy dysku…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "Pracownik recyklingu został nieoczekiwanie zatrzymany. Sprawdź wybrany element przed ponowną próbą."
+translation = "Zadanie przenoszenia do Kosza zostało nieoczekiwanie zatrzymane. Sprawdź wybrany element przed ponowną próbą."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -460,11 +460,11 @@ translation = "Wszystko w Koszu na { $drive } zostanie trwale usunięte."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
-translation = "Opróżnij kosz"
+translation = "Opróżnij Kosz"
 
 [messages.empty-recycle-bin-title]
 source = "Empty the Recycle Bin?"
-translation = "Opróżnić kosz?"
+translation = "Opróżnić Kosz?"
 
 [messages.empty-temp-body]
 source = "Permanently delete the contents of { $path }? The Temp folder will be kept. Items Windows refuses to delete will be left in place. Close applications first to free more temporary files."
@@ -480,7 +480,7 @@ translation = "Wyczyścić folder Temp?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
-translation = "Opróżnianie kosza…"
+translation = "Opróżnianie Kosza…"
 
 [messages.encrypt]
 source = "Encrypt"
@@ -544,7 +544,7 @@ translation = "Fiński"
 
 [messages.folder]
 source = "FOLDER"
-translation = "OBSERWUJ"
+translation = "FOLDER"
 
 [messages.folder-2]
 source = "Folder"
@@ -640,7 +640,7 @@ translation = "Na żywo · Uzgadnianie zmian w tle"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Aktualizacje na żywo niedostępne: Skanowanie anulowane · Skanuj ponownie, aby odświeżyć"
+translation = "Aktualizacje na żywo niedostępne: skanowanie anulowane · Skanuj ponownie, aby odświeżyć"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -652,7 +652,7 @@ translation = "Aktualizacje na żywo niedostępne: { $error } · Skanuj ponownie
 
 [messages.live-watching]
 source = "Live · Watching for changes"
-translation = "Na żywo · Obserwuję zmiany"
+translation = "Na żywo · Obserwowanie zmian"
 
 [messages.location]
 source = "Location:"
@@ -756,7 +756,7 @@ translation = "Otwórz w Eksploratorze"
 
 [messages.open-in-file-manager]
 source = "Open in File Manager"
-translation = "Otwórz w Menedżerze plików"
+translation = "Otwórz w menedżerze plików"
 
 [messages.open-in-finder]
 source = "Open in Finder"
@@ -1056,7 +1056,7 @@ translation = "Zachowanie"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Lewy faworyzuje kształty poziome; wyśrodkuj je równoważenie; prawe faworyzuje kształty pionowe."
+translation = "Lewa strona preferuje kształty poziome, środek je równoważy, a prawa strona preferuje kształty pionowe."
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1064,11 +1064,11 @@ translation = "Usuwanie plików"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Księgowanie rozmiaru"
+translation = "Obliczanie rozmiaru"
 
 [messages.settings-info-tips]
 source = "File details"
-translation = "Szczegóły pliku"
+translation = "Szczegóły plików"
 
 [messages.settings-name-tips]
 source = "File names"
@@ -1080,7 +1080,7 @@ translation = "Zapisz zmiany"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Zeskanuj granice"
+translation = "Zakres skanowania"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1276,7 +1276,7 @@ translation = "Tymczasowy"
 
 [messages.temp-cleanup-skipped]
 source = "Cleanup left { $count } items that could not be removed. First reason: { $error }"
-translation = "Podczas czyszczenia pozostało { $count } elementów, których nie można było usunąć. Pierwszy powód: { $error }"
+translation = "Elementy pozostawione po czyszczeniu, których nie można było usunąć: { $count }. Pierwszy powód: { $error }"
 
 [messages.thai]
 source = "Thai"
@@ -1320,7 +1320,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: montaż folderów · { $files } plików"
+translation = "Turbo: składanie folderów · plików: { $files }"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1332,7 +1332,7 @@ translation = "Wyświetlanie postępu Turbo · sprawdzanie wyników…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Liczniki przełączają się na Turbo, gdy zmontowała więcej wpisów. Mapa utrzymuje regularny podgląd skanowania do czasu potwierdzenia kompletnego drzewa Turbo. Jeśli Turbo się nie powiedzie, regularne skanowanie będzie kontynuowane."
+translation = "Liczniki przełączają się na Turbo, gdy złoży ono więcej wpisów. Mapa zachowuje podgląd zwykłego skanowania do czasu zweryfikowania pełnego drzewa Turbo. Jeśli Turbo się nie powiedzie, zwykłe skanowanie będzie kontynuowane."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
@@ -1344,7 +1344,7 @@ translation = "Turbo: odczytywanie MFT…"
 
 [messages.turbo-resolving]
 source = "Turbo: resolving file names…"
-translation = "Turbo: rozwiązywanie nazw plików…"
+translation = "Turbo: ustalanie nazw plików…"
 
 [messages.turbo-sorting]
 source = "Turbo: sorting results…"
@@ -1352,7 +1352,7 @@ translation = "Turbo: sortowanie wyników…"
 
 [messages.turbo-transferring]
 source = "Turbo: loading results…"
-translation = "Turbo: ładowanie wyników…"
+translation = "Turbo: wczytywanie wyników…"
 
 [messages.turbo-unavailable-normal-scan-continues]
 source = "Turbo unavailable — normal scan continues"
@@ -1396,11 +1396,11 @@ translation = "Uruchom dezinstalator…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "W tym folderze nie można zidentyfikować żadnej aplikacji. Otwórz zainstalowane aplikacje lub Steam, aby zarządzać ich zawartością."
+translation = "Nie można zidentyfikować aplikacji dla tego folderu. Otwórz Zainstalowane aplikacje lub Steam, aby zarządzać jego zawartością."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Otwórz zainstalowane aplikacje"
+translation = "Otwórz Zainstalowane aplikacje"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
@@ -1456,11 +1456,11 @@ translation = "Ta lokalizacja należy do zainstalowanego oprogramowania. Wybierz
 
 [messages.uninstaller-launch-error]
 source = "Windows could not start the uninstaller (error { $code }). Open Installed Apps to manage this application."
-translation = "System Windows nie mógł uruchomić deinstalatora (błąd { $code }). Otwórz Zainstalowane aplikacje, aby zarządzać tą aplikacją."
+translation = "System Windows nie mógł uruchomić dezinstalatora (błąd { $code }). Otwórz Zainstalowane aplikacje, aby zarządzać tą aplikacją."
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "Nie można znaleźć zarejestrowanego deinstalatora. Otwórz aplikacje zainstalowane w systemie Windows, aby zarządzać tą aplikacją."
+translation = "Nie można znaleźć zarejestrowanego dezinstalatora. Otwórz Zainstalowane aplikacje w systemie Windows, aby zarządzać tą aplikacją."
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1618,7 +1618,7 @@ translation = "Przeglądaj pliki dystrybucji i usuwaj dane, których już nie po
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
-translation = "Przechowuje system plików tej dystrybucji Linuksa, w tym jego programy i pliki po stronie Linuksa."
+translation = "Przechowuje system plików tej dystrybucji Linuksa, w tym jej programy i pliki po stronie Linuksa."
 
 [messages.wsl-open-docker]
 source = "Open Docker Desktop"

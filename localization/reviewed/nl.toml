@@ -206,7 +206,7 @@ translation = "Temp-map opschonen…"
 
 [messages.click-to-clean-temp-folder]
 source = "Click to clean your temporary files"
-translation = "Klik om uw tijdelijke bestanden op te schonen"
+translation = "Klik om je tijdelijke bestanden op te schonen"
 
 [messages.click-to-empty-recycle-bin]
 source = "Click to empty this drive’s Recycle Bin"
@@ -272,7 +272,7 @@ translation = """
 
 [messages.copy-error-details]
 source = "Copy error details"
-translation = "Kopieer foutdetails"
+translation = "Foutdetails kopiëren"
 
 [messages.copyright-2026-azazel-labs]
 source = "Copyright © 2026 Azazel Labs LLC."
@@ -328,7 +328,7 @@ translation = "De inhoud van “{ $name }” is te groot voor de Prullenbak. De 
 
 [messages.delete-details]
 source = "{ $size } · { $seconds }s elapsed"
-translation = "{ $size } · { $seconds }s is verstreken"
+translation = "{ $size } · { $seconds } s verstreken"
 
 [messages.delete-error]
 source = 'Failed to delete { $path }{ ".\u000A\u000A" }{ $error }'
@@ -352,7 +352,7 @@ translation = "Permanent verwijderen?"
 
 [messages.delete-preparing]
 source = "Preparing to recycle…"
-translation = "Gerecycleerd voorbereiden…"
+translation = "Verplaatsen naar Prullenbak voorbereiden…"
 
 [messages.delete-progress-files]
 source = "{ $done } of { $total } files"
@@ -368,7 +368,7 @@ translation = "Extra items in de wachtrij: { $count }"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
-translation = "Verplaatsen naar prullenbak…"
+translation = "Verplaatsen naar Prullenbak…"
 
 [messages.delete-size-files]
 source = """
@@ -388,7 +388,7 @@ translation = "Schijfkaart bijwerken…"
 
 [messages.delete-worker-stopped]
 source = "The recycling worker stopped unexpectedly. Check the selected item before trying again."
-translation = "De recyclingarbeider is onverwacht gestopt. Controleer het geselecteerde item voordat u het opnieuw probeert."
+translation = "Het verwijderproces op de achtergrond is onverwacht gestopt. Controleer het geselecteerde item voordat je het opnieuw probeert."
 
 [messages.deleting]
 source = '{ "Deleting...\u000A" }{ $path }'
@@ -452,7 +452,7 @@ translation = "Nederlands"
 
 [messages.empty-recycle-bin-body]
 source = "Everything in your Recycle Bin on { $drive } will be deleted permanently."
-translation = "Alles in uw Prullenbak op { $drive } wordt permanent verwijderd."
+translation = "Alles in je Prullenbak op { $drive } wordt permanent verwijderd."
 
 [messages.empty-recycle-bin-button]
 source = "Empty Recycle Bin"
@@ -472,7 +472,7 @@ translation = "Map Temp opschonen"
 
 [messages.empty-temp-title]
 source = "Clean your Temp folder?"
-translation = "Uw Temp-map opschonen?"
+translation = "Je Temp-map opschonen?"
 
 [messages.emptying-recycle-bin]
 source = "Emptying Recycle Bin…"
@@ -636,7 +636,7 @@ translation = "Live · Veranderingen in de achtergrond afstemmen"
 
 [messages.live-scan-cancelled]
 source = "Live unavailable: scan cancelled · Rescan to refresh"
-translation = "Live bijwerken niet beschikbaar: Scan geannuleerd · Scan opnieuw om bij te werken"
+translation = "Live bijwerken niet beschikbaar: scan geannuleerd · Scan opnieuw om bij te werken"
 
 [messages.live-stopped]
 source = "Live stopped: { $error } · Rescan to reconnect"
@@ -648,7 +648,7 @@ translation = "Live bijwerken niet beschikbaar: { $error } · Scan opnieuw om bi
 
 [messages.live-watching]
 source = "Live · Watching for changes"
-translation = "Live · Kijken naar veranderingen"
+translation = "Live · Wijzigingen worden gevolgd"
 
 [messages.location]
 source = "Location:"
@@ -680,7 +680,7 @@ translation = "Gewijzigd:"
 
 [messages.move-selected-item-to-trash]
 source = "Move selected item to trash"
-translation = "Geselecteerd item naar de prullenbak verplaatsen"
+translation = "Geselecteerd item naar de Prullenbak verplaatsen"
 
 [messages.msec]
 source = "msec"
@@ -840,7 +840,7 @@ translation = "Gereed"
 
 [messages.recent]
 source = "Recent"
-translation = "Recentelijk"
+translation = "Recent"
 
 [messages.reclaim]
 source = "Reclaim"
@@ -932,7 +932,7 @@ translation = "Virtuele WSL-schijf; die krimpt niet vanzelf"
 
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
-translation = "Compactie behoudt de inhoud van de schijf en verkleint de Windows-bestandsgrootte door blokken terug te winnen die gevuld zijn met nullen. Het kan weinig of geen ruimte terugwinnen. Ruim eerst ongewenste gegevens op in Docker of Linux."
+translation = "Verkleinen behoudt de inhoud van de schijf en verkleint de Windows-bestandsgrootte door blokken terug te winnen die gevuld zijn met nullen. Het kan weinig of geen ruimte terugwinnen. Ruim eerst ongewenste gegevens op in Docker of Linux."
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
@@ -940,7 +940,7 @@ translation = "WSL-schijfruimte vrijmaken"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
-translation = "Voordat u gaat comprimeren, slaat u uw werk op, sluit u Docker Desktop af en sluit u WSL-sessies. Voer deze opdracht uit in PowerShell om alle WSL-distributies te stoppen. Houd Docker en WSL gestopt totdat het verdichten is voltooid. Windows zal om beheerderstoestemming vragen."
+translation = "Sla voor het verkleinen je werk op, sluit Docker Desktop af en sluit WSL-sessies. Voer deze opdracht uit in PowerShell om alle WSL-distributies te stoppen. Houd Docker en WSL gestopt totdat het verkleinen is voltooid. Windows zal om beheerderstoestemming vragen."
 
 [messages.recycle-bin]
 source = "Recycle Bin"
@@ -1048,7 +1048,7 @@ translation = "Gedrag"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "Linker favorieten voor horizontale vormen; centreer ze in evenwicht; rechts geeft voorkeur aan verticale vormen."
+translation = "Links krijgen horizontale vormen de voorkeur; het midden houdt ze in evenwicht; rechts krijgen verticale vormen de voorkeur."
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1056,15 +1056,15 @@ translation = "Bestanden verwijderen"
 
 [messages.settings-file-sizes]
 source = "Size accounting"
-translation = "Formaat boekhouding"
+translation = "Grootteberekening"
 
 [messages.settings-info-tips]
 source = "File details"
-translation = "File Details"
+translation = "Bestandsdetails"
 
 [messages.settings-name-tips]
 source = "File names"
-translation = "Bestand namen"
+translation = "Bestandsnamen"
 
 [messages.settings-save]
 source = "Save changes"
@@ -1072,7 +1072,7 @@ translation = "Wijzigingen opslaan"
 
 [messages.settings-scan-scope]
 source = "Scan boundaries"
-translation = "Scan grenzen"
+translation = "Scangrenzen"
 
 [messages.settings-updates]
 source = "Updates"
@@ -1272,7 +1272,7 @@ translation = "Bij het opruimen zijn { $count } items overgebleven die niet kond
 
 [messages.thai]
 source = "Thai"
-translation = "Thaise"
+translation = "Thai"
 
 [messages.the-scan-worker-stopped-unexpectedly]
 source = "The scan worker stopped unexpectedly."
@@ -1312,7 +1312,7 @@ translation = "Turbo"
 
 [messages.turbo-assembling]
 source = "Turbo: assembling folders · { $files } files"
-translation = "Turbo: assembleermappen · { $files } bestanden"
+translation = "Turbo: mappen samenstellen · { $files } bestanden"
 
 [messages.turbo-cancelled-normal-scan-continues]
 source = "Turbo cancelled — normal scan continues"
@@ -1320,15 +1320,15 @@ translation = "Turbo geannuleerd — normale scan gaat door"
 
 [messages.turbo-main-progress]
 source = "Showing Turbo progress · validating results…"
-translation = "Turbo voortgang weergeven · validatie resultaten…"
+translation = "Turbo-voortgang weergeven · resultaten valideren…"
 
 [messages.turbo-progress-help]
 source = "Counters switch to Turbo when it has assembled more entries. The map keeps the regular scan preview until the complete Turbo tree is validated. If Turbo fails, the regular scan continues."
-translation = "Tellers overschakelen naar Turbo wanneer ze meer items hebben geassembleerd. De kaart houdt de reguliere scan preview totdat de volledige Turbo boom is gevalideerd. Als Turbo faalt, gaat de reguliere scan door."
+translation = "De tellers schakelen over naar Turbo zodra Turbo meer items heeft samengesteld. De kaart blijft het voorbeeld van de normale scan tonen totdat de volledige Turbo-boom is gevalideerd. Als Turbo mislukt, gaat de normale scan door."
 
 [messages.turbo-read-progress]
 source = "Turbo: reading MFT { $percent }% · { $records } records"
-translation = "Turbo: lees MFT { $percent }% · { $records } records"
+translation = "Turbo: MFT lezen { $percent }% · { $records } records"
 
 [messages.turbo-reading-mft]
 source = "Turbo: reading MFT…"
@@ -1360,7 +1360,7 @@ translation = "TYPE"
 
 [messages.type-2]
 source = "Type:"
-translation = "Type"
+translation = "Type:"
 
 [messages.ukrainian]
 source = "Ukrainian"
@@ -1388,15 +1388,15 @@ translation = "Verwijderingsprogramma starten…"
 
 [messages.uninstall-no-match]
 source = "No application could be identified for this folder. Open Installed Apps or Steam to manage its contents."
-translation = "Er kon geen applicatie worden geïdentificeerd voor deze map. Open geïnstalleerde apps of Steam om de inhoud ervan te beheren."
+translation = "Er kon geen applicatie worden geïdentificeerd voor deze map. Open Geïnstalleerde apps of Steam om de inhoud ervan te beheren."
 
 [messages.uninstall-open-apps]
 source = "Open Installed Apps"
-translation = "Open geïnstalleerde apps"
+translation = "Geïnstalleerde apps openen"
 
 [messages.uninstall-open-steam]
 source = "Open Steam library"
-translation = "Open Steam-bibliotheek"
+translation = "Steam-bibliotheek openen"
 
 [messages.uninstall-publisher]
 source = "Publisher: { $publisher }"
@@ -1408,7 +1408,7 @@ translation = "De kaart volgt live veranderingen. Gebruik Opnieuw scannen na het
 
 [messages.uninstall-scope-short]
 source = "Removes the whole application, including files outside your selection."
-translation = "Verwijdert de hele applicatie, inclusief bestanden buiten uw selectie."
+translation = "Verwijdert de hele applicatie, inclusief bestanden buiten je selectie."
 
 [messages.uninstall-selected-path]
 source = "Selected item"
@@ -1532,7 +1532,7 @@ translation = "Huidige limiet voor gelijktijdige taken; wordt automatisch aangep
 
 [messages.wsl-browse-linux]
 source = "Browse Linux files"
-translation = "Blader door Linux-bestanden"
+translation = "Linux-bestanden doorbladeren"
 
 [messages.wsl-browse-linux-detail]
 source = "Open this distribution in Explorer. This may start the distribution."
@@ -1552,7 +1552,7 @@ translation = "Windows zal om beheerderstoestemming vragen."
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
-translation = "Herstel nulgevulde blokken met behoud van de inhoud van de schijf. Vereist dat Docker en WSL worden gestopt."
+translation = "Wint nulgevulde blokken terug met behoud van de inhoud van de schijf. Vereist dat Docker en WSL zijn gestopt."
 
 [messages.wsl-compact-ready]
 source = "Ready to compact?"
@@ -1560,15 +1560,15 @@ translation = "Klaar om de schijf te verkleinen?"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "Sla uw Linux-werk op en sluit Docker Desktop af. Clawback stopt alle WSL-sessies en verkleint vervolgens deze schijf. Houd Docker en WSL gesloten totdat het klaar is."
+translation = "Sla je Linux-werk op en sluit Docker Desktop af. Clawback stopt alle WSL-sessies en verkleint vervolgens deze schijf. Houd Docker en WSL gesloten totdat het klaar is."
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
-translation = "Herstel ongebruikte schijfruimte."
+translation = "Win ongebruikte schijfruimte terug."
 
 [messages.wsl-compact-tooltip]
 source = "Reclaims zero-filled blocks without deleting your files. Clean up inside Linux or Docker first; savings vary. Docker and WSL must remain stopped during compaction."
-translation = "Herwint nulgevulde blokken zonder uw bestanden te verwijderen. Ruim eerst op in Linux of Docker; besparingen variëren. Docker en WSL moeten tijdens het verdichten gestopt blijven."
+translation = "Wint nulgevulde blokken terug zonder je bestanden te verwijderen. Ruim eerst op in Linux of Docker; de besparing varieert. Docker en WSL moeten tijdens het verkleinen gestopt blijven."
 
 [messages.wsl-copy-command]
 source = "Copy command"
@@ -1592,7 +1592,7 @@ translation = "WSL-distributie"
 
 [messages.wsl-docker-cleanup-help]
 source = "In Docker Desktop, review images, stopped containers and volumes. Build cache can also be cleaned with “docker builder prune”. Volumes may contain databases or other files you need; inspect them before removing them. Cleanup and disk compaction are separate steps."
-translation = 'Bekijk in Docker Desktop images, gestopte containers en volumes. De build-cache kan ook worden opgeschoond met "docker builder prune". Volumes kunnen databases of andere bestanden bevatten die u nodig heeft; inspecteer ze voordat u ze verwijdert. Opschonen en schijfverdichting zijn afzonderlijke stappen.'
+translation = 'Bekijk in Docker Desktop images, gestopte containers en volumes. De build-cache kan ook worden opgeschoond met "docker builder prune". Volumes kunnen databases of andere bestanden bevatten die je nodig hebt; inspecteer ze voordat je ze verwijdert. Opschonen en de schijf verkleinen zijn afzonderlijke stappen.'
 
 [messages.wsl-docker-data-description]
 source = "Stores Docker images, containers, volumes and build cache."
@@ -1604,7 +1604,7 @@ translation = "Slaat de Linux-omgeving van Docker Desktop op. Docker-applicatieg
 
 [messages.wsl-linux-cleanup-help]
 source = "Browse the distribution’s files and remove data you no longer need. Use its Linux package manager to clean package caches. After cleanup, “sudo fstrim -av” inside the distribution may help release unused blocks before shutting down WSL and compacting."
-translation = 'Blader door de bestanden van de distributie en verwijder gegevens die u niet langer nodig heeft. Gebruik de Linux-pakketbeheerder om pakketcaches op te schonen. Na het opruimen kan "sudo fstrim -av" in de distributie helpen ongebruikte blokken vrij te geven voordat WSL wordt afgesloten en gecomprimeerd.'
+translation = 'Blader door de bestanden van de distributie en verwijder gegevens die je niet meer nodig hebt. Gebruik de Linux-pakketbeheerder om pakketcaches op te schonen. Na het opruimen kan "sudo fstrim -av" in de distributie helpen ongebruikte blokken vrij te geven voordat WSL wordt afgesloten en de schijf wordt verkleind.'
 
 [messages.wsl-linux-description]
 source = "Stores this Linux distribution’s filesystem, including its programs and Linux-side files."
@@ -1616,7 +1616,7 @@ translation = "Docker Desktop openen"
 
 [messages.wsl-open-docker-detail]
 source = "Review containers, images and volumes before removing unwanted data."
-translation = "Controleer containers, images en volumes voordat u ongewenste gegevens verwijdert."
+translation = "Controleer containers, images en volumes voordat je ongewenste gegevens verwijdert."
 
 [messages.wsl-owner-docker-data]
 source = "Docker Desktop — data disk"

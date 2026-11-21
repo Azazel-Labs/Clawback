@@ -50,7 +50,7 @@ Unter Windows liest Turbo ein ganzes lokales NTFS-Volume schneller über einen s
 
 ## Docker im Browser
 
-Für ein NAS oder einen Heimserver führt das Docker-Image Clawback auf dem Server aus und streamt es in einen Browser-Tab. Binden Sie die gewünschten Ordner unter `/data` ein. Aus Ordnern mit Lese- und Schreibzugriff können Sie löschen; schreibgeschützte Ordner lassen sich durchsuchen, aber nie daraus löschen.
+Für ein NAS oder einen Heimserver führt das Docker-Image Clawback auf dem Server aus und streamt es in einen Browser-Tab. Binde die gewünschten Ordner unter `/data` ein. Aus Ordnern mit Lese- und Schreibzugriff kannst du löschen; schreibgeschützte Ordner lassen sich durchsuchen, aus ihnen wird aber nie etwas gelöscht.
 
 ```yaml
 services:
@@ -68,7 +68,7 @@ services:
     restart: unless-stopped
 ```
 
-Führen Sie `docker compose up -d` aus und öffnen Sie dann `https://<server>:3001`. Einrichtungsanleitung (Englisch): [docs/docker.md](../docker.md)
+Führe `docker compose up -d` aus und öffne dann `https://<server>:3001`. Einrichtungsanleitung (Englisch): [docs/docker.md](../docker.md)
 
 ![Clawback](../images/browser.png)
 

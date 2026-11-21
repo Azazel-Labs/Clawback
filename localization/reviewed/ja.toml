@@ -66,7 +66,7 @@ translation = "3D アセット"
 
 [messages.attribute-backup-flag]
 source = "Marked for backup"
-translation = "バックアップ用にマークされました"
+translation = "バックアップ対象"
 
 [messages.attribute-compressed]
 source = "Compressed"
@@ -74,7 +74,7 @@ translation = "圧縮"
 
 [messages.attribute-encrypted]
 source = "Encrypted"
-translation = "暗号化されています"
+translation = "暗号化"
 
 [messages.attribute-reparse-point]
 source = "Filesystem link or redirect"
@@ -218,7 +218,7 @@ translation = "Windows によって管理されています。クリックする
 
 [messages.click-to-reclaim-wsl-space]
 source = "VHDX · WSL virtual disk. Click for disk details, browse files, or reclaim space."
-translation = "VHDX · WSL 仮想ディスク。クリックしてディスクの詳細を表示したり、ファイルを参照したり、スペースを再利用したりできます。"
+translation = "VHDX · WSL 仮想ディスク。クリックすると、ディスクの詳細の表示、ファイルの参照、空き領域の回収ができます。"
 
 [messages.click-to-uninstall-software]
 source = "Installed application or game files. Click to identify and uninstall the whole application."
@@ -329,7 +329,7 @@ translation = '次の項目を削除できませんでした: { $path }{ "\u000A
 
 [messages.delete-failed-title]
 source = "Couldn’t delete item"
-translation = "アイテムを削除できませんでした"
+translation = "項目を削除できませんでした"
 
 [messages.delete-permanently]
 source = "Deleting permanently…"
@@ -357,7 +357,7 @@ source = """
         [one] { $count } more item queued
        *[other] { $count } more items queued
     }"""
-translation = "追加のアイテムがキューに追加されました: { $count }"
+translation = "さらに { $count } 件の項目が待機中"
 
 [messages.delete-recycling]
 source = "Moving to Recycle Bin…"
@@ -709,7 +709,7 @@ translation = "ノルウェー語（ブークモール）"
 
 [messages.of-scan]
 source = "% OF SCAN"
-translation = "% スキャン済み"
+translation = "全体比 %"
 
 [messages.offline]
 source = "Offline"
@@ -925,11 +925,11 @@ translation = "WSL 仮想ディスク。自動では縮小しません"
 
 [messages.reclaim-wsl-body]
 source = "Compaction preserves the disk’s contents and reduces its Windows file size by reclaiming blocks filled with zeros. It may reclaim little or no space. Clean up unwanted data inside Docker or Linux first."
-translation = "圧縮はディスクの内容を保存し、ゼロで埋められたブロックを再利用することで Windows ファイル サイズを削減します。スペースがほとんど、またはまったく再利用されない場合があります。まず、Docker または Linux 内の不要なデータをクリーンアップします。"
+translation = "圧縮はディスクの内容を保持したまま、ゼロで埋められたブロックを回収して Windows 上のファイル サイズを削減します。ほとんど、またはまったく回収できない場合もあります。先に Docker または Linux 内の不要なデータをクリーンアップしてください。"
 
 [messages.reclaim-wsl-space]
 source = "Reclaim WSL disk space"
-translation = "WSL ディスク領域を再利用する"
+translation = "WSL のディスク領域を回収"
 
 [messages.reclaim-wsl-stop]
 source = "Before compacting, save your work, quit Docker Desktop and close WSL sessions. Run this command in PowerShell to stop all WSL distributions. Keep Docker and WSL stopped until compaction finishes. Windows will ask for administrator permission."
@@ -1035,7 +1035,7 @@ translation = "動作"
 
 [messages.settings-bias-help]
 source = "Left favors horizontal shapes; center balances them; right favors vertical shapes."
-translation = "左は水平な形、中央はそれらのバランスをとる、右は垂直な形を好む。"
+translation = "左は横長の形、中央は均等、右は縦長の形を優先します。"
 
 [messages.settings-deletion]
 source = "Deleting files"
@@ -1399,7 +1399,7 @@ translation = "選択範囲外のファイルを含むアプリケーション�
 
 [messages.uninstall-selected-path]
 source = "Selected item"
-translation = "選択されたアイテム"
+translation = "選択した項目"
 
 [messages.uninstall-software]
 source = "Uninstall…"
@@ -1439,7 +1439,7 @@ translation = "Windows はアンインストーラーを開始できませんで
 
 [messages.uninstaller-missing]
 source = "The registered uninstaller could not be found. Open Windows Installed Apps to manage this application."
-translation = "登録されたアンインストーラーが見つかりませんでした。このアプリケーションを管理するには、「Windows インストール済みアプリ」を開いてください。"
+translation = "登録されたアンインストーラーが見つかりませんでした。このアプリケーションを管理するには、Windows の「インストールされているアプリ」を開いてください。"
 
 [messages.unreadable-folders]
 source = "Unreadable folders"
@@ -1535,7 +1535,7 @@ translation = "Windows は管理者の許可を求めます。"
 
 [messages.wsl-compact-detail]
 source = "Reclaim zero-filled blocks while preserving the disk’s contents. Requires Docker and WSL to be stopped."
-translation = "ディスクの内容を保持しながら、ゼロで埋められたブロックを再利用します。 Docker と WSL を停止する必要があります。"
+translation = "ディスクの内容を保持したまま、ゼロで埋められたブロックを回収します。Docker と WSL を停止する必要があります。"
 
 [messages.wsl-compact-ready]
 source = "Ready to compact?"
@@ -1543,7 +1543,7 @@ translation = "圧縮する準備はできましたか?"
 
 [messages.wsl-compact-stop-short]
 source = "Save your Linux work and quit Docker Desktop. Clawback will stop all WSL sessions, then compact this disk. Keep Docker and WSL closed until it finishes."
-translation = "Linux の作業を保存し、Docker Desktop を終了します。 Clawback はすべての WSL セッションを停止し、このディスクを圧縮します。 Docker と WSL は終了するまで閉じたままにしておきます。"
+translation = "Linux の作業を保存し、Docker Desktop を終了してください。Clawback はすべての WSL セッションを停止してから、このディスクを圧縮します。処理が完了するまで Docker と WSL を閉じたままにしてください。"
 
 [messages.wsl-compact-summary]
 source = "Recover unused disk space."
@@ -1599,7 +1599,7 @@ translation = "Docker Desktop を開く"
 
 [messages.wsl-open-docker-detail]
 source = "Review containers, images and volumes before removing unwanted data."
-translation = "不要なデータを削除する前に、コンテナ、イメージ、ボリュームを確認してください。"
+translation = "不要なデータを削除する前に、コンテナー、イメージ、ボリュームを確認してください。"
 
 [messages.wsl-owner-docker-data]
 source = "Docker Desktop — data disk"
