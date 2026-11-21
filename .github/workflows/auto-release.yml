@@ -1,16 +1,19 @@
 name: Auto release
 
-# After CI passes on a push to main, commit messages drive versioning:
-#   - #patch, #minor or #major in any commit since the last version change bumps
-#     Cargo.toml and Cargo.lock (the highest wins) and commits "Bump version to X";
-#   - #release in any commit since the last version tag tags the current version,
-#     after any bump in the same run, and starts the release.
+# After CI passes on a push to main, commit messages drive releases:
+#   - #release in any commit since the last version tag tags the next version and starts the Release and crates.io workflows;
+#   - #patch, #minor or #major in those commits says how far the version moves (the highest wins;
+#     patch when none says).
 # A tag counts only on a line by itself or with other tags (e.g. "#minor #release");
 # tags mentioned mid-sentence are ignored.
-# Pull (--rebase) after a bump: the bot's commit lands on main.
 #
-# Pushes made with GITHUB_TOKEN don't start workflows, so the tag's Release and
-# crates.io workflows are dispatched here instead (dispatch is the exception).
+# Nothing is committed to main. The version is set in a commit of its own that only the version tag
+# points to, so builds from the tag see it in Cargo.toml, there's never a bot commit to pull first, and
+# the bot isn't counted among the repository's contributors. main's Cargo.toml keeps whatever version
+# it was last given by hand; the version tags are what count.
+#
+# Pushes made with GITHUB_TOKEN don't start workflows, so release.yml and crates.yml are called from here
+# rather than started by the tag.
 on:
   workflow_run:
     workflows: [CI]
@@ -38,7 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: write
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+      version: ${{ steps.plan.outputs.version }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -59,74 +64,65 @@ jobs:
           tag_lines() {
             git log --format=%B "$@" | grep -iE '^[[:space:]]*(#(patch|minor|major|release)[[:space:]]*)+$' || true
           }
-          current="$(sed -n '/^\[workspace.package\]/,/^\[/ s/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
-          changed="$(git log -1 --format=%H -G'^version = "' -- Cargo.toml)"
-          bumps="$(tag_lines "$changed..HEAD")"
-          IFS=. read -r major minor patch <<< "${current%%-*}"
-          if grep -qiw -- '#major' <<< "$bumps"; then version="$((major + 1)).0.0"
-          elif grep -qiw -- '#minor' <<< "$bumps"; then version="$major.$((minor + 1)).0"
-          elif grep -qiw -- '#patch' <<< "$bumps"; then
-            if [[ "$current" == *-* ]]; then version="${current%%-*}"   # 0.9.0-rc.1 -> 0.9.0
-            else version="$major.$minor.$((patch + 1))"; fi
-          else version=""; fi
-
-          last="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
-          release=false
-          if tag_lines ${last:+"$last"..}HEAD | grep -qiw -- '#release'; then
-            if [ -z "$version" ] && [ "$last" = "v$current" ]; then
-              echo "::warning::#release, but v$current is already released. Add #patch, #minor or #major."
-            else
-              release=true
-            fi
+          # The last version released: the highest version tag, a prerelease sorting before its release.
+          # Its commit needn't be on main, so it's found by name, not by walking back from HEAD.
+          last="$(git -c versionsort.suffix=- tag --list 'v[0-9]*' --sort=-v:refname | head -1)"
+          current="${last#v}"
+          # No release yet: the first is Cargo.toml's version as it stands.
+          [ -n "$current" ] || current="$(sed -n '/^\[workspace\.package\]/,/^\[/ s/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
+          lines="$(tag_lines ${last:+"$last"..}HEAD)"
+          if ! grep -qiw -- '#release' <<< "$lines"; then
+            echo "No #release since ${last:-the start}; nothing to do"
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          IFS=. read -r major minor patch <<< "${current%%-*}"
+          if [ -z "$last" ]; then version="$current"
+          elif grep -qiw -- '#major' <<< "$lines"; then version="$((major + 1)).0.0"
+          elif grep -qiw -- '#minor' <<< "$lines"; then version="$major.$((minor + 1)).0"
+          elif [[ "$current" == *-* ]]; then version="${current%%-*}"   # 0.9.0-rc.1 -> 0.9.0
+          else version="$major.$minor.$((patch + 1))"; fi
 
-          echo "Version $current -> ${version:-unchanged}; release: $release"
-          echo "bump=$version" >> "$GITHUB_OUTPUT"
-          echo "release=$release" >> "$GITHUB_OUTPUT"
-          echo "version=${version:-$current}" >> "$GITHUB_OUTPUT"
+          echo "Releasing ${last:-nothing yet} -> v$version"
+          echo "release=true" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Install toolchain (from rust-toolchain.toml)
-        if: steps.plan.outputs.bump != ''
+        if: steps.plan.outputs.release == 'true'
         run: rustup toolchain install
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
-        if: steps.plan.outputs.bump != ''
+        if: steps.plan.outputs.release == 'true'
         with:
           key: auto-release
-      - name: Bump version
-        if: steps.plan.outputs.bump != ''
-        env:
-          VERSION: ${{ steps.plan.outputs.bump }}
-        run: |
-          # Prepare updates the lockfile offline, so download what it resolves against first.
-          cargo fetch --locked
-          cargo xtask release prepare "$VERSION"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "Bump version to $VERSION"
       - name: Tag
         if: steps.plan.outputs.release == 'true'
         env:
           VERSION: ${{ steps.plan.outputs.version }}
         run: |
+          # Setting the version updates the lockfile offline, so download what it resolves against first.
+          cargo fetch --locked
+          cargo xtask release prepare "$VERSION"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # On a commit only the tag points to; main already having the version needs none.
+          git diff --quiet || git commit -qam "Release $VERSION"
           git tag -a "v$VERSION" -m "Clawback $VERSION"
-      - name: Push
-        if: steps.plan.outputs.bump != '' || steps.plan.outputs.release == 'true'
-        env:
-          VERSION: ${{ steps.plan.outputs.version }}
-          BUMP: ${{ steps.plan.outputs.bump }}
-          RELEASE: ${{ steps.plan.outputs.release }}
-        run: |
-          refs=()
-          [ -n "$BUMP" ] && refs+=(HEAD:refs/heads/main)
-          [ "$RELEASE" = true ] && refs+=("refs/tags/v$VERSION")
-          # Fails rather than overwrites if main moved; that push's own run picks the tags up.
-          git push --atomic origin "${refs[@]}"
-      - name: Start release
-        if: steps.plan.outputs.release == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.plan.outputs.version }}
-        run: |
-          gh workflow run release.yml --ref "v$VERSION"
-          gh workflow run crates.yml --ref main -f tag="v$VERSION"
+          # Only the tag is pushed. It fails rather than replaces a version tag that's already there.
+          git push origin "refs/tags/v$VERSION"
+
+  release:
+    needs: version
+    if: needs.version.outputs.release == 'true'
+    uses: ./.github/workflows/release.yml
+    permissions: { contents: write, packages: write }
+    with:
+      tag: v${{ needs.version.outputs.version }}
+    secrets: inherit
+
+  crates:
+    needs: version
+    if: needs.version.outputs.release == 'true'
+    uses: ./.github/workflows/crates.yml
+    permissions: { contents: read }
+    with:
+      tag: v${{ needs.version.outputs.version }}
+    secrets: inherit

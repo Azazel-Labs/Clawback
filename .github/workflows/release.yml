@@ -1,7 +1,8 @@
 name: Release
 
 # Nightly builds run on a schedule but only when main has new commits since
-# the previous nightly. Version tags publish stable or alpha/beta/RC releases.
+# the previous nightly. Version tags publish stable or alpha/beta/RC releases:
+# Auto release calls this with the tag it made, or push one yourself.
 on:
   schedule:
     - cron: "17 6 * * *" # 06:17 UTC daily
@@ -13,17 +14,25 @@ on:
         description: "Build a nightly even if nothing changed"
         type: boolean
         default: false
+  workflow_call:
+    inputs:
+      tag:
+        description: "Version tag to release (Auto release passes the one it made)"
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag || github.ref }}
   cancel-in-progress: false
 
 env:
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: 0
+  # What to release: the tag Auto release passes, else what started the run.
+  REF: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
 
 jobs:
   plan:
@@ -38,15 +47,16 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ env.REF }}
           fetch-depth: 0
       - name: Install toolchain (from rust-toolchain.toml)
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(env.REF, 'refs/tags/v')
         run: rustup toolchain install
       - name: Validate version tag
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(env.REF, 'refs/tags/v')
         shell: bash
         env:
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: cargo xtask release validate "$RELEASE_TAG"
       - id: decide
         shell: bash
@@ -55,10 +65,11 @@ jobs:
         run: |
           sha="$(git rev-parse HEAD)"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          if [[ "$REF" == refs/tags/v* ]]; then
+            tag="${REF#refs/tags/}"
+            echo "tag=$tag" >> "$GITHUB_OUTPUT"
             echo "nightly=false" >> "$GITHUB_OUTPUT"
-            if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            if [[ "$tag" == *-* ]]; then
               echo "prerelease=true" >> "$GITHUB_OUTPUT"
             else
               echo "prerelease=false" >> "$GITHUB_OUTPUT"
@@ -66,7 +77,7 @@ jobs:
             echo "build=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [[ "$GITHUB_REF" != refs/heads/main ]]; then
+          if [[ "$REF" != refs/heads/main ]]; then
             echo "::error::Run nightly builds from main."
             exit 1
           fi

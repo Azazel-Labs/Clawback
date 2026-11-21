@@ -15,20 +15,21 @@ reads the commit messages:
 
 | Tag in a commit message | Effect |
 | --- | --- |
-| `#patch`, `#minor`, `#major` | Bumps the version in Cargo.toml and Cargo.lock and commits "Bump version to X" to `main`. Counts commits since the last version change; the largest bump wins. |
-| `#release` | Tags the current version, which starts the Release and crates.io workflows below. Counts commits since the last version tag. |
+| `#release` | Tags the next version, which starts the Release and crates.io workflows below. Counts commits since the last version tag. |
+| `#patch`, `#minor`, `#major` | How far that release moves the version from the last tag; the largest wins, and patch when none says. On its own it does nothing: it waits for a `#release`. |
 
 Put tags on a line of their own, alone or together, usually the last line of the
 message. A tag inside a sentence is ignored, so describing these tags in a commit
 message is safe.
 
-Both can go in one push: a `#minor #release` line bumps 1.0.0 to 1.1.0 and releases it.
-Bump without `#release` to let a version collect changes before releasing it. A
-`#release` with no bump for a version that is already tagged only logs a warning.
+A `#minor #release` line releases 1.0.0 to 1.1.0. Leave out `#release` to let changes
+collect; the bump lines count once a later push releases.
 
-After a bump, pull before your next push (`git pull --rebase`), since the bot's
-commit is on `main`. If CI fails, nothing happens; the tags still count once a
-later push passes CI.
+Nothing is committed to `main`, so there's never a bot commit to pull. The version
+is set in Cargo.toml and Cargo.lock in a commit of its own that only the version
+tag points to, which is what the release builds from. `main`'s Cargo.toml keeps
+the version it was last given by hand; the version tags are what count. If CI
+fails, nothing happens; the tags still count once a later push passes CI.
 
 ## Publish a version manually
 

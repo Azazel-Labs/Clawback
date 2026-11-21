@@ -9,6 +9,12 @@ on:
         description: "Existing version tag to publish (for example v0.1.0)"
         required: true
         type: string
+  workflow_call:
+    inputs:
+      tag:
+        description: "Version tag to publish (Auto release passes the one it made)"
+        required: true
+        type: string
 
 permissions:
   contents: read
