@@ -8,8 +8,9 @@ name: Auto release
 # tags mentioned mid-sentence are ignored.
 #
 # Nothing is committed to main. The version is set in a commit of its own that only the version tag
-# points to, so builds from the tag see it in Cargo.toml, there's never a bot commit to pull first, and
-# the bot isn't counted among the repository's contributors. main's Cargo.toml keeps whatever version
+# points to, so builds from the tag see it in Cargo.toml and there's never a release commit to pull
+# first. That commit and the tag are made as whoever pushed the commit that released, not as a bot,
+# so versions show on GitHub as theirs. main's Cargo.toml keeps whatever version
 # it was last given by hand; the version tags are what count.
 #
 # Pushes made with GITHUB_TOKEN don't start workflows, so release.yml and crates.yml are called from here
@@ -97,12 +98,16 @@ jobs:
         if: steps.plan.outputs.release == 'true'
         env:
           VERSION: ${{ steps.plan.outputs.version }}
+          # Whoever pushed the commit that released, by their GitHub noreply address, so the version
+          # shows as theirs on GitHub without their email in the tag.
+          RELEASER: ${{ github.event.workflow_run.actor.login }}
+          RELEASER_ID: ${{ github.event.workflow_run.actor.id }}
         run: |
           # Setting the version updates the lockfile offline, so download what it resolves against first.
           cargo fetch --locked
           cargo xtask release prepare "$VERSION"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "$RELEASER"
+          git config user.email "$RELEASER_ID+$RELEASER@users.noreply.github.com"
           # On a commit only the tag points to; main already having the version needs none.
           git diff --quiet || git commit -qam "Release $VERSION"
           git tag -a "v$VERSION" -m "Clawback $VERSION"

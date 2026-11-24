@@ -112,13 +112,17 @@ jobs:
       - name: Prepare tap commit
         env:
           RELEASE_TAG: ${{ needs.metadata.outputs.tag }}
+          # Whoever released (or ran this by hand), by their GitHub noreply address, so the tap's
+          # commit shows as theirs rather than a bot's.
+          RELEASER: ${{ github.actor }}
+          RELEASER_ID: ${{ github.actor_id }}
         run: |
           set -euo pipefail
           mkdir -p tap/Formula
           cp packages/homebrew/Formula/clawback.rb tap/Formula/clawback.rb
           ruby -c tap/Formula/clawback.rb
-          git -C tap config user.name 'github-actions[bot]'
-          git -C tap config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C tap config user.name "$RELEASER"
+          git -C tap config user.email "$RELEASER_ID+$RELEASER@users.noreply.github.com"
           git -C tap add Formula/clawback.rb
           if ! git -C tap diff --cached --quiet; then
             git -C tap commit -m "Update Clawback to $RELEASE_TAG"
