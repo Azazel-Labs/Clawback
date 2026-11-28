@@ -7,33 +7,29 @@ Release tooling is Rust: `cargo xtask`. You need Rust and Git, with push access 
 the repository. VS Code provides the same commands under **Tasks: Run Task →
 Clawback: Release …**.
 
-## Release from commit messages
+## Release by raising the version
 
-After CI passes on a push to `main`, the
+The version in Cargo.toml's `[workspace.package]` is the one source of truth. After
+CI passes on a push to `main`, the
 [Auto release workflow](https://github.com/Azazel-Labs/Clawback/actions/workflows/auto-release.yml)
-reads the commit messages:
+reads it: if no `vX.Y.Z` tag has that version yet, it tags the commit, which starts
+the Release and crates.io workflows below; otherwise it does nothing. So to release
+`1.2.0`:
 
-| Tag in a commit message | Effect |
-| --- | --- |
-| `#release` | Tags the next version, which starts the Release and crates.io workflows below. Counts commits since the last version tag. |
-| `#patch`, `#minor`, `#major` | How far that release moves the version from the last tag; the largest wins, and patch when none says. On its own it does nothing: it waits for a `#release`. |
+```sh
+cargo xtask release prepare 1.2.0
+git commit -am "Release 1.2.0"
+git push origin main
+```
 
-Put tags on a line of their own, alone or together, usually the last line of the
-message. A tag inside a sentence is ignored, so describing these tags in a commit
-message is safe.
-
-A `#minor #release` line releases 1.0.0 to 1.1.0. Leave out `#release` to let changes
-collect; the bump lines count once a later push releases.
-
-Nothing is committed to `main`, so there's never a bot commit to pull. The version
-is set in Cargo.toml and Cargo.lock in a commit of its own that only the version
-tag points to, which is what the release builds from. `main`'s Cargo.toml keeps
-the version it was last given by hand; the version tags are what count. If CI
-fails, nothing happens; the tags still count once a later push passes CI.
+Leave the version alone to let changes collect; they go out with the next version
+pushed. Nothing is committed back to `main`, and if CI fails nothing is tagged: the
+next push that passes releases the version then. A version behind the newest tag
+fails the workflow rather than releasing.
 
 ## Publish a version manually
 
-Start on `main`. For example, to release `0.1.0`:
+To tag by hand instead of waiting for Auto release, start on `main`. For example, to release `0.1.0`:
 
 ```sh
 cargo xtask release prepare 0.1.0
